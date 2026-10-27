@@ -3,6 +3,18 @@
 
 Een Nederlandstalige prijsvergelijker voor sportelektronica, te beginnen met Garmin- en Wahoo-fietscomputers. De site toont **geen verzonnen live winkelprijzen**. De prijsscanner gebruikt uitsluitend door de eigenaar geautoriseerde CSV-productfeeds; er wordt niet gescrapet en nooit automatisch gekocht.
 
+## Volgende stap — 27 oktober 2026
+
+De code staat daadwerkelijk in deze openbare repository, maar **de website is nog niet als commerciële dienst gepubliceerd**. Er is nog geen aangesloten, toegestane winkelproductfeed, geen goedgekeurde affiliatepartner en geen omzet.
+
+1. Meld je als publisher aan bij [Daisycon](https://login.daisycon.com/nl/register) of [Awin](https://www.awin.com/nl/faqs). De precieze, eerlijke aanvraagtekst staat in [docs/PUBLISHER_AANMELDEN.md](docs/PUBLISHER_AANMELDEN.md).
+2. Vraag bij minstens één winkelcampagne expliciete toestemming voor productfeeds, prijsvergelijking en affiliate-deeplinks.
+3. Sla een geautoriseerde HTTPS CSV-feed-URL **uitsluitend** op als GitHub Actions-secret `STD_FEED_URLS`. Deel nooit wachtwoorden of feedtokens in publieke issues.
+4. Test de feed zonder te publiceren met [Actions → Controleer affiliate-productfeed](../../actions/workflows/feed-test.yml).
+5. Controleer eerst exploitantgegevens, privacy, affiliatevermelding en merknaam, en kies daarna pas bewust voor publieke uitrol.
+
+**De standaardinstelling blijft: geen automatische publicatie en geen automatische aankopen.**
+
 ## Bestanden
 - `site/`: responsieve website, categorieoverzicht, koopgids en voorlopige juridische informatie.
 - `config/`: productcatalogus en controlegrenzen.
