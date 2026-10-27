@@ -1,0 +1,6 @@
+title,shop,price,shipping,url,condition,currency,stock
+Garmin Edge 540,VOORBEELD WINKEL A,199,5,https://example.org/fictief-a,new,EUR,in_stock
+Garmin Edge 540,VOORBEELD WINKEL B,260,5,https://example.org/fictief-b,new,EUR,in_stock
+Garmin Edge 540,VOORBEELD WINKEL C,270,5,https://example.org/fictief-c,new,EUR,in_stock
+Wahoo ELEMNT BOLT 3,VOORBEELD WINKEL A,260,8,https://example.org/fictief-d,new,EUR,in_stock
+Garmin Edge 840 Solar,VOORBEELD WINKEL A,260,0,https://example.org/fictief-e,new,EUR,in_stock
