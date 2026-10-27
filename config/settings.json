@@ -1,0 +1,15 @@
+{
+  "site_name": "SportTech Deals",
+  "region": "Nederland",
+  "currency": "EUR",
+  "feed_max_age_hours": 48,
+  "minimum_distinct_shops_for_comparison": 3,
+  "deal_percent_below_peer_median": 15,
+  "max_offers_per_product": 12,
+  "allow_used_in_public_comparison": false,
+  "resale_budget_eur": 200,
+  "resale_max_purchase_eur": 120,
+  "resale_min_profit_eur": 30,
+  "resale_min_roi_percent": 25,
+  "resale_min_sold_comparables": 3
+}

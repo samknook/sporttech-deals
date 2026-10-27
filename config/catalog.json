@@ -1,0 +1,74 @@
+[
+  {
+    "id": "garmin-edge-550",
+    "brand": "Garmin",
+    "model": "Edge 550",
+    "category": "Fietscomputers",
+    "match_pattern": "\\bgarmin\\s+edge\\s+550\\b",
+    "note": "Compact model met knoppen; let op bundels.",
+    "search_terms": "Garmin Edge 550"
+  },
+  {
+    "id": "garmin-edge-850",
+    "brand": "Garmin",
+    "model": "Edge 850",
+    "category": "Fietscomputers",
+    "match_pattern": "\\bgarmin\\s+edge\\s+850\\b",
+    "note": "Touchscreenmodel; vergelijk exact dezelfde uitvoering.",
+    "search_terms": "Garmin Edge 850"
+  },
+  {
+    "id": "garmin-edge-540",
+    "brand": "Garmin",
+    "model": "Edge 540",
+    "category": "Fietscomputers",
+    "match_pattern": "\\bgarmin\\s+edge\\s+540\\b",
+    "note": "Vorige generatie, met knopbediening.",
+    "search_terms": "Garmin Edge 540"
+  },
+  {
+    "id": "garmin-edge-840",
+    "brand": "Garmin",
+    "model": "Edge 840",
+    "category": "Fietscomputers",
+    "match_pattern": "\\bgarmin\\s+edge\\s+840\\b",
+    "note": "Touchscreen; let op Solar en bundel.",
+    "search_terms": "Garmin Edge 840"
+  },
+  {
+    "id": "garmin-edge-1050",
+    "brand": "Garmin",
+    "model": "Edge 1050",
+    "category": "Fietscomputers",
+    "match_pattern": "\\bgarmin\\s+edge\\s+1050\\b",
+    "note": "Groter premium navigatiemodel.",
+    "search_terms": "Garmin Edge 1050"
+  },
+  {
+    "id": "wahoo-elemnt-bolt-3",
+    "brand": "Wahoo",
+    "model": "ELEMNT BOLT 3",
+    "category": "Fietscomputers",
+    "match_pattern": "\\bwahoo\\s+(?:elemnt\\s+)?bolt\\s*(?:v?3|iii)\\b",
+    "note": "Compact model; BOLT V2 is een ander product.",
+    "search_terms": "Wahoo ELEMNT BOLT 3"
+  },
+  {
+    "id": "wahoo-elemnt-roam-3",
+    "brand": "Wahoo",
+    "model": "ELEMNT ROAM 3",
+    "category": "Fietscomputers",
+    "match_pattern": "\\bwahoo\\s+(?:elemnt\\s+)?roam\\s*(?:v?3|iii)\\b",
+    "note": "Groter scherm, focus op navigatie.",
+    "search_terms": "Wahoo ELEMNT ROAM 3"
+  },
+  {
+    "id": "wahoo-elemnt-ace",
+    "brand": "Wahoo",
+    "model": "ELEMNT ACE",
+    "category": "Fietscomputers",
+    "match_pattern": "\\bwahoo\\s+(?:elemnt\\s+)?ace\\b",
+    "note": "Groot premium model.",
+    "search_terms": "Wahoo ELEMNT ACE"
+  }
+]
