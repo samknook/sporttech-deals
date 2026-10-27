@@ -1,0 +1,63 @@
+name: Publiceer introductiewebsite voor Daisycon
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/index.html'
+      - 'docs/koopgids.html'
+      - 'docs/transparantie.html'
+      - 'docs/site.css'
+      - 'docs/.nojekyll'
+      - '.github/workflows/pages-intro.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: sporttech-intro-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Haal introductiepagina's op
+        uses: actions/checkout@v4
+      - name: Controleer introductie-inhoud
+        run: |
+          test -s docs/index.html
+          test -s docs/koopgids.html
+          test -s docs/transparantie.html
+          test -s docs/site.css
+          python - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          class Check(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.meta=[]
+              def handle_starttag(self, tag, attrs):
+                  if tag=="meta": self.meta.append(dict(attrs))
+          p=Check()
+          p.feed(Path("docs/index.html").read_text(encoding="utf-8"))
+          expected_name="3045ec1a300a1b5"
+          expected_value="e43119facc31c6d54302cec101a02834"
+          assert any(m.get("name")==expected_name and m.get("content")==expected_value for m in p.meta), "Daisycon verificatiemetatag ontbreekt."
+          print("Introductiepagina en Daisycon-tag gecontroleerd.")
+          PY
+      - name: GitHub Pages configureren
+        uses: actions/configure-pages@v5
+      - name: Introductiesite uploaden
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./docs
+      - name: Introductiesite publiceren
+        id: deployment
+        uses: actions/deploy-pages@v4
