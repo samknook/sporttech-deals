@@ -17,6 +17,17 @@ jobs:
         run: python -m compileall -q app tests
       - name: Scanner- en veiligheidstests
         run: python -m unittest discover -s tests -v
+      - name: Front-end JavaScript syntax
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          html=Path('site/index.html').read_text(encoding='utf-8')
+          scripts=re.findall(r'<script>(.*?)</script>',html,flags=re.S)
+          assert len(scripts)==1, 'De homepage moet een inline applicatiescript hebben'
+          Path('/tmp/sporttech-site.js').write_text(scripts[0],encoding='utf-8')
+          PY
+          node --check /tmp/sporttech-site.js
       - name: JSON valideren
         run: |
           python -m json.tool config/catalog.json > /dev/null
