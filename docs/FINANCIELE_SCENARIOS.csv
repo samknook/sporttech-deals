@@ -1,0 +1,5 @@
+Scenario,Bezoekers_maand,Doorklikratio,Conversie_winkel,Commissie_eur,Berekende_commissie_eur
+Voorzichtig,500,0.08,0.02,8,6.40
+Test,2000,0.10,0.025,10,50.00
+Groei,10000,0.12,0.03,12,432.00
+Ambitie,25000,0.14,0.04,15,2100.00
