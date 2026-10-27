@@ -1,0 +1,39 @@
+name: Controleer affiliate-productfeed (zonder publicatie)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-authorized-feed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code ophalen
+        uses: actions/checkout@v4
+      - name: Python installeren
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Tests van de prijsscanner
+        run: python -m unittest discover -s tests -v
+      - name: Controleer of een goedgekeurde feed is ingesteld
+        env:
+          STD_FEED_URLS: ${{ secrets.STD_FEED_URLS }}
+        run: |
+          python - <<'PY'
+          import os, sys
+          feed_urls=[x.strip() for x in os.environ.get('STD_FEED_URLS','').splitlines() if x.strip()]
+          if not feed_urls:
+              print('Geen STD_FEED_URLS-secret: vraag eerst een toegestane publisherfeed aan.')
+              sys.exit(1)
+          if not all(x.startswith('https://') for x in feed_urls):
+              print('Feed-URL moet HTTPS gebruiken.')
+              sys.exit(1)
+          print(f'{len(feed_urls)} goedgekeurde HTTPS-feedbron(nen) ingesteld (URL geheim gehouden).')
+          PY
+      - name: Feed lezen en modellen herkennen — alleen controleren
+        env:
+          STD_FEED_URLS: ${{ secrets.STD_FEED_URLS }}
+        run: python app/build.py --verify
