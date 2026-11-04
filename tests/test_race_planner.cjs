@@ -65,3 +65,61 @@ test('ongeldige invoer wordt veilig geweigerd', () => {
     {...sample,start:'12:67'}
   ]) assert.throws(()=>core.calculate(bad),Error);
 });
+
+test('presets cover Sprint, Olympic, 70.3 and Full', () => {
+  const expected={
+    sprint:[750,20,5],
+    olympic:[1500,40,10],
+    half:[1900,90,21.0975],
+    full:[3800,180,42.195]
+  };
+  for(const [key,distances] of Object.entries(expected)){
+    const result=core.calculate({...sample,distance:key,target:''});
+    assert.deepEqual([result.distance.swimMeters,result.distance.bikeKm,result.distance.runKm],distances);
+    const manual=120*distances[0]/100 + 90/distances[1]*0 + distances[1]/33*3600 + 7*60 + 300*distances[2];
+    assert.ok(Math.abs(result.total-manual)<.00001);
+    assert.equal(result.targetDifference,null);
+    assert.equal(result.checkpoints.length,12);
+    assert.equal(result.checkpoints.at(-1).elapsed,result.total);
+    for(let i=1;i<result.checkpoints.length;i++){
+      assert.ok(result.checkpoints[i].elapsed>=result.checkpoints[i-1].elapsed);
+    }
+  }
+});
+test('custom distance respects fractional distances',()=>{
+  const r=core.calculate({...sample,distance:'custom',swimMeters:500,bikeKm:25.5,runKm:7.5,target:''});
+  assert.equal(r.swim,600);
+  assert.ok(Math.abs(r.bike-25.5/33*3600)<1e-6);
+  assert.equal(r.run,2250);
+  assert.ok(r.checkpoints.some(p=>p.distance.includes('25,5 km')));
+  assert.equal(r.distance.name,'Eigen afstand');
+});
+test('target time belongs to selected race',()=>{
+  const full=core.calculate({...sample,distance:'full',target:'12:00'});
+  assert.equal(full.target,43200);
+  assert.equal(full.targetDifference,43200-full.total);
+  const race=core.calculate({...sample,distance:'sprint',target:'01:30'});
+  assert.equal(race.target,5400);
+  const none=core.calculate({...sample,distance:'full',target:''});
+  assert.equal(none.target,null);
+  assert.equal(none.targetDifference,null);
+  assert.equal(core.targetToSeconds('05:00'),18000);
+  assert.equal(core.targetToSeconds('12:15:30'),44130);
+});
+test('reject unknown presets and unsafe custom/goal values',()=>{
+  for(const opts of [
+    {distance:'half-unknown'},
+    {distance:'custom',swimMeters:0,bikeKm:20,runKm:5},
+    {distance:'custom',swimMeters:750,bikeKm:'',runKm:5},
+    {distance:'custom',swimMeters:750,bikeKm:20,runKm:500},
+    {distance:'custom',swimMeters:750,bikeKm:Infinity,runKm:5},
+    {distance:'sprint',target:'01:60'},
+    {distance:'sprint',target:'-1:00'},
+    {distance:'full',target:'99:00'}
+  ])assert.throws(()=>core.calculate({...sample,...opts}),Error);
+});
+test('full distance and long custom race clock passes midnight safely',()=>{
+  const p=core.calculate({...sample,start:'18:00',distance:'full',target:''});
+  assert.equal(p.distance.runKm,42.195);
+  assert.ok(p.checkpoints.at(-1).clock.includes('(+1 dag)'));
+});
