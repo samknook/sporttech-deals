@@ -12,3 +12,29 @@
 .home-tool.bike{background:#e2f8ed;border-top:4px solid #118b70}
 .home-tool.run{background:#fff0e5;border-top:4px solid #df7f32}
 @media(max-width:620px){.home-tool-grid{grid-template-columns:1fr}.home-tool{padding:14px 16px}}
+
+/* TriZentro brand layer: deep race-day navy, swim blue, bike mint, run orange. */
+:root{--green:#091f34;--ink:#142d3c;--muted:#54707d;--bg:#f2f6f8;--soft:#eaf3f5;--acid:#86eedb;--line:#d7e5eb}
+.brand{display:inline-flex;align-items:center;gap:9px}
+.brand .brand-icon{width:36px;height:36px;border-radius:9px;flex-shrink:0;object-fit:contain}
+.top{background:linear-gradient(125deg,#091f34,#103c56);color:#fff}
+footer{background:#071c2c;color:#d9eaf0}
+footer a{color:#d9eaf0}
+footer p{color:#b0cbd4}
+.hero-art.tri-brand-art{background:radial-gradient(circle at 75% 18%,#1d7081,transparent 56%),linear-gradient(135deg,#071d32,#143d58);border-color:#367889}
+.hero-art.tri-brand-art:before,.hero-art.tri-brand-art:after{border-color:#ffffff16}
+.tri-brand-race{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:min(90%,440px);align-items:stretch}
+.tri-brand-race>div{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:1px solid #ffffff33;border-radius:20px;padding:32px 7px 26px;background:#ffffff10}
+.tri-brand-race>div:nth-child(1){border-top:5px solid #32b4eb}
+.tri-brand-race>div:nth-child(2){border-top:5px solid #31c8ad}
+.tri-brand-race>div:nth-child(3){border-top:5px solid #ffa66a}
+.tri-brand-race>div span{font-size:clamp(26px,3vw,43px)}
+.tri-brand-race>div strong{font-size:12px;letter-spacing:.1em;color:white}
+.tri-brand-race p{grid-column:1/-1;text-align:center!important;color:#a6ebdf!important;font-size:12px!important;font-weight:900!important;letter-spacing:.13em;margin:10px 0 0!important}
+.hero-art.tri-brand-art .float-label{background:#d8fcde;color:#113a36}
+.btn{background:var(--acid);color:#073c42}
+.btn.secondary{background:#205269;color:#fff}
+.kicker{color:#167b8b}
+.product{background:#f8fcfd}
+.notice{background:#e9f6f5;border-color:#b5dcd6;color:#235a61}
+@media(max-width:620px){.brand .brand-icon{width:30px;height:30px}.tri-brand-race>div{padding:26px 5px 20px}.tri-brand-race{width:92%;gap:6px}}
