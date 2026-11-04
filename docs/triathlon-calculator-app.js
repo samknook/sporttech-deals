@@ -34,10 +34,12 @@
         $('bar-'+key).style.width=(time/p.total*100).toFixed(2)+'%';
       }
       $('planner-link').href='race-planner.html?distance='+encodeURIComponent(selected);
+      window.RaceInsights.render(values());
     }catch(e){
       $('validation-error').textContent=e.message;
       $('time-total').textContent='—';
       $('goal-status').textContent='Controleer je tempo’s of afstand';
+      window.RaceInsights.clear();
       for(const key of ['swim','t1','bike','t2','run']){
         $('split-'+key).textContent='—';$('bar-'+key).style.width='0%';
       }
@@ -56,6 +58,7 @@
     $('swim-meters').value='1900';$('bike-km').value='90';$('run-km').value='21.0975';
     changeDistance('half');
   });
+  window.RaceInsights.bind(update,values);
   const fromUrl=new URLSearchParams(window.location.search).get('distance');
   changeDistance(fromUrl==='custom'||Object.prototype.hasOwnProperty.call(core.DISTANCES,fromUrl||'')?fromUrl:'half');
 })();
