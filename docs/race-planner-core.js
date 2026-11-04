@@ -25,7 +25,16 @@
   }
   function targetToSeconds(value) {
     if (value == null || String(value).trim() === '') return null;
-    const m = /^(\d{1,2}):(\d{2})(?::(\d{2}))?$/.exec(String(value).trim());
+    let v = String(value).trim();
+    // Mobile numeric keyboards do not always expose a colon.
+    // Interpret 530 as 05:30, 500 as 05:00 and 53015 as 05:30:15.
+    // Accept this directly during input, before the UI formats on blur.
+    if (/^\d{1,6}$/.test(v)) {
+      if (v.length <= 2) v = v.padStart(2,'0') + ':00';
+      else if (v.length <= 4) v = v.slice(0,-2).padStart(2,'0') + ':' + v.slice(-2);
+      else v = v.slice(0,-4).padStart(2,'0') + ':' + v.slice(-4,-2) + ':' + v.slice(-2);
+    }
+    const m = /^(\d{1,2}):(\d{2})(?::(\d{2}))?$/.exec(v);
     if (!m || Number(m[2]) > 59 || (m[3] && Number(m[3]) > 59)) return NaN;
     const seconds = Number(m[1]) * 3600 + Number(m[2]) * 60 + Number(m[3] || 0);
     return seconds >= 900 && seconds <= 48 * 3600 ? seconds : NaN;
