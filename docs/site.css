@@ -88,3 +88,10 @@ footer p{color:#b0cbd4}
 .tz-shortcuts-grid a:hover,.tz-shortcuts-grid a:focus-visible{outline:3px solid #3ab6a5;outline-offset:1px;transform:translateY(-1px)}
 @media(max-width:870px){.tz-shortcuts-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:500px){.tz-shortcuts{padding:26px 0 29px}.tz-shortcuts-grid{grid-template-columns:1fr;gap:9px}.tz-shortcuts-grid a{min-height:75px;padding:13px 14px}}
+
+/* Shared NL / EN language selection, visible on mobile and desktop. */
+.tz-lang-switch{display:flex;align-items:center;gap:3px;background:#ffffff16;border:1px solid #ffffff35;border-radius:12px;padding:3px;flex-shrink:0;margin-left:7px}
+.tz-lang-switch button{font:inherit;font-size:12px;font-weight:850;letter-spacing:.04em;color:#e1f0ed;background:transparent;border:0;border-radius:8px;min-height:38px;min-width:39px;padding:8px 10px;cursor:pointer}
+.tz-lang-switch button[aria-pressed="true"]{background:#86eedb;color:#082d39;box-shadow:0 2px 6px #061b2933}
+.tz-lang-switch button:focus-visible{outline:3px solid #86eedb;outline-offset:3px}
+@media(max-width:420px){.tz-lang-switch{margin-left:0}.tz-lang-switch button{min-width:35px;padding:7px}.tz-mobile-menu>summary{min-width:77px;padding:9px 10px}}
