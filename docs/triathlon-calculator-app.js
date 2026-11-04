@@ -3,6 +3,9 @@
   'use strict';
   const core=window.RacePlannerCore;if(!core)return;
   const $=id=>document.getElementById(id);
+  const english=window.TriZentroI18n&&window.TriZentroI18n.lang==='en';
+  const tr=(nl,en)=>english?en:nl;
+  const distName=id=>id==='olympic'?tr('Olympisch','Olympic'):id==='half'?tr('70.3 / Halve','70.3 / Half'):id==='custom'?tr('Eigen afstand','Custom distance'):core.DISTANCES[id].name;
   const selector=$('distance-selector'),buttons=[...selector.querySelectorAll('[data-distance]')];
   let selected='half';
   const inputIds=['swim-pace','bike-speed','run-pace','t1-minutes','t2-minutes','target-time','swim-meters','bike-km','run-km'];
@@ -15,7 +18,7 @@
     buttons.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.distance===key)));
     $('custom-distances').hidden=key!=='custom';
     $('target-time').value='';
-    $('distance-label').textContent=key==='custom'?'Eigen afstand':core.DISTANCES[key].name;
+    $('distance-label').textContent=distName(key);
     update();
   }
   function update(){
@@ -24,11 +27,11 @@
       $('validation-error').textContent='';
       $('time-total').textContent=core.formatDuration(p.total);
       $('goal-status').textContent=p.targetDifference===null
-        ? 'Vul eventueel een doeltijd in voor een vergelijking.'
-        : p.targetDifference>=0?'Binnen doel: '+core.formatDuration(p.targetDifference)+' sneller'
-          :'Boven doel: '+core.formatDuration(-p.targetDifference)+' langzamer';
+        ? tr('Vul eventueel een doeltijd in voor een vergelijking.','Optionally enter a finish target for comparison.')
+        : p.targetDifference>=0?tr('Binnen doel: ','Within target: ')+core.formatDuration(p.targetDifference)+tr(' sneller',' faster')
+          :tr('Boven doel: ','Above target: ')+core.formatDuration(-p.targetDifference)+tr(' langzamer',' slower');
       $('goal-status').classList.toggle('neutral',p.targetDifference===null);
-      $('distance-description').textContent=core.formatKm(p.distance.swimMeters,0)+' m zwemmen · '+core.formatKm(p.distance.bikeKm)+' km fietsen · '+core.formatKm(p.distance.runKm)+' km hardlopen';
+      $('distance-description').textContent=core.formatKm(p.distance.swimMeters,0)+tr(' m zwemmen · ',' m swim · ')+core.formatKm(p.distance.bikeKm)+tr(' km fietsen · ',' km bike · ')+core.formatKm(p.distance.runKm)+tr(' km hardlopen',' km run');
       for(const [key,time] of [['swim',p.swim],['t1',p.t1],['bike',p.bike],['t2',p.t2],['run',p.run]]){
         $('split-'+key).textContent=core.formatDuration(time);
         $('bar-'+key).style.width=(time/p.total*100).toFixed(2)+'%';
@@ -38,7 +41,7 @@
     }catch(e){
       $('validation-error').textContent=e.message;
       $('time-total').textContent='—';
-      $('goal-status').textContent='Controleer je tempo’s of afstand';
+      $('goal-status').textContent=tr('Controleer je tempo’s of afstand','Check your paces or distance');
       window.RaceInsights.clear();
       for(const key of ['swim','t1','bike','t2','run']){
         $('split-'+key).textContent='—';$('bar-'+key).style.width='0%';
