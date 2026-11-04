@@ -10,6 +10,7 @@ on:
       - 'docs/site.css'
       - 'docs/fietscomputer-triatlon.html'
       - 'docs/fietscomputer-aanbieding.html'
+      - 'docs/70-3-eindtijd-calculator.html'
       - 'docs/robots.txt'
       - 'docs/sitemap.xml'
       - 'docs/.nojekyll'
@@ -40,6 +41,17 @@ jobs:
           test -s docs/koopgids.html
           test -s docs/transparantie.html
           test -s docs/site.css
+          test -s docs/70-3-eindtijd-calculator.html
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          html = Path('docs/70-3-eindtijd-calculator.html').read_text(encoding='utf-8')
+          scripts = re.findall(r'<script>(.*?)</script>', html, flags=re.S)
+          assert len(scripts)==1, 'Racecalculator moet precies één lokaal script hebben'
+          assert '21.0975' in scripts[0] and '90/bike' in scripts[0], '70.3 afstanden ontbreken'
+          Path('/tmp/sporttech-70-3-calculator.js').write_text(scripts[0],encoding='utf-8')
+          PY
+          node --check /tmp/sporttech-70-3-calculator.js
           test -s docs/fietscomputer-triatlon.html
           test -s docs/fietscomputer-aanbieding.html
           test -s docs/sitemap.xml
