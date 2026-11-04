@@ -1,4 +1,4 @@
-name: Controleer Google Search Console-verificatie live
+name: Controleer Search Console-verificatie en sitemap live
 
 on:
   push:
@@ -6,6 +6,14 @@ on:
     paths:
       - 'docs/index.html'
       - 'docs/google36c6913874a61b33.html'
+      - 'docs/sitemap.xml'
+      - 'docs/race-planner.html'
+      - 'docs/triathlon-calculator.html'
+      - 'docs/triatlon-afstanden.html'
+      - 'docs/koopgids.html'
+      - 'docs/fietscomputer-triatlon.html'
+      - 'docs/fietscomputer-aanbieding.html'
+      - 'docs/transparantie.html'
       - '.github/workflows/google-verification-check.yml'
   workflow_dispatch:
 
@@ -52,5 +60,55 @@ jobs:
               print(f'Attempt {attempt}: {problems}')
               if attempt == 9:
                   raise SystemExit('Google verification website check failed')
+              time.sleep(8)
+          PY
+
+      - name: Controleer live XML-sitemap en indexeerbare pagina's
+        run: |
+          python3 - <<'PY'
+          import time, re
+          import urllib.request
+          import urllib.parse
+          import xml.etree.ElementTree as ET
+
+          base = 'https://samknook.github.io/sporttech-deals/'
+          url = base+'sitemap.xml'
+          ns = '{http://www.sitemaps.org/schemas/sitemap/0.9}'
+          required = {
+              base,
+              base+'race-planner.html',
+              base+'triathlon-calculator.html',
+              base+'triatlon-afstanden.html',
+          }
+          for attempt in range(1, 10):
+              errors=[]
+              try:
+                  request=urllib.request.Request(url,headers={'User-Agent':'TriZentroSitemapCheck/1.0'})
+                  with urllib.request.urlopen(request,timeout=20) as response:
+                      assert response.status==200, f'Sitemap status: {response.status}'
+                      xml=response.read(300000)
+                  root=ET.fromstring(xml)
+                  assert root.tag==ns+'urlset', 'Expected XML sitemap namespace/root'
+                  urls=[e.text for e in root.iter(ns+'loc')]
+                  assert len(urls)==len(set(urls)), 'Duplicate sitemap URLs'
+                  assert len(urls)>=4, 'Sitemap suspiciously small'
+                  assert required.issubset(urls), 'Critical TriZentro pages missing'
+                  for item in urls:
+                      assert item.startswith(base), 'Sitemap contains foreign URL: '+str(item)
+                      assert item != base+'70-3-eindtijd-calculator.html', 'Legacy redirect in sitemap'
+                      assert item != base+'google36c6913874a61b33.html', 'Verification page in sitemap'
+                      req=urllib.request.Request(item,headers={'User-Agent':'TriZentroSitemapCheck/1.0'})
+                      with urllib.request.urlopen(req,timeout=15) as response:
+                          assert response.status==200, f'{item} returned {response.status}'
+                          html=response.read(200000).decode('utf-8')
+                          xrobots=response.headers.get('X-Robots-Tag','')
+                      assert not re.search(r'<meta[^>]+(?:name=["\']robots["\'])[^>]+content=["\'][^"\']*noindex',html,re.I), item+' is noindex'
+                      assert 'noindex' not in xrobots.lower(), item+' has noindex header'
+                  print('PASS: live sitemap is valid; '+str(len(urls))+' public, crawlable URLs with no noindex.')
+                  break
+              except Exception as exc:
+                  errors.append(str(exc))
+              print(f'Poging {attempt}: {errors}')
+              if attempt==9:raise SystemExit('Sitemap livecontrole mislukt: '+str(errors))
               time.sleep(8)
           PY
