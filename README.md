@@ -28,7 +28,7 @@ De eerste SEO- en distributieversie is opgesteld:
 - Canonical-links en deelmetadata op homepage en beide gratis tools; WebApplication-gegevens met werkelijke prijs €0, **zonder fictieve beoordelingen**.
 - De sitemap bevat alleen eigen, bruikbare pagina's; de oude 70.3-redirect is eruit verwijderd.
 - De tools kunnen vrijwillig via WhatsApp worden gedeeld. Alleen de openbare paginalink wordt gedeeld, nooit persoonlijke tempo's of notities.
-- [Handleiding Google Search Console en testplan](docs/ZOEKVERKEER_EN_VALIDATIE.md) en [open actie #5](../../issues/5).
+- [Handleiding Google Search Console en testplan](docs/ZOEKVERKEER_EN_VALIDATIE.md) · [Vierweeks Search Console-meetplan](docs/SEARCH_CONSOLE_MEETPLAN.md) en [open actie #5](../../issues/5).
 
 **Nog ontbrekend:** het eigendomsbewijs voor Google Search Console en echte menselijke bezoekdata. De GitHub Pages-tests zijn géén gebruikersstatistieken. Eerst zoekverkeer en echte feedback vastleggen, dan pas nieuwe betaalfuncties overwegen.
 
