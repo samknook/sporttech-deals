@@ -51,7 +51,7 @@
 <div class="form-grid">
 <label>Race name<input id="race-name" value="My first 70.3" maxlength="90"></label>
 <label>Race date<input id="race-date" type="date" value="2027-06-20"></label>
-<label>Start time<input id="start" type="time" value="08:00"></label>
+<label>Start time<input id="start" type="text" inputmode="numeric" maxlength="5" value="08:00"></label>
 <label>Target finish (hh:mm)<input id="target" inputmode="numeric" value="06:00" maxlength="5"></label>
 <label>Swim pace / 100 m<input id="swim" inputmode="numeric" value="2:10"><small>Type 210 for 2:10</small></label>
 <label>Bike average speed (km/h)<input id="bike" type="number" min="10" max="60" step="0.1" value="29"></label>
@@ -59,7 +59,7 @@
 <label>T1 (minutes)<input id="t1" type="number" min="0" max="30" step="0.5" value="5"></label>
 <label>T2 (minutes)<input id="t2" type="number" min="0" max="30" step="0.5" value="4"></label>
 </div>
-<p class="muted">The conservative and ambitious scenarios adjust swim pace by 5 seconds/100 m, bike speed by 1 km/h, and run pace by 10 seconds/km. These are illustrative variations, not fitness predictions.</p>
+<p class="muted">Mobile shortcut: type <strong>830</strong> for an 08:30 start and <strong>530</strong> for a 05:30 finish target. The conservative and ambitious scenarios adjust swim pace by 5 seconds/100 m, bike speed by 1 km/h, and run pace by 10 seconds/km. These are illustrative variations, not fitness predictions.</p>
 </section>
 <section class="preview-card"><h2>02 / Compare three outcomes</h2><p id="error" class="error" role="alert" hidden></p>
 <div id="result-content"><div class="results">
@@ -108,7 +108,7 @@
 <p>For the full free experience, also use our <a href="race-dashboard.html">Race Dashboard</a>, <a href="race-fuel-planner.html">Race Fuel Planner</a> and <a href="race-day-timeline.html">Race Day Timeline</a>.</p>
 </section></main>
 <footer><div class="wrap"><a class="brand" href="./"><img class="brand-icon" src="trizentro-icon.svg" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><a href="transparantie.html">Privacy &amp; transparency</a></div></footer>
-<script src="pace-input.js"></script><script>TriZentroPaceInput.bind(["swim","run"]);</script>
+<script src="pace-input.js"></script><script>TriZentroPaceInput.bind(["swim","run"]);TriZentroPaceInput.bindClock(["start"]);TriZentroPaceInput.bindDuration(["target"]);</script>
 <script src="race-planner-core.js"></script>
 <script src="race-pack-dossier.js"></script>
 <script>
