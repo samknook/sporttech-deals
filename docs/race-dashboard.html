@@ -50,18 +50,18 @@
 <label class="field">Wedstrijdnaam<input id="name" maxlength="90" value="Mijn triatlon"></label>
 <label class="field">Afstand<select id="distance"><option value="sprint">Sprint</option><option value="olympic">Olympisch</option><option value="half" selected>70.3 / Halve</option><option value="full">Full distance</option></select></label>
 <label class="field">Wedstrijddatum<input id="date" type="date" value="2027-06-20"></label>
-<label class="field">Starttijd<input id="start" type="time" value="08:00"></label>
+<label class="field">Starttijd<input id="start" type="text" inputmode="numeric" maxlength="5" value="08:00"></label>
 <label class="field">Zwemtempo (min:sec /100m)<input id="swim" value="2:00" inputmode="numeric" placeholder="2:00"></label>
 <label class="field">Fietssnelheid (km/u)<input id="bike" type="number" min="10" max="60" step="0.1" value="33"></label>
 <label class="field">Looptempo (min:sec /km)<input id="run" value="5:00" inputmode="numeric" placeholder="5:00"></label>
-<label class="field">Doeltijd (uu:mm)<input id="goal" placeholder="05:00" value="05:00"></label>
+<label class="field">Doeltijd (uu:mm)<input id="goal" placeholder="05:00" value="05:00" inputmode="numeric"></label>
 <label class="field">T1 (minuten)<input id="t1" type="number" min="0" max="30" step="0.5" value="4"></label>
 <label class="field">T2 (minuten)<input id="t2" type="number" min="0" max="30" step="0.5" value="3"></label>
 <label class="field">Reistijd (minuten)<input id="travel" type="number" min="0" max="1440" step="1" value="35"></label>
 <label class="field">Voorbereiding + buffer (minuten)<input id="prep" type="number" min="0" max="480" step="1" value="110"><small>Parkeren, wisselzone, warming-up en speling samen</small></label>
 </div>
 <p class="muted">Je kunt elke waarde aanpassen. De doeltijd is een rekendoel, geen gegarandeerde finish.</p>
-<p class="muted">Op mobiel: typ <strong>445</strong> voor 4:45 of <strong>150</strong> voor 1:50. De dubbele punt wordt automatisch toegevoegd als je het tempoveld verlaat.</p>
+<p class="muted">Op mobiel: typ <strong>830</strong> voor starttijd 08:30, <strong>530</strong> voor doeltijd 05:30, en <strong>445</strong> voor 4:45 of <strong>150</strong> voor 1:50. De dubbele punt wordt automatisch toegevoegd als je het tempoveld verlaat.</p>
 </section>
 <section class="panel"><h2>02 / Samenvatting</h2>
 <p id="error" class="error" role="alert" hidden></p>
@@ -117,7 +117,7 @@
 <p>Wil je meer detail? Open de <a href="race-planner.html">Race Planner</a>, <a href="race-fuel-planner.html">Fuel Planner</a>, <a href="race-day-timeline.html">Race Day Timeline</a> of de <a href="70-3-raceplan.html">70.3-gids</a>.</p>
 </section></main>
 <footer><div class="wrap"><a class="brand" href="./"><img class="brand-icon" src="trizentro-icon.svg" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><a href="transparantie.html">Privacy en transparantie</a></div></footer>
-<script src="pace-input.js"></script><script>TriZentroPaceInput.bind(["swim","run"]);</script>
+<script src="pace-input.js"></script><script>TriZentroPaceInput.bind(["swim","run"]);TriZentroPaceInput.bindClock(["start"]);TriZentroPaceInput.bindDuration(["goal"]);</script>
 <script src="race-planner-core.js"></script><script>
 (()=>{
 "use strict";
