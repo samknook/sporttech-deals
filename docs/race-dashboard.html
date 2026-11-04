@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="nl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Maak een persoonlijk triatlon Race Dashboard met eindtijd, splits, racevoeding en wedstrijddagplanning. Gratis, zonder account, lokaal op je apparaat.">
+<meta name="theme-color" content="#091f34">
+<link rel="canonical" href="https://samknook.github.io/sporttech-deals/race-dashboard.html">
+<meta property="og:type" content="website"><meta property="og:locale" content="nl_NL">
+<meta property="og:title" content="Gratis Race Dashboard | TriZentro"><meta property="og:description" content="Al je splits, wedstrijdvoeding en vertrekplanning op één plek, zonder account.">
+<meta property="og:url" content="https://samknook.github.io/sporttech-deals/race-dashboard.html">
+<title>Race Dashboard — jouw triatlon in één overzicht | TriZentro</title>
+<link rel="stylesheet" href="site.css"><link rel="icon" href="trizentro-icon.svg" type="image/svg+xml">
+<style>
+:root{--navy:#091f34;--blue:#32b4eb;--aqua:#31c8ad;--orange:#ffa66a}
+.dashboard{width:min(1100px,calc(100% - 36px));margin:auto;padding:34px 0 75px}
+.dashboard h1{font-size:clamp(35px,6vw,61px);letter-spacing:-.055em;line-height:1.06;margin:10px 0 15px}
+.dashboard p,.dashboard li{line-height:1.65}.intro{font-size:18px;max-width:800px;color:#527168}
+.eyebrow{font-size:12px;font-weight:900;letter-spacing:.14em;color:#12778d;text-transform:uppercase}
+.panel{background:#fff;border:1px solid #dce6db;border-radius:18px;padding:24px;margin:21px 0;box-shadow:0 6px 25px #11332208}
+.panel h2{font-size:25px;margin:0 0 14px}
+.fields{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.field{display:flex;flex-direction:column;gap:7px;font-weight:700;font-size:13px}
+.field input,.field select{font:inherit;font-size:16px;min-width:0;width:100%;padding:11px 12px;background:#fff;color:#153f35;border:1px solid #b2c9c1;border-radius:10px}
+.field small{font-size:12px;font-weight:400;color:#647a71}.result-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.stat{background:#eef6f5;border-top:4px solid var(--aqua);border-radius:12px;padding:15px}
+.stat:nth-child(2){border-top-color:var(--blue)}.stat:nth-child(3){border-top-color:var(--orange)}.stat:nth-child(4){border-top-color:#415b92}
+.stat span{display:block;font-size:12px;color:#52726a}.stat strong{display:block;font-size:clamp(21px,3vw,29px);margin:7px 0 4px}
+.tablewrap{overflow-x:auto}.dashboard table{border-collapse:collapse;width:100%;min-width:590px}
+.dashboard td,.dashboard th{padding:11px;border-bottom:1px solid #dce6db;text-align:left}
+.dashboard th{background:#eef5ef;font-size:13px}
+.note{padding:13px 16px;background:#e9f6f5;border-left:4px solid var(--aqua);border-radius:7px}
+.caution{background:#fff5ea;border-left-color:var(--orange)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.actions button,.actions a{background:var(--navy);color:#fff;border:0;border-radius:10px;padding:12px 17px;font:inherit;font-weight:800;cursor:pointer;text-decoration:none}
+.actions .secondary{background:#205269}
+.checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.checks label{border:1px solid #dce6db;border-radius:10px;padding:12px;display:flex;gap:9px;align-items:flex-start;font-size:14px}
+.checks input{width:18px;height:18px;flex:none;accent-color:#137d74}
+.muted{color:#536d64;font-size:13px}.error{color:#a32924;font-weight:750}
+@media(max-width:840px){.fields,.result-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:530px){.fields,.result-grid,.checks{grid-template-columns:1fr}.panel{padding:16px}}
+@media print{header,footer,.no-print,.actions{display:none!important}.panel{box-shadow:none;break-inside:avoid}.dashboard{padding:0}body{background:white}}
+</style></head><body>
+<header class="top"><div class="wrap"><div class="nav"><a class="brand" href="./"><img class="brand-icon" src="trizentro-icon.svg" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><nav aria-label="Navigatie"><a href="./">Home</a><a href="race-planner.html">Race Planner</a><a href="race-fuel-planner.html">Fuel Planner</a></nav></div></div></header>
+<main class="dashboard"><p class="muted"><a href="./">Home</a> / Race Dashboard</p>
+<div class="eyebrow">TRIZENTRO / ONE RACE. ONE PLAN.</div>
+<h1>Jouw race. Eén overzicht.</h1>
+<p class="intro">Maak een persoonlijk raceoverzicht met splits, doeltijd, voorbereiding en een eenvoudige voedingsberekening. Je kunt het plan op dit apparaat opslaan, als tekst downloaden of printen. Gratis en zonder account.</p>
+<section class="panel"><h2>01 / Jouw wedstrijd</h2>
+<div class="fields">
+<label class="field">Wedstrijdnaam<input id="name" maxlength="90" value="Mijn triatlon"></label>
+<label class="field">Afstand<select id="distance"><option value="sprint">Sprint</option><option value="olympic">Olympisch</option><option value="half" selected>70.3 / Halve</option><option value="full">Full distance</option></select></label>
+<label class="field">Wedstrijddatum<input id="date" type="date" value="2027-06-20"></label>
+<label class="field">Starttijd<input id="start" type="time" value="08:00"></label>
+<label class="field">Zwemtempo (min:sec /100m)<input id="swim" value="2:00" inputmode="numeric" placeholder="2:00"></label>
+<label class="field">Fietssnelheid (km/u)<input id="bike" type="number" min="10" max="60" step="0.1" value="33"></label>
+<label class="field">Looptempo (min:sec /km)<input id="run" value="5:00" inputmode="numeric" placeholder="5:00"></label>
+<label class="field">Doeltijd (uu:mm)<input id="goal" placeholder="05:00" value="05:00"></label>
+<label class="field">T1 (minuten)<input id="t1" type="number" min="0" max="30" step="0.5" value="4"></label>
+<label class="field">T2 (minuten)<input id="t2" type="number" min="0" max="30" step="0.5" value="3"></label>
+<label class="field">Reistijd (minuten)<input id="travel" type="number" min="0" max="1440" step="1" value="35"></label>
+<label class="field">Voorbereiding + buffer (minuten)<input id="prep" type="number" min="0" max="480" step="1" value="110"><small>Parkeren, wisselzone, warming-up en speling samen</small></label>
+</div>
+<p class="muted">Je kunt elke waarde aanpassen. De doeltijd is een rekendoel, geen gegarandeerde finish.</p>
+</section>
+<section class="panel"><h2>02 / Samenvatting</h2>
+<p id="error" class="error" role="alert" hidden></p>
+<div id="results">
+<div class="result-grid">
+<div class="stat"><span>Verwachte eindtijd</span><strong id="finish">—</strong><span>Rekenkundig op basis van tempo's</span></div>
+<div class="stat"><span>Verschil met doeltijd</span><strong id="difference">—</strong><span>Negatief betekent onder je doel</span></div>
+<div class="stat"><span>Geschatte finishklok</span><strong id="finish-clock">—</strong><span>Vanaf ingevoerde starttijd</span></div>
+<div class="stat"><span>Uiterlijk vertrek</span><strong id="departure">—</strong><span id="departure-day">Inclusief eigen voorbereidingstijd</span></div>
+</div>
+<div class="tablewrap"><table><thead><tr><th>Onderdeel</th><th>Duur</th><th>Voorbij sinds start</th><th>Kloktijd</th></tr></thead><tbody id="splits"></tbody></table></div>
+</div>
+</section>
+<section class="panel"><h2>03 / Voeding als rekenscenario</h2>
+<p>Vul hier alleen hoeveelheden in die je tijdens training hebt getest. De tool rekent een koolhydraatdoel voor het fiets- en loopdeel uit, maar geeft geen persoonlijk voedings- of vochtadvies.</p>
+<div class="fields">
+<label class="field">Eigen doel (gram koolhydraten/uur)<input id="carbs" type="number" min="0" max="200" value="60" step="1"></label>
+<label class="field">Koolhydraten per gel (gram)<input id="gel" type="number" min="1" max="150" value="25" step="1"></label>
+<label class="field">Koolhydraten per bidon (gram)<input id="bottle" type="number" min="0" max="200" value="40" step="1"></label>
+<label class="field">Geplande bidons fietsdeel<input id="bottles" type="number" min="0" max="20" value="2" step="1"></label>
+</div>
+<p class="note" id="nutrition">—</p>
+<p class="muted">Deze vereenvoudigde berekening houdt geen rekening met ander voedsel, vochtbehoefte, individuele tolerantie of verzorgingsposten. De uitkomst is geen innameschema.</p>
+</section>
+<section class="panel"><h2>04 / Wedstrijdchecklist</h2>
+<div class="checks" id="checks">
+<label><input type="checkbox">Starttijden, route en cut-offs gecontroleerd</label>
+<label><input type="checkbox">Wisselzone- en fiets-incheckregels gelezen</label>
+<label><input type="checkbox">Zwemspullen en eventueel wetsuit klaargelegd</label>
+<label><input type="checkbox">Fiets, helm, banden en reparatiespullen gecontroleerd</label>
+<label><input type="checkbox">Fietsschoenen, loopschoenen en sokken ingepakt</label>
+<label><input type="checkbox">Geteste voeding en drinkplan klaar</label>
+<label><input type="checkbox">Vervoer, parkeren en vertrektijd bevestigd</label>
+<label><input type="checkbox">Weerbericht en racebriefing bekeken</label>
+</div>
+</section>
+<section class="panel"><h2>05 / Bewaar jouw plan</h2>
+<p class="muted">Opslaan gebruikt alleen de lokale browseropslag op dit apparaat. Er is geen login en er worden geen gegevens naar TriZentro verzonden. Gebruik je een gedeeld apparaat, download of print liever je plan en verwijder daarna de opgeslagen versie.</p>
+<div class="actions no-print">
+<button id="save" type="button">Bewaar op dit apparaat</button>
+<button id="load" class="secondary" type="button">Laad opgeslagen plan</button>
+<button id="download" class="secondary" type="button">Download .txt</button>
+<button id="print" class="secondary" type="button">Print / bewaar als PDF</button>
+<button id="clear" class="secondary" type="button">Verwijder opgeslagen plan</button>
+</div>
+<p id="status" class="muted" role="status" aria-live="polite">Nog niet lokaal opgeslagen.</p>
+<p class="note caution">Bij het herladen van de pagina worden invoervelden niet automatisch teruggezet. Gebruik dan 'Laad opgeslagen plan'. De sportberekeningen zijn theoretisch. Raadpleeg officiële evenementinformatie en gekwalificeerde professionals voor individuele gezondheids- of voedingsvragen.</p>
+<p>Wil je meer detail? Open de <a href="race-planner.html">Race Planner</a>, <a href="race-fuel-planner.html">Fuel Planner</a>, <a href="race-day-timeline.html">Race Day Timeline</a> of de <a href="70-3-raceplan.html">70.3-gids</a>.</p>
+</section></main>
+<footer><div class="wrap"><a class="brand" href="./"><img class="brand-icon" src="trizentro-icon.svg" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><a href="transparantie.html">Privacy en transparantie</a></div></footer>
+<script src="race-planner-core.js"></script><script>
+(()=>{
+"use strict";
+const core=window.RacePlannerCore;
+const ids=["name","distance","date","start","swim","bike","run","goal","t1","t2","travel","prep","carbs","gel","bottle","bottles"];
+const $=id=>document.getElementById(id);
+const fmtSecs=sec=>core.formatDuration(sec);
+const fmt=n=>new Intl.NumberFormat("nl-NL",{maximumFractionDigits:1}).format(n);
+const storageKey="trizentro:race-dashboard:v1";
+const safeNum=(id,min,max,integer=false)=>{const v=$(id).value.trim(),n=Number(v);if(v===""||!Number.isFinite(n)||n<min||n>max||(integer&&!Number.isInteger(n)))throw Error("Controleer de invoer bij "+id+".");return n;};
+function values(){
+const date=$("date").value,start=$("start").value;
+if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!/^([01]\d|2[0-3]):[0-5]\d$/.test(start))throw Error("Vul een geldige wedstrijddatum en starttijd in.");
+const [year,month,day]=date.split("-").map(Number),[hour,minute]=start.split(":").map(Number);
+const dateObject=new Date(year,month-1,day,hour,minute);
+if(dateObject.getFullYear()!==year||dateObject.getMonth()!==month-1||dateObject.getDate()!==day||dateObject.getHours()!==hour||dateObject.getMinutes()!==minute)throw Error("Ongeldige wedstrijddatum.");
+const distance=$("distance").value;
+if(!["sprint","olympic","half","full"].includes(distance))throw Error("Ongeldige afstand.");
+const input={distance,swimPace:$("swim").value,bikeSpeed:safeNum("bike",10,60),runPace:$("run").value,t1Minutes:safeNum("t1",0,30),t2Minutes:safeNum("t2",0,30),start,target:$("goal").value};
+return {input, dateObject, travel:safeNum("travel",0,1440,true),prep:safeNum("prep",0,480,true),carbs:safeNum("carbs",0,200),gel:safeNum("gel",1,150),bottle:safeNum("bottle",0,200),bottles:safeNum("bottles",0,20,true)};
+}
+let exportText="";
+function calculate(){
+try{
+const v=values(),result=core.calculate(v.input);
+const target=v.input.target.trim()?core.targetToSeconds(v.input.target):null;
+$("error").hidden=true;$("results").hidden=false;$("nutrition").hidden=false;$("download").disabled=false;
+$("finish").textContent=fmtSecs(result.total);
+const diff=target===null?null:Math.round(result.total-target);
+$("difference").textContent=diff===null?"Geen doel":(diff>0?"+":"")+(diff<0?"−":"")+(Math.abs(diff)/3600>=1?fmtSecs(Math.abs(diff)):fmtSecs(Math.abs(diff)));
+const finishDate=new Date(v.dateObject.getTime()+result.total*1000);
+const depDate=new Date(v.dateObject.getTime()-(v.travel+v.prep)*60000);
+const clock=d=>d.toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"});
+const dated=d=>d.toLocaleDateString("nl-NL",{day:"numeric",month:"short"});
+$("finish-clock").textContent=clock(finishDate);
+$("departure").textContent=clock(depDate);
+$("departure-day").textContent=dated(depDate)+" · reistijd + voorbereiding";
+const data=[
+["Zwemmen",result.swim],
+["T1",result.t1],
+["Fietsen",result.bike],
+["T2",result.t2],
+["Lopen",result.run]
+];
+const body=$("splits");body.replaceChildren();
+let elapsed=0;for(const [label,seconds] of data){
+elapsed+=seconds;const row=document.createElement("tr");
+for(const val of [label,fmtSecs(seconds),fmtSecs(elapsed),clock(new Date(v.dateObject.getTime()+elapsed*1000))]){
+const cell=document.createElement("td");cell.textContent=val;row.appendChild(cell);
+}body.appendChild(row);
+}
+const bikeGoal=result.bike/3600*v.carbs,runGoal=result.run/3600*v.carbs;
+const drink=v.bottles*v.bottle;
+const bikeGels=Math.max(0,Math.ceil((bikeGoal-drink-1e-9)/v.gel));
+const runGels=Math.max(0,Math.ceil((runGoal-1e-9)/v.gel));
+$("nutrition").textContent="Eigen rekendoel: "+fmt(bikeGoal+runGoal)+" g koolhydraten over fiets- en loopdeel. Bij "+v.bottles+" ingevoerde bidons ("+fmt(drink)+" g totaal) en "+fmt(v.gel)+" g per gel: ongeveer "+bikeGels+" gels op de fiets en "+runGels+" gels tijdens het lopen. Afronding op hele gels kan je doel overschrijden; dit is geen voedingsadvies.";
+const checks=[...document.querySelectorAll("#checks input")];
+exportText=["TRIZENTRO · RACE DASHBOARD","Wedstrijd: "+$("name").value,"Datum: "+$("date").value,"Afstand: "+core.DISTANCES[v.input.distance].name,"Start: "+v.input.start,"Eindtijd (rekenvoorbeeld): "+fmtSecs(result.total),"Doeltijd: "+(v.input.target||"geen"),"Vertrek uiterlijk: "+dated(depDate)+" "+clock(depDate),"",...data.map(([label,seconds])=>label+": "+fmtSecs(seconds)),"","Voeding: "+$("nutrition").textContent,"","Checklist:",...checks.map(x=>(x.checked?"[x] ":"[ ] ")+x.parentElement.textContent.trim()),"","Alle berekeningen zijn hypothetisch. Officiële regels en persoonlijke behoeften gaan voor."].join("\n");
+}catch(e){$("error").hidden=false;$("error").textContent=e.message;$("results").hidden=true;$("nutrition").textContent="Controleer de ingevoerde waarden.";$("download").disabled=true;exportText="";}
+}
+document.querySelectorAll("input,select").forEach(x=>x.addEventListener("input",calculate));
+$("save").addEventListener("click",()=>{
+if(!exportText){$("status").textContent="Corrigeer eerst de invoer.";return;}
+const snapshot={version:1,fields:Object.fromEntries(ids.map(id=>[id,$(id).value])),checks:[...document.querySelectorAll("#checks input")].map(x=>x.checked)};
+try{localStorage.setItem(storageKey,JSON.stringify(snapshot));$("status").textContent="Plan lokaal bewaard op dit apparaat.";}catch(e){$("status").textContent="Opslaan is in deze browser niet mogelijk. Gebruik downloaden.";}
+});
+$("load").addEventListener("click",()=>{
+try{const saved=JSON.parse(localStorage.getItem(storageKey)||"null");
+if(!saved||saved.version!==1||!saved.fields){$("status").textContent="Geen opgeslagen plan gevonden.";return;}
+ids.forEach(id=>{if(typeof saved.fields[id]==="string"&&saved.fields[id].length<1000)$(id).value=saved.fields[id];});
+[...document.querySelectorAll("#checks input")].forEach((x,i)=>x.checked=Boolean(saved.checks&&saved.checks[i]));
+calculate();$("status").textContent="Opgeslagen plan geladen.";}catch(e){$("status").textContent="Plan kon niet worden geladen.";}
+});
+$("clear").addEventListener("click",()=>{try{localStorage.removeItem(storageKey);$("status").textContent="Lokaal opgeslagen plan verwijderd.";}catch(e){$("status").textContent="Browseropslag is niet toegankelijk.";}});
+$("download").addEventListener("click",()=>{if(!exportText)return;const u=URL.createObjectURL(new Blob([exportText],{type:"text/plain;charset=utf-8"}));const a=document.createElement("a");a.href=u;a.download="trizentro-race-dashboard.txt";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);});
+$("print").addEventListener("click",()=>window.print());
+calculate();
+})();
+</script></body></html>
