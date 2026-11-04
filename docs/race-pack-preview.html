@@ -127,9 +127,11 @@
 (()=>{
 "use strict";
 const $=id=>document.getElementById(id),core=window.RacePlannerCore;
+const locale=(window.TriZentroI18n&&window.TriZentroI18n.lang)||'en';
+const nl=locale==='nl';
 let exported="";
 function details(){return {distance:"half",swimPace:$("swim").value,bikeSpeed:$("bike").value,runPace:$("run").value,t1Minutes:$("t1").value,t2Minutes:$("t2").value,start:$("start").value,target:$("target").value};}
-const signed=n=>n===0?"Same as baseline":(n>0?"+":"−")+core.formatDuration(Math.abs(n))+" vs baseline";
+const signed=n=>n===0?(nl?"Gelijk aan basisplan":"Same as baseline"):(n>0?"+":"−")+core.formatDuration(Math.abs(n))+(nl?" t.o.v. basisplan":" vs baseline");
 function render(){
 try{
 const input=details(),base=core.calculate(input),scenarios=core.compareScenarios(input);
@@ -147,14 +149,14 @@ input,
 {...input,swimPace:core.secondsToPace(clamp(values-5,60,360)),bikeSpeed:clamp(bike+1,10,60),runPace:core.secondsToPace(clamp(run-10,120,900))}
 ];
 const results=scenarioInputs.map(s=>core.calculate(s));
-const minutes=id=>{const raw=$(id).value.trim(),num=Number(raw);if(raw===""||!Number.isInteger(num)||num<Number($(id).min)||num>Number($(id).max))throw Error("Check "+id+" minutes.");return num;};
+const minutes=id=>{const raw=$(id).value.trim(),num=Number(raw);if(raw===""||!Number.isInteger(num)||num<Number($(id).min)||num>Number($(id).max))throw Error(nl?"Controleer de minuten bij "+id+".":"Check "+id+" minutes.");return num;};
 const morning=window.TriZentroRaceDossier.morningSchedule({
 date:$("race-date").value,start:input.start,
-travel:minutes("travel"),parking:minutes("parking"),setup:minutes("setup"),warmup:minutes("warmup"),buffer:minutes("buffer")
+travel:minutes("travel"),parking:minutes("parking"),setup:minutes("setup"),warmup:minutes("warmup"),buffer:minutes("buffer"),locale
 });
 const morningBody=$("morning");morningBody.replaceChildren();
 for(const item of morning){const tr=document.createElement("tr");for(const value of [item.time,item.label]){const td=document.createElement("td");td.textContent=value;tr.appendChild(td);}morningBody.appendChild(tr);}
-const checkpoints=window.TriZentroRaceDossier.checkpoints(results[1],core,input.start);
+const checkpoints=window.TriZentroRaceDossier.checkpoints(results[1],core,input.start,locale);
 const checkpointBody=$("dossier-checkpoints");checkpointBody.replaceChildren();
 for(const point of checkpoints){
 const tr=document.createElement("tr");
@@ -164,13 +166,15 @@ const cell=document.createElement("td");cell.textContent=value;tr.appendChild(ce
 checkpointBody.appendChild(tr);
 }
 const body=$("comparison");body.replaceChildren();
-const disciplines=[["Swim","swim"],["T1","t1"],["Bike","bike"],["T2","t2"],["Run","run"]];
+const disciplines=[[nl?"Zwemmen":"Swim","swim"],["T1","t1"],[nl?"Fietsen":"Bike","bike"],["T2","t2"],[nl?"Lopen":"Run","run"]];
 for(const [label,key] of disciplines){const row=document.createElement("tr");for(const x of [label,...results.map(r=>core.formatDuration(r[key]))]){const cell=document.createElement("td");cell.textContent=x;row.appendChild(cell);}body.appendChild(row);}
 const goal=base.target;
-$("goal-note").textContent=goal===null?"No finish target entered.":(base.total<=goal?"Your baseline arithmetic is within your selected target by ":"Your baseline arithmetic is above your selected target by ")+core.formatDuration(Math.abs(goal-base.total))+". Actual racing may differ.";
+$("goal-note").textContent=goal===null?(nl?"Geen doeltijd ingevuld.":"No finish target entered."):
+(base.total<=goal?(nl?"Je basisplan is sneller dan je doeltijd met ":"Your baseline arithmetic is within your selected target by "):(nl?"Je basisplan is langzamer dan je doeltijd met ":"Your baseline arithmetic is above your selected target by "))
++core.formatDuration(Math.abs(goal-base.total))+(nl?". De werkelijkheid kan afwijken.":". Actual racing may differ.");
 exported=window.TriZentroRaceDossier.textDossier({
 name:$("race-name").value,date:$("race-date").value,start:input.start,target:input.target,
-scenarios:results,core,morning,
+scenarios:results,core,morning,locale,
 checks:[...document.querySelectorAll("#checklist label")].map(el=>({checked:el.querySelector("input").checked,label:el.textContent.trim()})),
 notes:$("race-notes").value
 });
