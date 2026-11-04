@@ -29,7 +29,7 @@ test('tools describe only real free webapp offerings, no fake ratings',()=>{
     assert.equal(obj['@type'],'WebApplication');
     assert.equal(obj.offers.price,0);
     assert.equal(obj.isAccessibleForFree,true);
-    assert.equal(obj.publisher.name,'SportTech Deals');
+    assert.equal(obj.publisher.name,'TriZentro');
     assert.equal('aggregateRating' in obj,false);
     assert.equal('review' in obj,false);
   }
