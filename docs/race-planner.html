@@ -107,6 +107,28 @@
 <p class="tri-error no-print" id="validation-error" role="alert"></p>
 <p class="tri-note">Dit is een theoretische berekening op basis van constante tempo's. Wind, parcours, openwatercondities, vermoeidheid en pauzes kunnen de werkelijke tijd veranderen.</p>
 </section>
+<section class="tri-panel tri-insights" id="goal-analysis" aria-labelledby="goal-insight-heading" hidden>
+<div class="tri-eyebrow">Goal mode / Doeltijd terugrekenen</div>
+<h2 id="goal-insight-heading">Wat moet je doen voor jouw doeltijd?</h2>
+<p class="intro">We rekenen steeds <strong>één onderdeel tegelijk</strong> terug, terwijl de andere tempo's en wissels gelijk blijven. Elke kaart is dus een afzonderlijk alternatief, geen advies om ze alle drie tegelijk te halen.</p>
+<div class="tri-insight-grid">
+<article class="tri-insight swim"><span>🏊 Zwemmen</span><strong id="goal-swim">—</strong><p id="goal-swim-note">Vul een doeltijd in.</p><button class="tri-btn secondary" type="button" data-goal-apply="swim" hidden>Gebruik dit tempo</button></article>
+<article class="tri-insight bike"><span>🚴 Fietsen</span><strong id="goal-bike">—</strong><p id="goal-bike-note">Vul een doeltijd in.</p><button class="tri-btn secondary" type="button" data-goal-apply="bike" hidden>Gebruik deze snelheid</button></article>
+<article class="tri-insight run"><span>🏃 Hardlopen</span><strong id="goal-run">—</strong><p id="goal-run-note">Vul een doeltijd in.</p><button class="tri-btn secondary" type="button" data-goal-apply="run" hidden>Gebruik dit tempo</button></article>
+</div>
+<p class="tri-note">“Buiten bereik” betekent dat één discipline binnen de invoergrenzen van deze calculator het doel niet zelfstandig kan oplossen. Dit zegt niets over je fysieke mogelijkheden. Test elk aangepast tempo altijd realistisch.</p>
+</section>
+<section class="tri-panel tri-insights" aria-labelledby="scenario-insight-heading">
+<div class="tri-eyebrow">Scenario lab / Vergelijking</div>
+<h2 id="scenario-insight-heading">Wat als je iets sneller of rustiger gaat?</h2>
+<p class="intro">Vergelijk drie <strong>rekenvoorbeelden</strong>: ±5 seconden per 100 m zwemmen, ±1 km/u fietsen en ±10 seconden per kilometer lopen. De wisseltijden blijven gelijk; bij invoergrenzen kan een verschil kleiner uitvallen.</p>
+<div class="tri-insight-grid">
+<article class="tri-insight slower"><span>Rustiger</span><strong id="scenario-slower-time">—</strong><p id="scenario-slower-delta">Ten opzichte van jouw invoer</p></article>
+<article class="tri-insight baseline"><span>Jouw invoer</span><strong id="scenario-base-time">—</strong><p id="scenario-base-delta">Huidig scenario</p></article>
+<article class="tri-insight faster"><span>Sneller</span><strong id="scenario-faster-time">—</strong><p id="scenario-faster-delta">Ten opzichte van jouw invoer</p></article>
+</div>
+<p class="tri-note">Sneller fietsen kan het hardlopen beïnvloeden. Deze scenario’s houden geen rekening met vermoeidheid, weersomstandigheden of parcours. Het zijn geen voorspellingen.</p>
+</section>
 <section class="tri-panel" aria-labelledby="timeline-title">
 <div class="tri-eyebrow">04 / Race timeline</div>
 <h2 id="timeline-title">Doorkomstschema</h2>
