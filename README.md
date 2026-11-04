@@ -3,7 +3,7 @@
 
 **TriZentro** maakt gratis triatloncalculators en raceplanners voor Sprint, Olympisch, 70.3, Full en eigen afstanden. De huidige tools werken in de browser; digitale producten en geautoriseerde affiliateprijsvergelijkingen zijn mogelijke toekomstige verdienmodellen. De naam, domeinen en socialmediahandles zijn juridisch en technisch nog niet volledig gecontroleerd. Er zijn nog geen accounts of domeinen onder TriZentro geregistreerd.
 
-[**Merkidentiteit, socialmedia- en Google-accountplan**](docs/BRAND_TRIZENTRO.md) · [**Live website (bestaande GitHub-URL)**](https://samknook.github.io/sporttech-deals/)
+[**Merkidentiteit, socialmedia- en Google-accountplan**](docs/BRAND_TRIZENTRO.md) · [**Brand Kit: PNG-avatar en banner**](https://samknook.github.io/sporttech-deals/brand-kit.html) · [**Live website (bestaande GitHub-URL)**](https://samknook.github.io/sporttech-deals/)
 
 ## Historische SportTech Deals-prijsscanner
 
