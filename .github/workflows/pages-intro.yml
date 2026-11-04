@@ -10,6 +10,7 @@ on:
       - 'docs/site.css'
       - 'docs/trizentro-icon.svg'
       - 'docs/trizentro-wordmark.svg'
+      - 'docs/brand-kit.html'
       - 'docs/fietscomputer-triatlon.html'
       - 'docs/fietscomputer-aanbieding.html'
       - 'docs/triatlon-afstanden.html'
@@ -56,6 +57,7 @@ jobs:
           test -s docs/site.css
           test -s docs/trizentro-icon.svg
           test -s docs/trizentro-wordmark.svg
+          test -s docs/brand-kit.html
           test -s docs/70-3-eindtijd-calculator.html
           test -s docs/triathlon-calculator.html
           test -s docs/triathlon.css
@@ -141,6 +143,7 @@ jobs:
           expected = {
               '': ['name="3045ec1a300a1b5"', 'content="e43119facc31c6d54302cec101a02834"', 'href="race-planner.html"'],
               'trizentro-icon.svg': ['<svg', 'TriZentro'],
+              'brand-kit.html': ['trizentro-avatar-1080.png', 'download-banner'],
               'triathlon-calculator.html': ['id="distance-selector"', 'triathlon-calculator-app.js', 'race-insights.js', 'id="goal-analysis"', 'triathlon.css'],
               'triatlon-afstanden.html': ['Triatlon afstanden', 'Sprint berekenen', 'Olympisch berekenen', 'rel="canonical"'],
               'triathlon-calculator-app.js': ['changeDistance', 'RacePlannerCore'],
