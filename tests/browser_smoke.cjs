@@ -32,6 +32,19 @@ const {chromium}=require('playwright');
    assert.match(await page.locator('#goal-status').innerText(),/Binnen doel/);
    await page.locator('[data-distance="full"]').click();
    assert.equal(await page.locator('#goal-analysis').isVisible(),false);
+   await page.goto('http://127.0.0.1:8765/brand-kit.html');
+   assert.equal(await page.locator('#avatar').getAttribute('width'),'1080');
+   assert.equal(await page.locator('#banner').getAttribute('width'),'1200');
+   for(const [button,filename] of [['download-avatar','trizentro-avatar-1080.png'],['download-banner','trizentro-banner-1200x630.png']]){
+     const requested=page.waitForEvent('download');
+     await page.locator('#'+button).click();
+     const file=await requested;
+     assert.equal(file.suggestedFilename(),filename);
+     const bytes=require('node:fs').readFileSync(await file.path());
+     assert.equal(bytes.toString('hex',0,4),'89504e47','Invalid PNG for '+filename);
+     assert.ok(bytes.length>10000,'Unexpectedly small PNG for '+filename);
+   }
+   assert.equal(errors.length,0,'Brand kit errors: '+errors.join('; '));
    assert.equal(errors.length,0,errors.join('; '));
    if(viewport.width<500){
     const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
