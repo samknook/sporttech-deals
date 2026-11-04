@@ -17,6 +17,8 @@ on:
       - 'docs/triathlon.css'
       - 'docs/race-planner-core.js'
       - 'docs/race-planner-app.js'
+      - 'docs/race-insights.js'
+      - 'tests/test_race_ui.cjs'
       - 'tests/test_race_planner.cjs'
       - 'docs/robots.txt'
       - 'docs/sitemap.xml'
@@ -72,6 +74,8 @@ jobs:
           test -s docs/race-planner-app.js
           node --check docs/race-planner-core.js
           node --check docs/race-planner-app.js
+          node --check docs/race-insights.js
+          node --test tests/test_race_ui.cjs
           node --test tests/test_race_planner.cjs
           test -s docs/fietscomputer-triatlon.html
           test -s docs/fietscomputer-aanbieding.html
@@ -112,11 +116,12 @@ jobs:
           base = os.environ['STD_PUBLIC_SITE']
           expected = {
               '': ['name="3045ec1a300a1b5"', 'content="e43119facc31c6d54302cec101a02834"', 'href="race-planner.html"'],
-              'triathlon-calculator.html': ['id="distance-selector"', 'triathlon-calculator-app.js', 'triathlon.css'],
+              'triathlon-calculator.html': ['id="distance-selector"', 'triathlon-calculator-app.js', 'race-insights.js', 'id="goal-analysis"', 'triathlon.css'],
               'triathlon-calculator-app.js': ['changeDistance', 'RacePlannerCore'],
+              'race-insights.js': ['RaceInsights', 'goalPacing', 'compareScenarios'],
               'triathlon.css': ['.distance-selector', '.tri-split-visual'],
               '70-3-eindtijd-calculator.html': ['triathlon-calculator.html?distance=half'],
-              'race-planner.html': ['id="timeline"', 'race-planner-core.js', 'race-planner-app.js'],
+              'race-planner.html': ['id="timeline"', 'id="goal-analysis"', 'race-planner-core.js', 'race-planner-app.js', 'race-insights.js'],
               'race-planner-core.js': ['RacePlannerCore', 'SWIM_METERS'],
               'race-planner-app.js': ['download-plan', 'print-plan'],
           }
