@@ -1,4 +1,12 @@
-# SportTech Deals — MVP
+# TriZentro — Triathlon Race Tools
+**Internationale werknaam, 4 november 2026 · voorheen SportTech Deals / TriKoers.**
+
+**TriZentro** maakt gratis triatloncalculators en raceplanners voor Sprint, Olympisch, 70.3, Full en eigen afstanden. De huidige tools werken in de browser; digitale producten en geautoriseerde affiliateprijsvergelijkingen zijn mogelijke toekomstige verdienmodellen. De naam, domeinen en socialmediahandles zijn juridisch en technisch nog niet volledig gecontroleerd. Er zijn nog geen accounts of domeinen onder TriZentro geregistreerd.
+
+[**Merkidentiteit, socialmedia- en Google-accountplan**](docs/BRAND_TRIZENTRO.md) · [**Live website (bestaande GitHub-URL)**](https://samknook.github.io/sporttech-deals/)
+
+## Historische SportTech Deals-prijsscanner
+
 **Status: prototype. Niet commercieel gepubliceerd.**
 
 Een Nederlandstalige prijsvergelijker voor sportelektronica, te beginnen met Garmin- en Wahoo-fietscomputers. De site toont **geen verzonnen live winkelprijzen**. De prijsscanner gebruikt uitsluitend door de eigenaar geautoriseerde CSV-productfeeds; er wordt niet gescrapet en nooit automatisch gekocht.
