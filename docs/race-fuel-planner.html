@@ -93,25 +93,28 @@
 "use strict";
 const ids=["bike-min","run-min","target","gel","bottle","bike-bottles","run-bottles"];
 const el=id=>document.getElementById(id);
+const english=window.TriZentroI18n&&window.TriZentroI18n.lang==='en';
+const tr=(nl,en)=>english?en:nl;
+const locale=english?'en-GB':'nl-NL';
 let textPlan="";
-const fmt=n=>Number.isInteger(n)?String(n):n.toLocaleString("nl-NL",{maximumFractionDigits:1});
+const fmt=n=>Number.isInteger(n)?String(n):n.toLocaleString(locale,{maximumFractionDigits:1});
 function calculate(){
 const vals=Object.fromEntries(ids.map(id=>[id,Number(el(id).value)]));
 const valid=ids.every(id=>el(id).value.trim()!==""&&Number.isFinite(vals[id])&&vals[id]>=Number(el(id).min)&&vals[id]<=Number(el(id).max))&&Number.isInteger(vals["bike-bottles"])&&Number.isInteger(vals["run-bottles"])&&Number.isInteger(vals["bike-min"])&&Number.isInteger(vals["run-min"]);
 el("error").hidden=valid;el("results").hidden=!valid;el("download").disabled=!valid;
-if(!valid){el("error").textContent="Controleer de ingevulde waarden en grenzen. Gebruik geen negatieve of lege waarden.";textPlan="";return;}
+if(!valid){el("error").textContent=tr("Controleer de ingevulde waarden en grenzen. Gebruik geen negatieve of lege waarden.","Check your inputs and limits. Negative or empty values are not allowed.");textPlan="";return;}
 const target=vals.target, gel=vals.gel, bottle=vals.bottle;
 const compute=(label,time,count)=>{
 const goal=time*target/60,drink=count*bottle;
 const gels=Math.max(0,Math.ceil((goal-drink-1e-9)/gel));
 return {label,time,count,goal,drink,gels,actual:drink+gels*gel};
 };
-const bike=compute("Fietsen",vals["bike-min"],vals["bike-bottles"]);
-const run=compute("Lopen",vals["run-min"],vals["run-bottles"]);
+const bike=compute(tr("Fietsen","Bike"),vals["bike-min"],vals["bike-bottles"]);
+const run=compute(tr("Lopen","Run"),vals["run-min"],vals["run-bottles"]);
 const totalGoal=bike.goal+run.goal;
 el("total-target").textContent=fmt(totalGoal)+" g";
 el("total-gels").textContent=fmt(bike.gels+run.gels)+" gels";
-el("total-bottles").textContent=fmt(bike.count+run.count)+" bidons";
+el("total-bottles").textContent=fmt(bike.count+run.count)+tr(" bidons"," bottles");
 for(const [prefix,d] of [["bike",bike],["run",run]]){
 el(prefix+"-target").textContent=fmt(d.goal)+" g";
 el(prefix+"-drink").textContent=fmt(d.drink)+" g";
@@ -119,8 +122,10 @@ el(prefix+"-gels").textContent=fmt(d.gels);
 el(prefix+"-actual").textContent=fmt(d.actual)+" g";
 }
 const over=[bike,run].filter(d=>d.drink>d.goal+0.001).map(d=>d.label.toLowerCase());
-el("detail").textContent="Met "+fmt(gel)+" g per gel en "+fmt(bottle)+" g per bidon kom je volgens de ingevoerde hoeveelheden uit op "+fmt(bike.actual+run.actual)+" g koolhydraten in totaal."+(over.length?" Let op: de geplande drank alleen overschrijdt je ingevoerde koolhydraatdoel bij "+over.join(" en ")+".":"")+" De berekening geeft geen advies over een veilige hoeveelheid of spreiding.";
-textPlan=["TRIZENTRO - RACE FUEL PLAN","Eigen rekenscenario, geen medisch of voedingsadvies.","","Gepland doel: "+fmt(target)+" g per uur","Gel: "+fmt(gel)+" g koolhydraten","Bidon: "+fmt(bottle)+" g koolhydraten",...([bike,run].flatMap(d=>["",d.label+": "+d.time+" minuten","Bidons: "+d.count,"Doel: "+fmt(d.goal)+" g","Gels: "+d.gels,"Totaal berekend: "+fmt(d.actual)+" g"])),"","Controleer werkelijke beschikbaarheid, etiket en persoonlijke tolerantie. Niet voor medische of hydratatieadviezen."].join("\n");
+el("detail").textContent=english?
+"With "+fmt(gel)+" g per gel and "+fmt(bottle)+" g per bottle, the entered amounts total "+fmt(bike.actual+run.actual)+" g carbohydrate."+(over.length?" Note: planned drinks alone exceed your entered carbohydrate target during "+over.join(" and ")+".":"")+" This tool does not recommend safe amounts or timing.":
+"Met "+fmt(gel)+" g per gel en "+fmt(bottle)+" g per bidon kom je volgens de ingevoerde hoeveelheden uit op "+fmt(bike.actual+run.actual)+" g koolhydraten in totaal."+(over.length?" Let op: de geplande drank alleen overschrijdt je ingevoerde koolhydraatdoel bij "+over.join(" en ")+".":"")+" De berekening geeft geen advies over een veilige hoeveelheid of spreiding.";
+textPlan=["TRIZENTRO - RACE FUEL PLAN",tr("Eigen rekenscenario, geen medisch of voedingsadvies.","Your own calculation scenario, not medical or nutrition advice."),"",tr("Gepland doel: ","Planned target: ")+fmt(target)+" g "+tr("per uur","per hour"),tr("Gel: ","Gel: ")+fmt(gel)+" g "+tr("koolhydraten","carbohydrate"),tr("Bidon: ","Bottle: ")+fmt(bottle)+" g "+tr("koolhydraten","carbohydrate"),...([bike,run].flatMap(d=>["",d.label+": "+d.time+tr(" minuten"," minutes"),tr("Bidons: ","Bottles: ")+d.count,tr("Doel: ","Target: ")+fmt(d.goal)+" g","Gels: "+d.gels,tr("Totaal berekend: ","Total calculated: ")+fmt(d.actual)+" g"])),"",tr("Controleer werkelijke beschikbaarheid, etiket en persoonlijke tolerantie. Niet voor medische of hydratatieadviezen.","Check availability, product labels and individual tolerance. Not medical or hydration advice.")].join("\n");
 }
 ids.forEach(id=>el(id).addEventListener("input",calculate));
 el("download").addEventListener("click",()=>{
