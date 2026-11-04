@@ -31,7 +31,7 @@ jobs:
           import time
           import urllib.request
 
-          base = 'https://samknook.github.io/sporttech-deals/'
+          base = 'https://samknook.github.io/trizentro/'
           checks = {
               base: [
                   '<meta name="google-site-verification" content="hMpAY4xSz1BBjiImUwCtvE_1hKk0XD56l4AEnsk7W14" />',
@@ -71,7 +71,7 @@ jobs:
           import urllib.parse
           import xml.etree.ElementTree as ET
 
-          base = 'https://samknook.github.io/sporttech-deals/'
+          base = 'https://samknook.github.io/trizentro/'
           url = base+'sitemap.xml'
           ns = '{http://www.sitemaps.org/schemas/sitemap/0.9}'
           required = {
