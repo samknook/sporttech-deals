@@ -10,6 +10,12 @@ const commonIds=['goal-analysis','goal-swim','goal-bike','goal-run',
   'goal-swim-note','goal-bike-note','goal-run-note',
   'scenario-slower-time','scenario-base-time','scenario-faster-time',
   'scenario-slower-delta','scenario-base-delta','scenario-faster-delta'];
+test('planner has every split and distance element referenced by its app',()=>{
+  const html=read('race-planner.html'),available=ids(html);
+  for(const id of ['swim-distance','bike-distance','run-distance','race-legs','time-total','timeline']){
+    assert.ok(available.has(id),'Planner missing dynamic display field '+id);
+  }
+});
 test('both tools have complete goal and scenario UI',()=>{
   for(const page of ['race-planner.html','triathlon-calculator.html']){
     const html=read(page),present=ids(html);
