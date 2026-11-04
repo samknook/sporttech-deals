@@ -95,3 +95,13 @@ footer p{color:#b0cbd4}
 .tz-lang-switch button[aria-pressed="true"]{background:#86eedb;color:#082d39;box-shadow:0 2px 6px #061b2933}
 .tz-lang-switch button:focus-visible{outline:3px solid #86eedb;outline-offset:3px}
 @media(max-width:420px){.tz-lang-switch{margin-left:0}.tz-lang-switch button{min-width:35px;padding:7px}.tz-mobile-menu>summary{min-width:77px;padding:9px 10px}}
+
+/* Keep brand, menu and language controls on one line on narrow phones. */
+@media(max-width:420px){
+ .top .nav{gap:5px}
+ .top .brand{font-size:15px;gap:5px;letter-spacing:-.055em}
+ .top .brand .brand-icon{width:25px;height:25px}
+ .tz-mobile-menu>summary{min-width:65px;padding:8px 7px;gap:4px;font-size:12px}
+ .tz-lang-switch{gap:1px;padding:2px}
+ .tz-lang-switch button{min-height:36px;min-width:29px;padding:5px;font-size:11px}
+}
