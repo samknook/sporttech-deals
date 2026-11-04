@@ -71,18 +71,7 @@ TriZentroAddTranslations('index.html','nl',[
 ['We volgen acht bekende modellen als startcatalogus. Nog zonder winkelprijzen: die verschijnen pas wanneer officiële, goedgekeurde productfeeds beschikbaar zijn.','Our starter catalog tracks eight popular models. Retail prices are not yet displayed; they will appear only when authorized feeds are available.'],
 ['Compact model met knoppen. Let bij vergelijking op uitvoering en accessoires.','Compact model with physical buttons. Compare editions and accessories.'],
 ['Vergelijk kaartfuncties, bediening en benodigde extra\'s.','Compare mapping, controls and the accessories you need.'],
-['Start here · Free 70.3 assessment','Begin hier · Gratis 70.3-check'],
-['What should you prepare next?','Wat moet je hierna voorbereiden?'],
-['Not sure where to start? Our free','Weet je niet waar te beginnen? Onze gratis'],
-['reviews 12 practical planning steps and gives you a focused action list — from event rules and transitions to fueling and race-morning logistics. This is a planning checklist, not a medical fitness test.','controleert 12 praktische voorbereidingspunten en geeft een gerichte actielijst: van wedstrijdregels en wissels tot voeding en de wedstrijdochtend. Dit is geen medische of fysieke geschiktheidstest.'],
-['Take the free 70.3 Readiness Check','Doe de gratis 70.3-voorbereidingscheck'],
-['Explore Blueprint & Race Pack','Bekijk Blueprint en Race Pack'],
-['70.3 beginner guide','70.3-gids voor beginners'],
-['The race-week checklist you can actually follow','Een raceweek-checklist waar je echt iets aan hebt'],
-['Seven days out, check-in, race morning: our new','Zeven dagen vooraf, inchecken, de wedstrijdochtend: onze nieuwe'],
-['walks through the steps beginners often overlook, from the official athlete guide to transition logistics. Read it free, then turn missing tasks into an action list.','behandelt wat beginners vaak vergeten, van de officiële deelnemershandleiding tot de wisselzone. Lees de gids gratis en maak een actielijst.'],
-['Read the race-week guide','Lees de raceweekgids'],
-['Check your preparation','Controleer je voorbereiding']
+
 ]);
 TriZentroAddTranslations('products.html','en',[
 ['TriZentro Products — Blueprint & Race Pack','TriZentro-producten — Blueprint en Race Pack'],
