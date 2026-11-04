@@ -102,6 +102,7 @@
           : core.formatDuration(-p.targetDifference)+' boven jouw doeltijd';
       $('goal-status').classList.toggle('neutral',p.targetDifference===null);
       setSplits(p);
+      window.RaceInsights.render(v);
       for(const point of p.checkpoints){
         const tr=document.createElement('tr');tr.dataset.sport=point.discipline;
         for(const cell of [point.label,point.distance,core.formatDuration(point.elapsed),point.clock]){
@@ -114,6 +115,7 @@
       $('validation-error').textContent=error.message;
       $('time-total').textContent='—';
       $('goal-status').textContent='Controleer de invoer';
+      window.RaceInsights.clear();
       for(const id of ['swim','bike','run','t1','t2']){
         $('split-'+id).textContent='—';$('bar-'+id).style.width='0%';
       }
@@ -178,6 +180,7 @@
     document.querySelectorAll('.check-item').forEach(x=>x.checked=false);
     checked();setDistance('half');
   });
+  window.RaceInsights.bind(render,values);
   checklist();
   const param=new URLSearchParams(window.location.search).get('distance');
   setDistance(param==='custom'||Object.prototype.hasOwnProperty.call(core.DISTANCES,param||'')?param:'half');
