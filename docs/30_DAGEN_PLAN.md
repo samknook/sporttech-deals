@@ -1,6 +1,10 @@
 # SportTech Deals — uitvoeringsplan eerste 30 dagen
 
 **Bijgewerkt: 4 november 2026. Eigenaar: samknook.**
+
+**Strategische aanvulling 4 november 2026:** dit oorspronkelijke plan richtte zich op affiliatie. De actuele prioriteitsverdeling is **70% gratis/digitale sporttools en 30% affiliate**. Zie [de recentere 8-weekse validatiestrategie](STRATEGIE_2_VERDIENMODELLEN.md). Het plan hieronder blijft bruikbaar voor het affiliategedeelte, maar heeft niet meer de hoogste prioriteit.
+
+
 **Richting:** onafhankelijke Nederlandstalige koopgids en daarna een prijsvergelijker, eerst voor Garmin- en Wahoo-fietscomputers. Geen dropshipping, geen voorraad, geen directe klantenservice als kernactiviteit.
 
 ## Beslisregels
