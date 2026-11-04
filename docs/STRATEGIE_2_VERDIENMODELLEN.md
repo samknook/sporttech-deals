@@ -31,7 +31,7 @@ SportTech Deals wordt een Nederlandstalig platform voor wielrenners en triatlete
 
 ## Eerste producthypothese
 
-**Gratis:** [70.3 eindtijdcalculator](../docs/70-3-eindtijd-calculator.html) (privacyvriendelijke statische pagina). Berekent 1,9 km zwemmen, 90 km fietsen, 21,0975 km hardlopen en twee wissels op basis van eigen invoer; geen trainingsadvies of daadwerkelijke eindtijdvoorspelling.
+**Gratis:** [70.3 eindtijdcalculator](../docs/70-3-eindtijd-calculator.html) en [70.3 Race Planner-preview](../docs/race-planner.html), beide privacyvriendelijke statische pagina's. De planner biedt theoretische tussentijden, een lokale materiaallijst, een printweergave en een exporteerbaar tekstplan. Dit zijn geen gegarandeerde voorspellingen, persoonlijke coaching of betaalde producten.
 
 **Mogelijk betaald:** een `70.3 Race Planner` met zelfstandig in te vullen wedstijdpacing, materiaallijst, reis-/racedagplanning, scenariovergelijking en een aanpasbare Excel/Google Sheets-template. Richtprijs als **testhypothese** €19–€29 eenmalig, niet nu gepubliceerd of verkocht. Een concrete prijs en aanbod pas kiezen na marktfeedback en kosten-/belastingcontrole.
 
@@ -41,7 +41,7 @@ SportTech Deals wordt een Nederlandstalig platform voor wielrenners en triatlete
 
 **Week 1–2**
 - [x] Gratis 70.3 calculator gemaakt en op de homepage gelinkt.
-- [ ] Syntaxis en berekening gecontroleerd via de publicatieworkflow.
+- [x] Zes Node-tests voor raceplannerberekeningen en JavaScript-syntaxiscontroles uitgevoerd via GitHub Pages-workflow.
 - [ ] Controleer in een echte browser de interface en mobiele weergave.
 - [ ] Kies een privacyvriendelijke manier om bezoeken/toolgebruik te meten; zonder meting niet suggereren dat er vraag is.
 - [ ] Affiliatecontacten monitoren (Daisycon en Odyssey).
@@ -49,7 +49,7 @@ SportTech Deals wordt een Nederlandstalig platform voor wielrenners en triatlete
 **Week 3–4**
 - [ ] Verzamel feitelijke zoek- en interessegegevens via Search Console of passende privacyvriendelijke analytics na eventuele verificatie.
 - [ ] Formuleer 2–3 concrete betaalde productproblemen die niet door gratis calculators worden opgelost.
-- [ ] Maak een compacte prototype-preview van de beste digitale planner, zonder betaalcheckout.
+- [x] Gratis interactieve Race Planner-preview gemaakt, zonder betaalcheckout of verzameling van gebruikersgegevens.
 - [ ] Onderzoek verkoopprovider en Nederlandse verplichtingen voor digitale leveringen; nog geen betaalde verkoop.
 
 **Week 5–6**
