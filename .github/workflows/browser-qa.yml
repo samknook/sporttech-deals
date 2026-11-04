@@ -11,6 +11,8 @@ on:
       - 'docs/triathlon-calculator.html'
       - 'docs/triathlon-calculator-app.js'
       - 'docs/triathlon.css'
+      - 'docs/brand-kit.html'
+      - 'docs/trizentro-icon.svg'
       - 'tests/browser_smoke.cjs'
       - '.github/workflows/browser-qa.yml'
   workflow_dispatch:
