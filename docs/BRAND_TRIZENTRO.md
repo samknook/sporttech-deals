@@ -2,6 +2,21 @@
 
 **Werknaam vastgesteld: 4 november 2026.** Dit is een **voorlopige productmerknaam**; er is nog geen domein, handelsnaam, merkregistratie, Gmail-account of socialmedia-profiel geclaimd of aangemaakt.
 
+## Besluit: zakelijk Google-account als exclusieve eigenaar (4 november 2026)
+
+De gebruiker wil **geen TriZentro-services op zijn privé-Google-account**. Daarom is de nieuwe hoofdregel:
+
+- [ ] Maak een **apart Google-account voor werk of zakelijk gebruik** aan via https://accounts.google.com/signup. Kies `Voor werk of zakelijk gebruik`. Een nieuw gratis Gmail-adres (bijvoorbeeld `trizentro.team@gmail.com`, indien beschikbaar) is het startpunt zolang er nog geen definitief eigen domein is.
+- [ ] Laat de **eigenaar zelf** gebruikersnaam, wachtwoord, herstelopties, passkey en eventuele telefoonverificatie invullen. Deel geen wachtwoorden of verificatiecodes via chat. Deze registratie kan niet door de beschikbare Google/Gmail-connector worden gedaan.
+- [ ] Stel **tweestapsverificatie** in. Gebruik eventueel een persoonlijk hersteladres uitsluitend voor herstel; het privé-Google-account wordt géén eigenaar van TriZentro-diensten.
+- [ ] Maak Search Console voor `https://samknook.github.io/sporttech-deals/` aan **ingelogd met het nieuwe zakelijke account**. Kies de URL-voorvoegsel-property en laat de eigenaar verifiëren met een unieke HTML-tag die op de site geplaatst kan worden.
+- [ ] Maak daarna YouTube-kanaal en Drive-map alleen onder dit zakelijke account aan. Koppel ook de Google-diensten in ChatGPT opnieuw met de juiste identiteit als gewenst.
+- [ ] Verbind de sociale profielen en eventueel Canva/Metricool met de merkidentiteit zodra hun officiële registratie is afgerond.
+- [ ] Google Workspace `admin@trizentro.com` is een toekomstige optie, **niet al aangemaakt**: vereist controle/aankoop van het domein en een betaald abonnement. Bestaande Gmail-identiteiten worden niet automatisch omgezet in een Workspace-gebruiker; regel eigendoms- en datamigratie expliciet indien later nodig.
+- [ ] **Geen Google Bedrijfsprofiel** als standaard instellen voor een puur online project zonder publiek toegankelijke klantlocatie; beoordeel eerst de toepasselijke deelnamevoorwaarden.
+
+**Status:** Het zakelijke Google-account **is nog niet aangemaakt**. Het plan en de voorgestelde e-mailadressen zijn geen registratiebevestiging.
+
 ## Update 4 november 2026 — echte merkassets en screening
 
 - [x] SVG-beeldmerk: [trizentro-icon.svg](trizentro-icon.svg), gebruikt als favicon en in de website-navigatie.
