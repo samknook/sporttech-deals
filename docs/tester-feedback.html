@@ -58,17 +58,21 @@
 (()=>{
 'use strict';
 const $=id=>document.getElementById(id);
+const lang=(window.TriZentroI18n&&window.TriZentroI18n.lang)||'en';
+const nl=lang==='nl';
+const dict=(window.TriZentroTranslations['tester-feedback.html']||{})[lang]||{};
+const tx=x=>dict[x]||x;
 function feedbackLines(){
  return [
-  'TRIZENTRO PRODUCT TESTER SCORECARD',
-  'Voluntary feedback, not a sale or purchase intent commitment.',
+  nl?'TRIZENTRO - FEEDBACK VOOR TESTERS':'TRIZENTRO PRODUCT TESTER SCORECARD',
+  nl?'Vrijwillige feedback, geen aankoop of toezegging.':'Voluntary feedback, not a sale or purchase intent commitment.',
   '',
-  'Product: '+$('product').value,
-  'Experience: '+$('experience').value,
-  'Helped with: '+$('value').value,
-  'Missing or confusing: '+$('missing').value,
-  'Willingness to pay (hypothetical): '+$('pay').value,
-  'Most wanted next feature: '+$('extra').value
+  (nl?'Product: ':'Product: ')+tx($('product').value),
+  (nl?'Ervaring: ':'Experience: ')+tx($('experience').value),
+  (nl?'Hielp bij: ':'Helped with: ')+$('value').value,
+  (nl?'Ontbrak of onduidelijk: ':'Missing or confusing: ')+$('missing').value,
+  (nl?'Hypothetische betalingsbereidheid: ':'Willingness to pay (hypothetical): ')+tx($('pay').value),
+  (nl?'Gewenste volgende functie: ':'Most wanted next feature: ')+$('extra').value
  ];
 }
 $('test-form').addEventListener('submit',event=>{
@@ -78,15 +82,15 @@ $('test-form').addEventListener('submit',event=>{
  const url=URL.createObjectURL(blob);
  const link=document.createElement('a');link.href=url;link.download='trizentro-tester-feedback.txt';
  document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
- $('status').textContent='Your feedback file was created locally. No answer has been sent to TriZentro.';
+ $('status').textContent=nl?'Je feedbackbestand is lokaal gemaakt. Er is niets naar TriZentro verzonden.':'Your feedback file was created locally. No answer has been sent to TriZentro.';
 });
 $('email-feedback').addEventListener('click',()=>{
  const body=feedbackLines().join('\n');
- const subject='TriZentro product tester feedback';
+ const subject=nl?'TriZentro feedback producttest':'TriZentro product tester feedback';
  const href='mailto:trizentro.team@gmail.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
  // Mail apps can impose length limits. This form caps each free-text field at 800 characters.
- if(href.length>7000){$('status').textContent='This message is too long for a reliable email draft. Download the .txt file and attach it instead.';return;}
- $('status').textContent='Opening your email app. Nothing is sent until you review and send your message.';
+ if(href.length>7000){$('status').textContent=nl?'Dit bericht is te lang voor een betrouwbaar e-mailconcept. Download het .txt-bestand en voeg het toe als bijlage.':'This message is too long for a reliable email draft. Download the .txt file and attach it instead.';return;}
+ $('status').textContent=nl?'Je e-mailapp wordt geopend. Er wordt niets verstuurd totdat je het bericht zelf controleert en verzendt.':'Opening your email app. Nothing is sent until you review and send your message.';
  window.location.href=href;
 });
 })();
