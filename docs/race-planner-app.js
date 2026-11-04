@@ -4,6 +4,9 @@
   const core=window.RacePlannerCore;
   if (!core) return;
   const $=id=>document.getElementById(id);
+  const english=window.TriZentroI18n&&window.TriZentroI18n.lang==='en';
+  const tr=(nl,en)=>english?en:nl;
+  const distName=id=>id==='olympic'?tr('Olympisch','Olympic'):id==='half'?tr('70.3 / Halve','70.3 / Half'):id==='custom'?tr('Eigen afstand','Custom distance'):core.DISTANCES[id].name;
   const ids=['event-name','race-date','start-time','swim-pace','bike-speed','run-pace','t1-minutes','t2-minutes','target-time','swim-meters','bike-km','run-km','race-notes'];
   const selector=$('distance-selector');
   const buttons=[...selector.querySelectorAll('[data-distance]')];
@@ -41,12 +44,12 @@
     buttons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.distance===key)));
     $('custom-distances').hidden=key!=='custom';
     $('distance-copy').textContent=key==='custom'
-      ? 'Vul hieronder zelf de zwem-, fiets- en loopafstand in.'
-      : core.DISTANCES[key].swimMeters.toLocaleString('nl-NL')+' m zwemmen · '+core.formatKm(core.DISTANCES[key].bikeKm)+' km fietsen · '+core.formatKm(core.DISTANCES[key].runKm)+' km lopen';
+      ? tr('Vul hieronder zelf de zwem-, fiets- en loopafstand in.','Enter the swim, bike and run distances below.')
+      : core.DISTANCES[key].swimMeters.toLocaleString(english?'en-GB':'nl-NL')+tr(' m zwemmen · ',' m swim · ')+core.formatKm(core.DISTANCES[key].bikeKm)+tr(' km fietsen · ',' km bike · ')+core.formatKm(core.DISTANCES[key].runKm)+tr(' km lopen',' km run');
     const target=$('target-time');
     // A target belongs to a distance: clearing avoids a misleading 70.3 sub-5 goal for Sprint or Full.
     target.value='';
-    $('distance-label').textContent=key==='custom'?'Eigen afstand':core.DISTANCES[key].name;
+    $('distance-label').textContent=distName(key);
     render();
   }
   function checklist(){
@@ -73,7 +76,7 @@
   function checked(){
     const nodes=[...document.querySelectorAll('.check-item')];
     const n=nodes.filter(x=>x.checked).length;
-    $('check-progress').textContent=n+' van '+nodes.length+' items afgevinkt';
+    $('check-progress').textContent=english?n+' of '+nodes.length+' items checked':n+' van '+nodes.length+' items afgevinkt';
   }
   function setSplits(p){
     const total=p.total;
@@ -84,22 +87,22 @@
     $('swim-distance').textContent=core.formatKm(p.distance.swimMeters,0)+' m';
     $('bike-distance').textContent=core.formatKm(p.distance.bikeKm)+' km';
     $('run-distance').textContent=core.formatKm(p.distance.runKm)+' km';
-    $('race-legs').textContent=core.formatKm(p.distance.swimMeters,0)+' m zwem · '+core.formatKm(p.distance.bikeKm)+' km fiets · '+core.formatKm(p.distance.runKm)+' km loop';
+    $('race-legs').textContent=core.formatKm(p.distance.swimMeters,0)+tr(' m zwem · ',' m swim · ')+core.formatKm(p.distance.bikeKm)+tr(' km fiets · ',' km bike · ')+core.formatKm(p.distance.runKm)+tr(' km loop',' km run');
   }
   function render(){
     const v=values();
     const tbody=$('timeline');tbody.replaceChildren();
-    $('race-name-view').textContent=v.eventName||'Mijn triatlon';
+    $('race-name-view').textContent=v.eventName||tr('Mijn triatlon','My triathlon');
     $('race-date-view').textContent=v.raceDate?' · '+v.raceDate:'';
     try{
       const p=core.calculate(v);
       $('validation-error').textContent='';
       $('time-total').textContent=core.formatDuration(p.total);
       $('goal-status').textContent=p.targetDifference===null
-        ? 'Voer optioneel een doeltijd in om te vergelijken.'
+        ? tr('Voer optioneel een doeltijd in om te vergelijken.','Optionally enter a finish target to compare.')
         : p.targetDifference>=0
-          ? 'Op koers: '+core.formatDuration(p.targetDifference)+' onder jouw doeltijd'
-          : core.formatDuration(-p.targetDifference)+' boven jouw doeltijd';
+          ? tr('Op koers: ','On target: ')+core.formatDuration(p.targetDifference)+tr(' onder jouw doeltijd',' below your finish target')
+          : core.formatDuration(-p.targetDifference)+tr(' boven jouw doeltijd',' above your finish target');
       $('goal-status').classList.toggle('neutral',p.targetDifference===null);
       setSplits(p);
       window.RaceInsights.render(v);
@@ -114,7 +117,7 @@
     }catch(error){
       $('validation-error').textContent=error.message;
       $('time-total').textContent='—';
-      $('goal-status').textContent='Controleer de invoer';
+      $('goal-status').textContent=tr('Controleer de invoer','Check your input');
       window.RaceInsights.clear();
       for(const id of ['swim','bike','run','t1','t2']){
         $('split-'+id).textContent='—';$('bar-'+id).style.width='0%';
