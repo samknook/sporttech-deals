@@ -1,0 +1,25 @@
+name: Check TriZentro Race Tools
+on:
+  push:
+    paths:
+      - 'docs/**'
+      - 'tests/race-dashboard.test.cjs'
+      - '.github/workflows/race-tools-check.yml'
+  pull_request:
+    paths:
+      - 'docs/**'
+      - 'tests/race-dashboard.test.cjs'
+      - '.github/workflows/race-tools-check.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  race-tools:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify race calculations, sitemap and dashboard integration
+        run: node --test tests/race-dashboard.test.cjs
