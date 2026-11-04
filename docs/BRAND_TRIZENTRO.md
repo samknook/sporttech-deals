@@ -6,6 +6,7 @@
 
 - [x] SVG-beeldmerk: [trizentro-icon.svg](trizentro-icon.svg), gebruikt als favicon en in de website-navigatie.
 - [x] SVG-woordmerk met pay-off: [trizentro-wordmark.svg](trizentro-wordmark.svg).
+- [x] [TriZentro Brand Kit](https://samknook.github.io/sporttech-deals/brand-kit.html) maakt een **1080×1080 PNG-avatar** en **1200×630 PNG-banner** lokaal in de browser, en heeft kopieerbare Engelse bio. De bestanden worden niet op een server opgeslagen. Gebruik pas op socialmedia na naam- en handlecontroles.
 - [x] Consistente Swim/Bike/Run-kleuren op de homepage; geen externe fonts, trackers of betaalde designsoftware.
 - [x] Eerste openbare zoekronde op exacte spelling `TriZentro`: geen duidelijk exact gebruik als triatlonplatform gevonden. **Dit is geen registratierapport en bewijst niet dat de naam vrij is.**
 - [!] Potentieel relevante vergelijkbare namen in andere sectoren: `Trisentra` (IT-consultancy), `Trizent` (IT-infrastructuur). Alleen een registercontrole per relevante goederen- en dienstenklasse kan de betekenis van de overlap helpen beoordelen.
