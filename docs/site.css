@@ -38,3 +38,40 @@ footer p{color:#b0cbd4}
 .product{background:#f8fcfd}
 .notice{background:#e9f6f5;border-color:#b5dcd6;color:#235a61}
 @media(max-width:620px){.brand .brand-icon{width:30px;height:30px}.tri-brand-race>div{padding:26px 5px 20px}.tri-brand-race{width:92%;gap:6px}}
+
+/* Shared TriZentro site navigation, responsive and keyboard-friendly. */
+.top .nav{position:relative;z-index:30}
+.tz-navigation{margin-left:auto;display:flex;align-items:center;min-width:0}
+.tz-nav-desktop{display:flex;gap:8px;align-items:center}
+.tz-navigation a,.tz-navigation summary{font:inherit;font-size:13px;font-weight:720;line-height:1.35;color:#e9f5f6;text-decoration:none}
+.tz-nav-desktop>a,.tz-nav-dropdown>summary{padding:12px 11px;border-radius:10px;display:flex;align-items:center;cursor:pointer;white-space:nowrap}
+.tz-nav-dropdown{position:relative}
+.tz-nav-dropdown>summary{list-style:none}
+.tz-nav-dropdown>summary::-webkit-details-marker,.tz-mobile-menu>summary::-webkit-details-marker{display:none}
+.tz-nav-dropdown>summary::after{content:"⌄";font-size:16px;margin-left:7px;line-height:1}
+.tz-nav-desktop>a:hover,.tz-nav-dropdown>summary:hover,.tz-nav-dropdown[open]>summary{background:#ffffff1d;text-decoration:none}
+.tz-navigation a[aria-current="page"]{background:#ffffff20;color:#9cf6e4}
+.tz-nav-submenu{position:absolute;z-index:50;top:calc(100% + 10px);left:0;min-width:225px;max-width:310px;padding:8px;background:#fff;border:1px solid #d6e5e7;border-radius:14px;box-shadow:0 18px 46px #071b2c3d}
+.tz-nav-dropdown:last-of-type .tz-nav-submenu{left:auto;right:0}
+.tz-nav-submenu a{display:block;padding:11px 13px;color:#173b4b;border-radius:8px;white-space:normal}
+.tz-nav-submenu a:hover,.tz-nav-submenu a:focus-visible{background:#e8f5f2;text-decoration:none}
+.tz-nav-submenu a[aria-current="page"]{background:#e2f5ef;color:#0b655f}
+.tz-mobile-menu{display:none;position:relative}
+.tz-mobile-menu>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;min-width:91px;padding:9px 13px;background:#ffffff20;border:1px solid #ffffff43;border-radius:11px;touch-action:manipulation}
+.tz-menu-bars{font-size:19px;line-height:1}
+.tz-navigation a:focus-visible,.tz-navigation summary:focus-visible{outline:3px solid #86eedb;outline-offset:3px}
+@media(max-width:1050px){
+ .tz-nav-desktop{display:none}
+ .tz-mobile-menu{display:block}
+ .tz-mobile-panel{position:absolute;z-index:100;right:0;top:calc(100% + 12px);width:min(360px,calc(100vw - 32px));max-height:min(74dvh,690px);overflow-y:auto;overscroll-behavior:contain;box-shadow:0 24px 70px #071b2c61;border:1px solid #ccdedf;border-radius:17px;padding:14px;background:#fff;color:#123b49}
+ .tz-mobile-panel a{display:block;min-height:43px;padding:10px 13px;color:#173b4b;border-radius:9px;font-size:14px;text-decoration:none}
+ .tz-mobile-panel a:hover,.tz-mobile-panel a:focus-visible{background:#eaf5f3}
+ .tz-mobile-panel a[aria-current="page"]{background:#d9f2eb;color:#075c50}
+ .tz-mobile-intro{color:#5e7580;font-size:12px;font-weight:800;letter-spacing:.05em;padding:4px 12px 11px;text-transform:uppercase}
+ .tz-mobile-group{padding:12px 0 6px;border-top:1px solid #e4eced}
+ .tz-mobile-heading{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.075em;color:#187e81;padding:0 13px 6px}
+ .tz-mobile-bottom{padding-top:8px}
+ /* Override older mobile rule that hid the second <nav> link. */
+ .nav nav.tz-navigation a:nth-child(2){display:block}
+}
+@media(max-width:420px){.top .nav{gap:8px}.top .brand{font-size:18px}.top .brand .brand-icon{width:29px;height:29px}.tz-mobile-panel{right:0}}
