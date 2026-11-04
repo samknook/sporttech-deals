@@ -1,54 +1,13 @@
-<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Gratis IRONMAN 70.3 racecalculator. Bereken je verwachte eindtijd op basis van zwemsnelheid, fietssnelheid, hardlooptempo en wisseltijden."><title>70.3 eindtijd calculator — zwem, fiets en loop | SportTech Deals</title><link rel="stylesheet" href="site.css">
-<style>.calc{background:#fff;border:1px solid #dce6db;border-radius:22px;padding:25px;margin:30px 0;box-shadow:0 15px 30px #11392a0c}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:13px;font-weight:800}.field input{background:#f5f8f1;color:#153d31;border:1px solid #bfd1c3;border-radius:10px;padding:12px 13px;font-size:20px;font-weight:800;min-width:0;width:100%}.field small{color:#6a7e70}.result{background:#0b392d;color:#fff;border-radius:18px;padding:25px;margin-top:22px}.result .big{font-size:clamp(42px,7vw,70px);line-height:1.1;letter-spacing:-.055em;font-weight:900;margin:6px 0}.result p{color:#d3e9d9}.split-list{display:grid;gap:16px;margin-top:26px}.split{display:grid;grid-template-columns:105px 95px 1fr;gap:14px;align-items:center}.split strong{font-size:15px}.split span{font-size:14px}.bar{height:13px;border-radius:20px;background:#e4ebe0;overflow:hidden}.bar b{display:block;height:100%;background:#387e61;border-radius:20px;width:1%;transition:width .15s}.fine{font-size:13px;color:#688173}.status{font-weight:900;color:#ddfaaa}.actions-calc{margin-top:20px;display:flex;gap:12px;flex-wrap:wrap}.actions-calc button{font:inherit;border:0;border-radius:10px;background:#d4f67d;color:#153d31;padding:10px 17px;font-weight:850;cursor:pointer}.actions-calc button.secondary{background:#e6f0e3}@media(max-width:600px){.fields{grid-template-columns:1fr}.calc{padding:16px}.split{grid-template-columns:85px 72px 1fr;gap:8px}}</style>
-</head><body><header class="top"><div class="wrap"><div class="nav"><a class="brand" href="./">SPORTTECH<span>DEALS.</span></a><nav aria-label="Navigatie"><a href="./">Home</a><a href="koopgids.html">Koopgids</a><a href="transparantie.html">Transparantie</a></nav></div></div></header>
-<main><article class="article wrap"><div class="tag">Gratis sporttool · Zonder registratie</div>
-<h1>Jouw IRONMAN 70.3 eindtijd berekenen</h1>
-<p style="font-size:18px">Wat gebeurt er met je eindtijd als je harder fietst, iets sneller zwemt of minder lang wisselt? Bereken live hoe jouw zwem-, fiets- en looptempo samenkomen over een halve triatlon.</p>
-<div class="calc"><div class="fields">
-<div class="field"><label for="swim">Zwemtempo — seconden per 100 meter</label><input id="swim" type="number" min="60" max="360" step="1" value="120"><small>Bijvoorbeeld 120 = 2:00 per 100 m</small></div>
-<div class="field"><label for="bike">Fietssnelheid — km/u</label><input id="bike" type="number" min="10" max="60" step="0.5" value="33"><small>Gemiddelde over 90 km inclusief vertragingen</small></div>
-<div class="field"><label for="run">Hardlooptempo — min:sec per km</label><input id="run" type="text" inputmode="numeric" value="5:00" maxlength="5" placeholder="5:00"><small>Bijvoorbeeld 5:00 per kilometer</small></div>
-<div class="field"><label for="t1">Wissel 1 — minuten</label><input id="t1" type="number" min="0" max="30" step="0.5" value="4"><small>Van zwemmen naar fietsen</small></div>
-<div class="field"><label for="t2">Wissel 2 — minuten</label><input id="t2" type="number" min="0" max="30" step="0.5" value="3"><small>Van fietsen naar lopen</small></div>
-</div>
-<section class="result" aria-live="polite"><div class="eyebrow" style="color:#d4f67d">Berekende totaalduur</div><div id="total" class="big">—</div><div id="goal" class="status">Berekenen…</div><p id="summary">Vul je tempo's in.</p></section>
-<div class="split-list" aria-label="Verdeling van de berekende eindtijd">
-<div class="split"><strong>Zwemmen</strong><span id="swim-time">—</span><div class="bar"><b id="swim-bar"></b></div></div>
-<div class="split"><strong>Fietsen</strong><span id="bike-time">—</span><div class="bar"><b id="bike-bar"></b></div></div>
-<div class="split"><strong>Hardlopen</strong><span id="run-time">—</span><div class="bar"><b id="run-bar"></b></div></div>
-<div class="split"><strong>Wissels</strong><span id="transition-time">—</span><div class="bar"><b id="transition-bar"></b></div></div>
-</div>
-<div class="actions-calc"><button id="sub5" type="button">Bekijk sub-5 voorbeeld</button><button id="reset" class="secondary" type="button">Herstel voorbeeld</button></div>
-<p class="fine" id="error" role="alert"></p>
-</div>
-<h2>Welke afstanden telt de calculator?</h2><p>Deze rekentool gebruikt de standaardafstanden van een 70.3-wedstrijd: 1,9 km zwemmen, 90 km fietsen en 21,0975 km hardlopen. Beide wissels zijn inbegrepen. De tool rondt tijden af op hele seconden en gebruikt de opgegeven gemiddelde snelheden alsof je die de hele discipline kunt vasthouden.</p>
-<h2>Wat zegt deze berekening niet?</h2><p>Het resultaat is <strong>geen persoonlijke eindtijdvoorspelling</strong>. Wateromstandigheden, parcours, wind, verkeer op het parcours, temperatuur, voeding, vermoeidheid, pacing en wedstrijdregels kunnen je werkelijke tijd sterk beïnvloeden. Gebruik de uitkomst om scenario's te vergelijken en toets je tempo's aan trainingen en ervaring.</p>
-<h2>Hoe haal je meer uit deze tool?</h2><p>Probeer niet direct op alle drie de disciplines sneller te worden. Verander één tempo tegelijk en bekijk wat het verschil is. Zo zie je of de grootste theoretische tijdswinst in zwemmen, fietsen, lopen of wisselen zit. Een hogere fietssnelheid kan wel ten koste gaan van je hardloopprestatie; de calculator modelleert die wisselwerking niet.</p>
-<div class="callout"><strong>SportTech Deals:</strong> we ontwikkelen praktische hulpmiddelen en onafhankelijk advies voor wielrenners en triatleten. Deze calculator is gratis, gebruikt geen account en verzendt geen ingevulde gegevens naar onze servers. <a href="fietscomputer-triatlon.html">Bekijk ook onze fietscomputer-koopgids voor triatleten.</a></div>
-<p><strong>Meer dan een eindtijd?</strong> <a href="race-planner.html">Maak ook gratis je volledige 70.3-raceplan met doorkomsttijden, materiaallijst en export.</a></p>
-<p><a href="./">← Terug naar SportTech Deals</a></p></article></main>
-<footer><div class="wrap"><div><a class="brand" href="./">SPORTTECH<span>DEALS.</span></a><p>Onafhankelijke sporttechnologie en handige tools.</p></div><a href="transparantie.html">Transparantie en privacy</a></div></footer>
-<script>
-(function(){
-'use strict';
-const ids=['swim','bike','run','t1','t2']; const $=id=>document.getElementById(id);
-const fmt=n=>{n=Math.max(0,Math.round(n));const h=Math.floor(n/3600);const m=Math.floor((n%3600)/60);const s=n%60;return h?String(h)+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'):String(m)+':'+String(s).padStart(2,'0');};
-const parseRun=str=>{const match=/^(\d{1,2}):(\d{2})$/.exec(str.trim());if(!match)return NaN;const min=Number(match[1]),sec=Number(match[2]);if(sec>59||min<2||min>15)return NaN;return min*60+sec;};
-function update(){
- const swim=Number($('swim').value),bike=Number($('bike').value),p= parseRun($('run').value),t1=Number($('t1').value),t2=Number($('t2').value);
- const ok=Number.isFinite(swim)&&swim>=60&&swim<=360&&Number.isFinite(bike)&&bike>=10&&bike<=60&&Number.isFinite(p)&&Number.isFinite(t1)&&t1>=0&&t1<=30&&Number.isFinite(t2)&&t2>=0&&t2<=30&&$('swim').value!==''&&$('bike').value!==''&&$('t1').value!==''&&$('t2').value!=='';
- if(!ok){$('error').textContent='Controleer de ingevulde waarden. Gebruik voor hardlopen bijvoorbeeld 5:00.';$('total').textContent='—';$('goal').textContent='Vul geldige tempo’s in.';$('summary').textContent='';for(const id of ['swim','bike','run','transition']){$(id+'-time').textContent='—';$(id+'-bar').style.width='0%';}return;}
- $('error').textContent='';
- const splits={swim:swim*19,bike:90/bike*3600,run:p*21.0975,transition:(t1+t2)*60};
- const total=Object.values(splits).reduce((a,b)=>a+b,0),difference=300*60-total;
- $('total').textContent=fmt(total);
- $('goal').textContent=difference>=0?'Onder de 5 uur — '+fmt(difference)+' marge':'Boven de 5 uur — '+fmt(-difference)+' verschil';
- $('summary').textContent='1,9 km zwemmen · 90 km fietsen · 21,1 km lopen · 2 wissels';
- for(const [key,sec] of Object.entries(splits)){$(key+'-time').textContent=fmt(sec);$(key+'-bar').style.width=(100*sec/total).toFixed(1)+'%';}
-}
-for(const id of ids)$(id).addEventListener('input',update);
-$('sub5').addEventListener('click',()=>{$('swim').value='110';$('bike').value='36';$('run').value='4:55';$('t1').value='3';$('t2').value='2';update();});
-$('reset').addEventListener('click',()=>{$('swim').value='120';$('bike').value='33';$('run').value='5:00';$('t1').value='4';$('t2').value='3';update();});
-update();
-})();
-</script></body></html>
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<meta http-equiv="refresh" content="0; url=triathlon-calculator.html?distance=half">
+<title>70.3 calculator verhuisd | SportTech Deals</title>
+<link rel="stylesheet" href="site.css"><link rel="stylesheet" href="triathlon.css">
+</head><body class="triathlon-page">
+<main class="wrap tri-main"><section class="tri-panel">
+<span class="tri-kicker">Nieuw: Triathlon Race Tools</span><h1>Je calculator is vernieuwd.</h1>
+<p>We ondersteunen nu Sprint, Olympisch, 70.3, Full en eigen afstanden. Je wordt doorgestuurd naar de nieuwe calculator.</p>
+<p><a class="tri-btn dark" href="triathlon-calculator.html?distance=half">Open de nieuwe calculator (70.3)</a></p>
+</section></main>
+</body></html>
