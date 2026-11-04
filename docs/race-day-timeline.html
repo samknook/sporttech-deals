@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Gratis Race Day Timeline Planner: plan je vertrek, aankomst, fietscheck, wisselzone, warming-up en start. Download een persoonlijk tijdschema zonder account.">
+<meta name="theme-color" content="#091f34">
+<link rel="canonical" href="https://samknook.github.io/sporttech-deals/race-day-timeline.html">
+<meta property="og:type" content="website"><meta property="og:locale" content="nl_NL">
+<meta property="og:title" content="Race Day Timeline Planner | TriZentro">
+<meta property="og:description" content="Bereken je wedstrijdochtend achteruit vanaf je starttijd. Met tijdschema en checklist.">
+<meta property="og:url" content="https://samknook.github.io/sporttech-deals/race-day-timeline.html">
+<title>Race Day Timeline Planner — triatlon wedstrijddag | TriZentro</title>
+<link rel="stylesheet" href="site.css"><link rel="icon" href="trizentro-icon.svg" type="image/svg+xml">
+<style>
+.plan{width:min(1020px,calc(100% - 40px));margin:0 auto;padding:34px 0 72px}
+.plan h1{font-size:clamp(35px,5.8vw,60px);letter-spacing:-.055em;line-height:1.06;margin:12px 0 20px}
+.plan p,.plan li{line-height:1.68}.lede{font-size:18px;max-width:750px;color:#4e6a61}
+.tag{color:#137c85;font-size:12px;letter-spacing:.15em;font-weight:900;text-transform:uppercase}
+.panel{background:white;border:1px solid #dce6db;border-radius:20px;padding:24px;margin:24px 0;box-shadow:0 8px 28px #0a302008}
+.panel h2{font-size:clamp(23px,3.6vw,31px);margin:0 0 14px}
+.inputs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.inputs label{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:750}
+.inputs input{padding:12px 11px;border:1px solid #adc1b6;border-radius:10px;min-width:0;width:100%;font:inherit;font-size:17px;color:#12382d}
+.inputs small{font-weight:400;color:#536e64;font-size:12px}
+.tablebox{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:560px}
+th,td{padding:12px;text-align:left;border-bottom:1px solid #dde9df}th{background:#edf4ee}
+strong.clock{font-size:19px;color:#0d4b42}.key{font-size:13px;color:#577268}
+.important{padding:15px 18px;background:#e7f5f5;border-left:4px solid #31c8ad;border-radius:8px;margin:19px 0}
+.caution{background:#fff4e8;border-left-color:#ffa66a}
+.buttons{display:flex;gap:11px;flex-wrap:wrap;margin:20px 0}
+.buttons button,.buttons a{background:#103e34;color:#fff;border:0;border-radius:11px;padding:12px 18px;font:inherit;font-weight:800;cursor:pointer;text-decoration:none}
+.buttons .alt{background:#205269}.error{color:#9c3128;font-weight:750}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.checks label{display:flex;gap:10px;align-items:flex-start;border:1px solid #dce6db;border-radius:10px;padding:11px}
+.checks input{width:19px;height:19px;flex:none;accent-color:#087a6d}
+@media(max-width:720px){.inputs{grid-template-columns:repeat(2,minmax(0,1fr))}.checks{grid-template-columns:1fr}.panel{padding:17px}}
+@media(max-width:440px){.inputs{grid-template-columns:1fr}}
+@media print{header,footer,.buttons,.no-print{display:none!important}.plan{padding:0}.panel{box-shadow:none;break-inside:avoid}body{background:white}}
+</style></head><body>
+<header class="top"><div class="wrap"><div class="nav"><a class="brand" href="./"><img class="brand-icon" src="trizentro-icon.svg" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><nav aria-label="Navigatie"><a href="./">Home</a><a href="race-planner.html">Race Planner</a><a href="race-fuel-planner.html">Fuel Planner</a></nav></div></div></header>
+<main class="plan"><p class="key"><a href="./">Home</a> / Race Day Timeline</p>
+<div class="tag">TRIZENTRO · RACE DAY TOOLS</div>
+<h1>Van voordeur tot startlijn. Zonder ochtendstress.</h1>
+<p class="lede">Vul je starttijd en reistijd in. TriZentro rekent vanaf je start achteruit wanneer je de wisselzone in wilt, je materiaal controleert, aankomt en uiterlijk vertrekt. Alle tijden zijn lokale tijden op de wedstrijddag.</p>
+<section class="panel"><h2>01 / Wedstrijd en route</h2>
+<div class="inputs">
+<label>Wedstrijddatum<input type="date" id="date" value="2027-06-20"><small>Datum van jouw evenement</small></label>
+<label>Starttijd<input type="time" id="start" value="08:00" required><small>Jouw wave / startgroep</small></label>
+<label>Reistijd (minuten)<input type="number" id="travel" min="0" max="1440" step="1" value="35"><small>Van vertrekpunt tot wedstrijdlocatie</small></label>
+<label>Parkeren en lopen (min)<input type="number" id="parking" min="0" max="240" step="1" value="20"><small>Van parkeerplek naar wisselzone</small></label>
+<label>Wisselzone en fietscontrole (min)<input type="number" id="setup" min="0" max="240" step="1" value="40"><small>Inclusief banden, voeding, spullen</small></label>
+<label>Warming-up en startvak (min)<input type="number" id="warmup" min="0" max="240" step="1" value="30"><small>Vanaf einde fietscontrole tot start</small></label>
+<label>Extra veiligheidsbuffer (min)<input type="number" id="buffer" min="0" max="180" step="1" value="20"><small>Voor vertraging en onverwachte situaties</small></label>
+</div><p class="key">Startvaksluiting, fiets-incheck, wisselzoneopening en organisatorische tijdsloten staan niet automatisch in deze tool. Controleer die altijd in de officiële deelnemersinformatie.</p>
+</section>
+<section class="panel"><h2>02 / Jouw tijdlijn</h2><p id="error" role="alert" class="error" hidden>Controleer de datum, starttijd en invoer. Minuten moeten gehele niet-negatieve waarden binnen de getoonde grenzen zijn.</p>
+<div id="output">
+<p class="important"><strong>Uiterlijk vertrekken:</strong> <strong class="clock" id="departure">—</strong> <span class="key" id="departuredate"></span></p>
+<div class="tablebox"><table><thead><tr><th>Tijd</th><th>Stap</th><th>Wat je doet</th></tr></thead><tbody id="schedule"></tbody></table></div>
+<p class="key">De buffer wordt vóór de reis ingepland. De berekening gaat uit van vaste ingevoerde tijden, niet van live verkeersdata.</p>
+</div>
+<div class="buttons no-print"><button id="save" type="button">Download tijdlijn (.txt)</button><button id="print" type="button" class="alt">Print tijdlijn</button><a class="alt" href="race-planner.html">Maak raceplan</a></div>
+</section>
+<section class="panel"><h2>03 / Laatste checks</h2>
+<div class="checks" id="checks">
+<label><input type="checkbox">Starttijd en startwave gecontroleerd</label>
+<label><input type="checkbox">Wisselzoneopening en -sluiting gecontroleerd</label>
+<label><input type="checkbox">Incheckvoorwaarden fiets en helm gelezen</label>
+<label><input type="checkbox">Parkeren / route en eventuele wegafsluitingen gecheckt</label>
+<label><input type="checkbox">Fiets, banden en reparatiespullen gecontroleerd</label>
+<label><input type="checkbox">Geteste voeding en bidons klaargelegd</label>
+<label><input type="checkbox">Startnummer, timingchip en wedstrijdinformatie klaargelegd</label>
+<label><input type="checkbox">Weer, kleding en wetsuitregels gecontroleerd</label>
+</div><p class="key">Checklistvinkjes worden niet op een server bewaard en verdwijnen wanneer je de pagina sluit of herlaadt.</p>
+<p class="important caution">Belangrijk: dit is een logistiek rekenvoorbeeld, geen officiële wedstrijdplanning. Een organisator kan fiets-incheck de dag ervoor verplichten, de wisselzone vroeg sluiten of eigen tijdsloten hanteren. Pas je plan daarom aan op de deelnemersinformatie en neem zo nodig meer tijd.</p>
+</section>
+<section class="panel"><h2>Alles gepland?</h2><p>Gebruik nu de <a href="race-fuel-planner.html">Fuel Planner</a> voor je eigen gels en bidons, onze <a href="70-3-raceplan.html">70.3-racegids</a> voor pacing en de <a href="race-planner.html">Race Planner</a> voor je doorkomsten en materiaalchecklist.</p></section>
+</main><footer><div class="wrap"><a class="brand" href="./"><img class="brand-icon" src="trizentro-icon.svg" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><a href="transparantie.html">Privacy en transparantie</a></div></footer>
+<script>
+(()=>{
+"use strict";
+const el=id=>document.getElementById(id);
+const numberFields=["travel","parking","setup","warmup","buffer"];
+let exported="";
+const two=n=>String(n).padStart(2,"0");
+const pretty=d=>two(d.getHours())+":"+two(d.getMinutes());
+const datePretty=d=>d.toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+const shift=(d,minutes)=>new Date(d.getTime()+minutes*60000);
+function calc(){
+const date=el("date").value,start=el("start").value;
+const nums=Object.fromEntries(numberFields.map(id=>[id,Number(el(id).value)]));
+const valid=/^\d{4}-\d{2}-\d{2}$/.test(date)&&/^\d{2}:\d{2}$/.test(start)&&numberFields.every(id=>el(id).value.trim()!==""&&Number.isInteger(nums[id])&&nums[id]>=Number(el(id).min)&&nums[id]<=Number(el(id).max));
+let startTime;
+if(valid){const [y,m,d]=date.split("-").map(Number),[hh,mm]=start.split(":").map(Number);startTime=new Date(y,m-1,d,hh,mm);if(startTime.getFullYear()!==y||startTime.getMonth()!==m-1||startTime.getDate()!==d||startTime.getHours()!==hh||startTime.getMinutes()!==mm)startTime=null;}
+el("error").hidden=Boolean(startTime);el("output").hidden=!startTime;el("save").disabled=!startTime;exported="";
+if(!startTime)return;
+const warm=shift(startTime,-nums.warmup);
+const setup=shift(warm,-nums.setup);
+const arrivals=shift(setup,-nums.parking);
+const departure=shift(arrivals,-nums.travel-nums.buffer);
+const rows=[
+[departure,"Vertrek","Reis inclusief "+nums.buffer+" minuten extra buffer"],
+[shift(arrivals,-nums.buffer),"Geplande aankomst","Buffer van "+nums.buffer+" minuten blijft beschikbaar"],
+[arrivals,"Parkeren / lopen","Richting wisselzone: "+nums.parking+" minuten"],
+[setup,"Wisselzone en fietscheck","Controle en klaarleggen: "+nums.setup+" minuten"],
+[warm,"Warming-up en startvak","Voorbereiden op de start: "+nums.warmup+" minuten"],
+[startTime,"Start","Starttijd volgens jouw invoer"]
+];
+el("departure").textContent=pretty(departure);
+el("departuredate").textContent=datePretty(departure);
+const tbody=el("schedule");tbody.replaceChildren();
+rows.forEach(([time,step,note])=>{
+const tr=document.createElement("tr");
+[pretty(time)+" · "+time.toLocaleDateString("nl-NL",{day:"numeric",month:"short"}),step,note].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td);});
+tbody.appendChild(tr);
+});
+exported=["TRIZENTRO RACE DAY TIMELINE","Datum en starttijd: "+datePretty(startTime)+" "+pretty(startTime),"Persoonlijk logistiek rekenvoorbeeld; officiële evenementinformatie gaat voor.","",...rows.map(([t,step,note])=>datePretty(t)+" "+pretty(t)+" — "+step+": "+note),"","Controleer wisselzone, startvak, verkeerssituatie en eventuele afwijkende incheckregels bij de organisatie."].join("\n");
+}
+["date","start",...numberFields].forEach(id=>el(id).addEventListener("input",calc));
+el("save").addEventListener("click",()=>{if(!exported)return;const blob=new Blob([exported],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="trizentro-racedag-tijdlijn.txt";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+el("print").addEventListener("click",()=>window.print());
+calc();
+})();
+</script></body></html>
