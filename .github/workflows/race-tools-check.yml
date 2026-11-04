@@ -3,12 +3,12 @@ on:
   push:
     paths:
       - 'docs/**'
-      - 'tests/race-dashboard.test.cjs'
+      - 'tests/*.test.cjs'
       - '.github/workflows/race-tools-check.yml'
   pull_request:
     paths:
       - 'docs/**'
-      - 'tests/race-dashboard.test.cjs'
+      - 'tests/*.test.cjs'
       - '.github/workflows/race-tools-check.yml'
   workflow_dispatch:
 permissions:
@@ -22,4 +22,4 @@ jobs:
         with:
           node-version: '22'
       - name: Verify race calculations, sitemap and dashboard integration
-        run: node --test tests/race-dashboard.test.cjs
+        run: node --test tests/*.test.cjs
