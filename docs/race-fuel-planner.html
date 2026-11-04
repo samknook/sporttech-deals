@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="nl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Gratis TriZentro Race Fuel Planner: bereken voor je triatlon per fiets- en looponderdeel hoeveel koolhydraten je met je eigen gels en sportdrank plant. Geen account.">
+<meta name="theme-color" content="#091f34">
+<link rel="canonical" href="https://samknook.github.io/sporttech-deals/race-fuel-planner.html">
+<meta property="og:type" content="website"><meta property="og:locale" content="nl_NL">
+<meta property="og:title" content="Race Fuel Planner — gels en sportdrank plannen | TriZentro">
+<meta property="og:description" content="Bereken je eigen koolhydraatplan voor fiets- en looponderdeel, zonder account.">
+<meta property="og:url" content="https://samknook.github.io/sporttech-deals/race-fuel-planner.html">
+<title>Race Fuel Planner: gels en sportdrank | TriZentro</title>
+<link rel="stylesheet" href="site.css"><link rel="icon" type="image/svg+xml" href="trizentro-icon.svg">
+<style>
+.fuel{width:min(1000px,calc(100% - 40px));margin:0 auto;padding:32px 0 70px}
+.fuel h1{font-size:clamp(36px,6vw,60px);letter-spacing:-.055em;line-height:1.06;margin:10px 0 18px}
+.fuel h2{font-size:clamp(24px,3.8vw,32px);margin:0 0 12px}
+.fuel p,.fuel li{line-height:1.65}.sub{font-size:18px;color:#507066;max-width:760px}
+.panel{background:#fff;border:1px solid #dce6db;border-radius:20px;padding:24px;margin:24px 0;box-shadow:0 8px 30px #0a302008}
+.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:7px;font-size:14px;font-weight:700}
+.field input{min-width:0;width:100%;font:inherit;font-size:17px;border:1px solid #aebfb5;border-radius:10px;padding:12px;background:#fff;color:#12382d}
+.field small{font-size:12px;font-weight:400;color:#587367}.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin:20px 0}
+.metric{background:#eef6f4;padding:18px;border-radius:16px}.metric span{display:block;color:#43695f;font-size:13px}.metric strong{display:block;font-size:clamp(23px,3vw,34px);line-height:1.25;margin-top:8px}
+.fuel table{width:100%;border-collapse:collapse;min-width:580px}.fuel th,.fuel td{text-align:left;padding:12px;border-bottom:1px solid #dce6db}.fuel th{background:#eef3ec}.scroll{overflow-x:auto}
+.note{padding:15px 18px;background:#e9f6f5;border-left:4px solid #31c8ad;border-radius:7px;margin:20px 0}.warn{background:#fff4e9;border-left-color:#ffa66a}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}.actions button,.actions a{background:#103e34;border:0;border-radius:11px;color:white;padding:12px 17px;font:inherit;font-weight:750;cursor:pointer;text-decoration:none}
+.actions .secondary{background:#205269}.eyebrow{font-size:12px;font-weight:850;letter-spacing:.13em;text-transform:uppercase;color:#187b83}.footnote{font-size:13px;color:#557267}
+@media(max-width:700px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.summary{grid-template-columns:1fr}.panel{padding:17px}}@media(max-width:430px){.fields{grid-template-columns:1fr}}@media print{header,footer,.actions,.no-print{display:none!important}.panel{box-shadow:none;break-inside:avoid}.fuel{padding:0}body{background:#fff}}
+</style></head><body>
+<header class="top"><div class="wrap"><div class="nav"><a class="brand" href="./"><img class="brand-icon" src="trizentro-icon.svg" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><nav aria-label="Navigatie"><a href="./">Home</a><a href="race-planner.html">Race Planner</a><a href="70-3-raceplan.html">70.3-gids</a></nav></div></div></header>
+<main class="fuel">
+<p class="footnote"><a href="./">Home</a> / Race Fuel Planner</p>
+<div class="eyebrow">TRIZENTRO · FREE RACE TOOLS</div>
+<h1>Plan wat je meeneemt. Test wat je verdraagt.</h1>
+<p class="sub">Reken uit hoeveel koolhydraten je met sportdrank en gels plant tijdens het fietsen en lopen. Kies zelf je hoeveelheden aan de hand van wat je vooraf in training hebt getest. De tool bepaalt geen veilige of optimale inname voor jou.</p>
+<section class="panel">
+<h2>01 / Jouw race</h2>
+<div class="fields">
+<label class="field">Fietstijd (minuten)<input id="bike-min" type="number" min="0" max="1000" step="1" value="155"><small>Bijvoorbeeld 2:35 = 155 min</small></label>
+<label class="field">Looptijd (minuten)<input id="run-min" type="number" min="0" max="1000" step="1" value="102"><small>Bijvoorbeeld 1:42 = 102 min</small></label>
+<label class="field">Jouw geteste koolhydraatdoel (g/uur)<input id="target" type="number" min="0" max="200" step="1" value="60"><small>Zelfgekozen rekeninvoer, geen aanbeveling</small></label>
+</div>
+</section>
+<section class="panel"><h2>02 / Jouw producten</h2>
+<div class="fields">
+<label class="field">Koolhydraten per gel (g)<input id="gel" type="number" min="1" max="150" step="1" value="25"></label>
+<label class="field">Koolhydraten per bidon (g)<input id="bottle" type="number" min="0" max="200" step="1" value="40"><small>Lees het etiket van jouw mix</small></label>
+<label class="field">Bidons op de fiets (aantal)<input id="bike-bottles" type="number" min="0" max="20" step="1" value="2"><small>Alleen de drank die je daadwerkelijk plant te drinken</small></label>
+<label class="field">Bidons tijdens lopen (aantal)<input id="run-bottles" type="number" min="0" max="20" step="1" value="0"><small>Of equivalent van vooraf bekende drankposten</small></label>
+</div>
+<p class="footnote">Dit model telt alleen de opgegeven koolhydraten van gels en bidons; repen, cola, isotone drank uit onbekende posten en andere voeding worden niet meegerekend. Drinkvolume, natrium en vochtbehoefte worden niet berekend.</p>
+</section>
+<section class="panel" aria-labelledby="result-title"><h2 id="result-title">03 / Je berekende paklijst</h2>
+<p id="error" role="alert" hidden></p>
+<div id="results">
+<div class="summary">
+<div class="metric"><span>Gepland koolhydraatdoel totaal</span><strong id="total-target">—</strong></div>
+<div class="metric"><span>Benodigde hele gels samen</span><strong id="total-gels">—</strong></div>
+<div class="metric"><span>Opgegeven bidons samen</span><strong id="total-bottles">—</strong></div>
+</div>
+<div class="scroll"><table><thead><tr><th>Onderdeel</th><th>Rekendoel</th><th>Koolhydraten uit drank</th><th>Hele gels nodig</th><th>Berekende inname</th></tr></thead><tbody>
+<tr><td>Fietsen</td><td id="bike-target">—</td><td id="bike-drink">—</td><td id="bike-gels">—</td><td id="bike-actual">—</td></tr>
+<tr><td>Lopen</td><td id="run-target">—</td><td id="run-drink">—</td><td id="run-gels">—</td><td id="run-actual">—</td></tr>
+</tbody></table></div>
+<p id="detail" class="note" aria-live="polite"></p>
+</div>
+<div class="actions no-print"><button id="download" type="button">Download paklijst (.txt)</button><button id="print" type="button" class="secondary">Print mijn plan</button><a class="secondary" href="race-planner.html">Open Race Planner</a></div>
+</section>
+<section class="panel"><h2>Hoe gebruik je deze berekening verstandig?</h2>
+<ul>
+<li>Het aantal gels wordt per discipline <strong>naar boven afgerond</strong> tot een heel aantal om je zelfgekozen koolhydraatdoel te halen. Daardoor kan de berekende hoeveelheid hoger uitvallen dan je doel.</li>
+<li>De tool gaat ervan uit dat alle ingevoerde bidons volledig worden gedronken. Reken alleen met producten en hoeveelheden die je praktisch kunt meenemen of zeker kunt verkrijgen.</li>
+<li>Als je al meer koolhydraten via drank hebt gepland dan je invoerdoel, toont de tool nul extra gels. Dat is geen beoordeling van tolerantie of veiligheid.</li>
+<li>Pas tijd, producten en plan aan na oefensessies. De uitkomst bevat geen timing van innamemomenten en zegt niets over je individuele maag-darmtolerantie.</li>
+</ul>
+<p class="note warn"><strong>Belangrijk:</strong> dit is een rekentool, geen persoonlijk sportvoedings- of medisch advies. Drinkbehoefte, hitte, zoutverlies, gezondheidsproblemen en medicijngebruik kunnen relevante factoren zijn. Te veel vocht drinken kan schadelijk zijn. Vraag bij persoonlijke gezondheidsvragen advies aan een gekwalificeerde professional en volg evenementinstructies.</p>
+<p>Vervolg: <a href="70-3-raceplan.html">bouw een volledig 70.3-raceplan</a>, of <a href="triatlon-afstanden.html">vergelijk de verschillende triatlonafstanden</a>.</p>
+</section>
+</main><footer><div class="wrap"><a class="brand" href="./"><img class="brand-icon" src="trizentro-icon.svg" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><a href="transparantie.html">Privacy en transparantie</a></div></footer>
+<script>
+(function(){
+"use strict";
+const ids=["bike-min","run-min","target","gel","bottle","bike-bottles","run-bottles"];
+const el=id=>document.getElementById(id);
+let textPlan="";
+const fmt=n=>Number.isInteger(n)?String(n):n.toLocaleString("nl-NL",{maximumFractionDigits:1});
+function calculate(){
+const vals=Object.fromEntries(ids.map(id=>[id,Number(el(id).value)]));
+const valid=ids.every(id=>el(id).value.trim()!==""&&Number.isFinite(vals[id])&&vals[id]>=Number(el(id).min)&&vals[id]<=Number(el(id).max))&&Number.isInteger(vals["bike-bottles"])&&Number.isInteger(vals["run-bottles"])&&Number.isInteger(vals["bike-min"])&&Number.isInteger(vals["run-min"]);
+el("error").hidden=valid;el("results").hidden=!valid;el("download").disabled=!valid;
+if(!valid){el("error").textContent="Controleer de ingevulde waarden en grenzen. Gebruik geen negatieve of lege waarden.";textPlan="";return;}
+const target=vals.target, gel=vals.gel, bottle=vals.bottle;
+const compute=(label,time,count)=>{
+const goal=time*target/60,drink=count*bottle;
+const gels=Math.max(0,Math.ceil((goal-drink-1e-9)/gel));
+return {label,time,count,goal,drink,gels,actual:drink+gels*gel};
+};
+const bike=compute("Fietsen",vals["bike-min"],vals["bike-bottles"]);
+const run=compute("Lopen",vals["run-min"],vals["run-bottles"]);
+const totalGoal=bike.goal+run.goal;
+el("total-target").textContent=fmt(totalGoal)+" g";
+el("total-gels").textContent=fmt(bike.gels+run.gels)+" gels";
+el("total-bottles").textContent=fmt(bike.count+run.count)+" bidons";
+for(const [prefix,d] of [["bike",bike],["run",run]]){
+el(prefix+"-target").textContent=fmt(d.goal)+" g";
+el(prefix+"-drink").textContent=fmt(d.drink)+" g";
+el(prefix+"-gels").textContent=fmt(d.gels);
+el(prefix+"-actual").textContent=fmt(d.actual)+" g";
+}
+const over=[bike,run].filter(d=>d.drink>d.goal+0.001).map(d=>d.label.toLowerCase());
+el("detail").textContent="Met "+fmt(gel)+" g per gel en "+fmt(bottle)+" g per bidon kom je volgens de ingevoerde hoeveelheden uit op "+fmt(bike.actual+run.actual)+" g koolhydraten in totaal."+(over.length?" Let op: de geplande drank alleen overschrijdt je ingevoerde koolhydraatdoel bij "+over.join(" en ")+".":"")+" De berekening geeft geen advies over een veilige hoeveelheid of spreiding.";
+textPlan=["TRIZENTRO - RACE FUEL PLAN","Eigen rekenscenario, geen medisch of voedingsadvies.","","Gepland doel: "+fmt(target)+" g per uur","Gel: "+fmt(gel)+" g koolhydraten","Bidon: "+fmt(bottle)+" g koolhydraten",...([bike,run].flatMap(d=>["",d.label+": "+d.time+" minuten","Bidons: "+d.count,"Doel: "+fmt(d.goal)+" g","Gels: "+d.gels,"Totaal berekend: "+fmt(d.actual)+" g"])),"","Controleer werkelijke beschikbaarheid, etiket en persoonlijke tolerantie. Niet voor medische of hydratatieadviezen."].join("\n");
+}
+ids.forEach(id=>el(id).addEventListener("input",calculate));
+el("download").addEventListener("click",()=>{
+if(!textPlan)return;
+const blob=new Blob([textPlan],{type:"text/plain;charset=utf-8"});
+const u=URL.createObjectURL(blob);const a=document.createElement("a");a.href=u;a.download="trizentro-race-fuel-plan.txt";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);
+});
+el("print").addEventListener("click",()=>window.print());
+calculate();
+})();
+</script></body></html>
