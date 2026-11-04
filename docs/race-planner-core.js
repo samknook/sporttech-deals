@@ -100,7 +100,7 @@
       {label:'Lopen · 50%',distance:formatKm(distance.runKm*.5)+' km',elapsed:runBegin+run*.5,discipline:'run'},
       {label:'Lopen · 75%',distance:formatKm(distance.runKm*.75)+' km',elapsed:runBegin+run*.75,discipline:'run'},
       {label:'Lopen · 90%',distance:formatKm(distance.runKm*.9)+' km',elapsed:runBegin+run*.9,discipline:'run'},
-      {label:'FINISH',distance:formatKm(distance.runKm)+' km',elapsed:total,discipline:'finish'}
+      {label:'Finish',distance:formatKm(distance.runKm)+' km',elapsed:total,discipline:'finish'}
     ];
     return {
       distance,swim,t1,bike,t2,run,total,target,targetDifference:target===null?null:target-total,
