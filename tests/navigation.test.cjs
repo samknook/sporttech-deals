@@ -34,3 +34,13 @@ test('mobile menu supports keyboard and touch screen sizing',()=>{
  assert.match(siteCss,/min-height:44px/);
  assert.match(siteCss,/:focus-visible/);
 });
+
+test('home page has four obvious destination cards for mobile visitors',()=>{
+ const html=fs.readFileSync(path.join(docs,'index.html'),'utf8');
+ const links=['race-dashboard.html','70-3-readiness-check.html','products.html','koopgids.html'];
+ const section=html.match(/<section class="tz-shortcuts"[\s\S]*?<\/section>/);
+ assert.ok(section,'home shortcuts section missing');
+ for(const dest of links)assert.ok(section[0].includes('href="'+dest+'"'),dest+' missing from quick access');
+ assert.match(siteCss,/\.tz-shortcuts-grid/);
+ assert.match(siteCss,/@media\(max-width:500px\)/);
+});
