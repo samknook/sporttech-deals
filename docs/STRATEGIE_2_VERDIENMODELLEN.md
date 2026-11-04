@@ -1,6 +1,14 @@
 # Strategische herijking — SportTech Deals
 **Besluitdatum: 4 november 2026. Status: experiment, niet bewezen businessmodel.**
 
+## Update 4 november 2026 — multi-distance v2
+
+- [x] Sprint (750 m / 20 km / 5 km), Olympisch (1,5 / 40 / 10), 70.3 (1,9 / 90 / 21,0975), Full (3,8 / 180 / 42,195) en instelbare afstanden.
+- [x] Twee pagina's in Swim–Bike–Run-thema, met disciplinekleuren en interactieve afstandskeuze.
+- [x] Oude 70.3-calculatorlink leidt naar de nieuwe calculator.
+- [x] Elf Node-rekentests en publieke GitHub Pages-controle geslaagd.
+- [ ] Echte gebruikservaring en mobiele bediening testen; er zijn nog geen bezoekers- of conversiecijfers.
+
 ## Het besluit
 
 **Niet vijf losse bedrijven starten. Wel twee verdienmodellen testen voor één doelgroep.**
@@ -31,7 +39,7 @@ SportTech Deals wordt een Nederlandstalig platform voor wielrenners en triatlete
 
 ## Eerste producthypothese
 
-**Gratis:** [70.3 eindtijdcalculator](../docs/70-3-eindtijd-calculator.html) en [70.3 Race Planner-preview](../docs/race-planner.html), beide privacyvriendelijke statische pagina's. De planner biedt theoretische tussentijden, een lokale materiaallijst, een printweergave en een exporteerbaar tekstplan. Dit zijn geen gegarandeerde voorspellingen, persoonlijke coaching of betaalde producten.
+**Gratis:** [Triathlon Eindtijdcalculator](../docs/triathlon-calculator.html) en [Triathlon Race Planner](../docs/race-planner.html). Beide ondersteunen Sprint, Olympisch, 70.3, Full en eigen afstanden, en verwerken de gegevens lokaal. De planner biedt dynamische checkpoints, een doelvergelijking, een materiaalchecklist, printweergave en een exporteerbaar tekstplan. Dit zijn geen gegarandeerde voorspellingen, persoonlijke coaching of betaalde producten.
 
 **Mogelijk betaald:** een `70.3 Race Planner` met zelfstandig in te vullen wedstijdpacing, materiaallijst, reis-/racedagplanning, scenariovergelijking en een aanpasbare Excel/Google Sheets-template. Richtprijs als **testhypothese** €19–€29 eenmalig, niet nu gepubliceerd of verkocht. Een concrete prijs en aanbod pas kiezen na marktfeedback en kosten-/belastingcontrole.
 
