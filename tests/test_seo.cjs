@@ -72,3 +72,12 @@ test('TriZentro identity is consistent and asset links point to real local SVG f
   }
   assert.match(read('index.html'),/name="3045ec1a300a1b5" content="e43119facc31c6d54302cec101a02834"/);
 });
+
+
+test('Google Search Console and Daisycon ownership tokens coexist safely',()=>{
+  const homepage=read('index.html');
+  assert.match(homepage,/<meta name="google-site-verification" content="hMpAY4xSz1BBjiImUwCtvE_1hKk0XD56l4AEnsk7W14"\s*\/>/);
+  assert.match(homepage,/<meta name="3045ec1a300a1b5" content="e43119facc31c6d54302cec101a02834"\s*\/>/);
+  assert.equal(read('google36c6913874a61b33.html').trim(),
+    'google-site-verification: google36c6913874a61b33.html');
+});
