@@ -1,131 +1,184 @@
-/* SportTech Deals — clientside race planner preview; geen data naar servers. */
+/* Triathlon Race Planner v2 — fully offline, no storage, cookies or network. */
 (function () {
   'use strict';
-  const core = window.RacePlannerCore;
+  const core=window.RacePlannerCore;
   if (!core) return;
-  const $ = id => document.getElementById(id);
-  const inputIds = ['event-name','race-date','start-time','swim-pace','bike-speed','run-pace','t1-minutes','t2-minutes','race-notes'];
-  const fields = () => ({
-    eventName: $('event-name').value.trim().slice(0,80),
-    raceDate: $('race-date').value,
-    start: $('start-time').value,
-    swimPace: $('swim-pace').value,
-    bikeSpeed: $('bike-speed').value,
-    runPace: $('run-pace').value,
-    t1Minutes: $('t1-minutes').value,
-    t2Minutes: $('t2-minutes').value,
-    notes: $('race-notes').value.trim().slice(0,2000)
-  });
-  const groups = [
-    {name:'Voor vertrek',items:['Startdocumenten en locatie gecontroleerd','Materiaal en fiets gecontroleerd','Route en vertrektijd gepland','Weer en actuele wedstrijdregels bekeken']},
-    {name:'Zwemmen en wissel 1',items:['Zwembril en reservebril','Badmuts volgens wedstrijdregels','Wetsuit indien toegestaan en gewenst','Timingchip en eventuele raceband','Handdoek en wisselspullen']},
-    {name:'Fietsen en wissel 2',items:['Fiets, bandenspanning en remmen gecontroleerd','Helm en fietsschoenen','Fietscomputer opgeladen en parcours geladen','Bidons en eigen getest voedingsplan','Reserveonderdelen en gereedschap','Loopschoenen en startnummer']},
-    {name:'Na de finish',items:['Droge kleding en schoenen','Vervoer en spullen ophalen','Herstelmaaltijd of -snack voor eigen voorkeur']}
-  ];
+  const $=id=>document.getElementById(id);
+  const ids=['event-name','race-date','start-time','swim-pace','bike-speed','run-pace','t1-minutes','t2-minutes','target-time','swim-meters','bike-km','run-km','race-notes'];
+  const selector=$('distance-selector');
+  const buttons=[...selector.querySelectorAll('[data-distance]')];
+  let selected='half';
 
-  function drawChecklist() {
-    const parent = $('checklist');
-    for (const group of groups) {
-      const section = document.createElement('section'); section.className='check-group';
-      const heading = document.createElement('h3'); heading.textContent=group.name; section.appendChild(heading);
+  const groups=[
+    {name:'Voor vertrek',sport:'general',icon:'📋',items:['Starttijd, parcours en locatie gecontroleerd','Aanmelding, startnummer en timingchip geregeld','Spullen ingepakt en vervoer geregeld','Weer, racebriefing en actuele regels bekeken']},
+    {name:'Zwemmen',sport:'swim',icon:'🏊',items:['Zwembril en eventueel reservebril','Badmuts volgens organisator','Wetsuit indien toegestaan en gewenst','Zwemstart en route bekeken']},
+    {name:'Wissels · T1/T2',sport:'transition',icon:'🔄',items:['Wisselzone en looproutes verkend','Handdoek en wisselspullen klaargelegd','Startnummer en bevestiging gecontroleerd']},
+    {name:'Fietsen',sport:'bike',icon:'🚴',items:['Fiets, remmen en bandenspanning gecontroleerd','Helm en fietsschoenen gereed','Fietscomputer opgeladen en route voorbereid','Bidons en een eerder getest voedingsplan ingepakt','Reserveband, pomp of CO₂ en gereedschap']},
+    {name:'Hardlopen',sport:'run',icon:'🏃',items:['Loopschoenen en sokken klaargelegd','Startnummer en raceband gereed','Pet of zonbescherming indien nodig','Eigen getest drink- en voedingsplan gecontroleerd']},
+    {name:'Finish en terugreis',sport:'general',icon:'🏁',items:['Droge kleding en schoenen','Afspraak over vervoer en spullen ophalen','Herstelvoeding naar eigen voorkeur']}
+  ];
+  function values(){
+    return {
+      distance:selected,
+      eventName:$('event-name').value.trim().slice(0,80),
+      raceDate:$('race-date').value,
+      start:$('start-time').value,
+      swimPace:$('swim-pace').value,
+      bikeSpeed:$('bike-speed').value,
+      runPace:$('run-pace').value,
+      t1Minutes:$('t1-minutes').value,
+      t2Minutes:$('t2-minutes').value,
+      target:$('target-time').value,
+      swimMeters:$('swim-meters').value,
+      bikeKm:$('bike-km').value,
+      runKm:$('run-km').value,
+      notes:$('race-notes').value.trim().slice(0,2000)
+    };
+  }
+  function setDistance(key){
+    if(key!=='custom'&&!Object.prototype.hasOwnProperty.call(core.DISTANCES,key))return;
+    selected=key;
+    buttons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.distance===key)));
+    $('custom-distances').hidden=key!=='custom';
+    $('distance-copy').textContent=key==='custom'
+      ? 'Vul hieronder zelf de zwem-, fiets- en loopafstand in.'
+      : core.DISTANCES[key].swimMeters.toLocaleString('nl-NL')+' m zwemmen · '+core.formatKm(core.DISTANCES[key].bikeKm)+' km fietsen · '+core.formatKm(core.DISTANCES[key].runKm)+' km lopen';
+    const target=$('target-time');
+    // A target belongs to a distance: clearing avoids a misleading 70.3 sub-5 goal for Sprint or Full.
+    target.value='';
+    $('distance-label').textContent=key==='custom'?'Eigen afstand':core.DISTANCES[key].name;
+    render();
+  }
+  function checklist(){
+    const parent=$('checklist');
+    for(const group of groups){
+      const section=document.createElement('section');
+      section.className='tri-check-group';section.dataset.sport=group.sport;
+      const heading=document.createElement('h3');
+      const emoji=document.createElement('span');emoji.setAttribute('aria-hidden','true');emoji.textContent=group.icon;
+      heading.append(emoji,document.createTextNode(group.name));section.appendChild(heading);
       const ul=document.createElement('ul');
-      for (const item of group.items) {
-        const li=document.createElement('li'),label=document.createElement('label'),checkbox=document.createElement('input'),span=document.createElement('span');
-        checkbox.type='checkbox'; checkbox.className='check-item'; checkbox.addEventListener('change',updateChecked);
-        span.textContent=item; label.append(checkbox,span);li.appendChild(label);ul.appendChild(li);
+      for(const item of group.items){
+        const li=document.createElement('li');
+        const label=document.createElement('label');
+        const input=document.createElement('input');input.type='checkbox';input.className='check-item';
+        input.addEventListener('change',checked);
+        const span=document.createElement('span');span.textContent=item;
+        label.append(input,span);li.appendChild(label);ul.appendChild(li);
       }
       section.appendChild(ul);parent.appendChild(section);
     }
-    updateChecked();
+    checked();
   }
-  function updateChecked() {
+  function checked(){
     const nodes=[...document.querySelectorAll('.check-item')];
-    const count=nodes.filter(el=>el.checked).length;
-    $('check-progress').textContent=count+' van '+nodes.length+' afgevinkt';
+    const n=nodes.filter(x=>x.checked).length;
+    $('check-progress').textContent=n+' van '+nodes.length+' items afgevinkt';
   }
-  function render() {
-    const values=fields();
-    const body=$('timeline');
-    body.replaceChildren();
-    try {
-      const result=core.calculate(values);
+  function setSplits(p){
+    const total=p.total;
+    for(const [id,seconds] of [['swim',p.swim],['t1',p.t1],['bike',p.bike],['t2',p.t2],['run',p.run]]){
+      $('split-'+id).textContent=core.formatDuration(seconds);
+      $('bar-'+id).style.width=(seconds*100/total).toFixed(2)+'%';
+    }
+    $('swim-distance').textContent=core.formatKm(p.distance.swimMeters,0)+' m';
+    $('bike-distance').textContent=core.formatKm(p.distance.bikeKm)+' km';
+    $('run-distance').textContent=core.formatKm(p.distance.runKm)+' km';
+    $('race-legs').textContent=core.formatKm(p.distance.swimMeters,0)+' m zwem · '+core.formatKm(p.distance.bikeKm)+' km fiets · '+core.formatKm(p.distance.runKm)+' km loop';
+  }
+  function render(){
+    const v=values();
+    const tbody=$('timeline');tbody.replaceChildren();
+    $('race-name-view').textContent=v.eventName||'Mijn triatlon';
+    $('race-date-view').textContent=v.raceDate?' · '+v.raceDate:'';
+    try{
+      const p=core.calculate(v);
       $('validation-error').textContent='';
-      $('time-total').textContent=core.formatDuration(result.total);
-      $('goal-status').textContent=result.targetDifference >= 0
-        ? 'Onder 5 uur: '+core.formatDuration(result.targetDifference)+' marge'
-        : 'Boven 5 uur: '+core.formatDuration(-result.targetDifference)+' verschil';
-      $('splits').textContent='Zwemmen '+core.formatDuration(result.swim)+' · T1 '+core.formatDuration(result.t1)+
-        ' · Fietsen '+core.formatDuration(result.bike)+' · T2 '+core.formatDuration(result.t2)+
-        ' · Hardlopen '+core.formatDuration(result.run);
-      $('race-name-view').textContent=values.eventName||'Mijn 70.3 race';
-      $('race-date-view').textContent=values.raceDate?' · '+values.raceDate:'';
-      for (const point of result.checkpoints) {
-        const tr=document.createElement('tr');
-        for (const cell of [point.label,point.distance,core.formatDuration(point.elapsed),point.clock]) {
+      $('time-total').textContent=core.formatDuration(p.total);
+      $('goal-status').textContent=p.targetDifference===null
+        ? 'Voer optioneel een doeltijd in om te vergelijken.'
+        : p.targetDifference>=0
+          ? 'Op koers: '+core.formatDuration(p.targetDifference)+' onder jouw doeltijd'
+          : core.formatDuration(-p.targetDifference)+' boven jouw doeltijd';
+      $('goal-status').classList.toggle('neutral',p.targetDifference===null);
+      setSplits(p);
+      for(const point of p.checkpoints){
+        const tr=document.createElement('tr');tr.dataset.sport=point.discipline;
+        for(const cell of [point.label,point.distance,core.formatDuration(point.elapsed),point.clock]){
           const td=document.createElement('td');td.textContent=cell;tr.appendChild(td);
         }
-        body.appendChild(tr);
+        tbody.appendChild(tr);
       }
-      $('download-plan').disabled=false;
-      $('print-plan').disabled=false;
-    } catch(error) {
+      $('download-plan').disabled=false;$('print-plan').disabled=false;
+    }catch(error){
       $('validation-error').textContent=error.message;
       $('time-total').textContent='—';
       $('goal-status').textContent='Controleer de invoer';
-      $('splits').textContent='';
-      $('download-plan').disabled=true;
-      $('print-plan').disabled=true;
+      for(const id of ['swim','bike','run','t1','t2']){
+        $('split-'+id).textContent='—';$('bar-'+id).style.width='0%';
+      }
+      $('download-plan').disabled=true;$('print-plan').disabled=true;
     }
   }
-  function textPlan() {
-    const values=fields(),plan=core.calculate(values);
-    const checked=[...document.querySelectorAll('.check-item')];
-    const lines=[
-      'SPORTTECH DEALS — MIJN 70.3 RACEPLAN',
-      'Conceptplanning, geen voorspelling of persoonlijk sportadvies.',
+  function textPlan(){
+    const v=values(),p=core.calculate(v);
+    const checks=[...document.querySelectorAll('.check-item')];
+    const list=[
+      'SPORTTECH DEALS — TRIATHLON RACE PLAN',
+      'Gratis planningsprototype. Scenario, geen gegarandeerde finishtijd.',
       '',
-      'Wedstrijd: '+(values.eventName||'Mijn 70.3 race'),
-      'Datum: '+(values.raceDate||'Nog niet ingevuld'),
-      'Starttijd: '+values.start,
-      'Zwemtempo: '+values.swimPace+' /100 m',
-      'Fietssnelheid: '+values.bikeSpeed+' km/u',
-      'Looptempo: '+values.runPace+' /km',
-      'Verwachte totaalduur: '+core.formatDuration(plan.total),
+      'Wedstrijd: '+(v.eventName||'Mijn triatlon'),
+      'Datum: '+(v.raceDate||'Niet ingevuld'),
+      'Afstand: '+p.distance.name,
+      'Disciplineafstanden: '+core.formatKm(p.distance.swimMeters,0)+' m / '+core.formatKm(p.distance.bikeKm)+' km / '+core.formatKm(p.distance.runKm)+' km',
+      'Starttijd: '+v.start,
+      'Zwemtempo per 100 m: '+v.swimPace,
+      'Fietssnelheid: '+v.bikeSpeed+' km/u',
+      'Hardlooptempo per km: '+v.runPace,
+      'Wissel 1: '+v.t1Minutes+' minuten',
+      'Wissel 2: '+v.t2Minutes+' minuten',
+      'Optionele doeltijd: '+(v.target||'Niet ingevuld'),
+      'Berekende finishtijd: '+core.formatDuration(p.total),
       '',
-      'PLANNING / THEORETISCHE DOORKOMSTTIJDEN',
-      ...plan.checkpoints.map(p=>p.label+' | '+p.distance+' | '+core.formatDuration(p.elapsed)+' | '+p.clock),
+      'DOORKOMSTTIJDEN — THEORETISCH',
+      ...p.checkpoints.map(cp=>[cp.label,cp.distance,core.formatDuration(cp.elapsed),cp.clock].join(' | ')),
       '',
       'MATERIAALCHECKLIST'
     ];
-    let j=0;
-    for(const group of groups) {
-      lines.push('',group.name);
-      for(const item of group.items){lines.push((checked[j++]?.checked?'[x] ':'[ ] ')+item);}
+    let k=0;
+    for(const group of groups){
+      list.push('',group.name);
+      for(const item of group.items)list.push((checks[k++]?.checked?'[x] ':'[ ] ')+item);
     }
-    lines.push('','EIGEN NOTITIES',values.notes||'(geen)','',
-      'Controleer omstandigheden, lokale regels, parcours, wissels en benodigdheden bij de organisator.',
-      'SportTech Deals — gratis prototype. Alle ingevulde gegevens blijven in deze browser tot je ze zelf exporteert.');
-    return lines.join('\n');
+    list.push('','NOTITIES',v.notes||'(geen)','',
+      'Controleer parcours, starttijd, lokale wedstrijdregels en eventueel bekende cut-offs bij de organisator.',
+      'Deze tool verstuurt geen ingevulde gegevens naar SportTech Deals.');
+    return list.join('\n');
   }
-  function download() {
-    try {
-      const text=textPlan();
-      const blob=new Blob([text],{type:'text/plain;charset=utf-8'});
+  function download(){
+    try{
+      const blob=new Blob([textPlan()],{type:'text/plain;charset=utf-8'});
       const url=URL.createObjectURL(blob);
-      const a=document.createElement('a');a.href=url;a.download='mijn-70-3-raceplan.txt';document.body.appendChild(a);a.click();a.remove();
-      setTimeout(()=>URL.revokeObjectURL(url),1000);
-    }catch(err){$('validation-error').textContent=err.message;}
+      const a=document.createElement('a');
+      a.href=url;a.download='mijn-triathlon-raceplan.txt';
+      document.body.appendChild(a);a.click();a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),1500);
+    }catch(e){$('validation-error').textContent=e.message;}
   }
-  inputIds.forEach(id=>$(id).addEventListener('input',render));
+  buttons.forEach(btn=>btn.addEventListener('click',()=>setDistance(btn.dataset.distance)));
+  ids.forEach(id=>$(id).addEventListener('input',render));
   $('download-plan').addEventListener('click',download);
-  $('print-plan').addEventListener('click',()=>{try{core.calculate(fields());window.print();}catch(err){$('validation-error').textContent=err.message;}});
+  $('print-plan').addEventListener('click',()=>{try{core.calculate(values());window.print();}catch(e){$('validation-error').textContent=e.message;}});
   $('reset-plan').addEventListener('click',()=>{
-    $('event-name').value='Mijn 70.3 race';$('race-date').value='';$('start-time').value='08:00';
+    $('event-name').value='Mijn triatlon';$('race-date').value='';$('start-time').value='08:00';
     $('swim-pace').value='2:00';$('bike-speed').value='33';$('run-pace').value='5:00';
-    $('t1-minutes').value='4';$('t2-minutes').value='3';$('race-notes').value='';
-    document.querySelectorAll('.check-item').forEach(el=>{el.checked=false;});
-    updateChecked();render();
+    $('t1-minutes').value='4';$('t2-minutes').value='3';
+    $('swim-meters').value='1900';$('bike-km').value='90';$('run-km').value='21.0975';
+    $('race-notes').value='';
+    document.querySelectorAll('.check-item').forEach(x=>x.checked=false);
+    checked();setDistance('half');
   });
-  drawChecklist();
-  render();
+  checklist();
+  const param=new URLSearchParams(window.location.search).get('distance');
+  setDistance(param==='custom'||Object.prototype.hasOwnProperty.call(core.DISTANCES,param||'')?param:'half');
 })();
