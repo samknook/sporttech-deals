@@ -88,13 +88,13 @@ jobs:
           from pathlib import Path
           from urllib.parse import urlparse, unquote
           tree=ET.parse('docs/sitemap.xml')
-          base='https://samknook.github.io/sporttech-deals/'
+          base='https://samknook.github.io/trizentro/'
           locs=[el.text for el in tree.iter() if el.tag.endswith('}loc') and el.text]
           assert locs, 'XML-sitemap heeft geen links'
           assert len(locs)==len(set(locs)), 'XML-sitemap bevat dubbele URL'
           for url in locs:
               assert url.startswith(base), f'Verkeerd domein of projectpad: {url}'
-              path=unquote(urlparse(url).path).removeprefix('/sporttech-deals/')
+              path=unquote(urlparse(url).path).removeprefix('/trizentro/')
               path=path if path else 'index.html'
               assert Path('docs',path).is_file(), f'Sitemaplink zonder bestand: {url}'
           print(f'XML-sitemap gevalideerd: {len(locs)} echte, unieke pagina’s.')

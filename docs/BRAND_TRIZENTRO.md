@@ -9,7 +9,7 @@ De gebruiker wil **geen TriZentro-services op zijn privé-Google-account**. Daar
 - [ ] Maak een **apart Google-account voor werk of zakelijk gebruik** aan via https://accounts.google.com/signup. Kies `Voor werk of zakelijk gebruik`. Een nieuw gratis Gmail-adres (bijvoorbeeld `trizentro.team@gmail.com`, indien beschikbaar) is het startpunt zolang er nog geen definitief eigen domein is.
 - [ ] Laat de **eigenaar zelf** gebruikersnaam, wachtwoord, herstelopties, passkey en eventuele telefoonverificatie invullen. Deel geen wachtwoorden of verificatiecodes via chat. Deze registratie kan niet door de beschikbare Google/Gmail-connector worden gedaan.
 - [ ] Stel **tweestapsverificatie** in. Gebruik eventueel een persoonlijk hersteladres uitsluitend voor herstel; het privé-Google-account wordt géén eigenaar van TriZentro-diensten.
-- [ ] Maak Search Console voor `https://samknook.github.io/sporttech-deals/` aan **ingelogd met het nieuwe zakelijke account**. Kies de URL-voorvoegsel-property en laat de eigenaar verifiëren met een unieke HTML-tag die op de site geplaatst kan worden.
+- [ ] Maak Search Console voor `https://samknook.github.io/trizentro/` aan **ingelogd met het nieuwe zakelijke account**. Kies de URL-voorvoegsel-property en laat de eigenaar verifiëren met een unieke HTML-tag die op de site geplaatst kan worden.
 - [ ] Maak daarna YouTube-kanaal en Drive-map alleen onder dit zakelijke account aan. Koppel ook de Google-diensten in ChatGPT opnieuw met de juiste identiteit als gewenst.
 - [ ] Verbind de sociale profielen en eventueel Canva/Metricool met de merkidentiteit zodra hun officiële registratie is afgerond.
 - [ ] Google Workspace `admin@trizentro.com` is een toekomstige optie, **niet al aangemaakt**: vereist controle/aankoop van het domein en een betaald abonnement. Bestaande Gmail-identiteiten worden niet automatisch omgezet in een Workspace-gebruiker; regel eigendoms- en datamigratie expliciet indien later nodig.
@@ -17,11 +17,15 @@ De gebruiker wil **geen TriZentro-services op zijn privé-Google-account**. Daar
 
 **Status:** Het zakelijke Google-account **is nog niet aangemaakt**. Het plan en de voorgestelde e-mailadressen zijn geen registratiebevestiging.
 
+## Website-URL-migratie (technisch voorbereid, niet gepubliceerd)
+
+De beoogde TriZentro-URL is `https://samknook.github.io/trizentro/`. Eerst moet de GitHub-repository worden hernoemd, daarna kan de migratiebranch worden gemerged. De oude Google Search Console-property wordt niet automatisch verplaatst; zie [migratieplan](URL_MIGRATIE_TRIZENTRO.md).
+
 ## Update 4 november 2026 — echte merkassets en screening
 
 - [x] SVG-beeldmerk: [trizentro-icon.svg](trizentro-icon.svg), gebruikt als favicon en in de website-navigatie.
 - [x] SVG-woordmerk met pay-off: [trizentro-wordmark.svg](trizentro-wordmark.svg).
-- [x] [TriZentro Brand Kit](https://samknook.github.io/sporttech-deals/brand-kit.html) maakt een **1080×1080 PNG-avatar** en **1200×630 PNG-banner** lokaal in de browser, en heeft kopieerbare Engelse bio. De bestanden worden niet op een server opgeslagen. Gebruik pas op socialmedia na naam- en handlecontroles.
+- [x] [TriZentro Brand Kit](https://samknook.github.io/trizentro/brand-kit.html) maakt een **1080×1080 PNG-avatar** en **1200×630 PNG-banner** lokaal in de browser, en heeft kopieerbare Engelse bio. De bestanden worden niet op een server opgeslagen. Gebruik pas op socialmedia na naam- en handlecontroles.
 - [x] Consistente Swim/Bike/Run-kleuren op de homepage; geen externe fonts, trackers of betaalde designsoftware.
 - [x] Eerste openbare zoekronde op exacte spelling `TriZentro`: geen duidelijk exact gebruik als triatlonplatform gevonden. **Dit is geen registratierapport en bewijst niet dat de naam vrij is.**
 - [!] Potentieel relevante vergelijkbare namen in andere sectoren: `Trisentra` (IT-consultancy), `Trizent` (IT-infrastructuur). Alleen een registercontrole per relevante goederen- en dienstenklasse kan de betekenis van de overlap helpen beoordelen.
@@ -77,7 +81,7 @@ Alle bovenstaande namen zijn **ideeën, geen werkende contacten of bevestigde UR
 1. **Verifieer naam en domein** met BOIP/KVK/WIPO en registrar. Leg vast welke namen echt beschikbaar zijn. Betaal pas dan voor het domein.
 2. **Google:** gebruik voorlopig een bestaand, veilig beheerd Google-account om Google Search Console in te stellen op de huidige GitHub Pages URL; een nieuw Gmail-account is niet verplicht voor Search Console. Als je later een apart merkaccount wilt, maak dat via de officiële Google-registratie met eigen herstelmethoden en 2FA; registratie kan niet via de huidige GitHub/Gmail-koppelingen worden overgenomen.
 3. **Domein & website:** pas na aankoop GitHub Pages-instellingen en DNS veranderen. De oude URL bevat `sporttech-deals` en blijft actief zolang er geen bevestigd eigen domein is.
-4. **Search Console:** verifieer een URL-prefix-property voor `https://samknook.github.io/sporttech-deals/` of, na migratie, het eigen domein. Dien de bestaande `sitemap.xml` in na succesvolle verificatie.
+4. **Search Console:** verifieer een URL-prefix-property voor `https://samknook.github.io/trizentro/` of, na migratie, het eigen domein. Dien de bestaande `sitemap.xml` in na succesvolle verificatie.
 5. **Socialmedia:** claim de gekozen handle via eigen aanmelding met sterk uniek wachtwoord en 2FA. Instagram eerst (reels/carousels over de tool), dan YouTube Shorts en eventueel TikTok. Facebook/LinkedIn alleen wanneer ze aantoonbaar nut hebben; niet direct vijf kanalen actief onderhouden.
 6. **Google/YouTube:** maak met het eigen Google-account een officieel YouTube-kanaal voor TriZentro. De officiële kanalen vereisen soms identiteits- of telefoonverificatie.
 7. **E-mail:** pas na domeinregistratie `hello@trizentro.com` instellen via mailprovider, liefst met SPF/DKIM/DMARC. Publiceer het adres pas als het functioneert.
@@ -109,7 +113,7 @@ TriZentro is an emerging independent triathlon tools platform for athletes prepa
 2. **Educational:** “How much time do transitions really cost? Your finish time is SWIM + T1 + BIKE + T2 + RUN. Even a simple race plan should include both transitions. Try the free TriZentro Finish Time Calculator. [link]”
 3. **Goal mode:** “Chasing a 70.3 goal? Explore the pace needed in each discipline while keeping your other splits constant. Race math, not a performance guarantee. Try our goal-time mode. [link]”
 
-Gebruik voorlopig uitsluitend de werkende `https://samknook.github.io/sporttech-deals/`-links, totdat een nieuw domein daadwerkelijk actief is. Stem rebranding van Google/socials af op juridische checks.
+Gebruik voorlopig uitsluitend de werkende `https://samknook.github.io/trizentro/`-links, totdat een nieuw domein daadwerkelijk actief is. Stem rebranding van Google/socials af op juridische checks.
 
 ## Product- en merkmigratie
 
@@ -122,4 +126,4 @@ Gebruik voorlopig uitsluitend de werkende `https://samknook.github.io/sporttech-
 
 ### Waarom niet nu de GitHub-repository hernoemen?
 
-De huidige website en Daisycon-verificatie lopen via `https://samknook.github.io/sporttech-deals/`. Een repo-rename zou het projectpad, backlinks, bestaande Google-verificatie en Daisycon-instellingen kunnen raken. We behouden daarom de oude repo-ID tot een eigen domein bevestigd en gemigreerd is.
+De huidige website en Daisycon-verificatie lopen via `https://samknook.github.io/trizentro/`. Een repo-rename zou het projectpad, backlinks, bestaande Google-verificatie en Daisycon-instellingen kunnen raken. We behouden daarom de oude repo-ID tot een eigen domein bevestigd en gemigreerd is.

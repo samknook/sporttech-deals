@@ -4,7 +4,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const docs=path.join(__dirname,'..','docs');
-const base='https://samknook.github.io/sporttech-deals/';
+const base='https://samknook.github.io/trizentro/';
 const read=name=>fs.readFileSync(path.join(docs,name),'utf8');
 
 test('homepage and tools declare exact public canonical URLs',()=>{

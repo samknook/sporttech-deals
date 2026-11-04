@@ -1,6 +1,6 @@
 # TriZentro — Social Launch Pack (November 2026)
 
-**Status: DRAFT — nothing posted or scheduled.** The current public website is https://samknook.github.io/sporttech-deals/. Do not use unverified trizentro.com or social handles. No connected social networks in Metricool yet.
+**Status: DRAFT — nothing posted or scheduled.** The current public website is https://samknook.github.io/trizentro/. Do not use unverified trizentro.com or social handles. No connected social networks in Metricool yet.
 
 ## Brand system
 
@@ -9,7 +9,7 @@
 - Alternate marketing line: **Your race. Your pace.**
 - Midnight navy `#091F34`; swim blue `#32B4EB`; bike mint `#31C8AD`; run orange `#FFA66A`.
 - Official artwork: [TriZentro Icon](trizentro-icon.svg), [TriZentro Wordmark](trizentro-wordmark.svg).
-- [Browser-based brand kit](https://samknook.github.io/sporttech-deals/brand-kit.html): PNG avatar and cover banner.
+- [Browser-based brand kit](https://samknook.github.io/trizentro/brand-kit.html): PNG avatar and cover banner.
 - Canva workspace: [TriZentro — Brand & Launch](https://www.canva.com/folder/FAHZ9DVqu5c). Both existing SVG assets are imported into this folder.
 - Be conservative about claims. Theoretical pace calculations are **not** race predictions; no training guarantee, official affiliation or medical advice.
 - Social profile usernames, `trizentro.com`, and other accounts are **not registered or confirmed**.
@@ -26,7 +26,7 @@ Free race planners & finish-time tools
 Sprint • Olympic • 70.3 • Full
 ↓ Plan your race
 
-**Website link:** `https://samknook.github.io/sporttech-deals/`
+**Website link:** `https://samknook.github.io/trizentro/`
 
 **Before publication:** Verify availability of desired handle in Instagram, set recovery methods and two-factor authentication. Do not put unregistered addresses in the bio.
 
@@ -45,7 +45,7 @@ Choose your distance. Adjust swim pace, bike speed and run pace. See how the num
 
 The website is currently in Dutch; our plan is to make the experience more international over time.
 
-🔗 https://samknook.github.io/sporttech-deals/race-planner.html
+🔗 https://samknook.github.io/trizentro/race-planner.html
 
 #triathlon #swimbikerun #triathlontraining #raceday #trizentro
 
@@ -65,7 +65,7 @@ Your course is different? Use Custom Distance.
 
 Every race is different, so always check the official event distances.
 
-🔗 https://samknook.github.io/sporttech-deals/triathlon-calculator.html
+🔗 https://samknook.github.io/trizentro/triathlon-calculator.html
 
 #triathlonlife #triathlon #ironman703 #olympictriathlon #trizentro
 
@@ -82,7 +82,7 @@ Swim + T1 + Bike + T2 + Run = total race time.
 
 Our free TriZentro calculator includes both transitions, so you can build a more complete time scenario.
 
-🔗 https://samknook.github.io/sporttech-deals/triathlon-calculator.html
+🔗 https://samknook.github.io/trizentro/triathlon-calculator.html
 
 #triathlon #transition #t1 #t2 #raceday
 
@@ -97,7 +97,7 @@ Try entering your swim, bike and run estimates and a 5:00:00 target. TriZentro s
 
 This is race math — not a prediction. Real pacing changes can affect your performance in the following leg.
 
-🔗 https://samknook.github.io/sporttech-deals/triathlon-calculator.html?distance=half
+🔗 https://samknook.github.io/trizentro/triathlon-calculator.html?distance=half
 
 #ironman703 #triathlonpacing #triathlon #swimbikerun #trizentro
 
