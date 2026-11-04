@@ -84,25 +84,29 @@
 (()=>{
 'use strict';
 const $=id=>document.getElementById(id),inputs=[...document.querySelectorAll('#questions select')];
+const lang=(window.TriZentroI18n&&window.TriZentroI18n.lang)||'en';
+const nl=lang==='nl';
+const dictionary=(window.TriZentroTranslations['70-3-readiness-check.html']||{})[lang]||{};
+const tx=v=>dictionary[v]||v;
 let downloadText='';
 function render(){
-const records=inputs.map(x=>({status:x.value,topic:x.dataset.topic,action:x.dataset.action,url:x.dataset.url}));
-const result=window.TriZentroReadiness.summarize(records);
-$('score').textContent=result.done+' of '+result.total+' planning checks done';
-$('missing').textContent=result.unanswered?result.unanswered+' unanswered — fill in all 12 for a complete checklist.':'All 12 checks have a status.';
+const records=inputs.map(x=>({status:x.value,topic:tx(x.dataset.topic),action:tx(x.dataset.action),url:x.dataset.url}));
+const result=window.TriZentroReadiness.summarize(records,lang);
+$('score').textContent=nl?result.done+' van '+result.total+' voorbereidingspunten klaar':result.done+' of '+result.total+' planning checks done';
+$('missing').textContent=nl?(result.unanswered?result.unanswered+' niet ingevuld — beantwoord alle 12 vragen.':'Alle 12 punten hebben een status.'): (result.unanswered?result.unanswered+' unanswered — fill in all 12 for a complete checklist.':'All 12 checks have a status.');
 $('summary').textContent=result.summary;
 const target=$('actions');target.replaceChildren();
 if(result.pending.length){
- const head=document.createElement('h3');head.textContent='Next practical steps';target.appendChild(head);
+ const head=document.createElement('h3');head.textContent=nl?'Volgende praktische stappen':'Next practical steps';target.appendChild(head);
  for(const item of result.pending){
   const card=document.createElement('div');card.className='action-card';
-  const title=document.createElement('strong');title.textContent=item.topic+' · '+(item.status==='not'?'Not started':'In progress');
+  const title=document.createElement('strong');title.textContent=item.topic+' · '+(item.status==='not'?(nl?'Niet begonnen':'Not started'):(nl?'Bezig':'In progress'));
   const text=document.createElement('p');text.textContent=item.action;
-  const link=document.createElement('a');link.href=item.url;link.textContent='Open useful TriZentro resource';
+  const link=document.createElement('a');link.href=item.url;link.textContent=nl?'Open een passende TriZentro-tool':'Open useful TriZentro resource';
   card.append(title,text,link);target.appendChild(card);
  }
-}else if(!result.unanswered){const p=document.createElement('p');p.className='note';p.textContent='You marked all planning steps done. Recheck event information as the race approaches.';target.appendChild(p);}
-downloadText=window.TriZentroReadiness.exportText(records,result);
+}else if(!result.unanswered){const p=document.createElement('p');p.className='note';p.textContent=nl?'Alle voorbereidingspunten staan op klaar. Controleer officiële wedstrijdinformatie opnieuw als de race dichterbij komt.':'You marked all planning steps done. Recheck event information as the race approaches.';target.appendChild(p);}
+downloadText=window.TriZentroReadiness.exportText(records,result,lang);
 }
 inputs.forEach(x=>x.addEventListener('change',render));
 $('download').addEventListener('click',()=>{
