@@ -1,5 +1,5 @@
 /*
- * SportTech Deals — Triathlon Race Tools v2.
+ * TriZentro — Triathlon Race Tools v2.
  * Pure calculations for Sprint, Olympic, 70.3, Full and Custom distances.
  * No network requests, accounts or cookies.
  */
