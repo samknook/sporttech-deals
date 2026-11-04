@@ -1,4 +1,4 @@
-name: Publiceer TriZentro website en controleer verificatie
+name: Valideer TriZentro website en Daisycon-tag
 
 on:
   push:
@@ -33,23 +33,14 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: sporttech-intro-pages
-  cancel-in-progress: false
 
 jobs:
-  deploy:
+  validate:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Haal introductiepagina's op
+      - name: Haal TriZentro bestanden op
         uses: actions/checkout@v4
-      - name: Controleer introductie-inhoud
+      - name: Controleer inhoud, scripts, merkmiddelen en verificatietag
         run: |
           test -s docs/index.html
           test -s docs/koopgids.html
@@ -122,54 +113,4 @@ jobs:
           expected_value="e43119facc31c6d54302cec101a02834"
           assert any(m.get("name")==expected_name and m.get("content")==expected_value for m in p.meta), "Daisycon verificatiemetatag ontbreekt."
           print("Introductiepagina en Daisycon-tag gecontroleerd.")
-          PY
-      - name: GitHub Pages configureren
-        uses: actions/configure-pages@v5
-      - name: Introductiesite uploaden
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./docs
-      - name: Introductiesite publiceren
-        id: deployment
-        uses: actions/deploy-pages@v4
-      - name: Controleer LIVE website, planner en Daisycon-metatag
-        env:
-          STD_PUBLIC_SITE: ${{ steps.deployment.outputs.page_url }}
-        run: |
-          python - <<'PY'
-          import os, time, urllib.request
-          from urllib.parse import urljoin
-          base = os.environ['STD_PUBLIC_SITE']
-          expected = {
-              '': ['name="3045ec1a300a1b5"', 'content="e43119facc31c6d54302cec101a02834"', 'href="race-planner.html"'],
-              'trizentro-icon.svg': ['<svg', 'TriZentro'],
-              'brand-kit.html': ['trizentro-avatar-1080.png', 'download-banner'],
-              'triathlon-calculator.html': ['id="distance-selector"', 'triathlon-calculator-app.js', 'race-insights.js', 'id="goal-analysis"', 'triathlon.css'],
-              'triatlon-afstanden.html': ['Triatlon afstanden', 'Sprint berekenen', 'Olympisch berekenen', 'rel="canonical"'],
-              'triathlon-calculator-app.js': ['changeDistance', 'RacePlannerCore'],
-              'race-insights.js': ['RaceInsights', 'goalPacing', 'compareScenarios'],
-              'triathlon.css': ['.distance-selector', '.tri-split-visual'],
-              '70-3-eindtijd-calculator.html': ['triathlon-calculator.html?distance=half'],
-              'race-planner.html': ['id="timeline"', 'id="goal-analysis"', 'race-planner-core.js', 'race-planner-app.js', 'race-insights.js'],
-              'race-planner-core.js': ['RacePlannerCore', 'SWIM_METERS'],
-              'race-planner-app.js': ['download-plan', 'print-plan'],
-          }
-          errors=[]
-          for attempt in range(1,9):
-              errors=[]
-              for path, fragments in expected.items():
-                  url=urljoin(base, path)
-                  try:
-                      with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'SportTechDealsSiteCheck/1.0'}),timeout=15) as response:
-                          content=response.read(150000).decode('utf-8')
-                      missing=[part for part in fragments if part not in content]
-                      if missing: errors.append(f'{path or "home"}: ontbreekt {missing}')
-                  except Exception as exc:
-                      errors.append(f'{path or "home"}: {type(exc).__name__}: {exc}')
-              if not errors:
-                  print(f'Publieke site gecontroleerd na poging {attempt}: {base}')
-                  break
-              print(f'Poging {attempt}: {errors}')
-              if attempt<8:time.sleep(6)
-          if errors:raise SystemExit('LIVE sitecontrole mislukt: '+str(errors))
           PY
