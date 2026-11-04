@@ -123,3 +123,46 @@ test('full distance and long custom race clock passes midnight safely',()=>{
   assert.equal(p.distance.runKm,42.195);
   assert.ok(p.checkpoints.at(-1).clock.includes('(+1 dag)'));
 });
+
+
+test('doeltijdmodus rekent benodigde pacing per onderdeel exact terug', () => {
+  const v={...sample,distance:'half',target:'05:00'};
+  const current=core.calculate(v);
+  const goals=core.goalPacing(v);
+  assert.equal(goals.target,18000);
+  assert.equal(goals.swim.status,'possible');
+  assert.equal(goals.bike.status,'possible');
+  assert.equal(goals.run.status,'possible');
+  const baseWithoutSwim=current.total-current.swim;
+  assert.ok(goals.swim.raw*19+baseWithoutSwim<=18000+1e-6);
+  assert.ok(Math.abs((goals.bike.raw>0 ? 90/goals.bike.raw*3600 : 0)+current.swim+current.run+current.t1+current.t2-18000)<1e-6);
+  assert.ok(Math.abs(goals.run.raw*21.0975+current.swim+current.bike+current.t1+current.t2-18000)<1e-6);
+  assert.equal(core.goalPacing({...v,target:''}),null);
+});
+test('doeltijdmodus waarschuwt bij onhaalbaar rekenscenario of ruim doel',()=>{
+  const tiny=core.goalPacing({...sample,distance:'half',target:'00:15'});
+  assert.equal(tiny.swim.status,'outside-fast');
+  assert.equal(tiny.bike.status,'outside-fast');
+  assert.equal(tiny.run.status,'outside-fast');
+  const loose=core.goalPacing({...sample,distance:'sprint',target:'20:00'});
+  assert.equal(loose.swim.status,'already');
+  assert.equal(loose.bike.status,'already');
+  assert.equal(loose.run.status,'already');
+});
+test('scenariovergelijking rekent consequent voor alle afstanden',()=>{
+  for(const key of ['sprint','olympic','half','full','custom']){
+    const opt={...sample,distance:key,target:'',...(key==='custom'?{swimMeters:850,bikeKm:34.5,runKm:7.5}:{})};
+    const scenarios=core.compareScenarios(opt);
+    assert.equal(scenarios.length,3);
+    assert.ok(scenarios[0].total>scenarios[1].total);
+    assert.ok(scenarios[2].total<scenarios[1].total);
+    assert.equal(scenarios[1].deltaSeconds,0);
+    assert.ok(Math.abs(scenarios[0].deltaSeconds-(scenarios[0].total-scenarios[1].total))<1e-9);
+  }
+});
+test('scenariovergelijking houdt tempogrenzen aan',()=>{
+  const list=core.compareScenarios({...sample,distance:'sprint',swimPace:'1:00',runPace:'2:00',bikeSpeed:60,target:''});
+  assert.ok(list.every(item=>Number.isFinite(item.total)));
+  assert.ok(list[0].total>=list[1].total);
+  assert.ok(list[1].total>=list[2].total);
+});
