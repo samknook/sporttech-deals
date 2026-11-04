@@ -67,3 +67,20 @@ test('every sitemap URL has a matching docs file',()=>{
  }
  assert.equal(new Set(urls).size,urls.length,'duplicate sitemap URLs');
 });
+
+test('commercial previews exist, reference calculation engine and have no checkout',()=>{
+ const products=fs.readFileSync(path.join(docs,'products.html'),'utf8');
+ const pack=fs.readFileSync(path.join(docs,'race-pack-preview.html'),'utf8');
+ const blueprint=fs.readFileSync(path.join(docs,'blueprint-preview.html'),'utf8');
+ const index=fs.readFileSync(path.join(docs,'index.html'),'utf8');
+ assert.match(products,/Your First 70\.3 Race Pack/);
+ assert.match(products,/The Complete Triathlon Blueprint/);
+ assert.match(pack,/race-planner-core\.js/);
+ assert.match(pack,/core\.compareScenarios\(input\)/);
+ assert.match(pack,/id="comparison"/);
+ assert.match(pack,/id="download"/);
+ assert.match(blueprint,/CHAPTER 01/);
+ assert.match(index,/href="products\.html"/);
+ assert.doesNotMatch(products,/type="submit"|checkout|buy now/i);
+ assert.doesNotMatch(pack,/payment processor|stripe\.com|paypal\.com/i);
+});
