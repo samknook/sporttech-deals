@@ -63,3 +63,10 @@ test('race pack sample renders morning plan and exports it',()=>{
  assert.match(html,/TriZentroRaceDossier\.morningSchedule/);
  assert.match(html,/scenarios:results,core,morning/);
 });
+
+test('feedback scorecard remains local and has no submission endpoint',()=>{
+ const feedback=fs.readFileSync(path.join(__dirname,'../docs/tester-feedback.html'),'utf8');
+ assert.match(feedback,/id="test-form"/);
+ assert.match(feedback,/URL\.createObjectURL\(blob\)/);
+ assert.doesNotMatch(feedback,/<form[^>]+action=|fetch\(|XMLHttpRequest|sendBeacon/);
+});
