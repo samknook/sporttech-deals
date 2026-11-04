@@ -39,3 +39,27 @@ test('preview uses actual dossier module and editable notes',()=>{
  assert.match(html,/id="race-notes"/);
  assert.match(html,/TriZentroRaceDossier\.textDossier/);
 });
+
+test('race morning timeline works backwards across midnight',()=>{
+ const schedule=dossier.morningSchedule({date:'2027-06-20',start:'00:30',travel:60,parking:20,setup:40,warmup:30,buffer:20});
+ assert.equal(schedule.length,6);
+ assert.equal(schedule.at(-1).label,'Wave start');
+ assert.equal(schedule[0].label,'Leave home / lodging');
+ assert.equal(schedule.at(-1).date.getTime()-schedule[0].date.getTime(),(60+20+40+30+20)*60000);
+ assert.equal(schedule[0].date.getDate(),19);
+ for(let i=1;i<schedule.length;i++)assert.ok(schedule[i].date>=schedule[i-1].date);
+});
+test('race morning inputs reject invalid dates and times',()=>{
+ const v={date:'2027-06-20',start:'08:00',travel:35,parking:20,setup:40,warmup:30,buffer:20};
+ assert.throws(()=>dossier.morningSchedule({...v,date:'2027-02-30'}));
+ assert.throws(()=>dossier.morningSchedule({...v,start:'25:00'}));
+ assert.throws(()=>dossier.morningSchedule({...v,travel:-1}));
+ assert.throws(()=>dossier.morningSchedule({...v,travel:1.2}));
+});
+test('race pack sample renders morning plan and exports it',()=>{
+ const html=fs.readFileSync(path.join(__dirname,'../docs/race-pack-preview.html'),'utf8');
+ assert.match(html,/id="morning"/);
+ assert.match(html,/id="travel"/);
+ assert.match(html,/TriZentroRaceDossier\.morningSchedule/);
+ assert.match(html,/scenarios:results,core,morning/);
+});
