@@ -7,7 +7,7 @@ Een Nederlandstalige prijsvergelijker voor sportelektronica, te beginnen met Gar
 
 **Status 4 november 2026:** we houden de affiliateprijsvergelijker aan, maar verminderen de afhankelijkheid van één extern netwerk.
 
-- **70% ontwikkeltijd: gratis en eventueel betaalde sporttools** voor wielrenners en triatleten. De [gratis 70.3-eindtijdcalculator](docs/70-3-eindtijd-calculator.html) en de [gratis 70.3 Race Planner-preview](docs/race-planner.html) draaien volledig in de browser. De planner toont 12 checkpoints, een materiaallijst en een lokaal te downloaden tekstplan. Een zelfstandig betaald product is er nog niet. Er is nog **geen betaald digitaal product** en er zijn geen gemeten verkoopcijfers.
+- **70% ontwikkeltijd: gratis en eventueel betaalde sporttools** voor wielrenners en triatleten. De [gratis Triathlon Eindtijdcalculator](docs/triathlon-calculator.html) en de [gratis Triathlon Race Planner](docs/race-planner.html) draaien in de browser en ondersteunen **Sprint, Olympisch, 70.3, Full en eigen afstanden**. De planner toont 12 dynamische checkpoints, een materiaalchecklist, een doelvergelijking en een lokaal downloadbaar raceplan. Een zelfstandig betaald product is er nog niet. Er is nog **geen betaald digitaal product** en er zijn geen gemeten verkoopcijfers.
 - **30% ontwikkeltijd: affiliate-vergelijkingen en koopgidsen** voor goedgekeurde Garmin- en Wahoo-productfeeds. Nog geen bevestigde partner of geldige prijsfeed.
 - **Geen verspreiding over vijf bedrijven:** beide proeven richten zich op dezelfde doelgroep. Zelfstandige financiële automatiseringstemplates blijven een alternatief voor later.
 
