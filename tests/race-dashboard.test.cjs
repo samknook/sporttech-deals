@@ -35,6 +35,17 @@ test('scenario comparison has slower, baseline and faster outcomes',()=>{
  assert.ok(scenarios[2].total<scenarios[1].total);
  assert.equal(scenarios[1].deltaSeconds,0);
 });
+test('goal input without colon is immediately accepted during calculation',()=>{
+ const formats=[['530','05:30'],['500','05:00'],['53015','05:30:15']];
+ for(const [digits,withColon] of formats){
+  assert.equal(core.targetToSeconds(digits),core.targetToSeconds(withColon));
+  assert.equal(race('half',{target:digits}).target,race('half',{target:withColon}).target);
+  assert.equal(race('half',{target:digits}).targetDifference,race('half',{target:withColon}).targetDifference);
+ }
+ assert.ok(Number.isNaN(core.targetToSeconds('560')));
+ assert.ok(Number.isNaN(core.targetToSeconds('0499')));
+ assert.equal(core.targetToSeconds(''),null);
+});
 test('unrealistic and malformed inputs fail validation',()=>{
  assert.throws(()=>race('half',{swimPace:'bad'}));
  assert.throws(()=>race('half',{bikeSpeed:0}));
