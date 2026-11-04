@@ -124,6 +124,7 @@
   }
   function textPlan(){
     const v=values(),p=core.calculate(v);
+    const goals=core.goalPacing(v),scenarios=core.compareScenarios(v);
     const checks=[...document.querySelectorAll('.check-item')];
     const list=[
       'SPORTTECH DEALS — TRIATHLON RACE PLAN',
@@ -144,6 +145,16 @@
       '',
       'DOORKOMSTTIJDEN — THEORETISCH',
       ...p.checkpoints.map(cp=>[cp.label,cp.distance,core.formatDuration(cp.elapsed),cp.clock].join(' | ')),
+      '',
+      'SCENARIOVERGELIJKING — REKENVOORBEELDEN',
+      ...scenarios.map(s=>s.label+': '+core.formatDuration(s.total)),
+      ...(goals?['',
+        'BENODIGDE DOELTEMPO’S — ELKE DISCIPLINE AFZONDERLIJK',
+        'Zwemmen: '+goals.swim.value+(goals.swim.status==='possible'?' /100 m':''),
+        'Fietsen: '+goals.bike.value+(goals.bike.status==='possible'?' km/u':''),
+        'Hardlopen: '+goals.run.value+(goals.run.status==='possible'?' /km':''),
+        'Alleen geldig bij gelijkblijvende overige disciplines en wisseltijden.'
+      ]:[]),
       '',
       'MATERIAALCHECKLIST'
     ];
