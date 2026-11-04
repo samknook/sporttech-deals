@@ -149,3 +149,20 @@ TriZentroAddTranslations('products.html','en',[
 ['all prices on this page are market-test proposals, not active offers. We do not yet accept payments or promise delivery dates. Health, training and nutrition content is educational; consult the race organizer for event rules and a qualified professional for personal health advice.','alle prijzen zijn testvoorstellen, geen actieve aanbiedingen. We accepteren nog geen betalingen en beloven geen leverdatum. Trainings-, gezondheids- en voedingsinformatie is educatief; raadpleeg de wedstrijdorganisatie en waar nodig gekwalificeerde professionals.'],
 ['Transparency & privacy','Transparantie en privacy']
 ]);
+
+/* English blocks on the otherwise Dutch homepage: render them in Dutch in NL mode. */
+TriZentroAddTranslations('index.html','en',[
+ ['Start here · Free 70.3 assessment','Begin hier · Gratis 70.3-voorbereidingscheck'],
+ ['What should you prepare next?','Wat kun je hierna voorbereiden?'],
+ ['Not sure where to start? Our free','Weet je niet waar te beginnen? Onze gratis'],
+ ['reviews 12 practical planning steps and gives you a focused action list — from event rules and transitions to fueling and race-morning logistics. This is a planning checklist, not a medical fitness test.','controleert 12 onderdelen van je voorbereiding en maakt een gerichte actielijst, van wedstrijdregels en wissels tot voeding en racedaglogistiek. Het is een checklist, geen medische of fysieke test.'],
+ ['Take the free 70.3 Readiness Check','Doe de gratis 70.3-voorbereidingscheck'],
+ ['Explore Blueprint & Race Pack','Bekijk Blueprint en Race Pack'],
+ ['70.3 beginner guide','70.3-gids voor beginners'],
+ ['The race-week checklist you can actually follow','De raceweek-checklist die je echt kunt gebruiken'],
+ ['Seven days out, check-in, race morning: our new','Zeven dagen vooraf, inchecken, wedstrijdochtend: onze nieuwe'],
+ ['walks through the steps beginners often overlook, from the official athlete guide to transition logistics. Read it free, then turn missing tasks into an action list.','behandelt de stappen die beginners vaak vergeten, van officiële wedstrijdinformatie tot de wisselzone. Lees hem gratis en zet ontbrekende taken op je actielijst.'],
+ ['Read the race-week guide','Lees de raceweekgids'],
+ ['Check your preparation','Controleer je voorbereiding'],
+ ['Learn smarter. Race prepared.','Leer slimmer. Start voorbereid.']
+]);
