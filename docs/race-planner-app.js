@@ -127,7 +127,7 @@
     const goals=core.goalPacing(v),scenarios=core.compareScenarios(v);
     const checks=[...document.querySelectorAll('.check-item')];
     const list=[
-      'SPORTTECH DEALS — TRIATHLON RACE PLAN',
+      'TRIZENTRO — TRIATHLON RACE PLAN',
       'Gratis planningsprototype. Scenario, geen gegarandeerde finishtijd.',
       '',
       'Wedstrijd: '+(v.eventName||'Mijn triatlon'),
@@ -165,7 +165,7 @@
     }
     list.push('','NOTITIES',v.notes||'(geen)','',
       'Controleer parcours, starttijd, lokale wedstrijdregels en eventueel bekende cut-offs bij de organisator.',
-      'Deze tool verstuurt geen ingevulde gegevens naar SportTech Deals.');
+      'Deze tool verstuurt geen ingevulde gegevens naar TriZentro.');
     return list.join('\n');
   }
   function download(){
