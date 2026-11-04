@@ -11,6 +11,10 @@ on:
       - 'docs/fietscomputer-triatlon.html'
       - 'docs/fietscomputer-aanbieding.html'
       - 'docs/70-3-eindtijd-calculator.html'
+      - 'docs/race-planner.html'
+      - 'docs/race-planner-core.js'
+      - 'docs/race-planner-app.js'
+      - 'tests/test_race_planner.cjs'
       - 'docs/robots.txt'
       - 'docs/sitemap.xml'
       - 'docs/.nojekyll'
@@ -52,6 +56,12 @@ jobs:
           Path('/tmp/sporttech-70-3-calculator.js').write_text(scripts[0],encoding='utf-8')
           PY
           node --check /tmp/sporttech-70-3-calculator.js
+          test -s docs/race-planner.html
+          test -s docs/race-planner-core.js
+          test -s docs/race-planner-app.js
+          node --check docs/race-planner-core.js
+          node --check docs/race-planner-app.js
+          node --test tests/test_race_planner.cjs
           test -s docs/fietscomputer-triatlon.html
           test -s docs/fietscomputer-aanbieding.html
           test -s docs/sitemap.xml
