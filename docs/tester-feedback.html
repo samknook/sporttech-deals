@@ -24,7 +24,7 @@
 <div class="label">TRIZENTRO · PRODUCT TEST</div>
 <h1>Tell us what is actually useful.</h1>
 <p>We are building digital tools and practical guides for triathletes. Use the <a href="race-pack-preview.html">free 70.3 Race Pack prototype</a> or read our <a href="blueprint-preview.html">Blueprint sample chapters</a> first. Then answer these six questions. We want specific criticism, not just compliments.</p>
-<div class="note"><strong>Privacy:</strong> this page does not submit or store your answers on any server. Pressing "Download feedback" creates a text file on your own device. You decide whether and with whom to share it. Do not include private medical details or unnecessary personal information.</div>
+<div class="note"><strong>Privacy:</strong> this page does not submit or store your answers on a TriZentro server. Download creates a local text file. The email option opens your own mail app with a draft; you decide whether to send it to trizentro.team@gmail.com. If you send it, your email provider and ours process the message, including your email address. Avoid sensitive health details and unnecessary personal information.</div>
 <form id="test-form" class="form-panel">
 <label for="product">1. Which product did you try?</label>
 <select id="product"><option value="70.3 Race Pack preview">70.3 Race Pack preview</option><option value="Blueprint chapter preview">Blueprint chapter preview</option><option value="Both products">Both products</option></select>
@@ -38,7 +38,7 @@
 <select id="pay"><option value="Not sure">Not sure</option><option value="Yes, if the extra value is clear">Yes, if the extra value is clear</option><option value="Maybe at a different price">Maybe at a different price</option><option value="No">No</option></select>
 <label for="extra">6. What one extra feature would make you want to use it again?</label>
 <textarea id="extra" maxlength="800" placeholder="A feature, document, improvement or example"></textarea>
-<div class="button-row"><button type="submit">Download my feedback (.txt)</button><a class="alt" href="race-pack-preview.html">Back to Race Pack</a></div>
+<div class="button-row"><button type="submit">Download my feedback (.txt)</button><button type="button" id="email-feedback" class="alt">Review &amp; email feedback</button><a class="alt" href="race-pack-preview.html">Back to Race Pack</a></div>
 <p id="status" role="status" aria-live="polite"></p>
 </form>
 <p><strong>For the TriZentro team:</strong> survey answers are not automatically collected. Use this scorecard during voluntary 1:1 tests, ask testers to share their exported feedback if they wish, then summarize the responses without identifying the testers. Do not treat a selected willingness-to-pay option as a purchase.</p>
@@ -47,9 +47,8 @@
 (()=>{
 'use strict';
 const $=id=>document.getElementById(id);
-$('test-form').addEventListener('submit',event=>{
- event.preventDefault();
- const lines=[
+function feedbackLines(){
+ return [
   'TRIZENTRO PRODUCT TESTER SCORECARD',
   'Voluntary feedback, not a sale or purchase intent commitment.',
   '',
@@ -60,11 +59,24 @@ $('test-form').addEventListener('submit',event=>{
   'Willingness to pay (hypothetical): '+$('pay').value,
   'Most wanted next feature: '+$('extra').value
  ];
+}
+$('test-form').addEventListener('submit',event=>{
+ event.preventDefault();
+ const lines=feedbackLines();
  const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
  const url=URL.createObjectURL(blob);
  const link=document.createElement('a');link.href=url;link.download='trizentro-tester-feedback.txt';
  document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
  $('status').textContent='Your feedback file was created locally. No answer has been sent to TriZentro.';
+});
+$('email-feedback').addEventListener('click',()=>{
+ const body=feedbackLines().join('\n');
+ const subject='TriZentro product tester feedback';
+ const href='mailto:trizentro.team@gmail.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+ // Mail apps can impose length limits. This form caps each free-text field at 800 characters.
+ if(href.length>7000){$('status').textContent='This message is too long for a reliable email draft. Download the .txt file and attach it instead.';return;}
+ $('status').textContent='Opening your email app. Nothing is sent until you review and send your message.';
+ window.location.href=href;
 });
 })();
 </script></body></html>
