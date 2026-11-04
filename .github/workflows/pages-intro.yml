@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'docs/index.html'
+      - 'docs/google36c6913874a61b33.html'
       - 'docs/koopgids.html'
       - 'docs/transparantie.html'
       - 'docs/site.css'
@@ -43,6 +44,7 @@ jobs:
       - name: Controleer inhoud, scripts, merkmiddelen en verificatietag
         run: |
           test -s docs/index.html
+          test -s docs/google36c6913874a61b33.html
           test -s docs/koopgids.html
           test -s docs/transparantie.html
           test -s docs/site.css
