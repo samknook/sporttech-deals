@@ -49,6 +49,7 @@
 <input id="bike-speed" type="number" min="10" max="60" step="0.1" value="33"><small>Gemiddeld inclusief vertragingen</small></label>
 <label class="tri-field run" for="run-pace">🏃 Hardlooptempo (min:sec / km)
 <input id="run-pace" value="5:00" maxlength="5" inputmode="numeric"><small>Voorbeeld: 5:15</small></label>
+<p class="tri-note">Mobiel: typ <strong>445</strong> voor 4:45 of <strong>150</strong> voor 1:50. De dubbele punt wordt automatisch toegevoegd als je het tempoveld verlaat.</p>
 <label class="tri-field" for="t1-minutes">🔄 T1 (minuten)
 <input id="t1-minutes" type="number" min="0" max="30" step="0.5" value="4"></label>
 <label class="tri-field" for="t2-minutes">🔄 T2 (minuten)
@@ -109,6 +110,8 @@
 </section>
 </main>
 <footer><div class="wrap"><div><a class="brand" href="./"><img class="brand-icon" src="trizentro-icon.svg" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><p>Gratis triatlontools zonder account of tracking.</p></div><a href="transparantie.html">Privacy en transparantie</a></div></footer>
+<script src="pace-input.js"></script>
+<script>TriZentroPaceInput.bind(["swim-pace","run-pace"]);</script>
 <script src="race-planner-core.js"></script>
 <script src="race-insights.js"></script><script src="triathlon-calculator-app.js"></script>
 </body></html>
