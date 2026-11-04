@@ -129,6 +129,7 @@
 const $=id=>document.getElementById(id),core=window.RacePlannerCore;
 const locale=(window.TriZentroI18n&&window.TriZentroI18n.lang)||'en';
 const nl=locale==='nl';
+if(nl&&$("race-name").value==="My first 70.3")$("race-name").value="Mijn eerste 70.3";
 let exported="";
 function details(){return {distance:"half",swimPace:$("swim").value,bikeSpeed:$("bike").value,runPace:$("run").value,t1Minutes:$("t1").value,t2Minutes:$("t2").value,start:$("start").value,target:$("target").value};}
 const signed=n=>n===0?(nl?"Gelijk aan basisplan":"Same as baseline"):(n>0?"+":"−")+core.formatDuration(Math.abs(n))+(nl?" t.o.v. basisplan":" vs baseline");
@@ -184,5 +185,7 @@ document.querySelectorAll("input,textarea").forEach(el=>el.addEventListener("inp
 $("download").addEventListener("click",()=>{if(!exported)return;const url=URL.createObjectURL(new Blob([exported],{type:"text/plain;charset=utf-8"}));const link=document.createElement("a");link.href=url;link.download="trizentro-first-70-3-sample.txt";document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);});
 $("print").addEventListener("click",()=>window.print());
 render();
+// Refresh text export once the shared translator has localized checklist labels.
+document.addEventListener("DOMContentLoaded",render);
 })();
 </script></body></html>
