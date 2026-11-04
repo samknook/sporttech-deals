@@ -187,3 +187,37 @@ Object.assign(TriZentroTranslations.pageTitles,{
  'fietscomputer-aanbieding.html':{nl:'Fietscomputer aanbiedingen beoordelen',en:'Evaluating bike computer deals'},
  'transparantie.html':{nl:'Transparantie en privacy',en:'Transparency and privacy'}
 });
+
+/* Shared calculation messages generated after inputs change. */
+TriZentroCommonTranslations([
+ ['Kies een geldige triatlonafstand.','Choose a valid triathlon distance.'],
+ ['Zwemafstand: vul 100 tot 10.000 meter in.','Swim distance: enter 100 to 10,000 meters.'],
+ ['Fietsafstand: vul 1 tot 400 kilometer in.','Bike distance: enter 1 to 400 kilometers.'],
+ ['Loopafstand: vul 1 tot 100 kilometer in.','Run distance: enter 1 to 100 kilometers.'],
+ ['Zwemtempo: gebruik 1:00 tot 6:00 per 100 meter.','Swim pace: use 1:00 to 6:00 per 100 meters.'],
+ ['Looptempo: gebruik 2:00 tot 15:00 per kilometer.','Run pace: use 2:00 to 15:00 per kilometer.'],
+ ['Fietssnelheid: gebruik 10 tot 60 km/u.','Bike speed: use 10 to 60 km/h.'],
+ ['T1: gebruik 0 tot 30 minuten.','T1: use 0 to 30 minutes.'],
+ ['T2: gebruik 0 tot 30 minuten.','T2: use 0 to 30 minutes.'],
+ ['Starttijd: gebruik uu:mm.','Start time: use hh:mm.'],
+ ['Doeltijd: gebruik uu:mm, bijvoorbeeld 05:00.','Finish target: use hh:mm, for example 05:00.'],
+ ['Rustiger scenario','Conservative scenario'],
+ ['Jouw invoer','Your input'],
+ ['Sneller scenario','Faster scenario'],
+ ['Geen doel','No target'],
+ ['Controleer de ingevoerde waarden.','Check your input values.'],
+ ['Corrigeer eerst de invoer.','Correct the input first.'],
+ ['Plan lokaal bewaard op dit apparaat.','Plan saved locally on this device.'],
+ ['Opslaan is in deze browser niet mogelijk. Gebruik downloaden.','Saving is unavailable in this browser. Download instead.'],
+ ['Geen opgeslagen plan gevonden.','No saved plan found.'],
+ ['Opgeslagen plan geladen.','Saved plan loaded.'],
+ ['Plan kon niet worden geladen.','The saved plan could not be loaded.'],
+ ['Lokaal opgeslagen plan verwijderd.','Locally saved plan deleted.'],
+ ['Browseropslag is niet toegankelijk.','Browser storage is unavailable.'],
+ ['Controleer de invoer','Check your input'],
+ ['Controleer je tempo’s of afstand','Check your paces or distance'],
+ ['Vul een doeltijd in voor een vergelijking.','Enter a finish target for comparison.'],
+ ['Eigen afstand','Custom distance'],
+ ['Mijn triatlon','My triathlon'],
+ ['Berekenen…','Calculating…']
+]);
