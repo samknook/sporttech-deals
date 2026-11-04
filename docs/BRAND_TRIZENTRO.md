@@ -86,6 +86,8 @@ TriZentro helps triathletes plan smarter. Calculate finish times, compare race p
 
 TriZentro is an emerging independent triathlon tools platform for athletes preparing for Sprint, Olympic, 70.3 and full-distance races. Our free online calculators and Race Planner help athletes explore pacing scenarios, transitions, checkpoints and race-day preparation.
 
+**Actuele, complete Engelstalige social-media launch set met vier captions, designbriefs, publicatievolgorde en controles:** [TRIZENTRO_SOCIAL_LAUNCH.md](TRIZENTRO_SOCIAL_LAUNCH.md). De onderstaande drie ideeën blijven historische concepten; niets is geplaatst of ingepland.
+
 ## Eerste drie social posts (concept, NIET geplaatst)
 
 1. **Launch:** “Meet TriZentro 🏊🚴🏃 Free race tools for every triathlete. Choose your distance, estimate your splits, and build your race-day checklist. Sprint · Olympic · 70.3 · Full. [link to current site]”
