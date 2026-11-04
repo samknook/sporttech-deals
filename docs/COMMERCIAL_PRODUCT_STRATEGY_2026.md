@@ -93,3 +93,9 @@ Avoid a fabricated 'conversion rate' until there is genuine traffic and tracked 
 **Week 4:** decide whether buyer interest warrants the legal/payment setup; postpone launch if evidence is weak.
 
 None of these milestones are guarantees. Never present roadmap as completed work.
+
+## Product update — 4 November 2026, follow-up
+- The free 70.3 Race Pack prototype now has a customizable race-morning schedule, separate bike/run checkpoints, event notes, text dossier export and print layout. Calculations and inline JavaScript were evaluated successfully in isolated code checks; browser and production deployment checks remain outstanding.
+- A six-question privacy-first tester scorecard is available at `docs/tester-feedback.html`. It downloads answers locally and does **not** automatically send or collect responses. Do not count page views or downloads as completed testers.
+- Next decision: recruit real testers, gather voluntary feedback and determine whether the paid offer needs substantially stronger event-specific and PDF functionality than this free prototype. If not, do not launch the proposed paid pack at the same price.
+- The public GitHub Pages address remained inaccessible to the assistant's web fetch, so external go-live is **unverified**. Source file existence is not evidence of a functioning public site.
