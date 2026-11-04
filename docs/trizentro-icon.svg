@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+<title id="title">TriZentro</title><desc id="desc">Abstract three-discipline triathlon mark, swim blue, bike mint, run orange</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#081f35"/><stop offset="1" stop-color="#0b4054"/></linearGradient>
+</defs>
+<rect width="512" height="512" rx="112" fill="url(#bg)"/>
+<path d="M110 154H402" stroke="#32b4eb" stroke-width="40" stroke-linecap="round"/>
+<path d="M110 231H338" stroke="#31c8ad" stroke-width="40" stroke-linecap="round"/>
+<path d="M110 308H269" stroke="#ffa66a" stroke-width="40" stroke-linecap="round"/>
+<path d="M299 346L378 267L393 330L426 343L299 455Z" fill="#fff" transform="translate(-11 -31) rotate(-8 370 345)"/>
+<circle cx="113" cy="396" r="12" fill="#32b4eb"/>
+<circle cx="154" cy="396" r="12" fill="#31c8ad"/>
+<circle cx="195" cy="396" r="12" fill="#ffa66a"/>
+</svg>
