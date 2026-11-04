@@ -210,3 +210,11 @@ TriZentroCommonTranslations([
  ['Mijn triatlon','My triathlon'],
  ['Berekenen…','Calculating…']
 ]);
+
+TriZentroCommonTranslations([
+ ['Vul een geldige wedstrijddatum en starttijd in.','Enter a valid race date and start time.'],
+ ['Voer geldige niet-negatieve voorbereidingstijden in.','Enter valid nonnegative planning times.'],
+ ['Ongeldige wedstrijddatum.','Invalid race date.'],
+ ['Vul een geldig berekend racescenario in.','Provide a valid calculated race scenario.'],
+ ['Drie racescenario’s nodig.','Three race scenarios required.']
+]);
