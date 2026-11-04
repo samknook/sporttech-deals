@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="nl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Gratis triatlon-eindtijdcalculator voor Sprint, Olympisch, 70.3, Full en aangepaste afstanden. Bereken zwemtijd, fietstijd, looptijd en wissels.">
+<meta name="theme-color" content="#091f34">
+<title>Triathlon Eindtijdcalculator — Sprint, Olympisch, 70.3 & Full | SportTech Deals</title>
+<link rel="stylesheet" href="site.css"><link rel="stylesheet" href="triathlon.css">
+</head><body class="triathlon-page">
+<header class="top"><div class="wrap"><div class="nav"><a class="brand" href="./">SPORTTECH<span>DEALS.</span></a><nav aria-label="Navigatie"><a href="./">Home</a><a href="race-planner.html">Race Planner</a><a href="koopgids.html">Koopgids</a></nav></div></div></header>
+<section class="tri-hero"><div class="wrap">
+<div class="eyebrow">⏱️ Triathlon Race Tools · Gratis calculator</div>
+<h1>Hoe snel ben jij<br><em>over de finish?</em></h1>
+<p>Bereken je eindtijd voor een Sprint, Olympische afstand, 70.3, Full of eigen triatlon. Vergelijk je eigen tempo’s, twee wissels en een optionele doeltijd.</p>
+<div class="tri-sport-ribbon"><span class="ribbon-part" data-sport="swim"><span aria-hidden="true">🏊</span> SWIM</span><span class="ribbon-part" data-sport="bike"><span aria-hidden="true">🚴</span> BIKE</span><span class="ribbon-part" data-sport="run"><span aria-hidden="true">🏃</span> RUN</span></div>
+</div></section>
+<main class="wrap tri-main">
+<section class="tri-panel" aria-labelledby="choose-distance">
+<div class="tri-eyebrow">01 / Distance</div><h2 id="choose-distance">Welke afstand ga je doen?</h2>
+<p class="intro">De afstandsopties zijn standaardvoorbeelden. Met 'Eigen afstand' reken je exact jouw parcours door.</p>
+<div class="distance-selector" id="distance-selector" role="group" aria-label="Kies afstand">
+<button data-distance="sprint" type="button" aria-pressed="false"><span class="distance-title">Sprint</span><span class="distance-detail">750 m · 20 km · 5 km</span></button>
+<button data-distance="olympic" type="button" aria-pressed="false"><span class="distance-title">Olympisch</span><span class="distance-detail">1,5 · 40 · 10 km</span></button>
+<button data-distance="half" type="button" aria-pressed="true"><span class="distance-title">70.3 / Halve</span><span class="distance-detail">1,9 · 90 · 21,1 km</span></button>
+<button data-distance="full" type="button" aria-pressed="false"><span class="distance-title">Full</span><span class="distance-detail">3,8 · 180 · 42,2 km</span></button>
+<button data-distance="custom" type="button" aria-pressed="false"><span class="distance-title">Eigen afstand</span><span class="distance-detail">Zelf instellen</span></button>
+</div>
+<div class="tri-custom-grid" id="custom-distances" hidden>
+<label class="tri-field swim" for="swim-meters">🏊 Zwemafstand (m)<input id="swim-meters" type="number" min="100" max="10000" step="50" value="1900"></label>
+<label class="tri-field bike" for="bike-km">🚴 Fietsafstand (km)<input id="bike-km" type="number" min="1" max="400" step="0.1" value="90"></label>
+<label class="tri-field run" for="run-km">🏃 Loopafstand (km)<input id="run-km" type="number" min="1" max="100" step="any" value="21.0975"></label>
+</div>
+</section>
+<section class="tri-panel">
+<div class="tri-eyebrow">02 / Tempo's</div><h2>Jouw Swim · Bike · Run</h2>
+<p class="intro">Geef realistische gemiddelde tempo’s op. Je kunt alle velden direct aanpassen.</p>
+<div class="tri-inputs">
+<label class="tri-field swim" for="swim-pace">🏊 Zwemtempo (min:sec / 100 m)
+<input id="swim-pace" value="2:00" maxlength="5" inputmode="numeric"><small>Voorbeeld: 1:50</small></label>
+<label class="tri-field bike" for="bike-speed">🚴 Fietssnelheid (km/u)
+<input id="bike-speed" type="number" min="10" max="60" step="0.1" value="33"><small>Gemiddeld inclusief vertragingen</small></label>
+<label class="tri-field run" for="run-pace">🏃 Hardlooptempo (min:sec / km)
+<input id="run-pace" value="5:00" maxlength="5" inputmode="numeric"><small>Voorbeeld: 5:15</small></label>
+<label class="tri-field" for="t1-minutes">🔄 T1 (minuten)
+<input id="t1-minutes" type="number" min="0" max="30" step="0.5" value="4"></label>
+<label class="tri-field" for="t2-minutes">🔄 T2 (minuten)
+<input id="t2-minutes" type="number" min="0" max="30" step="0.5" value="3"></label>
+<label class="tri-field" for="target-time">🏁 Doeltijd (optioneel, uren:minuten)
+<input id="target-time" maxlength="8" inputmode="numeric" placeholder="05:00"><small>Dit is jouw persoonlijke doel, geen officiële tijdslimiet</small></label>
+</div>
+<div class="tri-actions">
+<button class="tri-btn dark" id="sub5" type="button">Probeer een sub-5 70.3</button>
+<button class="tri-btn secondary" id="reset" type="button">Standaardvoorbeeld</button>
+</div>
+</section>
+<section class="tri-panel">
+<div class="tri-eyebrow">03 / Finish time</div>
+<h2>Jouw berekende eindtijd</h2>
+<p class="tri-note"><strong id="distance-label">70.3 / Halve</strong> · <span id="distance-description">1.900 m zwemmen · 90 km fietsen · 21,1 km lopen</span></p>
+<div class="tri-results" aria-live="polite">
+<div class="tri-eyebrow">Race time</div><div class="time" id="time-total">—</div>
+<div class="status neutral" id="goal-status">Berekenen…</div>
+<div class="tri-result-segments" aria-hidden="true">
+<span class="swim" id="bar-swim"></span><span class="t1" id="bar-t1"></span><span class="bike" id="bar-bike"></span><span class="t2" id="bar-t2"></span><span class="run" id="bar-run"></span>
+</div>
+<div class="tri-result-metrics">
+<div class="swim"><small>🏊 Zwemmen</small><strong id="split-swim">—</strong></div>
+<div><small>T1</small><strong id="split-t1">—</strong></div>
+<div class="bike"><small>🚴 Fietsen</small><strong id="split-bike">—</strong></div>
+<div><small>T2</small><strong id="split-t2">—</strong></div>
+<div class="run"><small>🏃 Lopen</small><strong id="split-run">—</strong></div>
+</div></div>
+<p class="tri-error" id="validation-error" role="alert"></p>
+<p class="tri-note">Deze uitkomst is een theoretisch tijdscenario, geen wedstrijdvoorspelling. Condities, parcours, verzorging en vermoeidheid veranderen je werkelijke tempo.</p>
+<div class="tri-actions"><a class="tri-btn" id="planner-link" href="race-planner.html?distance=half">📋 Maak een compleet raceplan</a><a class="tri-btn secondary" href="./">Terug naar home</a></div>
+</section>
+</main>
+<footer><div class="wrap"><div><a class="brand" href="./">SPORTTECH<span>DEALS.</span></a><p>Gratis triatlontools zonder account of tracking.</p></div><a href="transparantie.html">Privacy en transparantie</a></div></footer>
+<script src="race-planner-core.js"></script><script src="triathlon-calculator-app.js"></script>
+</body></html>
