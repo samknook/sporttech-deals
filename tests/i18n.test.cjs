@@ -7,8 +7,8 @@ const docs=path.join(__dirname,'..','docs');
 const modules=['translations.js','translations-pages.js','translations-more.js','translations-readiness.js','translations-tools.js','translations-guides.js','translations-race-guides.js','translations-equipment.js','translations-privacy.js'];
 const script=name=>fs.readFileSync(path.join(docs,name),'utf8');
 function loadCatalog(){
- const context={window:{}};
- context.window.window=context.window;
+ const context={};
+ context.window=context;
  vm.createContext(context);
  for(const name of modules)vm.runInContext(script(name),context,{filename:name});
  return context.window.TriZentroTranslations;
