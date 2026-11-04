@@ -15,20 +15,27 @@ const page=decodeURIComponent(root.location.pathname.split('/').pop()||'index.ht
 const native=(root.document.documentElement.getAttribute('lang')||'nl').slice(0,2);
 root.document.documentElement.lang=current;
 const T=root.TriZentroTranslations||{};
+const dict=(T[page]||{})[current]||{};
+const common=(T.common||{})[current]||{};
+const lastRendered=new WeakMap();
+function translateNode(n){
+ if(!n||n.nodeType!==3||!n.parentElement||n.parentElement.closest('script,style,noscript,code,pre,textarea,[data-no-translate],.tz-navigation'))return;
+ const original=n.nodeValue;
+ if(lastRendered.get(n)===original)return;
+ const trimmed=original.trim();
+ if(!trimmed)return;
+ const translation=Object.prototype.hasOwnProperty.call(dict,trimmed)?dict[trimmed]:common[trimmed];
+ if(typeof translation==='string'&&translation!==trimmed){
+  const next=original.replace(trimmed,translation);
+  lastRendered.set(n,next);
+  n.nodeValue=next;
+ }
+}
 function translate(){
- const dict=(T[page]||{})[current]||{};
- const common=(T.common||{})[current]||{};
  const walker=root.document.createTreeWalker(root.document.body,NodeFilter.SHOW_TEXT);
  const nodes=[];
  while(walker.nextNode())nodes.push(walker.currentNode);
- for(const n of nodes){
-  if(n.parentElement&&n.parentElement.closest('script,style,noscript,code,pre,textarea,[data-no-translate],.tz-navigation'))continue;
-  const original=n.nodeValue;
-  const trimmed=original.trim();
-  if(!trimmed)continue;
-  const translation=Object.prototype.hasOwnProperty.call(dict,trimmed)?dict[trimmed]:common[trimmed];
-  if(typeof translation==='string')n.nodeValue=original.replace(trimmed,translation);
- }
+ for(const n of nodes)translateNode(n);
  for(const el of root.document.querySelectorAll('[placeholder],[aria-label],[title]')){
   if(el.closest('.tz-navigation'))continue;
   for(const attr of ['placeholder','aria-label','title']){
@@ -62,6 +69,25 @@ function switchLanguage(lang){
  root.location.assign(u.toString());
 }
 root.TriZentroI18n={lang:current,native,page,switchLanguage,translate,decorateLinks};
-if(root.document.readyState==='loading')root.document.addEventListener('DOMContentLoaded',()=>{translate();decorateLinks();});
-else{translate();decorateLinks();}
+function init(){
+ translate();decorateLinks();
+ // Keep calculation messages and result labels in the selected language.
+ if(typeof MutationObserver!=='undefined'){
+  const observer=new MutationObserver(records=>{
+   for(const record of records){
+    if(record.type==='characterData')translateNode(record.target);
+    for(const node of record.addedNodes||[]){
+     if(node.nodeType===3)translateNode(node);
+     else if(node.nodeType===1){
+      const walker=root.document.createTreeWalker(node,NodeFilter.SHOW_TEXT);
+      while(walker.nextNode())translateNode(walker.currentNode);
+     }
+    }
+   }
+  });
+  observer.observe(root.document.body,{subtree:true,childList:true,characterData:true});
+ }
+}
+if(root.document.readyState==='loading')root.document.addEventListener('DOMContentLoaded',init);
+else init();
 })(window);
