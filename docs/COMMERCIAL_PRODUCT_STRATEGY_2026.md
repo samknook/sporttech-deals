@@ -99,3 +99,17 @@ None of these milestones are guarantees. Never present roadmap as completed work
 - A six-question privacy-first tester scorecard is available at `docs/tester-feedback.html`. It downloads answers locally and does **not** automatically send or collect responses. Do not count page views or downloads as completed testers.
 - Next decision: recruit real testers, gather voluntary feedback and determine whether the paid offer needs substantially stronger event-specific and PDF functionality than this free prototype. If not, do not launch the proposed paid pack at the same price.
 - The public GitHub Pages address remained inaccessible to the assistant's web fetch, so external go-live is **unverified**. Source file existence is not evidence of a functioning public site.
+
+## Acquisition update — 4 November 2026
+A new free `70-3-readiness-check.html` offers a twelve-question planning self-check and a downloadable, locally generated action list. Linked from homepage, product catalog and Race Pack preview. This is **not** a health/physical readiness certification. The score should not be presented as a safety guarantee.
+
+**Customer path under test**
+1. A visitor discovers the readiness checklist through an organic query or a shared link.
+2. The visitor identifies a practical gap (event rules, pace estimate, fueling, morning schedule).
+3. The visitor follows a link to the relevant free tool and, if useful, the Race Pack preview.
+4. The visitor may voluntarily complete the private tester-feedback scorecard, downloading their answers and optionally sharing them with the business in a separately agreed channel.
+5. Only after real feedback and compliance checks consider a commercial launch.
+
+**Measurement limitation:** No analytics or feedback submission is currently active. Therefore no claims about funnel traffic, completions, leads, conversion or revenue are supportable. The public GitHub Pages URL remains unverified via the available web access. The site owner should check Pages publication source in repository Settings and inspect the site in a regular browser before recruiting testers.
+
+**Next concrete marketing tasks:** Write two original search-intent guides ("first 70.3 checklist" and "70.3 race day schedule"), avoid keyword-stuffed duplicates, confirm Search Console sitemap indexing, and invite a small panel of genuine volunteer users to review both the mobile experience and the product proposition.
