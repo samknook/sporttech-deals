@@ -1,0 +1,40 @@
+name: Test Triathlon Race Tools in mobiele browser
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/race-planner.html'
+      - 'docs/race-planner-core.js'
+      - 'docs/race-planner-app.js'
+      - 'docs/race-insights.js'
+      - 'docs/triathlon-calculator.html'
+      - 'docs/triathlon-calculator-app.js'
+      - 'docs/triathlon.css'
+      - 'tests/browser_smoke.cjs'
+      - '.github/workflows/browser-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Code ophalen
+        uses: actions/checkout@v4
+      - name: Node.js instellen
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Playwright tijdelijk installeren
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Desktop en telefoon in echte browser testen
+        run: |
+          python3 -m http.server 8765 --directory docs >/tmp/sporttech-http.log 2>&1 &
+          sleep 2
+          node tests/browser_smoke.cjs
