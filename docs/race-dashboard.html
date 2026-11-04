@@ -74,6 +74,11 @@
 <div class="tablewrap"><table><thead><tr><th>Onderdeel</th><th>Duur</th><th>Voorbij sinds start</th><th>Kloktijd</th></tr></thead><tbody id="splits"></tbody></table></div>
 </div>
 </section>
+<section class="panel" aria-labelledby="scenario-title"><h2 id="scenario-title">Scenario Lab / Wat als?</h2>
+<p>Vergelijk hetzelfde parcours met een iets rustiger en een iets sneller tempo. De berekening verandert zwemmen met 5 seconden per 100 m, fietsen met 1 km/u en lopen met 10 seconden per kilometer. Wisseltijden blijven gelijk.</p>
+<div class="tablewrap"><table><thead><tr><th>Scenario</th><th>Eindtijd</th><th>Verschil met jouw plan</th></tr></thead><tbody id="scenarios"></tbody></table></div>
+<p class="note caution">Dit zijn rekenvoorbeelden, geen voorspellingen. Sneller fietsen kan je looptijd beïnvloeden. De scenario's houden geen rekening met vermoeidheid, weersomstandigheden of parcours.</p>
+</section>
 <section class="panel"><h2>03 / Voeding als rekenscenario</h2>
 <p>Vul hier alleen hoeveelheden in die je tijdens training hebt getest. De tool rekent een koolhydraatdoel voor het fiets- en loopdeel uit, maar geeft geen persoonlijk voedings- of vochtadvies.</p>
 <div class="fields">
@@ -162,13 +167,24 @@ for(const val of [label,fmtSecs(seconds),fmtSecs(elapsed),clock(new Date(v.dateO
 const cell=document.createElement("td");cell.textContent=val;row.appendChild(cell);
 }body.appendChild(row);
 }
+const scenarios=core.compareScenarios(v.input);
+const scenarioBody=$("scenarios");scenarioBody.replaceChildren();
+for(const entry of scenarios){
+ const row=document.createElement("tr");
+ const delta=Math.round(entry.deltaSeconds);
+ const label=delta===0?"—":(delta>0?"+":"−")+fmtSecs(Math.abs(delta));
+ for(const value of [entry.label,fmtSecs(entry.total),label]){
+  const cell=document.createElement("td");cell.textContent=value;row.appendChild(cell);
+ }
+ scenarioBody.appendChild(row);
+}
 const bikeGoal=result.bike/3600*v.carbs,runGoal=result.run/3600*v.carbs;
 const drink=v.bottles*v.bottle;
 const bikeGels=Math.max(0,Math.ceil((bikeGoal-drink-1e-9)/v.gel));
 const runGels=Math.max(0,Math.ceil((runGoal-1e-9)/v.gel));
 $("nutrition").textContent="Eigen rekendoel: "+fmt(bikeGoal+runGoal)+" g koolhydraten over fiets- en loopdeel. Bij "+v.bottles+" ingevoerde bidons ("+fmt(drink)+" g totaal) en "+fmt(v.gel)+" g per gel: ongeveer "+bikeGels+" gels op de fiets en "+runGels+" gels tijdens het lopen. Afronding op hele gels kan je doel overschrijden; dit is geen voedingsadvies.";
 const checks=[...document.querySelectorAll("#checks input")];
-exportText=["TRIZENTRO · RACE DASHBOARD","Wedstrijd: "+$("name").value,"Datum: "+$("date").value,"Afstand: "+core.DISTANCES[v.input.distance].name,"Start: "+v.input.start,"Eindtijd (rekenvoorbeeld): "+fmtSecs(result.total),"Doeltijd: "+(v.input.target||"geen"),"Vertrek uiterlijk: "+dated(depDate)+" "+clock(depDate),"",...data.map(([label,seconds])=>label+": "+fmtSecs(seconds)),"","Voeding: "+$("nutrition").textContent,"","Checklist:",...checks.map(x=>(x.checked?"[x] ":"[ ] ")+x.parentElement.textContent.trim()),"","Alle berekeningen zijn hypothetisch. Officiële regels en persoonlijke behoeften gaan voor."].join("\n");
+exportText=["TRIZENTRO · RACE DASHBOARD","Wedstrijd: "+$("name").value,"Datum: "+$("date").value,"Afstand: "+core.DISTANCES[v.input.distance].name,"Start: "+v.input.start,"Eindtijd (rekenvoorbeeld): "+fmtSecs(result.total),"Doeltijd: "+(v.input.target||"geen"),"Vertrek uiterlijk: "+dated(depDate)+" "+clock(depDate),"",...data.map(([label,seconds])=>label+": "+fmtSecs(seconds)),"","Scenario's:",...scenarios.map(entry=>entry.label+": "+fmtSecs(entry.total)),"","Voeding: "+$("nutrition").textContent,"","Checklist:",...checks.map(x=>(x.checked?"[x] ":"[ ] ")+x.parentElement.textContent.trim()),"","Alle berekeningen zijn hypothetisch. Officiële regels en persoonlijke behoeften gaan voor."].join("\n");
 }catch(e){$("error").hidden=false;$("error").textContent=e.message;$("results").hidden=true;$("nutrition").textContent="Controleer de ingevoerde waarden.";$("download").disabled=true;exportText="";}
 }
 document.querySelectorAll("input,select").forEach(x=>x.addEventListener("input",calculate));
