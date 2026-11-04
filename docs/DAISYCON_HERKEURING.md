@@ -39,3 +39,9 @@ Sam
 ## Officiële bronnen
 https://faq-publisher.daisycon.com/hc/nl/articles/204989981-Hoe-verifieer-ik-mijn-website-bij-Daisycon
 https://daisycon.com/nl/publishers/affiliate-marketing-gids/deel-2/
+
+## Werk uitgevoerd op 4 november 2026 (avond)
+- Nieuwe originele gids `docs/70-3-raceplan.html` toegevoegd met 70.3-splits, onderbouwd sub-5-rekenvoorbeeld, pacing, voeding, wissels en materiaalchecklist.
+- De homepage verwijst naar deze gids en de sitemap bevat de nieuwe URL.
+- Broncode is vastgelegd in GitHub; openbare bereikbaarheid is **niet** onafhankelijk bevestigd (externe URL-test faalde). Noem dit daarom nog niet een bewezen live publicatie.
+- Hiermee is **niet** aangetoond dat Daisycon de site nu zal goedkeuren. Eigen domein, contactgegevens en duidelijkheid over mediaomschrijving blijven belangrijke punten.
