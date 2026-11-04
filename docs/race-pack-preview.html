@@ -41,7 +41,7 @@
 .muted{font-size:13px;color:#62766c}.error{color:#a12e25;font-weight:800}
 @media(max-width:850px){.form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:570px){.form-grid,.results,.preview-checks{grid-template-columns:1fr}.preview-card{padding:16px}}
-@media print{header,footer,.actions,.no-print{display:none!important}.preview{padding:0}.preview-card{box-shadow:none;break-inside:avoid}body{background:white}}
+@media print{header,footer,.actions,.no-print{display:none!important}.preview{padding:0}.preview-card{box-shadow:none;break-inside:avoid}body{background:white}.preview table{min-width:0;font-size:11px}.tablewrap{overflow:visible}.preview th,.preview td{padding:5px}.preview-card{padding:12px;margin:10px 0}h1{font-size:27px!important}}
 </style></head><body>
 <header class="top"><div class="wrap"><div class="nav"><a class="brand" href="./"><img src="trizentro-icon.svg" class="brand-icon" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><nav aria-label="Navigation"><a href="./">Home</a><a href="products.html">Products</a><a href="race-dashboard.html">Free Dashboard</a></nav></div></div></header>
 <main class="preview"><p class="muted"><a href="products.html">Products</a> / Your First 70.3</p>
@@ -69,7 +69,11 @@
 </div><h3>Split comparison</h3><div class="tablewrap"><table><thead><tr><th>Discipline</th><th>Conservative</th><th>Baseline</th><th>Ambition</th></tr></thead><tbody id="comparison"></tbody></table></div>
 <p id="goal-note" class="alert" aria-live="polite">—</p></div>
 </section>
-<section class="preview-card"><h2>03 / Your race-week checklist</h2>
+<section class="preview-card"><h2>03 / Baseline course checkpoints</h2>
+<p>Estimated elapsed and clock times at major course milestones. These are based on constant pace and the nominal 70.3 distances, not official timing mats or road locations.</p>
+<div class="tablewrap"><table><thead><tr><th>Checkpoint</th><th>Distance</th><th>Elapsed</th><th>Clock time</th></tr></thead><tbody id="dossier-checkpoints"></tbody></table></div>
+</section>
+<section class="preview-card"><h2>04 / Your race-week checklist</h2>
 <div class="preview-checks" id="checklist">
 <label><input type="checkbox">Confirm race briefing, rules and cut-offs</label>
 <label><input type="checkbox">Confirm registration and equipment check-in</label>
@@ -81,7 +85,11 @@
 <label><input type="checkbox">Prepare a weather contingency plan</label>
 </div><p class="muted">Your checklist stays in this browser while this page remains open; it is not uploaded or stored.</p>
 </section>
-<section class="preview-card"><h2>04 / Take your sample race pack</h2>
+<section class="preview-card"><h2>05 / Your event notes</h2>
+<p>Make a short personal note about transition access, event cut-offs, nutrition pickup or your contingency plan. This note stays in the browser and is included in your text export.</p>
+<label for="race-notes">My notes</label><textarea id="race-notes" maxlength="1500" rows="5" style="width:100%;border:1px solid #b8c9c1;border-radius:10px;padding:12px;font:inherit" placeholder="Example: Check T1 closure time with event organizer."></textarea>
+</section>
+<section class="preview-card"><h2>06 / Take your sample race pack</h2>
 <div class="actions no-print"><button id="download" type="button">Download sample (.txt)</button><button id="print" class="secondary" type="button">Print / save as PDF</button><a class="secondary" href="products.html">Explore product lineup</a></div>
 <p class="alert warning">This is a prototype, not individualized coaching, nutritional guidance or a guarantee of performance. Course conditions, fatigue and local event rules can change actual results. The future commercial pack would add much more detail, professionally reviewed templates and polished exports. No checkout or payment is active.</p>
 <p>For the full free experience, also use our <a href="race-dashboard.html">Race Dashboard</a>, <a href="race-fuel-planner.html">Race Fuel Planner</a> and <a href="race-day-timeline.html">Race Day Timeline</a>.</p>
@@ -89,6 +97,7 @@
 <footer><div class="wrap"><a class="brand" href="./"><img class="brand-icon" src="trizentro-icon.svg" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><a href="transparantie.html">Privacy &amp; transparency</a></div></footer>
 <script src="pace-input.js"></script><script>TriZentroPaceInput.bind(["swim","run"]);</script>
 <script src="race-planner-core.js"></script>
+<script src="race-pack-dossier.js"></script>
 <script>
 (()=>{
 "use strict";
@@ -113,15 +122,29 @@ input,
 {...input,swimPace:core.secondsToPace(clamp(values-5,60,360)),bikeSpeed:clamp(bike+1,10,60),runPace:core.secondsToPace(clamp(run-10,120,900))}
 ];
 const results=scenarioInputs.map(s=>core.calculate(s));
+const checkpoints=window.TriZentroRaceDossier.checkpoints(results[1],core,input.start);
+const checkpointBody=$("dossier-checkpoints");checkpointBody.replaceChildren();
+for(const point of checkpoints){
+const tr=document.createElement("tr");
+for(const value of [point.label,point.distance,core.formatDuration(point.elapsed),point.clock]){
+const cell=document.createElement("td");cell.textContent=value;tr.appendChild(cell);
+}
+checkpointBody.appendChild(tr);
+}
 const body=$("comparison");body.replaceChildren();
 const disciplines=[["Swim","swim"],["T1","t1"],["Bike","bike"],["T2","t2"],["Run","run"]];
 for(const [label,key] of disciplines){const row=document.createElement("tr");for(const x of [label,...results.map(r=>core.formatDuration(r[key]))]){const cell=document.createElement("td");cell.textContent=x;row.appendChild(cell);}body.appendChild(row);}
 const goal=base.target;
 $("goal-note").textContent=goal===null?"No finish target entered.":(base.total<=goal?"Your baseline arithmetic is within your selected target by ":"Your baseline arithmetic is above your selected target by ")+core.formatDuration(Math.abs(goal-base.total))+". Actual racing may differ.";
-exported=["TRIZENTRO — YOUR FIRST 70.3 RACE PACK PREVIEW","Free sample, not coaching or an official race plan","Race: "+$("race-name").value,"Date: "+$("race-date").value,"Start: "+$("start").value,"Target: "+($("target").value||"none"),"","SCENARIOS",...ids.map((id,i)=>scenarios[i].label+": "+core.formatDuration(scenarios[i].total)), "","SPLITS",...disciplines.map(([label,key])=>label+": "+results.map(r=>core.formatDuration(r[key])).join(" | ")),"","CHECKLIST",...[...document.querySelectorAll("#checklist label")].map(el=>(el.querySelector("input").checked?"[x] ":"[ ] ")+el.textContent.trim()),"","Official rules override this sample. Test your pacing and nutrition in training."].join("\n");
+exported=window.TriZentroRaceDossier.textDossier({
+name:$("race-name").value,date:$("race-date").value,start:input.start,target:input.target,
+scenarios:results,core,
+checks:[...document.querySelectorAll("#checklist label")].map(el=>({checked:el.querySelector("input").checked,label:el.textContent.trim()})),
+notes:$("race-notes").value
+});
 }catch(e){$("error").hidden=false;$("error").textContent=e.message;$("result-content").hidden=true;$("download").disabled=true;exported="";}
 }
-document.querySelectorAll("input").forEach(el=>el.addEventListener("input",render));
+document.querySelectorAll("input,textarea").forEach(el=>el.addEventListener("input",render));
 $("download").addEventListener("click",()=>{if(!exported)return;const url=URL.createObjectURL(new Blob([exported],{type:"text/plain;charset=utf-8"}));const link=document.createElement("a");link.href=url;link.download="trizentro-first-70-3-sample.txt";document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);});
 $("print").addEventListener("click",()=>window.print());
 render();
