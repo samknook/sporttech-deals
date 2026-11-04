@@ -13,6 +13,17 @@ Een Nederlandstalige prijsvergelijker voor sportelektronica, te beginnen met Gar
 
 Het is een **8-weekse validatiesprint**, geen toezegging van opbrengsten: [volledig plan en stopcriteria](docs/STRATEGIE_2_VERDIENMODELLEN.md).
 
+## Zoekverkeer en validatie — 4 november 2026
+
+De eerste SEO- en distributieversie is opgesteld:
+- [Praktische gids triatlonafstanden](docs/triatlon-afstanden.html) met Sprint, Olympisch, 70.3, Full en pacing.
+- Canonical-links en deelmetadata op homepage en beide gratis tools; WebApplication-gegevens met werkelijke prijs €0, **zonder fictieve beoordelingen**.
+- De sitemap bevat alleen eigen, bruikbare pagina's; de oude 70.3-redirect is eruit verwijderd.
+- De tools kunnen vrijwillig via WhatsApp worden gedeeld. Alleen de openbare paginalink wordt gedeeld, nooit persoonlijke tempo's of notities.
+- [Handleiding Google Search Console en testplan](docs/ZOEKVERKEER_EN_VALIDATIE.md) en [open actie #5](../../issues/5).
+
+**Nog ontbrekend:** het eigendomsbewijs voor Google Search Console en echte menselijke bezoekdata. De GitHub Pages-tests zijn géén gebruikersstatistieken. Eerst zoekverkeer en echte feedback vastleggen, dan pas nieuwe betaalfuncties overwegen.
+
 ## Affiliatealternatieven — 4 november 2026
 
 We volgen nu meerdere officiële routes naar geautoriseerde winkeldata. Voorzichtigheid blijft belangrijk: **een openbaar winkelassortiment is geen bewijs van feedrechten of commissie.**
