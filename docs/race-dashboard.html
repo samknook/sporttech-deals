@@ -238,5 +238,7 @@ $("clear").addEventListener("click",()=>{try{localStorage.removeItem(storageKey)
 $("download").addEventListener("click",()=>{if(!exportText)return;const u=URL.createObjectURL(new Blob([exportText],{type:"text/plain;charset=utf-8"}));const a=document.createElement("a");a.href=u;a.download="trizentro-race-dashboard.txt";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);});
 $("print").addEventListener("click",()=>window.print());
 calculate();
+// Rebuild the downloaded checklist after visible labels are translated.
+document.addEventListener("DOMContentLoaded",calculate);
 })();
 </script></body></html>
