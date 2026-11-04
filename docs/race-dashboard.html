@@ -135,18 +135,22 @@
 const core=window.RacePlannerCore;
 const ids=["name","distance","date","start","swim","bike","run","goal","t1","t2","travel","prep","carbs","gel","bottle","bottles"];
 const $=id=>document.getElementById(id);
+const english=window.TriZentroI18n&&window.TriZentroI18n.lang==='en';
+const tr=(nl,en)=>english?en:nl;
+const locale=english?'en-GB':'nl-NL';
+const distName=key=>key==='olympic'?tr('Olympisch','Olympic'):key==='half'?tr('70.3 / Halve','70.3 / Half'):core.DISTANCES[key].name;
 const fmtSecs=sec=>core.formatDuration(sec);
-const fmt=n=>new Intl.NumberFormat("nl-NL",{maximumFractionDigits:1}).format(n);
+const fmt=n=>new Intl.NumberFormat(locale,{maximumFractionDigits:1}).format(n);
 const storageKey="trizentro:race-dashboard:v1";
-const safeNum=(id,min,max,integer=false)=>{const v=$(id).value.trim(),n=Number(v);if(v===""||!Number.isFinite(n)||n<min||n>max||(integer&&!Number.isInteger(n)))throw Error("Controleer de invoer bij "+id+".");return n;};
+const safeNum=(id,min,max,integer=false)=>{const v=$(id).value.trim(),n=Number(v);if(v===""||!Number.isFinite(n)||n<min||n>max||(integer&&!Number.isInteger(n)))throw Error(tr("Controleer de invoer bij ","Check the input for ")+id+".");return n;};
 function values(){
 const date=$("date").value,start=$("start").value;
-if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!/^([01]\d|2[0-3]):[0-5]\d$/.test(start))throw Error("Vul een geldige wedstrijddatum en starttijd in.");
+if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!/^([01]\d|2[0-3]):[0-5]\d$/.test(start))throw Error(tr("Vul een geldige wedstrijddatum en starttijd in.","Enter a valid race date and start time."));
 const [year,month,day]=date.split("-").map(Number),[hour,minute]=start.split(":").map(Number);
 const dateObject=new Date(year,month-1,day,hour,minute);
-if(dateObject.getFullYear()!==year||dateObject.getMonth()!==month-1||dateObject.getDate()!==day||dateObject.getHours()!==hour||dateObject.getMinutes()!==minute)throw Error("Ongeldige wedstrijddatum.");
+if(dateObject.getFullYear()!==year||dateObject.getMonth()!==month-1||dateObject.getDate()!==day||dateObject.getHours()!==hour||dateObject.getMinutes()!==minute)throw Error(tr("Ongeldige wedstrijddatum.","Invalid race date."));
 const distance=$("distance").value;
-if(!["sprint","olympic","half","full"].includes(distance))throw Error("Ongeldige afstand.");
+if(!["sprint","olympic","half","full"].includes(distance))throw Error(tr("Ongeldige afstand.","Invalid distance."));
 const input={distance,swimPace:$("swim").value,bikeSpeed:safeNum("bike",10,60),runPace:$("run").value,t1Minutes:safeNum("t1",0,30),t2Minutes:safeNum("t2",0,30),start,target:$("goal").value};
 return {input, dateObject, travel:safeNum("travel",0,1440,true),prep:safeNum("prep",0,480,true),carbs:safeNum("carbs",0,200),gel:safeNum("gel",1,150),bottle:safeNum("bottle",0,200),bottles:safeNum("bottles",0,20,true)};
 }
@@ -158,20 +162,20 @@ const target=v.input.target.trim()?core.targetToSeconds(v.input.target):null;
 $("error").hidden=true;$("results").hidden=false;$("nutrition").hidden=false;$("download").disabled=false;
 $("finish").textContent=fmtSecs(result.total);
 const diff=target===null?null:Math.round(result.total-target);
-$("difference").textContent=diff===null?"Geen doel":(diff>0?"+":"")+(diff<0?"−":"")+(Math.abs(diff)/3600>=1?fmtSecs(Math.abs(diff)):fmtSecs(Math.abs(diff)));
+$("difference").textContent=diff===null?tr("Geen doel","No target"):(diff>0?"+":"")+(diff<0?"−":"")+(Math.abs(diff)/3600>=1?fmtSecs(Math.abs(diff)):fmtSecs(Math.abs(diff)));
 const finishDate=new Date(v.dateObject.getTime()+result.total*1000);
 const depDate=new Date(v.dateObject.getTime()-(v.travel+v.prep)*60000);
-const clock=d=>d.toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"});
-const dated=d=>d.toLocaleDateString("nl-NL",{day:"numeric",month:"short"});
+const clock=d=>d.toLocaleTimeString(locale,{hour:"2-digit",minute:"2-digit"});
+const dated=d=>d.toLocaleDateString(locale,{day:"numeric",month:"short"});
 $("finish-clock").textContent=clock(finishDate);
 $("departure").textContent=clock(depDate);
-$("departure-day").textContent=dated(depDate)+" · reistijd + voorbereiding";
+$("departure-day").textContent=dated(depDate)+tr(" · reistijd + voorbereiding"," · travel + preparation");
 const data=[
-["Zwemmen",result.swim],
+[tr("Zwemmen","Swim"),result.swim],
 ["T1",result.t1],
-["Fietsen",result.bike],
+[tr("Fietsen","Bike"),result.bike],
 ["T2",result.t2],
-["Lopen",result.run]
+[tr("Lopen","Run"),result.run]
 ];
 const body=$("splits");body.replaceChildren();
 let elapsed=0;for(const [label,seconds] of data){
@@ -195,9 +199,11 @@ const bikeGoal=result.bike/3600*v.carbs,runGoal=result.run/3600*v.carbs;
 const drink=v.bottles*v.bottle;
 const bikeGels=Math.max(0,Math.ceil((bikeGoal-drink-1e-9)/v.gel));
 const runGels=Math.max(0,Math.ceil((runGoal-1e-9)/v.gel));
-$("nutrition").textContent="Eigen rekendoel: "+fmt(bikeGoal+runGoal)+" g koolhydraten over fiets- en loopdeel. Bij "+v.bottles+" ingevoerde bidons ("+fmt(drink)+" g totaal) en "+fmt(v.gel)+" g per gel: ongeveer "+bikeGels+" gels op de fiets en "+runGels+" gels tijdens het lopen. Afronding op hele gels kan je doel overschrijden; dit is geen voedingsadvies.";
+$("nutrition").textContent=english?
+"Your target: "+fmt(bikeGoal+runGoal)+" g carbohydrate across the bike and run. With "+v.bottles+" bottles ("+fmt(drink)+" g total) and "+fmt(v.gel)+" g per gel, approximately "+bikeGels+" gels for cycling and "+runGels+" gels for running. Rounding to whole gels may exceed your target; this is not nutrition advice.":
+"Eigen rekendoel: "+fmt(bikeGoal+runGoal)+" g koolhydraten over fiets- en loopdeel. Bij "+v.bottles+" ingevoerde bidons ("+fmt(drink)+" g totaal) en "+fmt(v.gel)+" g per gel: ongeveer "+bikeGels+" gels op de fiets en "+runGels+" gels tijdens het lopen. Afronding op hele gels kan je doel overschrijden; dit is geen voedingsadvies.";
 const checks=[...document.querySelectorAll("#checks input")];
-exportText=["TRIZENTRO · RACE DASHBOARD","Wedstrijd: "+$("name").value,"Datum: "+$("date").value,"Afstand: "+core.DISTANCES[v.input.distance].name,"Start: "+v.input.start,"Eindtijd (rekenvoorbeeld): "+fmtSecs(result.total),"Doeltijd: "+(v.input.target||"geen"),"Vertrek uiterlijk: "+dated(depDate)+" "+clock(depDate),"",...data.map(([label,seconds])=>label+": "+fmtSecs(seconds)),"","Scenario's:",...scenarios.map(entry=>entry.label+": "+fmtSecs(entry.total)),"","Voeding: "+$("nutrition").textContent,"","Checklist:",...checks.map(x=>(x.checked?"[x] ":"[ ] ")+x.parentElement.textContent.trim()),"","Alle berekeningen zijn hypothetisch. Officiële regels en persoonlijke behoeften gaan voor."].join("\n");
+exportText=["TRIZENTRO · RACE DASHBOARD","Wedstrijd: "+$("name").value,"Datum: "+$("date").value,"Afstand: "+distName(v.input.distance),"Start: "+v.input.start,"Eindtijd (rekenvoorbeeld): "+fmtSecs(result.total),"Doeltijd: "+(v.input.target||"geen"),"Vertrek uiterlijk: "+dated(depDate)+" "+clock(depDate),"",...data.map(([label,seconds])=>label+": "+fmtSecs(seconds)),"","Scenario's:",...scenarios.map(entry=>entry.label+": "+fmtSecs(entry.total)),"","Voeding: "+$("nutrition").textContent,"","Checklist:",...checks.map(x=>(x.checked?"[x] ":"[ ] ")+x.parentElement.textContent.trim()),"","Alle berekeningen zijn hypothetisch. Officiële regels en persoonlijke behoeften gaan voor."].join("\n");
 }catch(e){$("error").hidden=false;$("error").textContent=e.message;$("results").hidden=true;$("nutrition").textContent="Controleer de ingevoerde waarden.";$("download").disabled=true;exportText="";}
 }
 document.querySelectorAll("input,select").forEach(x=>x.addEventListener("input",calculate));
