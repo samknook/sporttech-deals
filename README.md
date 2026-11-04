@@ -3,6 +3,18 @@
 
 Een Nederlandstalige prijsvergelijker voor sportelektronica, te beginnen met Garmin- en Wahoo-fietscomputers. De site toont **geen verzonnen live winkelprijzen**. De prijsscanner gebruikt uitsluitend door de eigenaar geautoriseerde CSV-productfeeds; er wordt niet gescrapet en nooit automatisch gekocht.
 
+## Affiliatealternatieven — 4 november 2026
+
+We volgen nu meerdere officiële routes naar geautoriseerde winkeldata. Voorzichtigheid blijft belangrijk: **een openbaar winkelassortiment is geen bewijs van feedrechten of commissie.**
+
+- **Decathlon/Odyssey:** officieel programma met downloadbare productfeeds. Relevante Garmin/Wahoo-producten staan in de webshop; er is nog geen toestemming of feedtoegang. Op 4 november is een gerichte vraag naar Odyssey Support gestuurd.
+- **TradeTracker:** back-up voor meerdere winkels, productfeeds en API.
+- **Awin:** CSV-productfeeds en advertentieprogramma's na toelating.
+- **Adtraction:** productzoekfunctie en XML-feeds; onze huidige importer verwerkt uitsluitend CSV.
+- **Daisycon:** account bestaat en handmatige verificatie is aangevraagd, maar nog niet bevestigd.
+
+Zie [de uitgebreide, bronvermelde afweging](docs/AFFILIATE_ALTERNATIEVEN.md) en [de open actie](../../issues/3). **Nog geen live winkelprijzen, affiliatepartners of commissies geclaimd.**
+
 ## Volgende stap — 27 oktober 2026
 
 De code staat daadwerkelijk in deze openbare repository, maar **de website is nog niet als commerciële dienst gepubliceerd**. Er is nog geen aangesloten, toegestane winkelproductfeed, geen goedgekeurde affiliatepartner en geen omzet.
