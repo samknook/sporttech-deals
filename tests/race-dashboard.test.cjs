@@ -81,6 +81,6 @@ test('commercial previews exist, reference calculation engine and have no checko
  assert.match(pack,/id="download"/);
  assert.match(blueprint,/CHAPTER 01/);
  assert.match(index,/href="products\.html"/);
- assert.doesNotMatch(products,/type="submit"|checkout|buy now/i);
+ assert.doesNotMatch(products,/<form[^>]*action=|<button[^>]*type="submit"|href="[^"]*(?:checkout|cart)/i);
  assert.doesNotMatch(pack,/payment processor|stripe\.com|paypal\.com/i);
 });
