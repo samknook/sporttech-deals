@@ -73,7 +73,19 @@
 <p>Estimated elapsed and clock times at major course milestones. These are based on constant pace and the nominal 70.3 distances, not official timing mats or road locations.</p>
 <div class="tablewrap"><table><thead><tr><th>Checkpoint</th><th>Distance</th><th>Elapsed</th><th>Clock time</th></tr></thead><tbody id="dossier-checkpoints"></tbody></table></div>
 </section>
-<section class="preview-card"><h2>04 / Your race-week checklist</h2>
+<section class="preview-card"><h2>04 / Plan your race morning</h2>
+<p>Work backwards from your start time. Add your estimated travel, parking, transition setup, warm-up and a contingency buffer. The timeline adjusts when you change the start time. Confirm all official check-in and transition zone deadlines with the organizer.</p>
+<div class="form-grid">
+<label>Travel (minutes)<input id="travel" type="number" min="0" max="1440" step="1" value="35"></label>
+<label>Parking and walk (minutes)<input id="parking" type="number" min="0" max="240" step="1" value="20"></label>
+<label>Transition setup (minutes)<input id="setup" type="number" min="0" max="240" step="1" value="40"></label>
+<label>Warm-up and starting area (minutes)<input id="warmup" type="number" min="0" max="240" step="1" value="30"></label>
+<label>Extra buffer (minutes)<input id="buffer" type="number" min="0" max="180" step="1" value="20"></label>
+</div>
+<div class="tablewrap"><table><thead><tr><th>Local date &amp; time</th><th>Task</th></tr></thead><tbody id="morning"></tbody></table></div>
+<p class="muted">The planner uses your device's local timezone. For a race elsewhere, confirm time-zone differences and DST against the event's official local schedule. It does not check real-time traffic or organizer access rules.</p>
+</section>
+<section class="preview-card"><h2>05 / Your race-week checklist</h2>
 <div class="preview-checks" id="checklist">
 <label><input type="checkbox">Confirm race briefing, rules and cut-offs</label>
 <label><input type="checkbox">Confirm registration and equipment check-in</label>
@@ -85,11 +97,11 @@
 <label><input type="checkbox">Prepare a weather contingency plan</label>
 </div><p class="muted">Your checklist stays in this browser while this page remains open; it is not uploaded or stored.</p>
 </section>
-<section class="preview-card"><h2>05 / Your event notes</h2>
+<section class="preview-card"><h2>06 / Your event notes</h2>
 <p>Make a short personal note about transition access, event cut-offs, nutrition pickup or your contingency plan. This note stays in the browser and is included in your text export.</p>
 <label for="race-notes">My notes</label><textarea id="race-notes" maxlength="1500" rows="5" style="width:100%;border:1px solid #b8c9c1;border-radius:10px;padding:12px;font:inherit" placeholder="Example: Check T1 closure time with event organizer."></textarea>
 </section>
-<section class="preview-card"><h2>06 / Take your sample race pack</h2>
+<section class="preview-card"><h2>07 / Take your sample race pack</h2>
 <div class="actions no-print"><button id="download" type="button">Download sample (.txt)</button><button id="print" class="secondary" type="button">Print / save as PDF</button><a class="secondary" href="products.html">Explore product lineup</a></div>
 <p class="alert warning">This is a prototype, not individualized coaching, nutritional guidance or a guarantee of performance. Course conditions, fatigue and local event rules can change actual results. The future commercial pack would add much more detail, professionally reviewed templates and polished exports. No checkout or payment is active.</p>
 <p>For the full free experience, also use our <a href="race-dashboard.html">Race Dashboard</a>, <a href="race-fuel-planner.html">Race Fuel Planner</a> and <a href="race-day-timeline.html">Race Day Timeline</a>.</p>
@@ -122,6 +134,13 @@ input,
 {...input,swimPace:core.secondsToPace(clamp(values-5,60,360)),bikeSpeed:clamp(bike+1,10,60),runPace:core.secondsToPace(clamp(run-10,120,900))}
 ];
 const results=scenarioInputs.map(s=>core.calculate(s));
+const minutes=id=>{const raw=$(id).value.trim(),num=Number(raw);if(raw===""||!Number.isInteger(num)||num<Number($(id).min)||num>Number($(id).max))throw Error("Check "+id+" minutes.");return num;};
+const morning=window.TriZentroRaceDossier.morningSchedule({
+date:$("race-date").value,start:input.start,
+travel:minutes("travel"),parking:minutes("parking"),setup:minutes("setup"),warmup:minutes("warmup"),buffer:minutes("buffer")
+});
+const morningBody=$("morning");morningBody.replaceChildren();
+for(const item of morning){const tr=document.createElement("tr");for(const value of [item.time,item.label]){const td=document.createElement("td");td.textContent=value;tr.appendChild(td);}morningBody.appendChild(tr);}
 const checkpoints=window.TriZentroRaceDossier.checkpoints(results[1],core,input.start);
 const checkpointBody=$("dossier-checkpoints");checkpointBody.replaceChildren();
 for(const point of checkpoints){
@@ -138,7 +157,7 @@ const goal=base.target;
 $("goal-note").textContent=goal===null?"No finish target entered.":(base.total<=goal?"Your baseline arithmetic is within your selected target by ":"Your baseline arithmetic is above your selected target by ")+core.formatDuration(Math.abs(goal-base.total))+". Actual racing may differ.";
 exported=window.TriZentroRaceDossier.textDossier({
 name:$("race-name").value,date:$("race-date").value,start:input.start,target:input.target,
-scenarios:results,core,
+scenarios:results,core,morning,
 checks:[...document.querySelectorAll("#checklist label")].map(el=>({checked:el.querySelector("input").checked,label:el.textContent.trim()})),
 notes:$("race-notes").value
 });
