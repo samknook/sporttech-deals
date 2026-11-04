@@ -8,7 +8,7 @@ const {chromium}=require('playwright');
    const page=await browser.newPage({viewport,acceptDownloads:true});
    const errors=[];page.on('pageerror',e=>errors.push(e.message));
    await page.goto('http://127.0.0.1:8765/race-planner.html');
-   assert.notEqual(await page.locator('#time-total').innerText(),'—');
+   assert.notEqual(await page.locator('#time-total').innerText(),'—','Browser errors: '+errors.join('; ')+'; page validation: '+await page.locator('#validation-error').innerText());
    assert.equal(await page.locator('#timeline tr').count(),12);
    await page.locator('[data-distance="sprint"]').click();
    assert.match(await page.locator('#race-legs').innerText(),/750 m/);
