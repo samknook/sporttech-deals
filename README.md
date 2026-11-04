@@ -3,6 +3,16 @@
 
 Een Nederlandstalige prijsvergelijker voor sportelektronica, te beginnen met Garmin- en Wahoo-fietscomputers. De site toont **geen verzonnen live winkelprijzen**. De prijsscanner gebruikt uitsluitend door de eigenaar geautoriseerde CSV-productfeeds; er wordt niet gescrapet en nooit automatisch gekocht.
 
+## Strategie 2026/27 — twee verdienmodellen, één doelgroep
+
+**Status 4 november 2026:** we houden de affiliateprijsvergelijker aan, maar verminderen de afhankelijkheid van één extern netwerk.
+
+- **70% ontwikkeltijd: gratis en eventueel betaalde sporttools** voor wielrenners en triatleten. De eerste werkende proef is de [gratis 70.3-eindtijdcalculator](docs/70-3-eindtijd-calculator.html), die geen account of backend nodig heeft. Er is nog **geen betaald digitaal product** en er zijn geen gemeten verkoopcijfers.
+- **30% ontwikkeltijd: affiliate-vergelijkingen en koopgidsen** voor goedgekeurde Garmin- en Wahoo-productfeeds. Nog geen bevestigde partner of geldige prijsfeed.
+- **Geen verspreiding over vijf bedrijven:** beide proeven richten zich op dezelfde doelgroep. Zelfstandige financiële automatiseringstemplates blijven een alternatief voor later.
+
+Het is een **8-weekse validatiesprint**, geen toezegging van opbrengsten: [volledig plan en stopcriteria](docs/STRATEGIE_2_VERDIENMODELLEN.md).
+
 ## Affiliatealternatieven — 4 november 2026
 
 We volgen nu meerdere officiële routes naar geautoriseerde winkeldata. Voorzichtigheid blijft belangrijk: **een openbaar winkelassortiment is geen bewijs van feedrechten of commissie.**
