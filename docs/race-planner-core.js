@@ -107,8 +107,55 @@
       checkpoints:points.map(p=>({...p,clock:clockAt(start,p.elapsed)}))
     };
   }
+
+  function secondsToPace(seconds) {
+    if (!Number.isFinite(seconds) || seconds < 0) return '—';
+    const s=Math.floor(seconds + 1e-8);
+    return String(Math.floor(s/60))+':'+String(s%60).padStart(2,'0');
+  }
+  function goalPacing(values) {
+    const result=calculate(values);
+    if (result.target===null) return null;
+    const fixedTransitions=result.t1+result.t2;
+    const swimAvailable=result.target-(result.bike+result.run+fixedTransitions);
+    const bikeAvailable=result.target-(result.swim+result.run+fixedTransitions);
+    const runAvailable=result.target-(result.swim+result.bike+fixedTransitions);
+    function paceEntry(seconds,max,min) {
+      if (seconds<=0 || seconds/min < 0) return {status:'outside-fast',value:'Buiten bereik'};
+      if (seconds<min-1e-8) return {status:'outside-fast',value:'Buiten bereik'};
+      if (seconds>=max) return {status:'already',value:'Al binnen doel'};
+      return {status:'possible',value:secondsToPace(seconds),raw:seconds};
+    }
+    const swimPace=swimAvailable*100/result.distance.swimMeters;
+    const runPace=runAvailable/result.distance.runKm;
+    const neededBikeSpeed=bikeAvailable>0 ? result.distance.bikeKm*3600/bikeAvailable : Infinity;
+    const swim=paceEntry(swimPace,360,60);
+    const run=paceEntry(runPace,900,120);
+    const bike=neededBikeSpeed>60 ? {status:'outside-fast',value:'Buiten bereik'}
+      : neededBikeSpeed<=10 ? {status:'already',value:'Al binnen doel'}
+      : {status:'possible',value:(Math.ceil((neededBikeSpeed-1e-10)*10)/10).toFixed(1).replace('.',','),raw:neededBikeSpeed};
+    return {target:result.target,distance:result.distance,swim,bike,run};
+  }
+  function compareScenarios(values) {
+    const base=calculate(values);
+    const swim=paceToSeconds(values.swimPace);
+    const run=paceToSeconds(values.runPace);
+    const bike=Number(values.bikeSpeed);
+    const clamp=(x,min,max)=>Math.min(max,Math.max(min,x));
+    function make(label,delta) {
+      const scenario=calculate({
+        ...values,
+        swimPace:secondsToPace(clamp(swim + delta*5,60,360)),
+        bikeSpeed:clamp(bike-delta,10,60),
+        runPace:secondsToPace(clamp(run+delta*10,120,900))
+      });
+      return {label,total:scenario.total,deltaSeconds:scenario.total-base.total};
+    }
+    return [make('Rustiger scenario',1),{label:'Jouw invoer',total:base.total,deltaSeconds:0},make('Sneller scenario',-1)];
+  }
+
   const api={DISTANCES,SWIM_METERS,BIKE_KM,RUN_KM,TARGET_SECONDS,
-    paceToSeconds,targetToSeconds,formatDuration,formatKm,clockAt,resolveDistance,calculate};
+    paceToSeconds,targetToSeconds,formatDuration,formatKm,clockAt,resolveDistance,calculate,secondsToPace,goalPacing,compareScenarios};
   if (typeof module !== 'undefined' && module.exports) module.exports=api;
   global.RacePlannerCore=api;
 })(typeof window !== 'undefined' ? window : globalThis);
