@@ -54,3 +54,21 @@ test('guide and main tools link to each other without sending visitor details',(
   for(const key of ['sprint','olympic','half','full','custom'])
     assert.ok(guide.includes('triathlon-calculator.html?distance='+key));
 });
+
+test('TriZentro identity is consistent and asset links point to real local SVG files',()=>{
+  for(const asset of ['trizentro-icon.svg','trizentro-wordmark.svg']){
+    const svg=read(asset);
+    assert.match(svg,/<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg"/);
+    assert.match(svg,/<title[^>]*>TriZentro/);
+  }
+  for(const name of [
+    'index.html','race-planner.html','triathlon-calculator.html','triatlon-afstanden.html',
+    'koopgids.html','fietscomputer-aanbieding.html','fietscomputer-triatlon.html','transparantie.html'
+  ]){
+    const html=read(name);
+    assert.ok(html.includes('href="trizentro-icon.svg"'),name+' lacks favicon');
+    assert.ok(html.includes('TriZentro')||html.includes('TRI<span>ZENTRO.'),name+' lacks brand');
+    assert.ok(!html.includes('TRI<span>KOERS.'),name+' still has old wordmark');
+  }
+  assert.match(read('index.html'),/name="3045ec1a300a1b5" content="e43119facc31c6d54302cec101a02834"/);
+});
