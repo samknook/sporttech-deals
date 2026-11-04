@@ -40,7 +40,7 @@ TriZentroAddTranslations('transparantie.html','nl',[
 ]);
 
 TriZentroAddTranslations('transparantie.html','nl',[
- ['Taalvoorkeur / Language preference','Language preference'],
+ ['Taalvoorkeur','Language preference'],
  ['De website biedt Nederlands en Engels. Je taalkeuze wordt lokaal in je browser opgeslagen onder','The website offers Dutch and English. Your language choice is stored locally in your browser under'],
  ['zodat deze op andere pagina’s behouden blijft. Dit is geen trackingcookie en wordt niet naar TriZentro verstuurd. Je kunt de taal via de NL/EN-knoppen wijzigen of de lokale browseropslag wissen.','so it remains selected across pages. This is not a tracking cookie and is not sent to TriZentro. You can change the language using NL/EN buttons or clear browser storage.']
 ]);
