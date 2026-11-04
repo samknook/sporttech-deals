@@ -203,7 +203,22 @@ $("nutrition").textContent=english?
 "Your target: "+fmt(bikeGoal+runGoal)+" g carbohydrate across the bike and run. With "+v.bottles+" bottles ("+fmt(drink)+" g total) and "+fmt(v.gel)+" g per gel, approximately "+bikeGels+" gels for cycling and "+runGels+" gels for running. Rounding to whole gels may exceed your target; this is not nutrition advice.":
 "Eigen rekendoel: "+fmt(bikeGoal+runGoal)+" g koolhydraten over fiets- en loopdeel. Bij "+v.bottles+" ingevoerde bidons ("+fmt(drink)+" g totaal) en "+fmt(v.gel)+" g per gel: ongeveer "+bikeGels+" gels op de fiets en "+runGels+" gels tijdens het lopen. Afronding op hele gels kan je doel overschrijden; dit is geen voedingsadvies.";
 const checks=[...document.querySelectorAll("#checks input")];
-exportText=["TRIZENTRO · RACE DASHBOARD","Wedstrijd: "+$("name").value,"Datum: "+$("date").value,"Afstand: "+distName(v.input.distance),"Start: "+v.input.start,"Eindtijd (rekenvoorbeeld): "+fmtSecs(result.total),"Doeltijd: "+(v.input.target||"geen"),"Vertrek uiterlijk: "+dated(depDate)+" "+clock(depDate),"",...data.map(([label,seconds])=>label+": "+fmtSecs(seconds)),"","Scenario's:",...scenarios.map(entry=>entry.label+": "+fmtSecs(entry.total)),"","Voeding: "+$("nutrition").textContent,"","Checklist:",...checks.map(x=>(x.checked?"[x] ":"[ ] ")+x.parentElement.textContent.trim()),"","Alle berekeningen zijn hypothetisch. Officiële regels en persoonlijke behoeften gaan voor."].join("\n");
+exportText=[
+"TRIZENTRO · RACE DASHBOARD",
+tr("Wedstrijd: ","Race: ")+$("name").value,
+tr("Datum: ","Date: ")+$("date").value,
+tr("Afstand: ","Distance: ")+distName(v.input.distance),
+tr("Start: ","Start: ")+v.input.start,
+tr("Eindtijd (rekenvoorbeeld): ","Estimated finish: ")+fmtSecs(result.total),
+tr("Doeltijd: ","Target: ")+(v.input.target||tr("geen","none")),
+tr("Vertrek uiterlijk: ","Latest departure: ")+dated(depDate)+" "+clock(depDate),"",
+...data.map(([label,seconds])=>label+": "+fmtSecs(seconds)),"",
+tr("Scenario's:","Scenarios:"),...scenarios.map(entry=>tr(entry.label,entry.label==="Rustiger scenario"?"Conservative scenario":entry.label==="Sneller scenario"?"Faster scenario":"Your input")+": "+fmtSecs(entry.total)),"",
+tr("Voeding: ","Nutrition: ")+$("nutrition").textContent,"",
+tr("Checklist:","Checklist:"),
+...checks.map(x=>(x.checked?"[x] ":"[ ] ")+x.parentElement.textContent.trim()),"",
+tr("Alle berekeningen zijn hypothetisch. Officiële regels en persoonlijke behoeften gaan voor.","All calculations are hypothetical. Official rules and individual needs take priority.")
+].join("\n");
 }catch(e){$("error").hidden=false;$("error").textContent=e.message;$("results").hidden=true;$("nutrition").textContent="Controleer de ingevoerde waarden.";$("download").disabled=true;exportText="";}
 }
 document.querySelectorAll("input,select").forEach(x=>x.addEventListener("input",calculate));
