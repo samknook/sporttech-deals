@@ -70,3 +70,14 @@ test('feedback scorecard remains local and has no submission endpoint',()=>{
  assert.match(feedback,/URL\.createObjectURL\(blob\)/);
  assert.doesNotMatch(feedback,/<form[^>]+action=|fetch\(|XMLHttpRequest|sendBeacon/);
 });
+
+test('tester feedback requires explicit email intent and uses project contact',()=>{
+ const feedback=fs.readFileSync(path.join(__dirname,'../docs/tester-feedback.html'),'utf8');
+ const transparent=fs.readFileSync(path.join(__dirname,'../docs/transparantie.html'),'utf8');
+ const catalog=fs.readFileSync(path.join(__dirname,'../docs/products.html'),'utf8');
+ assert.match(feedback,/id="email-feedback"/);
+ assert.match(feedback,/mailto:trizentro\.team@gmail\.com/);
+ assert.match(feedback,/addEventListener\('click'/);
+ assert.match(transparent,/mailto:trizentro\.team@gmail\.com/);
+ assert.match(catalog,/href="tester-feedback.html"/);
+});
