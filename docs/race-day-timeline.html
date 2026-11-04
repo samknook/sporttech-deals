@@ -92,11 +92,14 @@ strong.clock{font-size:19px;color:#0d4b42}.key{font-size:13px;color:#577268}
 (()=>{
 "use strict";
 const el=id=>document.getElementById(id);
+const english=window.TriZentroI18n&&window.TriZentroI18n.lang==='en';
+const tr=(nl,en)=>english?en:nl;
+const locale=english?'en-GB':'nl-NL';
 const numberFields=["travel","parking","setup","warmup","buffer"];
 let exported="";
 const two=n=>String(n).padStart(2,"0");
 const pretty=d=>two(d.getHours())+":"+two(d.getMinutes());
-const datePretty=d=>d.toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+const datePretty=d=>d.toLocaleDateString(locale,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
 const shift=(d,minutes)=>new Date(d.getTime()+minutes*60000);
 function calc(){
 const date=el("date").value,start=el("start").value;
@@ -111,22 +114,22 @@ const setup=shift(warm,-nums.setup);
 const arrivals=shift(setup,-nums.parking);
 const departure=shift(arrivals,-nums.travel-nums.buffer);
 const rows=[
-[departure,"Vertrek","Reis inclusief "+nums.buffer+" minuten extra buffer"],
-[shift(arrivals,-nums.buffer),"Geplande aankomst","Buffer van "+nums.buffer+" minuten blijft beschikbaar"],
-[arrivals,"Parkeren / lopen","Richting wisselzone: "+nums.parking+" minuten"],
-[setup,"Wisselzone en fietscheck","Controle en klaarleggen: "+nums.setup+" minuten"],
-[warm,"Warming-up en startvak","Voorbereiden op de start: "+nums.warmup+" minuten"],
-[startTime,"Start","Starttijd volgens jouw invoer"]
+[departure,tr("Vertrek","Departure"),tr("Reis inclusief ","Travel including ")+nums.buffer+tr(" minuten extra buffer"," minutes extra buffer")],
+[shift(arrivals,-nums.buffer),tr("Geplande aankomst","Planned arrival"),tr("Buffer van ","Buffer of ")+nums.buffer+tr(" minuten blijft beschikbaar"," minutes remains available")],
+[arrivals,tr("Parkeren / lopen","Parking / walking"),tr("Richting wisselzone: ","To transition: ")+nums.parking+tr(" minuten"," minutes")],
+[setup,tr("Wisselzone en fietscheck","Transition and bike check"),tr("Controle en klaarleggen: ","Check and setup: ")+nums.setup+tr(" minuten"," minutes")],
+[warm,tr("Warming-up en startvak","Warm-up and start area"),tr("Voorbereiden op de start: ","Prepare for start: ")+nums.warmup+tr(" minuten"," minutes")],
+[startTime,tr("Start","Start"),tr("Starttijd volgens jouw invoer","Start time from your entry")]
 ];
 el("departure").textContent=pretty(departure);
 el("departuredate").textContent=datePretty(departure);
 const tbody=el("schedule");tbody.replaceChildren();
 rows.forEach(([time,step,note])=>{
 const tr=document.createElement("tr");
-[pretty(time)+" · "+time.toLocaleDateString("nl-NL",{day:"numeric",month:"short"}),step,note].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td);});
+[pretty(time)+" · "+time.toLocaleDateString(locale,{day:"numeric",month:"short"}),step,note].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td);});
 tbody.appendChild(tr);
 });
-exported=["TRIZENTRO RACE DAY TIMELINE","Datum en starttijd: "+datePretty(startTime)+" "+pretty(startTime),"Persoonlijk logistiek rekenvoorbeeld; officiële evenementinformatie gaat voor.","",...rows.map(([t,step,note])=>datePretty(t)+" "+pretty(t)+" — "+step+": "+note),"","Controleer wisselzone, startvak, verkeerssituatie en eventuele afwijkende incheckregels bij de organisatie."].join("\n");
+exported=["TRIZENTRO RACE DAY TIMELINE",tr("Datum en starttijd: ","Race date and start: ")+datePretty(startTime)+" "+pretty(startTime),tr("Persoonlijk logistiek rekenvoorbeeld; officiële evenementinformatie gaat voor.","Personal logistics estimate; official event information takes priority."),"",...rows.map(([t,step,note])=>datePretty(t)+" "+pretty(t)+" — "+step+": "+note),"",tr("Controleer wisselzone, startvak, verkeerssituatie en eventuele afwijkende incheckregels bij de organisatie.","Confirm transition access, start area, traffic and event-specific check-in rules with the organizer.")].join("\n");
 }
 ["date","start",...numberFields].forEach(id=>el(id).addEventListener("input",calc));
 el("save").addEventListener("click",()=>{if(!exported)return;const blob=new Blob([exported],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="trizentro-racedag-tijdlijn.txt";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);});
