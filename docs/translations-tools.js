@@ -185,3 +185,36 @@ TriZentroAddTranslations('race-fuel-planner.html','nl',[
 [', of',', or'],
 ['vergelijk de verschillende triatlonafstanden','compare triathlon race distances']
 ]);
+
+/* The Race Planner builds its checklist in JavaScript. Translate its generated labels. */
+TriZentroAddTranslations('race-planner.html','nl',[
+ ['Voor vertrek','Before departure'],
+ ['Starttijd, parcours en locatie gecontroleerd','Start time, course and venue checked'],
+ ['Aanmelding, startnummer en timingchip geregeld','Registration, race number and timing chip arranged'],
+ ['Spullen ingepakt en vervoer geregeld','Gear packed and transport arranged'],
+ ['Weer, racebriefing en actuele regels bekeken','Weather, race briefing and current rules reviewed'],
+ ['Zwemmen','Swim'],
+ ['Zwembril en eventueel reservebril','Goggles and optional spare pair'],
+ ['Badmuts volgens organisator','Swim cap as required by organizer'],
+ ['Wetsuit indien toegestaan en gewenst','Wetsuit if permitted and desired'],
+ ['Zwemstart en route bekeken','Swim start and course reviewed'],
+ ['Wissels · T1/T2','Transitions · T1/T2'],
+ ['Wisselzone en looproutes verkend','Transition area and walking routes checked'],
+ ['Handdoek en wisselspullen klaargelegd','Towel and transition gear prepared'],
+ ['Startnummer en bevestiging gecontroleerd','Race number and confirmation checked'],
+ ['Fietsen','Bike'],
+ ['Fiets, remmen en bandenspanning gecontroleerd','Bike, brakes and tyre pressure checked'],
+ ['Helm en fietsschoenen gereed','Helmet and cycling shoes ready'],
+ ['Fietscomputer opgeladen en route voorbereid','Bike computer charged and route ready'],
+ ['Bidons en een eerder getest voedingsplan ingepakt','Bottles and tested nutrition plan packed'],
+ ['Reserveband, pomp of CO₂ en gereedschap','Spare tube, pump or CO₂ and tools'],
+ ['Hardlopen','Run'],
+ ['Loopschoenen en sokken klaargelegd','Running shoes and socks ready'],
+ ['Startnummer en raceband gereed','Race number and race belt ready'],
+ ['Pet of zonbescherming indien nodig','Cap or sun protection if needed'],
+ ['Eigen getest drink- en voedingsplan gecontroleerd','Own tested hydration and nutrition plan checked'],
+ ['Finish en terugreis','Finish and journey home'],
+ ['Droge kleding en schoenen','Dry clothes and shoes'],
+ ['Afspraak over vervoer en spullen ophalen','Transport and equipment collection arranged'],
+ ['Herstelvoeding naar eigen voorkeur','Preferred post-race food']
+]);
