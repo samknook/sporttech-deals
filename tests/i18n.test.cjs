@@ -25,6 +25,7 @@ test('all eighteen public pages load bilingual modules in the right order',()=>{
    const needle='src="'+file+'"';
    const i=html.indexOf(needle);
    assert.ok(i>last,name+' missing or misordered '+file);
+   if(file!=='navigation.js')assert.ok(html.includes('<script src="'+file+'"></script>'),name+' must load the locale before inline application scripts: '+file);
    assert.equal((html.match(new RegExp('src="'+file.replace(/\./g,'\\.')+'"','g'))||[]).length,1,name+' duplicated '+file);
    last=i;
   }
