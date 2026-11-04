@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Maak gratis je IRONMAN 70.3 raceplan: zwem-, fiets- en loopsplits, theoretische doorkomsttijden, materiaallijst en export. Geen registratie.">
+<meta name="theme-color" content="#103e34">
+<title>Gratis 70.3 Race Planner — eindtijd, tijdlijn en checklist | SportTech Deals</title>
+<link rel="stylesheet" href="site.css">
+<style>
+.planner{border:1px solid #dce6db;border-radius:22px;background:white;padding:26px;margin:28px 0;box-shadow:0 16px 32px #133b2809}
+.planner .input-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.planner label.field{display:flex;flex-direction:column;gap:7px;font-size:13px;font-weight:850}
+.planner label.field input,.planner textarea{width:100%;background:#f5f8f2;color:#12382d;border:1px solid #bacebf;border-radius:10px;padding:12px;font:inherit;font-size:17px;font-weight:700}
+.planner label.field small{font-weight:450;color:#5d7469;font-size:12px}
+.planner textarea{font-weight:400;min-height:92px;resize:vertical;font-size:14px}
+.planner input:focus-visible,.planner textarea:focus-visible,.planner button:focus-visible{outline:3px solid #b4d777;outline-offset:2px}
+.planner .summary{background:#103e34;color:white;border-radius:17px;padding:22px;margin:24px 0}
+.planner .summary .sum{font-size:clamp(36px,6vw,62px);font-weight:900;letter-spacing:-.065em;line-height:1.1;margin:6px 0}
+.planner .summary p{color:#e0f0e5;font-size:14px;margin:8px 0}
+.planner .summary .accent{color:#d4f67d;font-weight:900;font-size:16px}
+.planner h2{font-size:28px;margin:28px 0 14px}
+.planner h3{font-size:18px;margin:16px 0 8px}
+.planner .table-scroll{overflow-x:auto;max-width:100%}
+.planner table{min-width:570px}
+.planner td,.planner th{font-size:13px;padding:10px 12px}
+.planner table th:last-child,.planner table td:last-child{font-weight:850;white-space:nowrap}
+.planner .check-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.planner .check-group{border:1px solid #dce6db;border-radius:14px;padding:16px}
+.planner .check-group ul{margin:0;padding:0;list-style:none}
+.planner .check-group li{padding:7px 0;border-bottom:1px solid #e5ece3}
+.planner .check-group li:last-child{border-bottom:0}
+.planner .check-group label{display:flex;align-items:start;gap:10px;font-size:13px;line-height:1.45;cursor:pointer}
+.planner .check-group input{accent-color:#357a4e;min-width:18px;width:18px;height:18px}
+.planner .check-group input:checked+span{text-decoration:line-through;color:#617567}
+.planner .actions{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0 8px}
+.planner .actions button{font:inherit;background:#d4f67d;color:#173f2f;border:0;border-radius:11px;padding:13px 18px;font-size:14px;font-weight:850;cursor:pointer}
+.planner .actions button.secondary{background:#e6ede2}
+.planner .actions button:disabled{opacity:.45;cursor:not-allowed}
+.planner .error{color:#9d2930;font-weight:750;font-size:13px;min-height:18px}
+.planner .fine{color:#5d7469;font-size:12px}
+@media(max-width:650px){.planner{padding:16px}.planner .input-grid,.planner .check-grid{grid-template-columns:1fr}.planner .summary{padding:18px}.planner .actions button{width:100%}}
+@media print{body{background:white;color:#111;font-family:Arial,sans-serif}.top,.planner .actions,footer,.no-print{display:none!important}.article{padding:0;max-width:none}.article h1{font-size:31px;margin:0 0 8px}.article>p:first-of-type{display:none}.planner{box-shadow:none;border:0;margin:0;padding:0}.planner .input-grid{display:none}.planner .summary{background:white!important;color:#111!important;border:1px solid #bbb;padding:12px;margin:10px 0;-webkit-print-color-adjust:exact;print-color-adjust:exact}.planner .summary *{color:#111!important}.planner .summary .sum{font-size:32px}.planner .check-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.planner .check-group{break-inside:avoid;padding:8px}.planner table{min-width:0;width:100%}.planner table th,.planner table td{font-size:11px;padding:5px}.planner h2{font-size:20px;margin:16px 0 6px}.planner textarea{font-size:12px;border:0;min-height:60px;padding:0}.planner .fine{font-size:10px}.planner .table-scroll{overflow:visible}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><div class="nav"><a class="brand" href="./">SPORTTECH<span>DEALS.</span></a><nav aria-label="Navigatie"><a href="./">Home</a><a href="70-3-eindtijd-calculator.html">Calculator</a><a href="koopgids.html">Koopgids</a></nav></div></div></header>
+<main><article class="article wrap">
+<div class="tag">Gratis prototype · Zonder account</div>
+<h1>Jouw 70.3 Race Planner.</h1>
+<p>Van startschot tot finish: bekijk je verwachte doorkomsttijden, houd je materiaallijst bij en sla je plan op als tekstbestand of print het uit. Een simpele wedstrijdvoorbereiding, rechtstreeks in je browser.</p>
+<div class="planner">
+<section aria-label="Invoer voor jouw wedstrijdplan">
+<div class="input-grid">
+<label class="field" for="event-name">Naam van je wedstrijd
+<input id="event-name" type="text" maxlength="80" value="Mijn 70.3 race" autocomplete="off"><small>Optioneel, voor op je eigen plan.</small></label>
+<label class="field" for="race-date">Wedstrijddatum
+<input id="race-date" type="date"><small>Optioneel, wordt niet opgeslagen.</small></label>
+<label class="field" for="start-time">Starttijd (lokale kloktijd)
+<input id="start-time" type="time" value="08:00"><small>Gebruik je eigen startgroep of wave.</small></label>
+<label class="field" for="swim-pace">Zwemtempo (min:sec per 100 m)
+<input id="swim-pace" type="text" value="2:00" maxlength="5" inputmode="numeric" placeholder="2:00"><small>Bijvoorbeeld 2:00 per 100 meter.</small></label>
+<label class="field" for="bike-speed">Gemiddelde fietssnelheid (km/u)
+<input id="bike-speed" type="number" min="10" max="60" step="0.1" value="33"><small>Gemiddelde over de gehele 90 km.</small></label>
+<label class="field" for="run-pace">Hardlooptempo (min:sec per km)
+<input id="run-pace" type="text" value="5:00" maxlength="5" inputmode="numeric" placeholder="5:00"><small>Bijvoorbeeld 5:00 per kilometer.</small></label>
+<label class="field" for="t1-minutes">Wissel 1 (minuten)
+<input id="t1-minutes" type="number" min="0" max="30" step="0.5" value="4"></label>
+<label class="field" for="t2-minutes">Wissel 2 (minuten)
+<input id="t2-minutes" type="number" min="0" max="30" step="0.5" value="3"></label>
+</div>
+</section>
+<section class="summary" aria-live="polite">
+<div style="font-weight:800;color:#d4f67d;font-size:12px;text-transform:uppercase;letter-spacing:.12em">Theoretische eindtijd</div>
+<div id="time-total" class="sum">—</div>
+<div id="goal-status" class="accent">Berekenen…</div>
+<p id="splits"></p>
+<p><strong id="race-name-view">Mijn 70.3 race</strong><span id="race-date-view"></span></p>
+</section>
+<p class="error" id="validation-error" role="alert"></p>
+<section aria-label="Doorkomsttijden">
+<h2>Jouw doorkomstschema</h2>
+<p class="fine">Tijden zijn theoretisch, zonder pauzes, vertragingen of verandering in tempo. Ronding op hele minuten voor de kloktijd. Geen officiële cut-offtijden of parcoursinformatie.</p>
+<div class="table-scroll"><table>
+<thead><tr><th>Moment</th><th>Afstand</th><th>Tijd na start</th><th>Kloktijd</th></tr></thead>
+<tbody id="timeline"></tbody>
+</table></div>
+</section>
+<section aria-label="Materiaallijst" id="gear">
+<h2>Materiaalchecklist</h2>
+<p class="fine" id="check-progress" aria-live="polite">0 afgevinkt</p>
+<div class="check-grid" id="checklist"></div>
+</section>
+<section>
+<h2>Eigen notities</h2>
+<label class="field" for="race-notes">Bijvoorbeeld parkeren, tijden, wisselzone of punten om te onthouden
+<textarea id="race-notes" maxlength="2000" placeholder="Vul hier je eigen aandachtspunten in."></textarea></label>
+</section>
+<div class="actions no-print"><button id="download-plan" type="button">Sla plan op (.txt)</button><button id="print-plan" class="secondary" type="button">Print of bewaar als PDF</button><button id="reset-plan" class="secondary" type="button">Begin opnieuw</button></div>
+<p class="fine">Alle invoer wordt uitsluitend in deze browser verwerkt; we versturen niets naar onze servers en gebruiken geen account of opslagcookies. Sluit je dit tabblad, dan raak je niet-geëxporteerde gegevens kwijt. Bij downloaden of printen bepaal je zelf waar je plan wordt bewaard.</p>
+</div>
+<div class="callout no-print"><strong>Dit is een gratis proefversie, geen betaald product.</strong> De planning is uitsluitend een rekenscenario. Controleer parcours, starttijd, materiaalregels, voorzieningen en cut-offs altijd bij de organisator. Je werkelijke prestatie kan afwijken door omstandigheden en vermoeidheid; voeding en medische beslissingen vereisen een eigen afweging en zo nodig deskundig advies.</div>
+<p class="no-print"><a href="70-3-eindtijd-calculator.html">← Simpele eindtijdcalculator</a> · <a href="./">Terug naar SportTech Deals</a></p>
+</article></main>
+<footer><div class="wrap"><div><a class="brand" href="./">SPORTTECH<span>DEALS.</span></a><p>Gratis sporttools en onafhankelijke koopinformatie.</p></div><a href="transparantie.html">Transparantie en privacy</a></div></footer>
+<script src="race-planner-core.js"></script>
+<script src="race-planner-app.js"></script>
+</body></html>
