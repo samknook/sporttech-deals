@@ -8,6 +8,10 @@ on:
       - 'docs/koopgids.html'
       - 'docs/transparantie.html'
       - 'docs/site.css'
+      - 'docs/fietscomputer-triatlon.html'
+      - 'docs/fietscomputer-aanbieding.html'
+      - 'docs/robots.txt'
+      - 'docs/sitemap.xml'
       - 'docs/.nojekyll'
       - '.github/workflows/pages-intro.yml'
   workflow_dispatch:
@@ -36,6 +40,10 @@ jobs:
           test -s docs/koopgids.html
           test -s docs/transparantie.html
           test -s docs/site.css
+          test -s docs/fietscomputer-triatlon.html
+          test -s docs/fietscomputer-aanbieding.html
+          test -s docs/sitemap.xml
+          test -s docs/robots.txt
           python - <<'PY'
           from html.parser import HTMLParser
           from pathlib import Path
