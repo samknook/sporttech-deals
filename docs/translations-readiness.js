@@ -82,3 +82,31 @@ TriZentroAddTranslations('tester-feedback.html','en',[
 ['Please be specific.','Wees zo concreet mogelijk.'],
 ['A feature, document, improvement or example','Een functie, document, verbetering of voorbeeld']
 ]);
+
+/* Readiness action cards are created dynamically: localize their data attributes too. */
+TriZentroAddTranslations('70-3-readiness-check.html','en',[
+ ['Official course distances','Officiële parcoursafstanden'],
+ ["Check the event's participant guide and exact course distances.",'Controleer de officiële deelnemershandleiding en exacte parcoursafstanden.'],
+ ['Rules and cut-offs','Regels en tijdslimieten'],
+ ['Read the latest official race briefing, check-in rules and cut-off times.','Lees de actuele briefing, incheckregels en tijdslimieten.'],
+ ['Race pacing','Wedstrijdtempo'],
+ ['Enter training-supported swim, bike and run estimates and compare scenarios.','Vul op trainingen gebaseerde zwem-, fiets- en looptempo’s in en vergelijk scenario’s.'],
+ ['Open-water confidence','Vertrouwen in open water'],
+ ['Plan supervised open-water practice appropriate for your experience; never swim alone.','Oefen in open water met passende begeleiding en veiligheid; zwem nooit alleen.'],
+ ['Sustainable bike pacing','Volhoudbare fietsintensiteit'],
+ ['Reassess bike pacing based on suitable training, not just the fastest possible bike split.','Beoordeel je fietsintensiteit op basis van geschikte trainingen, niet alleen de snelst mogelijke fietstijd.'],
+ ['Bike-to-run transition','Overgang van fietsen naar lopen'],
+ ['Plan an experience-appropriate brick session or transition rehearsal; do not suddenly increase training load.','Plan een passende bricktraining of wisseloefening; verhoog je trainingsbelasting niet plotseling.'],
+ ['Tested fueling','Geteste wedstrijdvoeding'],
+ ['Review what you actually tolerate and calculate the supplies you plan to carry.','Bekijk wat je echt verdraagt en bereken wat je mee wilt nemen.'],
+ ['Aid station plan','Verzorgingspostenplan'],
+ ['Verify the official aid station products, locations and practical availability.','Controleer de officiële producten, locaties en beschikbaarheid van verzorgingsposten.'],
+ ['Equipment audit','Materiaalcontrole'],
+ ['Inspect essential equipment, bike condition and any event-specific safety requirements.','Controleer essentieel materiaal, fietsconditie en wedstrijdspecifieke veiligheidsregels.'],
+ ['Event timetable','Wedstrijdschema'],
+ ["Confirm the event's mandatory arrival, check-in and transition deadlines.",'Controleer verplichte aankomst-, incheck- en wisselzonetijden.'],
+ ['Race morning','Wedstrijdochtend'],
+ ['Work backwards from your official start time and include realistic travel and check-in buffers.','Reken terug vanaf je officiële starttijd met realistische buffers voor reizen en inchecken.'],
+ ['Contingency plan','Plan B'],
+ ['Write one course-specific weather or equipment contingency, guided by official safety rules.','Schrijf een plan voor weersomstandigheden of materiaalpech, binnen de officiële veiligheidsregels.']
+]);
