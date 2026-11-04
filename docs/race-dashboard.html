@@ -61,6 +61,7 @@
 <label class="field">Voorbereiding + buffer (minuten)<input id="prep" type="number" min="0" max="480" step="1" value="110"><small>Parkeren, wisselzone, warming-up en speling samen</small></label>
 </div>
 <p class="muted">Je kunt elke waarde aanpassen. De doeltijd is een rekendoel, geen gegarandeerde finish.</p>
+<p class="muted">Op mobiel: typ <strong>445</strong> voor 4:45 of <strong>150</strong> voor 1:50. De dubbele punt wordt automatisch toegevoegd als je het tempoveld verlaat.</p>
 </section>
 <section class="panel"><h2>02 / Samenvatting</h2>
 <p id="error" class="error" role="alert" hidden></p>
@@ -116,6 +117,7 @@
 <p>Wil je meer detail? Open de <a href="race-planner.html">Race Planner</a>, <a href="race-fuel-planner.html">Fuel Planner</a>, <a href="race-day-timeline.html">Race Day Timeline</a> of de <a href="70-3-raceplan.html">70.3-gids</a>.</p>
 </section></main>
 <footer><div class="wrap"><a class="brand" href="./"><img class="brand-icon" src="trizentro-icon.svg" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><a href="transparantie.html">Privacy en transparantie</a></div></footer>
+<script src="pace-input.js"></script><script>TriZentroPaceInput.bind(["swim","run"]);</script>
 <script src="race-planner-core.js"></script><script>
 (()=>{
 "use strict";
