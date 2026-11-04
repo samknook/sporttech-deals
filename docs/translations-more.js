@@ -123,3 +123,7 @@ TriZentroAddTranslations('race-pack-preview.html','en',[
 ['Race Fuel Planner','Race Fuel Planner'],
 ['and','en']
 ]);
+
+TriZentroAddTranslations('race-pack-preview.html','en',[
+ ['Example: Check T1 closure time with event organizer.','Voorbeeld: controleer bij de organisatie wanneer T1 sluit.']
+]);
