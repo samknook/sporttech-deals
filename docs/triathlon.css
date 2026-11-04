@@ -120,3 +120,13 @@ body.triathlon-page{background:var(--tri-bg);color:var(--tri-ink)}
 .tri-insights[hidden]{display:none!important}
 @media(max-width:730px){.tri-insight-grid{grid-template-columns:1fr}.tri-insight{padding:16px}.tri-insight>strong{font-size:27px}}
 @media print{.tri-insights{break-inside:avoid}.tri-insight-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.tri-insight{padding:8px}.tri-insight>strong{font-size:19px}.tri-insight .tri-btn{display:none}.tri-insight>p{font-size:10px}}
+
+/* Keep the Swim Bike Run navigation usable on narrow phones. */
+@media(max-width:620px){
+  .triathlon-page .nav{height:auto;min-height:70px;flex-wrap:wrap;padding:15px 0;gap:11px}
+  .triathlon-page .brand{font-size:20px}
+  .triathlon-page .nav nav{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+  .triathlon-page .nav nav a{font-size:12px}
+  .tri-hero h1{overflow-wrap:break-word}
+  .tri-insight-grid{grid-template-columns:minmax(0,1fr)}
+}
