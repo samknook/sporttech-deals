@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="nl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<meta name="theme-color" content="#091f34">
+<title>TriZentro Brand Kit — voorbereide socialmedia-assets</title>
+<link rel="icon" type="image/svg+xml" href="trizentro-icon.svg">
+<link rel="stylesheet" href="site.css">
+<style>
+.kit-wrap{max-width:1120px;margin:48px auto 90px}.kit-hero h1{font-size:clamp(36px,5vw,62px);margin:10px 0}.kit-hero p{max-width:720px;color:#4d6473;font-size:16px}
+.kit-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:34px}.kit-card{background:white;border:1px solid #d8e5eb;border-radius:22px;padding:22px;overflow:hidden}.kit-card h2{font-size:24px;margin:2px 0 10px}.kit-card canvas{display:block;width:100%;height:auto;border-radius:12px;background:#091f34;box-shadow:0 12px 26px #051a311e}.kit-card .hint{font-size:13px;color:#526b78;margin:12px 0 17px}
+.kit-btn{display:inline-block;background:#091f34;color:#fff;border:0;padding:12px 17px;border-radius:12px;font:inherit;font-weight:800;cursor:pointer}.kit-btn:focus-visible{outline:3px solid #31c8ad;outline-offset:3px}.kit-btn:hover{background:#18546a}.kit-panel{background:#ecf5f7;border:1px solid #c9e1e6;border-radius:17px;margin-top:28px;padding:23px}.kit-panel h2{font-size:24px}.kit-panel textarea{width:100%;max-width:800px;min-height:125px;border:1px solid #c9dbe3;padding:15px;border-radius:12px;font:inherit;color:#132e42;background:white}.kit-panel p{color:#496773}.kit-warning{background:#fff3db;border-left:4px solid #d49b39;padding:15px 18px;border-radius:10px;font-size:13px;margin:28px 0;color:#66502f}
+@media(max-width:720px){.kit-grid{grid-template-columns:1fr}.kit-wrap{margin:30px auto 60px}.kit-card{padding:15px}}
+</style>
+</head><body>
+<header class="top"><div class="wrap"><div class="nav"><a class="brand" href="./"><img class="brand-icon" src="trizentro-icon.svg" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><nav aria-label="Navigatie"><a href="./">Website</a><a href="race-planner.html">Race Planner</a></nav></div></div></header>
+<main class="wrap kit-wrap">
+<section class="kit-hero"><div class="eyebrow">BRAND SYSTEM · DRAFT ASSETS</div><h1>TriZentro Brand Kit.</h1><p>Voorbereide visuele assets voor het toekomstige internationale triatlonplatform. Download een profielfoto en een liggende banner als PNG, of kopieer de Engelse profieltekst. Alle bestanden worden lokaal in je browser gemaakt.</p></section>
+<div class="kit-warning"><strong>Werknaam, nog niet juridisch vrijgegeven.</strong> Controleer eerst merkrechten, domeinen en gebruikersnamen. Deze brand-kit registreert geen accounts en reserveert geen sociale gebruikersnamen.</div>
+<section class="kit-grid" aria-label="Merksjablonen">
+<div class="kit-card"><h2>Profielfoto</h2><canvas id="avatar" width="1080" height="1080" role="img" aria-label="Vierkante TriZentro-profielfoto met Swim Bike Run-logo"></canvas><p class="hint">1080 × 1080 px · handig als basis voor Instagram, TikTok en YouTube.</p><button class="kit-btn" id="download-avatar" type="button">Download profielfoto (PNG)</button></div>
+<div class="kit-card"><h2>Socialmediabanner</h2><canvas id="banner" width="1200" height="630" role="img" aria-label="Liggende TriZentro-banner met merkbelofte"></canvas><p class="hint">1200 × 630 px · basis voor een linkvoorbeeld of een socialmediapost.</p><button class="kit-btn" id="download-banner" type="button">Download banner (PNG)</button></div>
+</section>
+<section class="kit-panel"><h2>Engelse profieltekst</h2>
+<label for="profile-text">Tekst voor een Engelstalig profiel (aanpasbaar vóór gebruik)</label>
+<textarea id="profile-text" spellcheck="true">TriZentro — Swim. Bike. Run. Beyond.
+Free triathlon race tools for Sprint, Olympic, 70.3 and Full distance.
+Calculate finish times, compare pacing scenarios and plan race day.
+Try the tools: https://samknook.github.io/sporttech-deals/</textarea>
+<p><button class="kit-btn" id="copy-profile" type="button">Kopieer profieltekst</button> <span id="copy-status" role="status" aria-live="polite"></span></p>
+<p>Gebruik de huidige werkende GitHub Pages-link tot het eigen domein daadwerkelijk geregistreerd en online is.</p></section>
+<section class="kit-panel"><h2>Kleurpalet</h2><p><strong>Midnight Navy</strong> #091F34 · <strong>Swim</strong> #32B4EB · <strong>Bike</strong> #31C8AD · <strong>Run</strong> #FFA66A · <strong>Ice</strong> #F3F7FA</p>
+<p>Vectorbestanden: <a href="trizentro-icon.svg">TriZentro icoon (SVG)</a> · <a href="trizentro-wordmark.svg">TriZentro woordmerk (SVG)</a></p></section>
+</main><footer><div class="wrap"><a href="./" class="brand"><img class="brand-icon" src="trizentro-icon.svg" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><p>Voorbereiding · Geen accounts geregistreerd</p></div></footer>
+<script>
+(function(){
+ 'use strict';
+ const $=id=>document.getElementById(id);
+ function bg(ctx,w,h){
+   const grad=ctx.createLinearGradient(0,0,w,h);grad.addColorStop(0,'#071c31');grad.addColorStop(1,'#10506a');ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
+   ctx.globalAlpha=.11;ctx.strokeStyle='#b6f8f0';ctx.lineWidth=2;
+   for(let x=-h;x<w+h;x+=90){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+h,h);ctx.stroke();}
+   ctx.globalAlpha=1;
+ }
+ function mark(ctx,x,y,scale){
+   const colors=['#32b4eb','#31c8ad','#ffa66a'];
+   for(let i=0;i<3;i++){
+     ctx.strokeStyle=colors[i];ctx.lineWidth=21*scale;ctx.lineCap='round';
+     ctx.beginPath();ctx.moveTo(x,y+i*46*scale);ctx.lineTo(x+(145-i*24)*scale,y+i*46*scale);ctx.stroke();
+   }
+   ctx.fillStyle='#fff';ctx.beginPath();
+   ctx.moveTo(x+139*scale,y+111*scale);ctx.lineTo(x+192*scale,y+59*scale);
+   ctx.lineTo(x+203*scale,y+101*scale);ctx.lineTo(x+222*scale,y+111*scale);ctx.lineTo(x+139*scale,y+173*scale);
+   ctx.closePath();ctx.fill();
+ }
+ function renderAvatar(){
+   const c=$('avatar'),ctx=c.getContext('2d');bg(ctx,1080,1080);
+   ctx.fillStyle='#ffffff0b';ctx.fillRect(95,95,890,890);
+   mark(ctx,225,270,2.25);
+   ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font='900 88px Arial, sans-serif';ctx.fillText('TRIZENTRO',540,790);
+   ctx.font='700 29px Arial, sans-serif';ctx.letterSpacing='3px';ctx.fillStyle='#8de9e0';ctx.fillText('SWIM  •  BIKE  •  RUN',540,844);
+   ctx.letterSpacing='0px';
+ }
+ function renderBanner(){
+   const c=$('banner'),ctx=c.getContext('2d');bg(ctx,1200,630);
+   mark(ctx,75,175,1.33);
+   ctx.fillStyle='#fff';ctx.font='900 116px Arial, sans-serif';ctx.fillText('TRIZENTRO',365,283);
+   ctx.fillStyle='#91eee2';ctx.font='700 36px Arial, sans-serif';ctx.fillText('SWIM. BIKE. RUN. BEYOND.',367,341);
+   ctx.fillStyle='#d8eaf2';ctx.font='500 29px Arial, sans-serif';ctx.fillText('Free race planners • Sprint • Olympic • 70.3 • Full',365,423);
+   ctx.fillStyle='#a4cedc';ctx.font='500 23px Arial, sans-serif';ctx.fillText('Triathlon Race Tools',365,485);
+ }
+ function save(canvas,name){
+   canvas.toBlob(blob=>{
+     if(!blob){$('copy-status').textContent='PNG genereren is niet gelukt.';return;}
+     const url=URL.createObjectURL(blob),a=document.createElement('a');
+     a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+     setTimeout(()=>URL.revokeObjectURL(url),3000);
+   },'image/png');
+ }
+ $('download-avatar').addEventListener('click',()=>save($('avatar'),'trizentro-avatar-1080.png'));
+ $('download-banner').addEventListener('click',()=>save($('banner'),'trizentro-banner-1200x630.png'));
+ $('copy-profile').addEventListener('click',async()=>{
+   try{
+     await navigator.clipboard.writeText($('profile-text').value);
+     $('copy-status').textContent='Gekopieerd.';
+   }catch(e){$('profile-text').focus();$('profile-text').select();$('copy-status').textContent='Selecteer en kopieer de tekst handmatig.';}
+ });
+ renderAvatar();renderBanner();
+})();
+</script>
+</body></html>
