@@ -1,9 +1,13 @@
+# TriZentro URL-migratie (nog niet live)
+
+De overgang van GitHub Pages-projectpad `/sporttech-deals/` naar `/trizentro/` staat in een aparte PR. **Merge deze PR pas nadat de repository via GitHub Settings naar `trizentro` is hernoemd.** Zie [het migratieplan](docs/URL_MIGRATIE_TRIZENTRO.md).
+
 # TriZentro — Triathlon Race Tools
 **Internationale werknaam, 4 november 2026 · voorheen SportTech Deals / TriKoers.**
 
 **TriZentro** maakt gratis triatloncalculators en raceplanners voor Sprint, Olympisch, 70.3, Full en eigen afstanden. De huidige tools werken in de browser; digitale producten en geautoriseerde affiliateprijsvergelijkingen zijn mogelijke toekomstige verdienmodellen. De naam, domeinen en socialmediahandles zijn juridisch en technisch nog niet volledig gecontroleerd. Er zijn nog geen accounts of domeinen onder TriZentro geregistreerd.
 
-[**Merkidentiteit, socialmedia- en Google-accountplan**](docs/BRAND_TRIZENTRO.md) · [**Brand Kit: PNG-avatar en banner**](https://samknook.github.io/sporttech-deals/brand-kit.html) · [**Live website (bestaande GitHub-URL)**](https://samknook.github.io/sporttech-deals/)
+[**Merkidentiteit, socialmedia- en Google-accountplan**](docs/BRAND_TRIZENTRO.md) · [**Brand Kit: PNG-avatar en banner**](https://samknook.github.io/trizentro/brand-kit.html) · [**Live website (bestaande GitHub-URL)**](https://samknook.github.io/trizentro/)
 
 ## Historische SportTech Deals-prijsscanner
 
