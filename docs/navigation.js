@@ -9,36 +9,40 @@ if(!navContainer)return;
 const oldNav=navContainer.querySelector('nav');
 if(!oldNav)return;
 const path=decodeURIComponent(location.pathname.split('/').pop()||'index.html');
+const locale=(window.TriZentroI18n&&window.TriZentroI18n.lang)||'nl';
+const english=locale==='en';
+const tr=(nl,en)=>english?en:nl;
+const urlFor=href=>href+(href.includes('?')?'&':'?')+'lang='+locale;
 const groups=[
-  {title:'Tools',items:[
-    ['Race Dashboard','race-dashboard.html'],
-    ['Race Planner','race-planner.html'],
-    ['Eindtijdcalculator','triathlon-calculator.html'],
-    ['Voedingscalculator','race-fuel-planner.html'],
-    ['Wedstrijddagplanning','race-day-timeline.html']
+  {title:tr('Tools','Tools'),items:[
+    [tr('Race Dashboard','Race Dashboard'),'race-dashboard.html'],
+    [tr('Race Planner','Race Planner'),'race-planner.html'],
+    [tr('Eindtijdcalculator','Finish Time Calculator'),'triathlon-calculator.html'],
+    [tr('Voedingscalculator','Fuel Planner'),'race-fuel-planner.html'],
+    [tr('Wedstrijddagplanning','Race Day Timeline'),'race-day-timeline.html']
   ]},
-  {title:'Voorbereiding',items:[
-    ['70.3 Readiness Check','70-3-readiness-check.html'],
-    ['Raceweek-checklist','first-70-3-race-week-checklist.html'],
-    ['70.3-racegids','70-3-raceplan.html'],
-    ['Triatlonafstanden','triatlon-afstanden.html']
+  {title:tr('Voorbereiding','Preparation'),items:[
+    [tr('70.3 Readiness Check','70.3 Readiness Check'),'70-3-readiness-check.html'],
+    [tr('Raceweek-checklist','Race-Week Checklist'),'first-70-3-race-week-checklist.html'],
+    [tr('70.3-racegids','70.3 Race Guide'),'70-3-raceplan.html'],
+    [tr('Triatlonafstanden','Triathlon Distances'),'triatlon-afstanden.html']
   ]},
-  {title:'Guides & Race Packs',items:[
-    ['Alle producten','products.html'],
-    ['70.3 Race Pack-preview','race-pack-preview.html'],
-    ['Triathlon Blueprint','blueprint-preview.html'],
-    ['Geef feedback','tester-feedback.html']
+  {title:tr('Guides & Race Packs','Guides & Race Packs'),items:[
+    [tr('Alle producten','All Products'),'products.html'],
+    [tr('70.3 Race Pack-preview','70.3 Race Pack Preview'),'race-pack-preview.html'],
+    [tr('Triathlon Blueprint','Triathlon Blueprint'),'blueprint-preview.html'],
+    [tr('Geef feedback','Share Feedback'),'tester-feedback.html']
   ]},
-  {title:'Materiaal',items:[
-    ['Fietscomputer-koopgids','koopgids.html'],
-    ['Fietscomputers vergelijken','fietscomputer-triatlon.html'],
-    ['Fietscomputer-aanbiedingen','fietscomputer-aanbieding.html']
+  {title:tr('Materiaal','Equipment'),items:[
+    [tr('Fietscomputer-koopgids','Bike Computer Buying Guide'),'koopgids.html'],
+    [tr('Fietscomputers vergelijken','Compare Bike Computers'),'fietscomputer-triatlon.html'],
+    [tr('Fietscomputer-aanbiedingen','Bike Computer Deals'),'fietscomputer-aanbieding.html']
   ]}
 ];
-const extra=[['Over & privacy','transparantie.html']];
+const extra=[[tr('Over & privacy','About & Privacy'),'transparantie.html']];
 function linkHtml(label,href){
  const current=href===path?' aria-current="page"':'';
- return '<a href="'+href+'"'+current+'>'+label+'</a>';
+ return '<a href="'+urlFor(href)+'"'+current+'>'+label+'</a>';
 }
 const groupsDesktop=groups.map(g=>
  '<details class="tz-nav-dropdown"><summary>'+g.title+'</summary><div class="tz-nav-submenu">'
@@ -52,18 +56,33 @@ const groupsMobile=groups.map(g=>
 ).join('');
 const nav=document.createElement('nav');
 nav.className='tz-navigation';
-nav.setAttribute('aria-label','Hoofdnavigatie');
+nav.setAttribute('aria-label',tr('Hoofdnavigatie','Main navigation'));
 nav.innerHTML=
  '<div class="tz-nav-desktop">'+linkHtml('Home','index.html')+
  groupsDesktop+linkHtml('Race Dashboard','race-dashboard.html')+'</div>'+
- '<details class="tz-mobile-menu"><summary aria-label="Open navigatiemenu"><span class="tz-menu-bars" aria-hidden="true">☰</span> Menu</summary>'+
- '<div class="tz-mobile-panel"><div class="tz-mobile-intro">Waar wil je naartoe?</div>'+
+ '<details class="tz-mobile-menu"><summary aria-label="'+tr('Open navigatiemenu','Open navigation menu')+'"><span class="tz-menu-bars" aria-hidden="true">☰</span> '+tr('Menu','Menu')+'</summary>'+
+ '<div class="tz-mobile-panel"><div class="tz-mobile-intro">'+tr('Waar wil je naartoe?','Where would you like to go?')+'</div>'+
  linkHtml('🏠 Home','index.html')+
  linkHtml('🏁 Race Dashboard','race-dashboard.html')+
  groupsMobile+
  '<div class="tz-mobile-group tz-mobile-bottom">'+extra.map(([label,href])=>linkHtml(label,href)).join('')+'</div>'+
  '</div></details>';
 oldNav.replaceWith(nav);
+const switcher=document.createElement('div');
+switcher.className='tz-lang-switch';
+switcher.setAttribute('role','group');
+switcher.setAttribute('aria-label',tr('Taal kiezen','Choose language'));
+for(const lang of ['nl','en']){
+  const button=document.createElement('button');
+  button.type='button';
+  button.textContent=lang.toUpperCase();
+  button.setAttribute('lang',lang);
+  button.setAttribute('aria-label',lang==='nl'?'Nederlands':'English');
+  button.setAttribute('aria-pressed',String(lang===locale));
+  button.addEventListener('click',()=>window.TriZentroI18n&&window.TriZentroI18n.switchLanguage(lang));
+  switcher.appendChild(button);
+}
+navContainer.appendChild(switcher);
 const menu=nav.querySelector('.tz-mobile-menu');
 const dropdowns=[...nav.querySelectorAll('.tz-nav-dropdown')];
 dropdowns.forEach(d=>d.addEventListener('toggle',()=>{
