@@ -2,6 +2,19 @@
 
 **Werknaam vastgesteld: 4 november 2026.** Dit is een **voorlopige productmerknaam**; er is nog geen domein, handelsnaam, merkregistratie, Gmail-account of socialmedia-profiel geclaimd of aangemaakt.
 
+## Update 4 november 2026 — echte merkassets en screening
+
+- [x] SVG-beeldmerk: [trizentro-icon.svg](trizentro-icon.svg), gebruikt als favicon en in de website-navigatie.
+- [x] SVG-woordmerk met pay-off: [trizentro-wordmark.svg](trizentro-wordmark.svg).
+- [x] Consistente Swim/Bike/Run-kleuren op de homepage; geen externe fonts, trackers of betaalde designsoftware.
+- [x] Eerste openbare zoekronde op exacte spelling `TriZentro`: geen duidelijk exact gebruik als triatlonplatform gevonden. **Dit is geen registratierapport en bewijst niet dat de naam vrij is.**
+- [!] Potentieel relevante vergelijkbare namen in andere sectoren: `Trisentra` (IT-consultancy), `Trizent` (IT-infrastructuur). Alleen een registercontrole per relevante goederen- en dienstenklasse kan de betekenis van de overlap helpen beoordelen.
+- [ ] Resultaten uit officiële BOIP-, TMview-, WIPO- en handelsnaamregisters **nog niet vastgesteld**.
+- [ ] `trizentro.com`, `trizentro.nl` en socialmediahandles **nog niet via een registrerende partij bevestigd**. Een webzoekresultaat of niet-bereikbare pagina is geen vrijgave.
+- [ ] Registratie en betaalde aankopen **nog niet uitgevoerd**.
+
+**Noot voor de socialmediavormgeving:** deze assets zijn SVG-vectorbestanden voor website en bronmateriaal. Uploads op Instagram, TikTok of YouTube kunnen PNG/JPG vereisen; converteer na officiële merkcheck en vóór upload naar het formaat van het platform. Doe geen claims over werkende socialaccounts.
+
 ## Het merk
 
 - **Naam:** TriZentro
