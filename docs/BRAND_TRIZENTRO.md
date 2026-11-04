@@ -1,21 +1,21 @@
 # TriZentro — internationale merkidentiteit en accountplan
 
-**Werknaam vastgesteld: 4 november 2026.** Dit is een **voorlopige productmerknaam**; er is nog geen domein, handelsnaam, merkregistratie, Gmail-account of socialmedia-profiel geclaimd of aangemaakt.
+**Werknaam vastgesteld: 4 november 2026.** Dit is een **voorlopige productmerknaam**; er is nog geen eigen domein, handelsnaam, merkregistratie of socialmedia-profiel bevestigd. Het zakelijke Google-account `trizentro.team@gmail.com` is volgens de eigenaar aangemaakt.
 
 ## Besluit: zakelijk Google-account als exclusieve eigenaar (4 november 2026)
 
 De gebruiker wil **geen TriZentro-services op zijn privé-Google-account**. Daarom is de nieuwe hoofdregel:
 
-- [ ] Maak een **apart Google-account voor werk of zakelijk gebruik** aan via https://accounts.google.com/signup. Kies `Voor werk of zakelijk gebruik`. Een nieuw gratis Gmail-adres (bijvoorbeeld `trizentro.team@gmail.com`, indien beschikbaar) is het startpunt zolang er nog geen definitief eigen domein is.
-- [ ] Laat de **eigenaar zelf** gebruikersnaam, wachtwoord, herstelopties, passkey en eventuele telefoonverificatie invullen. Deel geen wachtwoorden of verificatiecodes via chat. Deze registratie kan niet door de beschikbare Google/Gmail-connector worden gedaan.
+- [x] Apart Google-account aangemaakt: `trizentro.team@gmail.com` (bevestigd door eigenaar op 4 november 2026).
+- [x] Accounregistratie door eigenaar voltooid. Herstelopties en passkeys zijn niet onafhankelijk gecontroleerd; deel geen wachtwoorden of verificatiecodes via chat.
 - [ ] Stel **tweestapsverificatie** in. Gebruik eventueel een persoonlijk hersteladres uitsluitend voor herstel; het privé-Google-account wordt géén eigenaar van TriZentro-diensten.
-- [ ] Maak Search Console voor `https://samknook.github.io/sporttech-deals/` aan **ingelogd met het nieuwe zakelijke account**. Kies de URL-voorvoegsel-property en laat de eigenaar verifiëren met een unieke HTML-tag die op de site geplaatst kan worden.
+- [x] Search Console URL-prefix-property voor `https://samknook.github.io/sporttech-deals/` geverifieerd volgens bevestiging van eigenaar; verificatiemeta staat in `docs/index.html`.
 - [ ] Maak daarna YouTube-kanaal en Drive-map alleen onder dit zakelijke account aan. Koppel ook de Google-diensten in ChatGPT opnieuw met de juiste identiteit als gewenst.
 - [ ] Verbind de sociale profielen en eventueel Canva/Metricool met de merkidentiteit zodra hun officiële registratie is afgerond.
 - [ ] Google Workspace `admin@trizentro.com` is een toekomstige optie, **niet al aangemaakt**: vereist controle/aankoop van het domein en een betaald abonnement. Bestaande Gmail-identiteiten worden niet automatisch omgezet in een Workspace-gebruiker; regel eigendoms- en datamigratie expliciet indien later nodig.
 - [ ] **Geen Google Bedrijfsprofiel** als standaard instellen voor een puur online project zonder publiek toegankelijke klantlocatie; beoordeel eerst de toepasselijke deelnamevoorwaarden.
 
-**Status:** Het zakelijke Google-account **is nog niet aangemaakt**. Het plan en de voorgestelde e-mailadressen zijn geen registratiebevestiging.
+**Status 4 november 2026:** Zakelijk Google-account aangemaakt en Search Console-verificatie bevestigd door eigenaar. Sitemapverwerking en indexering nog niet bevestigd.
 
 ## Update 4 november 2026 — echte merkassets en screening
 
@@ -68,14 +68,14 @@ Een gewone zoekopdracht op 4 november 2026 leverde geen duidelijke exacte merkge
 | Facebook Page | `TriZentro` | `TriZentro Race Tools` |
 | LinkedIn Page | `TriZentro` | `TriZentro Race Tools` |
 | Zakelijk e-mailadres | `hello@trizentro.com` | Alleen **na** domeinregistratie en actieve mailhosting |
-| Google-account | `trizentro.brand@gmail.com` als voorstel | Geen aanname dat het Gmail-adres beschikbaar is |
+| Google-account | `trizentro.team@gmail.com` (aangemaakt) | Werkelijk zakelijk account |
 
 Alle bovenstaande namen zijn **ideeën, geen werkende contacten of bevestigde URL's**. Socialmedia-accountnamen kunnen per platform verschillen.
 
 ## Nodige accountvolgorde
 
 1. **Verifieer naam en domein** met BOIP/KVK/WIPO en registrar. Leg vast welke namen echt beschikbaar zijn. Betaal pas dan voor het domein.
-2. **Google:** gebruik voorlopig een bestaand, veilig beheerd Google-account om Google Search Console in te stellen op de huidige GitHub Pages URL; een nieuw Gmail-account is niet verplicht voor Search Console. Als je later een apart merkaccount wilt, maak dat via de officiële Google-registratie met eigen herstelmethoden en 2FA; registratie kan niet via de huidige GitHub/Gmail-koppelingen worden overgenomen.
+2. **Google:** het zakelijke account `trizentro.team@gmail.com` is aangemaakt en de Search Console URL-prefix-property is volgens de eigenaar geverifieerd. Controleer herstelmethoden en 2FA.
 3. **Domein & website:** pas na aankoop GitHub Pages-instellingen en DNS veranderen. De oude URL bevat `sporttech-deals` en blijft actief zolang er geen bevestigd eigen domein is.
 4. **Search Console:** verifieer een URL-prefix-property voor `https://samknook.github.io/sporttech-deals/` of, na migratie, het eigen domein. Dien de bestaande `sitemap.xml` in na succesvolle verificatie.
 5. **Socialmedia:** claim de gekozen handle via eigen aanmelding met sterk uniek wachtwoord en 2FA. Instagram eerst (reels/carousels over de tool), dan YouTube Shorts en eventueel TikTok. Facebook/LinkedIn alleen wanneer ze aantoonbaar nut hebben; niet direct vijf kanalen actief onderhouden.
@@ -115,11 +115,12 @@ Gebruik voorlopig uitsluitend de werkende `https://samknook.github.io/sporttech-
 
 - [x] Zichtbare website-teksten als **TriZentro** gepubliceerd, zonder GitHub repository, projectpad of Daisycon-meta te veranderen.
 - [x] Downloadbare tekstplannen gebruiken merknaam TriZentro.
-- [ ] Socialmediaprofielen en Gmail/Google-account **nog niet aangemaakt**; daarvoor is een ingelogde accountactie van eigenaar nodig.
+- [x] Zakelijk Gmail/Google-account aangemaakt en Search Console-verificatie bevestigd door eigenaar.
+- [ ] Socialmediaprofielen nog niet bevestigd; daarvoor is een ingelogde accountactie van eigenaar nodig.
 - [ ] Exacte domein- en merkrechten **niet bevestigd**.
 - [ ] Officiële verandering van naam in Daisycon/advertiseraccount **niet doorgevoerd**.
 - [ ] Definitieve bedrijfsregistratie/handelsnaam **niet doorgevoerd**.
 
-### Waarom niet nu de GitHub-repository hernoemen?
+### Waarom voorlopig niet de GitHub-repository hernoemen?
 
 De huidige website en Daisycon-verificatie lopen via `https://samknook.github.io/sporttech-deals/`. Een repo-rename zou het projectpad, backlinks, bestaande Google-verificatie en Daisycon-instellingen kunnen raken. We behouden daarom de oude repo-ID tot een eigen domein bevestigd en gemigreerd is.
