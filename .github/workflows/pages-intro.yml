@@ -10,6 +10,8 @@ on:
       - 'docs/site.css'
       - 'docs/fietscomputer-triatlon.html'
       - 'docs/fietscomputer-aanbieding.html'
+      - 'docs/triatlon-afstanden.html'
+      - 'tests/test_seo.cjs'
       - 'docs/70-3-eindtijd-calculator.html'
       - 'docs/race-planner.html'
       - 'docs/triathlon-calculator.html'
@@ -76,10 +78,28 @@ jobs:
           node --check docs/race-planner-app.js
           node --check docs/race-insights.js
           node --test tests/test_race_ui.cjs
+          node --test tests/test_seo.cjs
           node --test tests/test_race_planner.cjs
+          test -s docs/triatlon-afstanden.html
           test -s docs/fietscomputer-triatlon.html
           test -s docs/fietscomputer-aanbieding.html
           test -s docs/sitemap.xml
+          python - <<'PY'
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+          from urllib.parse import urlparse, unquote
+          tree=ET.parse('docs/sitemap.xml')
+          base='https://samknook.github.io/sporttech-deals/'
+          locs=[el.text for el in tree.iter() if el.tag.endswith('}loc') and el.text]
+          assert locs, 'XML-sitemap heeft geen links'
+          assert len(locs)==len(set(locs)), 'XML-sitemap bevat dubbele URL'
+          for url in locs:
+              assert url.startswith(base), f'Verkeerd domein of projectpad: {url}'
+              path=unquote(urlparse(url).path).removeprefix('/sporttech-deals/')
+              path=path if path else 'index.html'
+              assert Path('docs',path).is_file(), f'Sitemaplink zonder bestand: {url}'
+          print(f'XML-sitemap gevalideerd: {len(locs)} echte, unieke pagina’s.')
+          PY
           test -s docs/robots.txt
           python - <<'PY'
           from html.parser import HTMLParser
@@ -117,6 +137,7 @@ jobs:
           expected = {
               '': ['name="3045ec1a300a1b5"', 'content="e43119facc31c6d54302cec101a02834"', 'href="race-planner.html"'],
               'triathlon-calculator.html': ['id="distance-selector"', 'triathlon-calculator-app.js', 'race-insights.js', 'id="goal-analysis"', 'triathlon.css'],
+              'triatlon-afstanden.html': ['Triatlon afstanden', 'Sprint berekenen', 'Olympisch berekenen', 'rel="canonical"'],
               'triathlon-calculator-app.js': ['changeDistance', 'RacePlannerCore'],
               'race-insights.js': ['RaceInsights', 'goalPacing', 'compareScenarios'],
               'triathlon.css': ['.distance-selector', '.tri-split-visual'],
