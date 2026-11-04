@@ -7,17 +7,24 @@ The assistant has confirmed the website files are stored in the connected GitHub
 Expected homepage: https://samknook.github.io/sporttech-deals/
 Expected free guide: https://samknook.github.io/sporttech-deals/first-70-3-race-week-checklist.html
 
-## Publish the actual public site (repository owner)
-1. Open https://github.com/samknook/sporttech-deals/settings/pages
-2. Under **Build and deployment**, check **Source**.
-3. If it is already **Deploy from a branch**, verify **main** and **/docs** are selected. Save changes if necessary.
-4. If Source is **GitHub Actions**, don't enable the older `.github/workflows/publish.yml` just to make the Pages site appear. That workflow is for a legacy optional pricefeed build, not for `/docs`. First make a deliberate choice between branch publishing and a separate dedicated Pages deployment workflow.
-5. Open https://github.com/samknook/sporttech-deals/actions and inspect the most recent Pages build/deploy run and the Race Tools check. Record any errors instead of guessing the deployment status.
-6. Open homepage in an ordinary browser, ideally an iPhone Safari private tab. Verify CSS/logo, main navigation, Race Dashboard and mobile numeric inputs.
-7. Check https://samknook.github.io/sporttech-deals/sitemap.xml and submit the correct sitemap URL in the verified Google Search Console property once the site is reachable.
-8. If the page is stale, distinguish browser cache from an actual missing deploy; inspect the Pages build status and the published page source.
+## New dedicated deployment workflow (created 4 November 2026)
+A separate workflow now exists at `.github/workflows/deploy-trizentro.yml`:
+- Runs the Node regression tests on each relevant push.
+- Publishes **only `docs/`** to GitHub Pages if tests pass and GitHub Pages is configured for Actions.
+- Leaves the legacy pricefeed workflow in `.github/workflows/publish.yml` disabled and unchanged.
+- Does not enable any affiliate pricefeeds, checkout, payment or analytics.
 
-Official reference: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+**Required one-time owner action (only if Pages is not already using Actions):**
+1. Open https://github.com/samknook/sporttech-deals/settings/pages
+2. Under **Build and deployment → Source**, select **GitHub Actions**. This matters: the new workflow needs the GitHub Actions publishing source, not `main /docs` branch source.
+3. Open https://github.com/samknook/sporttech-deals/actions/workflows/deploy-trizentro.yml
+4. Select **Run workflow** on `main` if a new push did not initiate deployment automatically.
+5. Open the deployment job. If a step failed, inspect that exact step before changing settings.
+6. After a success, visit https://samknook.github.io/sporttech-deals/ and the product pages from your phone.
+
+**Important:** do not flip the legacy `STD_PUBLICATION_ENABLED` variable to `true` simply to deploy TriZentro. The legacy job uploads `./site` and can replace the new `docs` website. GitHub Pages deployment should have one deliberate owner. If branch publication is already working correctly, you may instead keep `main /docs` as the source and disable the dedicated Actions workflow; do not run both competing publishing approaches.
+
+GitHub Docs: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
 
 ## Smoke-test checklist for iPhone
 - [ ] Landing page opens over HTTPS and the brand icon is visible.
