@@ -43,13 +43,14 @@ strong.clock{font-size:19px;color:#0d4b42}.key{font-size:13px;color:#577268}
 <section class="panel"><h2>01 / Wedstrijd en route</h2>
 <div class="inputs">
 <label>Wedstrijddatum<input type="date" id="date" value="2027-06-20"><small>Datum van jouw evenement</small></label>
-<label>Starttijd<input type="time" id="start" value="08:00" required><small>Jouw wave / startgroep</small></label>
+<label>Starttijd<input type="text" id="start" inputmode="numeric" maxlength="5" value="08:00" required><small>Jouw wave / startgroep</small></label>
 <label>Reistijd (minuten)<input type="number" id="travel" min="0" max="1440" step="1" value="35"><small>Van vertrekpunt tot wedstrijdlocatie</small></label>
 <label>Parkeren en lopen (min)<input type="number" id="parking" min="0" max="240" step="1" value="20"><small>Van parkeerplek naar wisselzone</small></label>
 <label>Wisselzone en fietscontrole (min)<input type="number" id="setup" min="0" max="240" step="1" value="40"><small>Inclusief banden, voeding, spullen</small></label>
 <label>Warming-up en startvak (min)<input type="number" id="warmup" min="0" max="240" step="1" value="30"><small>Vanaf einde fietscontrole tot start</small></label>
 <label>Extra veiligheidsbuffer (min)<input type="number" id="buffer" min="0" max="180" step="1" value="20"><small>Voor vertraging en onverwachte situaties</small></label>
-</div><p class="key">Startvaksluiting, fiets-incheck, wisselzoneopening en organisatorische tijdsloten staan niet automatisch in deze tool. Controleer die altijd in de officiële deelnemersinformatie.</p>
+</div><p class="key">Mobiel: typ 830 voor starttijd 08:30; de dubbele punt verschijnt automatisch.</p>
+<p class="key">Startvaksluiting, fiets-incheck, wisselzoneopening en organisatorische tijdsloten staan niet automatisch in deze tool. Controleer die altijd in de officiële deelnemersinformatie.</p>
 </section>
 <section class="panel"><h2>02 / Jouw tijdlijn</h2><p id="error" role="alert" class="error" hidden>Controleer de datum, starttijd en invoer. Minuten moeten gehele niet-negatieve waarden binnen de getoonde grenzen zijn.</p>
 <div id="output">
@@ -74,6 +75,8 @@ strong.clock{font-size:19px;color:#0d4b42}.key{font-size:13px;color:#577268}
 </section>
 <section class="panel"><h2>Alles gepland?</h2><p>Gebruik nu de <a href="race-fuel-planner.html">Fuel Planner</a> voor je eigen gels en bidons, onze <a href="70-3-raceplan.html">70.3-racegids</a> voor pacing en de <a href="race-planner.html">Race Planner</a> voor je doorkomsten en materiaalchecklist.</p></section>
 </main><footer><div class="wrap"><a class="brand" href="./"><img class="brand-icon" src="trizentro-icon.svg" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><a href="transparantie.html">Privacy en transparantie</a></div></footer>
+<script src="pace-input.js"></script>
+<script>TriZentroPaceInput.bindClock(["start"]);</script>
 <script>
 (()=>{
 "use strict";
