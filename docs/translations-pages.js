@@ -166,3 +166,25 @@ TriZentroAddTranslations('index.html','en',[
  ['Check your preparation','Controleer je voorbereiding'],
  ['Learn smarter. Race prepared.','Leer slimmer. Start voorbereid.']
 ]);
+
+/* Browser/tab titles follow the selected language on every page. */
+Object.assign(TriZentroTranslations.pageTitles,{
+ 'index.html':{nl:'Triathlon-tools en fietsgidsen',en:'Triathlon tools and bike guides'},
+ 'triathlon-calculator.html':{nl:'Triatlon eindtijdcalculator',en:'Triathlon finish time calculator'},
+ 'race-planner.html':{nl:'Triatlon Race Planner',en:'Triathlon Race Planner'},
+ 'triatlon-afstanden.html':{nl:'Triatlonafstanden uitgelegd',en:'Triathlon distances explained'},
+ 'tester-feedback.html':{nl:'Feedback voor TriZentro-testers',en:'TriZentro tester feedback'},
+ 'first-70-3-race-week-checklist.html':{nl:'Raceweek-checklist eerste 70.3',en:'First 70.3 race-week checklist'},
+ '70-3-readiness-check.html':{nl:'70.3-voorbereidingscheck',en:'70.3 readiness check'},
+ 'products.html':{nl:'Blueprint en Race Pack',en:'Blueprint and Race Pack'},
+ 'blueprint-preview.html':{nl:'Blueprint voorbeeldhoofdstukken',en:'Blueprint sample chapters'},
+ 'race-pack-preview.html':{nl:'70.3 Race Pack voorbeeld',en:'70.3 Race Pack preview'},
+ 'race-dashboard.html':{nl:'Mijn Race Dashboard',en:'My Race Dashboard'},
+ 'race-day-timeline.html':{nl:'Wedstrijddagplanning',en:'Race Day Timeline'},
+ 'race-fuel-planner.html':{nl:'Wedstrijdvoeding berekenen',en:'Race Fuel Planner'},
+ '70-3-raceplan.html':{nl:'70.3 raceplan maken',en:'Build a 70.3 race plan'},
+ 'koopgids.html':{nl:'Fietscomputer koopgids',en:'Bike computer buying guide'},
+ 'fietscomputer-triatlon.html':{nl:'Fietscomputer voor triatlon',en:'Bike computer for triathlon'},
+ 'fietscomputer-aanbieding.html':{nl:'Fietscomputer aanbiedingen beoordelen',en:'Evaluating bike computer deals'},
+ 'transparantie.html':{nl:'Transparantie en privacy',en:'Transparency and privacy'}
+});
