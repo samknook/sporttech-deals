@@ -75,3 +75,16 @@ footer p{color:#b0cbd4}
  .nav nav.tz-navigation a:nth-child(2){display:block}
 }
 @media(max-width:420px){.top .nav{gap:8px}.top .brand{font-size:18px}.top .brand .brand-icon{width:29px;height:29px}.tz-mobile-panel{right:0}}
+
+/* Home: make the four primary visitor paths immediately findable. */
+.tz-shortcuts{padding:39px 0 45px;background:#eaf4f6}
+.tz-shortcuts h2{margin:7px 0 19px;letter-spacing:-.035em}
+.tz-shortcuts-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.tz-shortcuts-grid a{display:grid;grid-template-columns:auto 1fr auto;column-gap:10px;align-content:start;align-items:center;border-radius:16px;border:1px solid #cddfe5;background:#fff;padding:18px 14px;min-height:125px;text-decoration:none;box-shadow:0 4px 16px #0d304012}
+.tz-shortcuts-grid a>span:first-child{font-size:25px;grid-row:1/3}
+.tz-shortcuts-grid a strong{font-size:15px;line-height:1.3}
+.tz-shortcuts-grid a small{grid-column:2/4;color:#55717a;font-size:12px;line-height:1.4;margin-top:5px}
+.tz-shortcuts-grid a .tz-shortcut-arrow{grid-column:3;grid-row:1;font-size:19px;font-weight:800;color:#148278}
+.tz-shortcuts-grid a:hover,.tz-shortcuts-grid a:focus-visible{outline:3px solid #3ab6a5;outline-offset:1px;transform:translateY(-1px)}
+@media(max-width:870px){.tz-shortcuts-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:500px){.tz-shortcuts{padding:26px 0 29px}.tz-shortcuts-grid{grid-template-columns:1fr;gap:9px}.tz-shortcuts-grid a{min-height:75px;padding:13px 14px}}
