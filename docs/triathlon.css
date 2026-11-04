@@ -103,3 +103,20 @@ body.triathlon-page{background:var(--tri-bg);color:var(--tri-ink)}
 @media(max-width:620px){.tri-hero>.wrap{padding-top:45px;padding-bottom:51px}.tri-hero p{font-size:15px}.tri-main{padding-top:18px}.tri-panel{padding:17px;border-radius:18px}.distance-selector{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.distance-selector button{padding:12px 7px}.tri-custom-grid,.tri-inputs,.tri-check-grid{grid-template-columns:1fr}.tri-results{padding:18px}.tri-split-visual>div{padding:12px 7px}.tri-split-visual strong{font-size:14px}.tri-result-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.tri-actions .tri-btn{width:100%}.tri-sport-ribbon .ribbon-part{font-size:12px;padding:8px 11px}}
 [hidden]{display:none!important}
 @media print{.triathlon-page{background:#fff;color:#111}.triathlon-page header,.triathlon-page footer,.no-print{display:none!important}.tri-main{width:100%;max-width:none;padding:0}.tri-panel{box-shadow:none;border:0;padding:7px 0;margin:0;border-radius:0;break-inside:avoid}.tri-panel h2{font-size:22px;margin:5px 0}.tri-results{background:#fff!important;color:#111!important;border:1px solid #444;padding:12px;margin:5px 0}.tri-results *{color:#111!important}.tri-results .time{font-size:36px}.tri-result-segments{border:1px solid #ddd}.tri-result-metrics div{border:1px solid #ddd}.tri-table{min-width:0}.tri-table th,.tri-table td{font-size:10px;padding:5px}.tri-check-grid{grid-template-columns:1fr 1fr;gap:8px}.tri-check-group{padding:8px;break-inside:avoid}.tri-check-group li{padding:3px 0}.tri-check-group label{font-size:10px}.tri-sport-ribbon,.tri-hero,.tri-inputs,.tri-custom-grid,.distance-selector{display:none!important}.print-only{display:block!important}}
+
+/* Pace goal & scenario insight cards */
+.tri-insight-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:18px 0}
+.tri-insight{background:#f7fafc;border:1px solid #d9e5eb;border-top:4px solid #93aab8;border-radius:16px;padding:19px 16px;min-width:0;display:flex;flex-direction:column;align-items:flex-start}
+.tri-insight.swim{border-top-color:var(--tri-sea);background:#eff9ff}
+.tri-insight.bike{border-top-color:var(--tri-mint);background:#ebf9f4}
+.tri-insight.run{border-top-color:var(--tri-run);background:#fff4e9}
+.tri-insight.slower{border-top-color:#8fabbc}
+.tri-insight.baseline{border-top-color:#1c526b;background:#eaf4f8}
+.tri-insight.faster{border-top-color:#1eb89d;background:#eafbf6}
+.tri-insight>span{font-weight:900;font-size:13px;letter-spacing:.025em;color:#385468}
+.tri-insight>strong{font-size:clamp(22px,2.6vw,33px);line-height:1.13;letter-spacing:-.045em;margin:11px 0 7px;overflow-wrap:anywhere;color:#123b50}
+.tri-insight>p{color:#58717e;font-size:12px;line-height:1.55;margin:0 0 12px}
+.tri-insight>.tri-btn{margin-top:auto;padding:10px 12px;font-size:12px}
+.tri-insights[hidden]{display:none!important}
+@media(max-width:730px){.tri-insight-grid{grid-template-columns:1fr}.tri-insight{padding:16px}.tri-insight>strong{font-size:27px}}
+@media print{.tri-insights{break-inside:avoid}.tri-insight-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.tri-insight{padding:8px}.tri-insight>strong{font-size:19px}.tri-insight .tri-btn{display:none}.tri-insight>p{font-size:10px}}
