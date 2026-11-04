@@ -27,6 +27,14 @@ test('distance presets represent four distances',()=>{
 test('faster cycling reduces calculated finish time, holding all else constant',()=>{
  assert.ok(race('half',{bikeSpeed:35}).total<race('half',{bikeSpeed:30}).total);
 });
+test('scenario comparison has slower, baseline and faster outcomes',()=>{
+ const baseline={distance:'half',swimPace:'2:00',bikeSpeed:30,runPace:'5:00',t1Minutes:4,t2Minutes:3,start:'08:00',target:'05:00'};
+ const scenarios=core.compareScenarios(baseline);
+ assert.equal(scenarios.length,3);
+ assert.ok(scenarios[0].total>scenarios[1].total);
+ assert.ok(scenarios[2].total<scenarios[1].total);
+ assert.equal(scenarios[1].deltaSeconds,0);
+});
 test('unrealistic and malformed inputs fail validation',()=>{
  assert.throws(()=>race('half',{swimPace:'bad'}));
  assert.throws(()=>race('half',{bikeSpeed:0}));
@@ -41,6 +49,8 @@ test('dashboard and sitemap contain consistent references',()=>{
  assert.match(dashboard,/localStorage\.setItem/);
  assert.match(dashboard,/localStorage\.removeItem/);
  assert.match(dashboard,/id="download"/);
+ assert.match(dashboard,/id="scenarios"/);
+ assert.match(dashboard,/core\.compareScenarios\(v\.input\)/);
  assert.match(homepage,/href="race-dashboard.html"/);
  assert.match(sitemap,/https:\/\/samknook\.github\.io\/sporttech-deals\/race-dashboard\.html/);
 });
