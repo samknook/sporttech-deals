@@ -83,3 +83,13 @@ Implemented `club-event-portal.js` and integrated it into `club-race-brief.html`
 **Differentiation hypothesis:** an organizer-approved participant artifact is more useful than a plain text brief alone. It remains free to demonstrate value; paid customization, client support and a reliable update/distribution process are not yet operational.
 
 **Next engineering milestones:** versioned, reusable event templates, clearly marked update history, organizer approval workflow and safe static hosting guidance. Do not claim automatic updates, hosted accounts, user authentication, or official verification until actually built.
+
+## Product milestone — six start waves, reusable templates and revision labels (5 November 2026)
+- Extended the event briefing generator from two to six start waves (A–F) with strict chronology checks.
+- Added locally downloaded and uploaded JSON templates, with schema version 1, strict field validation, a hard size limit and revision labels such as `v2.1`. No accounts, cloud saves, background uploads or data harvesting.
+- A loaded template requires another explicit organizer review before participants can receive an HTML export.
+- Participant HTML now shows a revision label alongside its generated date. This is **not** an automatic update mechanism; previously shared copies remain unchanged.
+- Added tests for round-tripping templates, detecting out-of-order waves, refusal of malformed templates, and review-gated exports.
+- These features can reduce repeated data entry for multi-wave, recurring club races. Monetization remains a hypothesis, with no recorded clients or revenue.
+
+**Next differentiator:** a clean audit trail of what changed between revisions and an easy-to-review participant update notice, while still requiring the organizer to publish any changes. Any hosted multi-organization SaaS would require authorization, account security, infrastructure and an explicit subscription model.
