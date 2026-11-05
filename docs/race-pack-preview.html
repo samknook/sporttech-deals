@@ -296,9 +296,9 @@ $("pack-review-score").textContent=(nl?"Ingevuld: ":"Completed: ")+review.done+"
 $("pack-review-caution").textContent=nl?"Controleer officiële tijden, parcoursregels en deadlines altijd bij de organisatie.":"Always confirm official timings, course rules and deadlines with the organizer.";
 const reviewList=$("pack-review-list");reviewList.replaceChildren();
 for(const item of review.items){const li=document.createElement("li");li.textContent=(item.done?"✓ ":"○ ")+item.label;reviewList.appendChild(li);}
-exported+="\\n\\n"+(nl?"VOORBEREIDINGSCONTROLE (ZELF INGEVULD)":"PREPARATION REVIEW (SELF-REPORTED)")
-+"\\n"+review.done+"/"+review.total
-+"\\n"+review.items.map(item=>(item.done?"[x] ":"[ ] ")+item.label).join("\\n");
+exported+="\n\n"+(nl?"VOORBEREIDINGSCONTROLE (ZELF INGEVULD)":"PREPARATION REVIEW (SELF-REPORTED)")
++"\n"+review.done+"/"+review.total
++"\n"+review.items.map(item=>(item.done?"[x] ":"[ ] ")+item.label).join("\n");
 const stressIds=["shock-swim","shock-bike","shock-transition","shock-run"];
 const stressMax=[120,240,60,180];
 const stressMinutes=stressIds.map((id,i)=>{
