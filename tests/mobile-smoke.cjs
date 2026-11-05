@@ -85,6 +85,20 @@ async function test(){
   await page.locator('#load-draft').click();
   assert.match(await page.locator('#draft-status').innerText(),/geen opgeslagen concept/i);
 
+  // Club organizer flow: draft a briefing, flag a conflicting transition closure.
+  await page.goto(base+'/club-race-brief.html?lang=nl');
+  await page.locator('#club-form').waitFor();
+  await page.locator('#transitionClose').fill('08:10');
+  await page.locator('#club-form button[type="submit"]').click();
+  assert.match(await page.locator('#brief-status').innerText(),/Wisselzone sluit nadat startgroep A begint/);
+  assert.equal(await page.locator('#brief-content').isVisible(),true);
+  await page.locator('#transitionClose').fill('07:30');
+  await page.locator('#club-form button[type="submit"]').click();
+  assert.equal(await page.locator('#brief-status').getAttribute('data-ok'),'true');
+  await page.locator('.tz-lang-switch button[lang="en"]').click();
+  await page.waitForURL(/club-race-brief\.html.*lang=en/);
+  await page.locator('#club-form button[type="submit"]').click();
+  assert.match(await page.locator('#brief-status').innerText(),/No obvious scheduling contradictions/);
   // No unhandled JavaScript errors throughout navigation and calculations.
   assert.deepEqual(errors,[],'uncaught browser errors');
   console.log('PASS: 390px mobile menu, localized navigation, brand homepage, 530 goal and NL/EN product pages');
