@@ -100,6 +100,17 @@ async function test(){
   await page.waitForURL(/club-race-brief\.html.*lang=en/);
   await page.locator('#club-form button[type="submit"]').click();
   assert.match(await page.locator('#brief-status').innerText(),/No obvious scheduling contradictions/);
+  // Participant export stays blocked until explicit organizer confirmation.
+  assert.equal(await page.locator('#download-portal').isDisabled(),true);
+  await page.locator('#organizer-review').check();
+  assert.equal(await page.locator('#download-portal').isEnabled(),true);
+  await page.locator('#transitionClose').fill('08:10');
+  assert.equal(await page.locator('#download-portal').isDisabled(),true);
+  await page.goto(base+'/event-portal-demo.html');
+  await page.locator('#set-en').click();
+  assert.equal(await page.locator('html').getAttribute('lang'),'en');
+  assert.equal(await page.locator('#set-en').getAttribute('aria-pressed'),'true');
+  assert.match(await page.locator('h2').first().innerText(),/Event timeline/);
   // No unhandled JavaScript errors throughout navigation and calculations.
   assert.deepEqual(errors,[],'uncaught browser errors');
   console.log('PASS: 390px mobile menu, localized navigation, brand homepage, 530 goal and NL/EN product pages');
