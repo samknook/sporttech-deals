@@ -29,6 +29,12 @@
 .club-table td:first-child{font-variant-numeric:tabular-nums;font-weight:820;white-space:nowrap}
 .club small,.club .hint{font-size:13px;color:#5c736d}
 .club-note{padding:12px 15px;background:#f1f7f5;border-radius:10px;font-size:14px}
+.portal-export{margin-top:22px;border-top:1px solid #d2e4d8;padding-top:18px}
+.portal-export h3{font-size:20px;margin:0 0 8px}
+.portal-export p{line-height:1.55}
+.club label.portal-review{display:flex;align-items:flex-start;gap:11px;font-weight:600;line-height:1.5}
+.portal-review input{width:20px;min-width:20px;height:20px;min-height:20px;margin-top:2px;accent-color:#166f57}
+.club-actions button:disabled{opacity:.5;cursor:not-allowed}
 @media(max-width:610px){.club-grid{grid-template-columns:1fr}.club-panel{padding:16px}.club-actions{display:grid}.club-actions button{width:100%}}
 @media print{.top,.club form,.club-actions,.club .intro,.club .nonprint,footer{display:none!important}.club{padding:0;width:100%}.club-panel{border:0;box-shadow:none;padding:0}.club h1{font-size:30px}body{background:white}.club-table td{font-size:12px}}
 </style>
@@ -69,6 +75,13 @@
 <div style="overflow-x:auto"><table class="club-table"><thead><tr><th>Tijd</th><th>Onderdeel</th></tr></thead><tbody id="brief-rows"></tbody></table></div>
 <p class="club-note" id="brief-note"></p>
 <div class="club-actions nonprint"><button id="download-brief" type="button">Download .txt</button><button id="copy-brief" type="button" class="alt">Kopieer tekst</button><button id="print-brief" type="button" class="alt">Print / bewaar als PDF</button></div>
+<div class="portal-export nonprint">
+<h3>04 · Maak een deelnemerspagina</h3>
+<p>Maak een zelfstandig HTML-bestand voor deelnemers, met een mobiel tijdschema, NL/EN-knop, bronlink en versiedatum. Het bestand blijft op jouw apparaat; TriZentro publiceert niets automatisch.</p>
+<label class="portal-review"><input id="organizer-review" type="checkbox"> Ik heb alle tijden en de officiële bron zelf gecontroleerd en mag deze conceptinformatie namens de organisator voorbereiden.</label>
+<div class="club-actions"><button type="button" id="download-portal" disabled>Download deelnemerspagina (.html)</button></div>
+<p id="portal-status" class="hint" role="status" aria-live="polite">Controleer de bron, los waarschuwingen op en bevestig de review voordat je downloadt.</p>
+</div>
 </div>
 <p class="hint">Deze demonstratie is geen officieel geverifieerd bericht. Een organisator blijft verantwoordelijk voor de juistheid, publicatie en eventuele wijzigingen. Controleer alle sluitingstijden, veiligheidseisen en startgroepen.</p>
 </section>
@@ -80,18 +93,21 @@
 </main>
 <footer><div class="wrap"><a href="transparantie.html">Transparantie en privacy</a></div></footer>
 <script src="club-brief-core.js"></script>
+<script src="club-event-portal.js"></script>
 <script>
 (()=>{'use strict';
 const el=id=>document.getElementById(id);
 const locale=window.TriZentroI18n?.lang||'nl',nl=locale!=='en';
 const tx=(a,b)=>nl?a:b,keys=['event','date','venue','guide','checkin','bikeClose','transitionClose','briefing','waveA','waveB','notes'];
 if(!nl&&el('event').value==='Voorbeeld Triatlon')el('event').value='Sample Triathlon';
-let output='';
+let output='',currentAnalysis=null;
 function update(event){
  if(event)event.preventDefault();
  const values=Object.fromEntries(keys.map(k=>[k,el(k).value]));
  try{
   const result=window.TriZentroClubBrief.analyze(values);
+  currentAnalysis=result;
+  updatePortalAvailability();
   output=window.TriZentroClubBrief.lines(result,locale).join('\n');
   el('brief-content').hidden=false;
   el('brief-title').textContent=result.values.event;
@@ -104,12 +120,35 @@ function update(event){
   el('brief-note').textContent=result.values.notes||tx('Nog geen bijzonderheden ingevoerd.','No additional notes entered.');
   el('brief-meta').textContent=tx('Concept, gebaseerd op door jou ingevoerde informatie.','Draft based only on information you entered.');
  }catch(e){
-  output='';el('brief-content').hidden=true;el('brief-status').dataset.ok='false';
+  output='';currentAnalysis=null;updatePortalAvailability();el('brief-content').hidden=true;el('brief-status').dataset.ok='false';
   el('brief-status').textContent=tx('Controleer evenementnaam, datum, officiële URL en starttijden.','Check event name, date, official URL and wave times.');
  }
 }
+
+function updatePortalAvailability(){
+ const allowed=!!currentAnalysis&&currentAnalysis.warnings.length===0&&el('organizer-review').checked;
+ el('download-portal').disabled=!allowed;
+ el('portal-status').textContent=!currentAnalysis?tx('Controleer eerst de invoer.','Please check the inputs first.'):
+ currentAnalysis.warnings.length?tx('Los eerst alle waarschuwingen op en voeg een officiële bronlink toe.','Resolve all warnings and provide an official source link first.'):
+ !el('organizer-review').checked?tx('Bevestig je eigen controle van alle officiële informatie voordat je downloadt.','Confirm your own review of the official details before downloading.'):
+ tx('Deelnemerspagina klaar om lokaal te downloaden. Publicatie gebeurt niet automatisch.','Participant page ready for local download. Publication is not automatic.');
+}
+el('organizer-review').addEventListener('change',updatePortalAvailability);
+el('club-form').addEventListener('input',()=>{
+ el('organizer-review').checked=false;
+ currentAnalysis=null;
+ updatePortalAvailability();
+});
+el('download-portal').addEventListener('click',()=>{
+ if(!currentAnalysis||currentAnalysis.warnings.length||!el('organizer-review').checked)return;
+ try{
+  const doc=window.TriZentroEventPortal.documentHtml(currentAnalysis,{organizerConfirmed:true});
+  window.TriZentroEventPortal.download('trizentro-event-participant-brief.html',doc);
+  el('portal-status').textContent=tx('HTML-bestand gemaakt. Controleer het bestand zelf vóór je het deelt of publiceert.','HTML file created. Review it yourself before sharing or publishing.');
+ }catch(e){el('portal-status').textContent=tx('Kon de pagina niet maken. Controleer de bron en tijden.','Could not create page. Check source and schedule.');}
+});
 el('club-form').addEventListener('submit',update);
-el('club-form').addEventListener('reset',()=>setTimeout(()=>{if(!nl&&el('event').value==='Voorbeeld Triatlon')el('event').value='Sample Triathlon';update();},0));
+el('club-form').addEventListener('reset',()=>setTimeout(()=>{el('organizer-review').checked=false;if(!nl&&el('event').value==='Voorbeeld Triatlon')el('event').value='Sample Triathlon';update();},0));
 el('download-brief').addEventListener('click',()=>{if(!output)return;const blob=new Blob([output],{type:'text/plain;charset=utf-8'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='trizentro-club-race-brief.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);});
 el('copy-brief').addEventListener('click',async()=>{if(!output)return;try{await navigator.clipboard.writeText(output);el('brief-meta').textContent=tx('Tekst gekopieerd.','Text copied.');}catch(e){el('brief-meta').textContent=tx('Kopiëren niet mogelijk. Gebruik de downloadknop.','Cannot copy. Use download instead.');}});
 el('print-brief').addEventListener('click',()=>window.print());
