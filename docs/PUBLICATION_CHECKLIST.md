@@ -49,3 +49,22 @@ GitHub Docs: https://docs.github.com/en/pages/getting-started-with-github-pages/
 
 ## Technical assurance
 Automated checks under `tests/*.test.cjs` cover some calculations and internal links. Test files being committed is not proof that GitHub CI passed. Read actual workflow results.
+
+## Automated mobile browser QA (added 5 November 2026)
+
+A separate real-browser smoke test now lives in `tests/mobile-smoke.cjs` and `.github/workflows/mobile-smoke.yml`. It serves `docs/` locally, launches Chromium in a 390px touch-enabled viewport, and checks:
+- Dutch homepage and mobile navigation; selecting a tool category and opening Race Dashboard
+- Raw target entry `530` calculates without error and formats as `05:30`
+- Clicking the brand returns to the homepage (language preserved)
+- Switching NL to EN; navigating to the Readiness Check in English
+- Dutch and English product page headings
+- No unhandled browser JavaScript exceptions
+
+It runs on pull requests that touch website files and can be started manually from **Actions → TriZentro mobile browser smoke test → Run workflow**:
+https://github.com/samknook/sporttech-deals/actions/workflows/mobile-smoke.yml
+
+The workflow installs Playwright Chromium on GitHub Actions and uploads `mobile-smoke-failure.png` if a browser test fails. **Creating the workflow is not evidence that it ran or passed.** For full confidence, verify a green run and test Safari on a physical iPhone separately. This workflow does not deploy the website and does not alter checkout, feeds, or analytics.
+
+### Regression resolved
+An internal `./` homepage link on subpages could previously be turned into an empty path while appending `?lang=nl` or `?lang=en`. That empty path could keep visitors on the same subpage instead of returning home. The i18n link rewriting now preserves `./`, with a regression test.
+
