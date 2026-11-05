@@ -74,3 +74,22 @@ test('previously saved Race Pack drafts without new optional deadline still load
  assert.equal(actual.values['transition-close'],'');
  assert.equal(actual.values['race-name'],'First 70.3');
 });
+
+test('restoring an incompatible form never partially overwrites user inputs',()=>{
+ const draft=fixture();
+ const nodes=new Map(storage.fields.map(id=>[id,{value:'CURRENT'}]));
+ const checks=draft.checks.map(()=>({checked:false}));
+ const doc={
+  getElementById:id=>nodes.get(id),
+  querySelectorAll:()=>checks.slice(0,7)
+ };
+ assert.throws(()=>storage.apply(doc,draft),/not applied/);
+ for(const el of nodes.values())assert.equal(el.value,'CURRENT');
+ assert.equal(checks.every(el=>el.checked===false),true);
+ const incomplete={
+  getElementById:id=>id==='run'?null:nodes.get(id),
+  querySelectorAll:()=>checks
+ };
+ assert.throws(()=>storage.apply(incomplete,draft),/not applied/);
+ for(const el of nodes.values())assert.equal(el.value,'CURRENT');
+});
