@@ -118,6 +118,28 @@ async function test(){
   await page.locator('#club-form button[type="submit"]').click();
   assert.match(await page.locator('#brief-status').innerText(),/Startgroep C moet na/);
   assert.equal(await page.locator('#download-portal').isDisabled(),true);
+  // Organizer update notice: import reviewed source, change a wave and approve.
+  const sample={
+   schema:'trizentro.club-template',version:1,revision:'v1',
+   values:{event:'Fictional event',date:'2027-06-20',venue:'Example venue',
+    guide:'https://example.org/guide',checkin:'06:00',bikeClose:'07:00',
+    transitionClose:'07:30',briefing:'07:40',waveA:'08:00',waveB:'08:15',
+    waveC:'08:30',waveD:'',waveE:'',waveF:'',notes:'Example'}
+  };
+  await page.locator('#import-template').setInputFiles({
+   name:'fictional-event.json',mimeType:'application/json',
+   buffer:Buffer.from(JSON.stringify(sample),'utf8')
+  });
+  await page.locator('#template-changes').waitFor({state:'visible'});
+  await page.locator('#revision').fill('v2');
+  await page.locator('#waveC').fill('08:35');
+  await page.locator('#club-form button[type="submit"]').click();
+  assert.match(await page.locator('#template-change-list').innerText(),/08:30.*08:35/);
+  assert.equal(await page.locator('#download-update').isDisabled(),true);
+  await page.locator('#update-review').check();
+  assert.equal(await page.locator('#download-update').isEnabled(),true);
+  await page.locator('#waveC').fill('08:05');
+  assert.equal(await page.locator('#download-update').isDisabled(),true);
   await page.goto(base+'/event-portal-demo.html');
   await page.locator('#set-en').click();
   assert.equal(await page.locator('html').getAttribute('lang'),'en');
