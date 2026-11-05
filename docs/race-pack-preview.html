@@ -419,7 +419,7 @@ $("delete-draft").addEventListener("click",()=>{
  }catch(e){$("draft-status").textContent=draftText("Deleting the draft failed. Please check your browser storage settings.","Wissen is mislukt. Controleer de instellingen voor browseropslag.");}
 });
 $("print").addEventListener("click",()=>window.print());
-$("print-passport").addEventListener("click",()=>{if(!exported){$("draft-status").textContent=nl?"Corrigeer eerst de invoer.":"Correct the inputs first.";return;}document.body.classList.add("passport-only");try{window.print();}finally{document.body.classList.remove("passport-only");}});
+$("print-passport").addEventListener("click",()=>{if(!exported){$("draft-status").textContent=nl?"Corrigeer eerst de invoer.":"Correct the inputs first.";return;}document.body.classList.add("passport-only");window.print();});
 window.addEventListener("afterprint",()=>document.body.classList.remove("passport-only"));
 render();
 // Refresh text export once the shared translator has localized checklist labels.
