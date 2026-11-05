@@ -60,3 +60,12 @@ Dutch business information: https://business.gov.nl/running-your-business/legal-
 - Invalid times, dates and untrusted URLs are handled safely.
 - No network submission, account, storage or payment endpoint exists.
 - GitHub Action tests pass before inviting organizers.
+
+## Internet-first business decision — 5 November 2026
+The owner delegated market research and product prioritization rather than manually recruiting a fixed pilot panel. Updated external research is archived in `REVENUE_MARKET_EVIDENCE_2026.md`.
+
+An observable external comparator is Absurd Running's race partnership offer at **€250 per event (limited offer), with €500 thereafter** for a significantly richer route, branding, editor and support service. This is a marketed offer, not verified unit sales. TrainingPeaks confirms real checkout prices for 70.3 plans, but that category is crowded. Community discussions highlight paid convenience (device syncing, changing training schedules) and dislike opaque subscription locks.
+
+**Priority:** evolve the working Club Race Brief demo into a differentiated, organizer-approved, branded event communication deliverable. Avoid spending the next build cycle on generic 70.3 PDFs, training subscriptions or more calculators. Keep €149 only as an initial low-scope manual service hypothesis; do not present a €249–€499 event portal as available until built and reviewed. No clients, payment capability or live sales are currently verified.
+
+Market research can direct priorities without burdening the owner with repeated tester recruitment. It cannot establish TriZentro-specific purchase conversion or replace QA before publishing deadline-sensitive guidance. Owner input should be limited to business decisions, payments, contracts, account settings and legal formation.
