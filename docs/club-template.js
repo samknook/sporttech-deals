@@ -19,7 +19,14 @@ function filename(event,revision){
  const slug=String(event||'event').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,48)||'event';
  return 'trizentro-'+slug+'-'+revision.replace(/[^a-z0-9.]/gi,'')+'.json';
 }
-const api={SCHEMA,VERSION,create,parse,filename};
+function differences(previous,current,core){
+ const before=core.validate(previous),after=core.validate(current);
+ const labels={event:'Event',date:'Race date',venue:'Venue',guide:'Official source',checkin:'Check-in',bikeClose:'Bike check-in close',transitionClose:'Transition close',briefing:'Briefing',waveA:'Wave A',waveB:'Wave B',waveC:'Wave C',waveD:'Wave D',waveE:'Wave E',waveF:'Wave F',notes:'Notes'};
+ return Object.keys(labels).filter(key=>before[key]!==after[key]).map(key=>({
+  key,label:labels[key],before:before[key],after:after[key]
+ }));
+}
+const api={SCHEMA,VERSION,create,parse,filename,differences};
 if(typeof module!=='undefined'&&module.exports)module.exports=api;
 root.TriZentroClubTemplate=api;
 })(typeof window!=='undefined'?window:globalThis);
