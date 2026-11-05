@@ -5,6 +5,10 @@
 
 [**Merkidentiteit, socialmedia- en Google-accountplan**](docs/BRAND_TRIZENTRO.md) · [**Brand Kit: PNG-avatar en banner**](https://samknook.github.io/sporttech-deals/brand-kit.html) · [**Live website (bestaande GitHub-URL)**](https://samknook.github.io/sporttech-deals/)
 
+## Preparation Review — 5 november 2026
+
+De [70.3 Race Pack-preview](docs/race-pack-preview.html) heeft nu een **Preparation Review** met elf zelfcontrolepunten. Het overzicht onderscheidt ingevulde informatie van openstaande stappen; het is geen officiële wedstrijdverificatie. De punten komen ook in de tekstexport. De onafhankelijke berekeningsmodule staat in [race-pack-review.js](docs/race-pack-review.js). JavaScript-syntax en scriptstructuur zijn gecontroleerd, maar live browserwerking blijft ongeverifieerd.
+
 ## Ontwikkeling 5 november 2026 — betere racebeslissingen
 
 - Nieuwe [Goal Feasibility Calculator](docs/goal-feasibility.html) voor Sprint, Olympisch, 70.3, Full en eigen afstand. Rekent benodigd looptempo en tijdverlies door; volledig lokaal, NL/EN.
