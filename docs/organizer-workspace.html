@@ -1,0 +1,66 @@
+<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Event Operations Workspace | TriZentro</title><meta name="description" content="Organiseer je wedstrijd vanuit één werkoverzicht. Houd briefing, vrijwilligers, bron en controles bij. Gratis en lokaal.">
+<link rel="canonical" href="https://samknook.github.io/sporttech-deals/organizer-workspace.html"><link rel="stylesheet" href="site.css"><link rel="icon" type="image/svg+xml" href="trizentro-icon.svg">
+<style>.ws{max-width:960px;margin:auto;padding:38px 18px 78px}.ws h1{font-size:clamp(34px,5vw,54px);line-height:1.1;letter-spacing:-.04em}.ws .lead{max-width:720px;color:#4e6c60}.ws-panel{background:#fff;border:1px solid #d7e6dd;border-radius:16px;padding:24px;margin:18px 0}.ws-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.ws label{display:block;font-weight:750}.ws input:not([type=checkbox]),.ws textarea{margin-top:5px;border:1px solid #b7cbbf;padding:12px;border-radius:9px;width:100%;font:inherit}.ws textarea{min-height:90px}.ws button,.ws .action{background:#123e35;color:#fff;border:0;border-radius:10px;padding:12px 16px;font:inherit;font-weight:750;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}.ws .actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}.ws .light{background:#dfeee5;color:#143d31}.ws .step{border:1px solid #d9e8dd;border-radius:10px;padding:14px;margin:9px 0;display:flex;align-items:center;gap:13px}.ws .step input{width:21px;height:21px;accent-color:#187557}.ws .step span{flex:1}.ws .hint{font-size:13px;color:#5c7467}.ws .summary{font-weight:850;font-size:21px}.ws .message{white-space:pre-line;min-height:1.6em}.ws a{overflow-wrap:anywhere}@media(max-width:680px){.ws-grid{grid-template-columns:1fr}.ws-panel{padding:16px}.ws .actions>*{flex:1}}@media print{.top,.ws .actions,.ws .hint,footer,.ws .nonprint{display:none!important}.ws{width:100%;padding:0}.ws-panel{break-inside:avoid;border:0}.ws .step{padding:5px}}</style>
+<script src="translations-bundle.js"></script><script src="i18n.js"></script><script defer src="navigation.js"></script><script src="organizer-workspace-core.js"></script></head><body>
+<header class="top"><div class="wrap"><div class="nav"><a class="brand" href="./"><img class="brand-icon" src="trizentro-icon.svg" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><nav aria-label="Navigatie"><a href="organizer-pilot.html">Pilot</a><a href="club-race-brief.html">Briefing</a><a href="volunteer-roster.html">Vrijwilligers</a></nav></div></div></header>
+<main class="ws"><h1 id="title">Event Operations Workspace</h1>
+<p id="intro" class="lead">Eén overzicht voor de voorbereiding van jouw sportevenement. Gebruik de briefingtool en vrijwilligersplanner en vink daarna handmatig je gecontroleerde stappen af. De tools wisselen nog geen gegevens automatisch uit.</p>
+<section class="ws-panel"><h2 id="event-heading">1. Evenement</h2><div class="ws-grid">
+<label><span id="name-label">Evenementnaam</span><input id="event" maxlength="100" placeholder="Voorbeeld triatlon"></label>
+<label><span id="date-label">Evenementdatum</span><input id="date" type="date"></label>
+<label><span id="source-label">Officiële bron (HTTPS, optioneel)</span><input id="source" type="url" maxlength="500" placeholder="https://..."></label>
+</div><p class="hint" id="source-note">De bron is door jou ingevoerd. TriZentro controleert geen officiële informatie automatisch.</p></section>
+<section class="ws-panel"><h2 id="tools-heading">2. Gebruik de bestaande tools</h2><div class="actions">
+<a class="action" href="club-race-brief.html" id="brief-link">Open deelnemersbriefing</a>
+<a class="action light" href="volunteer-roster.html" id="roster-link">Open vrijwilligersplanner</a>
+</div><p id="tools-note" class="hint">Download bestanden in de afzonderlijke tools. Dit overzicht leest die bestanden niet automatisch en bevestigt geen werkzaamheden namens jou.</p></section>
+<section class="ws-panel"><h2 id="steps-heading">3. Controleer de stappen</h2><div id="steps"></div><p id="progress" class="summary" role="status">0 / 6</p>
+<p id="review-note" class="hint">Alleen de organisator kan definitief goedkeuren en publiceren. Deze checklist is geen veiligheidscontrole.</p></section>
+<section class="ws-panel"><h2 id="notes-heading">4. Overdracht en openstaande punten</h2><label for="notes" id="notes-label">Notities voor jouw team</label><textarea id="notes" maxlength="1800"></textarea>
+<h3 id="remaining-title">Nog openstaand</h3><ul id="remaining"></ul><p class="message" id="status" role="status"></p>
+<div class="actions nonprint"><button type="button" id="save">Bewaar lokaal</button><button type="button" class="light" id="load">Laad lokaal</button><button type="button" class="light" id="download">Download overzicht (.txt)</button><button type="button" class="light" id="export">Exporteer concept (.json)</button><button type="button" class="light" id="import-button">Importeer concept (.json)</button><button type="button" class="light" id="clear">Verwijder lokale opslag</button></div>
+<input type="file" id="import" accept=".json,application/json" hidden>
+<p id="privacy" class="hint">Er is geen account en niets wordt automatisch naar TriZentro verstuurd. Lokale opslag is alleen beschikbaar in dit browserprofiel. Gebruik geen privégegevens van vrijwilligers in dit overzicht.</p>
+</section></main><footer><div class="wrap"><a href="transparantie.html">Privacy en transparantie</a></div></footer>
+<script>
+(function(){'use strict';
+const engine=window.TriZentroOrganizerWorkspace,$=id=>document.getElementById(id),nl=window.TriZentroI18n?.lang!=='en';
+const tr=(a,b)=>nl?a:b;
+const labels={
+title:['Evenementenwerkruimte','Event Operations Workspace'],
+intro:['Eén overzicht voor de voorbereiding van jouw sportevenement. Gebruik de briefingtool en vrijwilligersplanner en vink daarna je eigen controles af. De tools wisselen nog geen gegevens automatisch uit.','One place to track preparations for your event. Use the briefing and volunteer tools, then mark the steps you have reviewed. The tools do not yet exchange data automatically.'],
+'event-heading':['1. Evenement','1. Event'],'name-label':['Evenementnaam','Event name'],'date-label':['Evenementdatum','Event date'],'source-label':['Officiële bron (HTTPS, optioneel)','Official source (HTTPS, optional)'],
+'source-note':['Deze link is door jou ingevoerd; TriZentro verifieert de bron niet.','This link is user-entered; TriZentro does not verify the source.'],
+'tools-heading':['2. Gebruik de bestaande tools','2. Open the existing tools'],'brief-link':['Open deelnemersbriefing','Open participant briefing'],'roster-link':['Open vrijwilligersplanner','Open volunteer roster'],
+'tools-note':['Download bestanden in de afzonderlijke tools. Dit overzicht leest die bestanden niet automatisch of bevestigt geen voltooide werkzaamheden.','Download files in the separate tools. This workspace does not automatically read their files or confirm work is complete.'],
+'steps-heading':['3. Controleer de stappen','3. Review the steps'],'review-note':['Alleen de organisator mag definitief goedkeuren en publiceren. Dit is geen veiligheidscontrole.','Only the organizer may approve and publish. This is not a safety validation.'],
+'notes-heading':['4. Overdracht en openstaande punten','4. Handoff and pending work'],'notes-label':['Notities voor jouw team','Notes for your team'],
+'remaining-title':['Nog openstaand','Still pending'],save:['Bewaar lokaal','Save locally'],load:['Laad lokaal','Load local draft'],
+download:['Download overzicht (.txt)','Download summary (.txt)'],export:['Exporteer concept (.json)','Export draft (.json)'],'import-button':['Importeer concept (.json)','Import draft (.json)'],
+clear:['Verwijder lokale opslag','Delete local storage'],
+privacy:['Er is geen account en niets wordt automatisch verstuurd. Browseropslag is toegankelijk voor gebruikers van dit profiel. Gebruik geen echte vrijwilligersgegevens.','No account or automatic transmission. Browser storage is accessible to anyone using this profile. Do not add real volunteer personal details.']
+};
+for(const [id,v] of Object.entries(labels))$(id).textContent=v[nl?0:1];
+const taskLabels={
+source:['Officiële bron beoordeeld','Official source reviewed'],schedule:['Startgroepen en deadlines gecontroleerd','Start waves and deadlines reviewed'],
+brief:['Concept deelnemersbriefing gemaakt','Participant briefing drafted'],roster:['Voorstel vrijwilligersrooster gemaakt','Volunteer roster drafted'],
+gaps:['Vrijwilligerstekorten beoordeeld','Staffing gaps reviewed'],review:['Definitieve controle door organisator','Organizer final review']
+};
+for(const [id] of engine.TASKS){const label=document.createElement('label');label.className='step';const check=document.createElement('input');check.type='checkbox';check.dataset.task=id;const span=document.createElement('span');span.textContent=taskLabels[id][nl?0:1];label.append(check,span);$('steps').append(label)}
+function snapshot(){return engine.validate({version:1,event:$('event').value,date:$('date').value,source:$('source').value,notes:$('notes').value,tasks:Object.fromEntries([...document.querySelectorAll('[data-task]')].map(el=>[el.dataset.task,el.checked]))})}
+function draw(){try{const p=engine.progress(snapshot());$('progress').textContent=p.complete+' / '+p.total+' · '+tr('stappen afgerond','steps completed');$('remaining').replaceChildren();for(const item of p.remaining){const li=document.createElement('li');li.textContent=taskLabels[item.key][nl?0:1];$('remaining').append(li)}if(!p.remaining.length){const li=document.createElement('li');li.textContent=tr('Alle stappen afgevinkt; controleer de officiële gegevens opnieuw voor publicatie.','All steps checked; recheck official information before publishing.');$('remaining').append(li)}}catch(e){$('progress').textContent='—';$('status').textContent=tr('Controleer de invoer: ','Check input: ')+e.message}}
+}
+function apply(d){const valid=engine.validate(d);$('event').value=valid.event;$('date').value=valid.date;$('source').value=valid.source;$('notes').value=valid.notes;for(const el of document.querySelectorAll('[data-task]'))el.checked=valid.tasks[el.dataset.task];draw()}
+function blobDownload(text,name,type){const u=URL.createObjectURL(new Blob([text],{type}));const a=document.createElement('a');a.href=u;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+document.querySelectorAll('input,textarea').forEach(el=>el.addEventListener('input',draw));
+$('save').addEventListener('click',()=>{try{localStorage.setItem(engine.KEY,JSON.stringify(snapshot()));$('status').textContent=tr('Concept lokaal opgeslagen.','Draft saved locally.')}catch(e){$('status').textContent=tr('Lokaal opslaan mislukt.','Local save failed.')};draw()});
+$('load').addEventListener('click',()=>{try{const raw=localStorage.getItem(engine.KEY);if(!raw)throw Error('empty');apply(JSON.parse(raw));$('status').textContent=tr('Concept geladen. Controleer alle gegevens.','Draft loaded. Review all details.')}catch(e){$('status').textContent=tr('Geen geldig lokaal concept.','No valid local draft.')}});
+$('clear').addEventListener('click',()=>{try{localStorage.removeItem(engine.KEY);$('status').textContent=tr('Lokale opslag gewist; invoer op het scherm behouden.','Local storage cleared; on-screen inputs remain.')}catch(e){$('status').textContent=tr('Wissen mislukt.','Unable to clear storage.')}});
+$('download').addEventListener('click',()=>{try{blobDownload(engine.report(snapshot(),nl?'nl':'en'),'trizentro-organizer-summary.txt','text/plain;charset=utf-8');$('status').textContent=tr('Overzicht gedownload.','Summary downloaded.')}catch(e){$('status').textContent=tr('Controleer de invoer.','Check your inputs.')}});
+$('export').addEventListener('click',()=>{try{blobDownload(JSON.stringify(snapshot(),null,2),'trizentro-organizer-draft.json','application/json;charset=utf-8')}catch(e){$('status').textContent=tr('Export mislukt.','Export failed.')}});
+$('import-button').addEventListener('click',()=>$('import').click());
+$('import').addEventListener('change',async()=>{const file=$('import').files?.[0];if(!file)return;try{if(file.size>10000)throw Error('size');const raw=await file.text();apply(JSON.parse(raw));$('status').textContent=tr('Concept geladen; controleer alle gegevens.','Draft imported; review all details.')}catch(e){$('status').textContent=tr('Ongeldig bestand; bestaande invoer behouden.','Invalid file; current inputs retained.')}finally{$('import').value=''}});
+draw();
+})();
+</script></body></html>
