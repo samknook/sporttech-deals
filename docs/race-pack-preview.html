@@ -184,10 +184,10 @@ $("goal-note").textContent=goal===null?(nl?"Geen doeltijd ingevuld.":"No finish 
 exported=window.TriZentroRaceDossier.textDossier({
 name:$("race-name").value,date:$("race-date").value,start:input.start,target:input.target,
 scenarios:results,core,morning,locale,
-deadline,
 checks:[...document.querySelectorAll("#checklist label")].map(el=>({checked:el.querySelector("input").checked,label:el.textContent.trim()})),
 notes:$("race-notes").value
 });
+if(deadline.status!=="not-entered")exported+="\n\n"+(nl?"SLUITING WISSELZONE (ZELF INGEVULD)":"TRANSITION CLOSURE (USER-ENTERED)")+"\n"+deadline.message;
 }catch(e){$("error").hidden=false;$("error").textContent=e.message;$("result-content").hidden=true;$("download").disabled=true;exported="";}
 }
 document.querySelectorAll("input,textarea").forEach(el=>el.addEventListener("input",render));
