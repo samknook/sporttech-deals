@@ -132,3 +132,11 @@ footer p{color:#b0cbd4}
 .tz-journey a:focus-visible{outline:3px solid #2bb99c;outline-offset:3px}
 .tz-onboarding-footer{font-size:14px;color:#4f6c63;line-height:1.75}
 @media(max-width:800px){.tz-journey{grid-template-columns:1fr;gap:10px}.tz-journey article{padding:17px}.tz-journey h3{margin:7px 0}.tz-journey p{margin-bottom:12px}}
+
+/* Organizer CTA: visible, but deliberately subordinate to the athlete journey. */
+.tz-club-strip{background:#133e35;color:#fff;padding:29px 0}
+.tz-club-strip .wrap{display:flex;justify-content:space-between;align-items:center;gap:24px}
+.tz-club-strip h2{margin:6px 0;font-size:clamp(21px,3vw,30px);line-height:1.2;letter-spacing:-.03em}
+.tz-club-strip p{margin:3px 0;color:#d6e9df;max-width:670px;line-height:1.55}
+.tz-club-strip .btn{flex:none;white-space:normal;text-align:center}
+@media(max-width:760px){.tz-club-strip .wrap{display:grid}.tz-club-strip .btn{width:100%}}
