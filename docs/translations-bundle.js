@@ -1226,3 +1226,9 @@ TriZentroAddTranslations('products.html','en',[
 TriZentroAddTranslations('race-pack-preview.html','en',[
  ['Your checklist is not uploaded. It is saved on this device only if you select Save on this device below; otherwise it is lost when this page closes.','Je checklist wordt niet geüpload. Hij wordt alleen op dit apparaat opgeslagen als je hieronder zelf op Bewaar op dit apparaat klikt. Anders verdwijnt hij als je de pagina sluit.']
 ]);
+
+
+TriZentroAddTranslations('race-pack-preview.html','en',[
+ ['Official race-morning transition closure (optional)','Officiële sluiting wisselzone op wedstrijdochtend (optioneel)'],
+ ['Enter the actual race-morning closure from the official athlete guide. This is not fetched automatically; leave blank if unknown or if bike check-in is on another day.','Vul de echte sluitingstijd uit de officiële deelnemershandleiding in. De tool haalt deze niet automatisch op. Laat het veld leeg als de tijd onbekend is of als de fietsincheck op een andere dag plaatsvindt.']
+]);
