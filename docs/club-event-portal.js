@@ -11,6 +11,7 @@ function documentHtml(analysis,options){
  const u=new URL(v.guide);
  if(!['https:','http:'].includes(u.protocol))throw Error('Invalid source URL.');
  const issued=options.issuedAt&&/^\d{4}-\d{2}-\d{2}$/.test(options.issuedAt)?options.issuedAt:new Date().toISOString().slice(0,10);
+ const revision=typeof options.revision==='string'&&/^v[0-9]{1,3}(?:\.[0-9]{1,3})?$/.test(options.revision)?options.revision:'v1';
  const dual=(nl,en)=>'<span class="nl">'+esc(nl)+'</span><span class="en">'+esc(en)+'</span>';
  const rows=analysis.events.map(e=>'<tr><td class="time">'+esc(e.time)+'</td><td>'+dual(e.nl,e.en)+'</td></tr>').join('');
  return [
@@ -37,7 +38,7 @@ function documentHtml(analysis,options){
  '<table><thead><tr><th>'+dual('Tijd','Time')+'</th><th>'+dual('Onderdeel','Activity')+'</th></tr></thead><tbody>'+rows+'</tbody></table></section>',
  '<section class="panel"><h2>'+dual('Praktische informatie','Practical information')+'</h2><p>'+esc(v.notes||'—')+'</p>',
  '<p><strong>'+dual('Officiële bron','Official source')+':</strong> <a href="'+esc(u.href)+'" rel="noopener noreferrer nofollow" target="_blank">'+esc(u.href)+'</a></p>',
- '<p class="small">'+dual('Document gemaakt op','Document generated on')+' '+esc(issued)+'</p>',
+ '<p class="small">'+dual('Document gemaakt op','Document generated on')+' '+esc(issued)+' · '+dual('Versie','Version')+' '+esc(revision)+'</p>',
  '<div class="notice">'+dual('Let op: dit is een statische momentopname, gecontroleerd door de maker. Geen automatisch bijgewerkte officiële melding. De organisator blijft verantwoordelijk voor tijden, regels en wijzigingen. Raadpleeg de officiële bron.', 'Important: this is a static snapshot reviewed by its creator, not an automatically updated official notice. The organizer remains responsible for rules, times and updates. Consult the official source.')+'</div></section>',
  '<p class="small">Created using TriZentro · Independent prototype · No tracking</p></main>',
  '<script>(function(){var n=document.getElementById("set-nl"),e=document.getElementById("set-en");function set(l){document.body.classList.toggle("english",l==="en");document.documentElement.lang=l;n.setAttribute("aria-pressed",String(l==="nl"));e.setAttribute("aria-pressed",String(l==="en"));}n.addEventListener("click",function(){set("nl")});e.addEventListener("click",function(){set("en")});})();</script>',
