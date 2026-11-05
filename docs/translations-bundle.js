@@ -1232,3 +1232,7 @@ TriZentroAddTranslations('race-pack-preview.html','en',[
  ['Official race-morning transition closure (optional)','Officiële sluiting wisselzone op wedstrijdochtend (optioneel)'],
  ['Enter the actual race-morning closure from the official athlete guide. This is not fetched automatically; leave blank if unknown or if bike check-in is on another day.','Vul de echte sluitingstijd uit de officiële deelnemershandleiding in. De tool haalt deze niet automatisch op. Laat het veld leeg als de tijd onbekend is of als de fietsincheck op een andere dag plaatsvindt.']
 ]);
+
+TriZentroAddTranslations('products.html','en',[
+ ['Optional conflict check against the race-morning transition closure you enter from the official athlete guide','Optionele controle op een conflict met de sluitingstijd van de wisselzone die je zelf uit de officiële deelnemershandleiding invult']
+]);
