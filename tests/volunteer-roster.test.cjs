@@ -15,7 +15,7 @@ const shifts=()=>[
  {id:'CHECKIN',from:'06:00',to:'08:00',needed:'2',skill:'registration'},
  {id:'SWIM',from:'08:00',to:'10:00',needed:'2',skill:'water'},
  {id:'COURSE',from:'10:00',to:'12:00',needed:'3',skill:'course'},
- {id:'FINISH',from:'12:00',to:'13:00',needed:'2',skill:'course'}
+ {id:'FINISH',from:'12:00',to:'13:00',needed:'3',skill:'course'}
 ];
 test('CSV parser reads expected columns and quoted fields',()=>{
  const csv='id,available_from,available_to,skills\n"VOL-01",06:00,12:00,"water|registration"\n';
@@ -25,7 +25,7 @@ test('CSV parser reads expected columns and quoted fields',()=>{
 });
 test('generates shortage report and prevents overlapping or unqualified assignments',()=>{
  const result=tool.assign(people(),shifts());
- assert.equal(result.required,9);
+ assert.equal(result.required,10);
  assert.equal(result.assigned+result.unfilled,result.required);
  assert.ok(result.unfilled>0,'example should show a real shortfall');
  const roster=new Map();
