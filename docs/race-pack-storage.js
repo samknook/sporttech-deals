@@ -11,6 +11,7 @@ const fieldRules={
  start:{type:'text',max:5},target:{type:'text',max:8},swim:{type:'text',max:8},
  bike:{type:'text',max:15},run:{type:'text',max:8},
  t1:{type:'text',max:15},t2:{type:'text',max:15},
+ 'transition-close':{type:'text',max:5},
  travel:{type:'text',max:8},parking:{type:'text',max:8},
  setup:{type:'text',max:8},warmup:{type:'text',max:8},buffer:{type:'text',max:8},
  'race-notes':{type:'text',max:1500}
