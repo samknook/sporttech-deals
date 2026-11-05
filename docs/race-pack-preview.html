@@ -136,6 +136,13 @@
 <p>Make a short personal note about transition access, event cut-offs, nutrition pickup or your contingency plan. This note stays in the browser and is included in your text export.</p>
 <label for="race-notes">My notes</label><textarea id="race-notes" maxlength="1500" rows="5" style="width:100%;border:1px solid #b8c9c1;border-radius:10px;padding:12px;font:inherit" placeholder="Example: Check T1 closure time with event organizer."></textarea>
 </section>
+<section class="preview-card" id="pack-review" aria-labelledby="pack-review-title">
+<h2 id="pack-review-title">Check before race day</h2>
+<p id="pack-review-intro">This is a preparation checklist, not official verification. Unchecked items do not prevent downloading your plan.</p>
+<p id="pack-review-score" class="alert" role="status" aria-live="polite">—</p>
+<ul id="pack-review-list" style="padding-left:23px;line-height:1.7"></ul>
+<p id="pack-review-caution" class="muted">Confirm official timings, course rules and deadlines directly with the event organizer.</p>
+</section>
 <section class="preview-card"><h2>07 / Take your sample race pack</h2>
 <div class="draft-panel no-print" aria-labelledby="draft-title">
 <strong id="draft-title">Keep working on your race plan</strong>
@@ -209,6 +216,7 @@ for(const [id,pair] of Object.entries(labels))document.getElementById(id).textCo
 <script src="race-pack-dossier.js"></script>
 <script src="race-deadline-core.js"></script>
 <script src="race-pack-storage.js"></script>
+<script src="race-pack-review.js"></script>
 <script>
 (()=>{
 "use strict";
@@ -277,6 +285,20 @@ const choices=[
 ];
 exported+="\n\n"+(nl?"MIJN RACEDAGBESLISSINGEN":"MY RACE-DAY DECISIONS")
  +"\n"+choices.map(([heading,value])=>heading+": "+(value.trim()|| (nl?"Nog niet ingevuld":"Not entered"))).join("\n");
+const checksForReview=[...document.querySelectorAll('#checklist input[type="checkbox"]')].map(el=>el.checked);
+const review=window.TriZentroPackReview.review({
+locale,name:$("race-name").value,date:$("race-date").value,transitionClose:$("transition-close").value,
+checks:checksForReview,weather:$("plan-weather").value,mechanical:$("plan-mechanical").value,nutrition:$("plan-nutrition").value
+});
+$("pack-review-title").textContent=nl?"Controleer je racedossier":"Check before race day";
+$("pack-review-intro").textContent=nl?"Dit is een controlelijst voor je eigen voorbereiding, geen officiële verificatie. Openstaande punten blokkeren je download niet.":"This is a preparation checklist, not official verification. Unchecked items do not prevent downloading.";
+$("pack-review-score").textContent=(nl?"Ingevuld: ":"Completed: ")+review.done+"/"+review.total;
+$("pack-review-caution").textContent=nl?"Controleer officiële tijden, parcoursregels en deadlines altijd bij de organisatie.":"Always confirm official timings, course rules and deadlines with the organizer.";
+const reviewList=$("pack-review-list");reviewList.replaceChildren();
+for(const item of review.items){const li=document.createElement("li");li.textContent=(item.done?"✓ ":"○ ")+item.label;reviewList.appendChild(li);}
+exported+="\\n\\n"+(nl?"VOORBEREIDINGSCONTROLE (ZELF INGEVULD)":"PREPARATION REVIEW (SELF-REPORTED)")
++"\\n"+review.done+"/"+review.total
++"\\n"+review.items.map(item=>(item.done?"[x] ":"[ ] ")+item.label).join("\\n");
 const stressIds=["shock-swim","shock-bike","shock-transition","shock-run"];
 const stressMax=[120,240,60,180];
 const stressMinutes=stressIds.map((id,i)=>{
