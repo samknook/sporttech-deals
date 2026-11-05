@@ -74,6 +74,21 @@
 </div><h3>Split comparison</h3><div class="tablewrap"><table><thead><tr><th>Discipline</th><th>Conservative</th><th>Baseline</th><th>Ambition</th></tr></thead><tbody id="comparison"></tbody></table></div>
 <p id="goal-note" class="alert" aria-live="polite">—</p></div>
 </section>
+<section class="preview-card" id="stress-test">
+<h2 id="stress-heading">Race Stress Test / Wat als het tegenzit?</h2>
+<p id="stress-intro">Pas afzonderlijke tijdverliezen toe op je eigen baseline. De tool rekent opnieuw uit hoeveel marge je hebt en welk looptempo je nodig zou hebben om toch je doel te halen. Dit zijn rekenscenario's, geen voorspellingen of pacingadvies.</p>
+<div class="form-grid">
+<label><span id="shock-swim-label">Extra zwemtijd (min)</span><input id="shock-swim" type="number" min="0" max="120" step="1" value="2"></label>
+<label><span id="shock-bike-label">Extra fietstijd (min)</span><input id="shock-bike" type="number" min="0" max="240" step="1" value="6"></label>
+<label><span id="shock-transition-label">Extra wisseltijd (min)</span><input id="shock-transition" type="number" min="0" max="60" step="1" value="2"></label>
+<label><span id="shock-run-label">Extra looptijd (min)</span><input id="shock-run" type="number" min="0" max="180" step="1" value="4"></label>
+</div>
+<div class="results" style="margin-top:16px">
+<div class="scenario"><span id="shock-finish-label">Nieuwe eindtijd</span><strong id="shock-finish">—</strong></div>
+<div class="scenario"><span id="shock-margin-label">Marge tegenover doeltijd</span><strong id="shock-margin">—</strong></div>
+<div class="scenario"><span id="shock-pace-label">Benodigd looptempo zonder extra loopvertraging</span><strong id="shock-pace">—</strong></div>
+</div><p id="shock-warning" class="alert warning" role="status" aria-live="polite"></p>
+</section>
 <section class="preview-card"><h2>03 / Baseline course checkpoints</h2>
 <p>Estimated elapsed and clock times at major course milestones. These are based on constant pace and the nominal 70.3 distances, not official timing mats or road locations.</p>
 <div class="tablewrap"><table><thead><tr><th>Checkpoint</th><th>Distance</th><th>Elapsed</th><th>Clock time</th></tr></thead><tbody id="dossier-checkpoints"></tbody></table></div>
@@ -123,6 +138,45 @@
 <p>For the full free experience, also use our <a href="race-dashboard.html">Race Dashboard</a>, <a href="race-fuel-planner.html">Race Fuel Planner</a> and <a href="race-day-timeline.html">Race Day Timeline</a>.</p>
 </section></main>
 <footer><div class="wrap"><a class="brand" href="./"><img class="brand-icon" src="trizentro-icon.svg" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><a href="transparantie.html">Privacy &amp; transparency</a></div></footer>
+<script>
+/* Independent scenario calculation; keeps all user data on-device. */
+(function(){
+'use strict';
+const $=id=>document.getElementById(id),en=window.TriZentroI18n?.lang==='en',tr=(nl,english)=>en?english:nl;
+const labels={
+'stress-heading':['Race Stress Test / Wat als het tegenzit?','Race Stress Test / What if things go wrong?'],
+'stress-intro':["Pas afzonderlijke tijdverliezen toe op je eigen baseline. De tool rekent opnieuw uit hoeveel marge je hebt en welk looptempo je nodig zou hebben om toch je doel te halen. Dit zijn rekenscenario's, geen voorspellingen of pacingadvies.","Apply time losses to your baseline. Check the remaining goal margin and run pace required to recover. These are arithmetic scenarios, not forecasts or pacing advice."],
+'shock-swim-label':['Extra zwemtijd (min)','Extra swim time (min)'],
+'shock-bike-label':['Extra fietstijd (min)','Extra bike time (min)'],
+'shock-transition-label':['Extra wisseltijd (min)','Extra transition time (min)'],
+'shock-run-label':['Extra looptijd (min)','Extra run time (min)'],
+'shock-finish-label':['Nieuwe eindtijd','New finish time'],
+'shock-margin-label':['Marge tegenover doeltijd','Margin vs goal'],
+'shock-pace-label':['Benodigd looptempo zonder extra loopvertraging','Required run pace before added run delay']
+};
+for(const [id,pair] of Object.entries(labels))$(id).textContent=pair[en?1:0];
+function pace(sec){if(!Number.isFinite(sec)||sec<=0)return '—';let v=Math.round(sec);return Math.floor(v/60)+':'+String(v%60).padStart(2,'0')+'/km';}
+function update(){
+ try{
+ const core=window.RacePlannerCore;
+ if(!core)return;
+ const params={distance:'half',swimPace:$('swim').value,bikeSpeed:$('bike').value,runPace:$('run').value,t1Minutes:$('t1').value,t2Minutes:$('t2').value,start:$('start').value,target:$('target').value};
+ const base=core.calculate(params);
+ const vals=['shock-swim','shock-bike','shock-transition','shock-run'].map(id=>{const input=$(id),n=Number(input.value);if(input.value.trim()===''||!Number.isInteger(n)||n<0||n>Number(input.max))throw Error(tr('Controleer de ingevoerde extra minuten.','Check the extra minutes entered.'));return n*60;});
+ const extra=vals.reduce((a,b)=>a+b,0),total=base.total+extra,goal=core.targetToSeconds(params.target);
+ if(!Number.isFinite(goal)||goal<=0)throw Error(tr('Voer een geldige doeltijd in.','Enter a valid target time.'));
+ const margin=goal-total,withoutRun=base.swim+base.bike+base.t1+base.t2+vals[0]+vals[1]+vals[2];
+ const required=(goal-withoutRun)/21.0975;
+ $('shock-finish').textContent=core.formatDuration(total);
+ $('shock-margin').textContent=(margin<0?'−':'+')+core.formatDuration(Math.abs(margin));
+ $('shock-pace').textContent=required>0?pace(required):'—';
+ $('shock-warning').textContent=required<=0?tr('Zelfs vóór het lopen is de doeltijd voorbij.','The target is already exceeded before the run.'):margin>=0?tr('Dit scenario past rekenkundig binnen je doel. Controleer of de aannames realistisch zijn.','This scenario fits your goal mathematically. Check whether the assumptions are realistic.'):tr('Dit scenario komt boven je doeltijd. Je kunt je uitgangspunten of doel herzien.','This scenario misses your target. Consider reviewing your assumptions or goal.');
+ }catch(e){['shock-finish','shock-margin','shock-pace'].forEach(id=>$(id).textContent='—');$('shock-warning').textContent=e.message;}
+}
+for(const input of document.querySelectorAll('#stress-test input, #race-name, #target, #swim, #bike, #run, #t1, #t2, #start'))input.addEventListener('input',update);
+document.addEventListener('DOMContentLoaded',update);update();
+})();
+</script>
 <script src="pace-input.js"></script><script>TriZentroPaceInput.bind(["swim","run"]);TriZentroPaceInput.bindClock(["start"]);TriZentroPaceInput.bindClock(["transition-close"]);TriZentroPaceInput.bindDuration(["target"]);</script>
 <script src="race-planner-core.js"></script>
 <script src="race-pack-dossier.js"></script>
