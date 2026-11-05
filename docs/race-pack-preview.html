@@ -193,7 +193,7 @@ $("save-draft").addEventListener("click",()=>{
   if(!exported)throw Error(draftText("Please fix the plan inputs before saving.","Controleer eerst de invoer van je plan."));
   draftStorage.save(storageRef(),draftStorage.capture(document));
   $("draft-status").textContent=draftText("Draft saved on this device. Use Load saved draft after reopening this page.","Concept opgeslagen op dit apparaat. Gebruik Concept laden als je de pagina opnieuw opent.");
- }catch(e){$("draft-status").textContent=draftText("Could not save the draft: ","Opslaan is niet gelukt: ")+e.message;}
+ }catch(e){$("draft-status").textContent=draftText("Saving failed. Check that browser storage is available and has free space.","Opslaan mislukt. Controleer of browseropslag beschikbaar is en voldoende ruimte heeft.");}
 });
 $("load-draft").addEventListener("click",()=>{
  try{
@@ -202,13 +202,13 @@ $("load-draft").addEventListener("click",()=>{
   draftStorage.apply(document,draft);
   render();
   $("draft-status").textContent=exported?draftText("Saved draft loaded. Review your plan before relying on it.","Opgeslagen concept geladen. Controleer je plan voordat je het gebruikt."):draftText("Draft loaded, but some values need correction.","Concept geladen, maar sommige waarden moeten worden gecorrigeerd.");
- }catch(e){$("draft-status").textContent=draftText("Could not load the draft: ","Laden is niet gelukt: ")+e.message;}
+ }catch(e){$("draft-status").textContent=draftText("This draft could not be loaded. It may be damaged or from another version. You can delete it.","Dit concept kon niet worden geladen. Het is mogelijk beschadigd of van een andere versie. Je kunt het wissen.");}
 });
 $("delete-draft").addEventListener("click",()=>{
  try{
   draftStorage.remove(storageRef());
   $("draft-status").textContent=draftText("Saved draft deleted from this browser. Your current on-screen inputs remain.","Opgeslagen concept verwijderd uit deze browser. De invoer op dit scherm blijft staan.");
- }catch(e){$("draft-status").textContent=draftText("Could not delete the draft: ","Wissen is niet gelukt: ")+e.message;}
+ }catch(e){$("draft-status").textContent=draftText("Deleting the draft failed. Please check your browser storage settings.","Wissen is mislukt. Controleer de instellingen voor browseropslag.");}
 });
 $("print").addEventListener("click",()=>window.print());
 render();
