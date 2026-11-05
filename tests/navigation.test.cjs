@@ -18,10 +18,11 @@ test('every sitemap HTML page loads universal menu once',()=>{
  }
 });
 test('every navigation destination has a real page',()=>{
- const matches=[...navigation.matchAll(/\['[^']+','([^']+\.html)'\]/g)];
- assert.ok(matches.length>=15);
- for(const [,href] of matches)assert.ok(fs.existsSync(path.join(docs,href)),href+' does not exist');
- const names=matches.map(m=>m[1]);
+ const matches=[...navigation.matchAll(/\[tr\('[^']+','[^']+'\),'([^']+\.html)'\]/g)];
+ const extra=[...navigation.matchAll(/\[\['[^']+','([^']+\.html)'\]\]/g)];
+ const names=matches.map(m=>m[1]).concat(extra.map(m=>m[1]));
+ assert.ok(names.length>=16,'unexpected number of menu destinations');
+ for(const href of names)assert.ok(fs.existsSync(path.join(docs,href)),href+' does not exist');
  assert.equal(new Set(names).size,names.length,'navigation has duplicate destinations');
 });
 test('mobile menu supports keyboard and touch screen sizing',()=>{
