@@ -5,6 +5,12 @@
 
 [**Merkidentiteit, socialmedia- en Google-accountplan**](docs/BRAND_TRIZENTRO.md) · [**Brand Kit: PNG-avatar en banner**](https://samknook.github.io/sporttech-deals/brand-kit.html) · [**Live website (bestaande GitHub-URL)**](https://samknook.github.io/sporttech-deals/)
 
+## Nieuw: Event Operations Workspace — 5 november 2026
+
+De [organisatorwerkruimte](docs/organizer-workspace.html) combineert links naar de bestaande deelnemersbriefing en vrijwilligersplanner met een lokaal bij te houden 6-stappenworkflow, openstaande acties, evenementbron en notities. Download een tekstoverdracht of importeer/exporteer een JSON-concept. Alle gegevens blijven op het eigen apparaat totdat de gebruiker zelf exporteert. Het overzicht **wisselt nog geen data automatisch uit met de afzonderlijke tools** en is geen officiële vrijgave.
+
+Pure validatie- en rapportagemodule: [docs/organizer-workspace-core.js](docs/organizer-workspace-core.js). Regressietest: `node tests/test-organizer-workspace.js`. JavaScript-syntaxcontrole geslaagd; nog geen volledige live browsertest.
+
 ## Strategische koers en organisatorpilot — 5 november 2026
 
 De [marktvergelijking](docs/MARKTSCAN_COMMERCIEEL_2026-11-05.md) toont dat veel consumenten-tools voor triatlonraceplanning al gratis of goedkoop verkrijgbaar zijn. Daarom is een voorgestelde betaalde Race Pack van €19,95 onvoldoende onderscheiden zonder extra bewijs. Consumententools blijven gratis; de potentieel betaalde richting verschuift voorlopig naar [Event Operations Pilot voor clubs en organisatoren](docs/organizer-pilot.html), met briefingtools, versieverschillen en vrijwilligersroostering. Dit is een hypothese en heeft **geen bevestigde klanten, verkopen of omzet**.
