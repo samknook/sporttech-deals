@@ -1,0 +1,131 @@
+<!doctype html><html lang="nl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vrijwilligersrooster voor sportevenementen | TriZentro</title>
+<meta name="description" content="Maak een automatisch vrijwilligersrooster op basis van beschikbaarheid, vaardigheden, diensten en bezetting. Zie direct welke diensten onvoldoende mensen hebben.">
+<link rel="canonical" href="https://samknook.github.io/sporttech-deals/volunteer-roster.html">
+<link rel="icon" type="image/svg+xml" href="trizentro-icon.svg"><link rel="stylesheet" href="site.css">
+<style>
+.vr{width:min(1080px,calc(100% - 34px));margin:auto;padding:35px 0 80px}
+.vr h1{font-size:clamp(34px,5.5vw,60px);letter-spacing:-.055em;margin:12px 0;line-height:1.1}
+.vr .lede{max-width:800px;font-size:17px;color:#4a645a}
+.vr-panel{background:#fff;border:1px solid #d6e5db;border-radius:18px;padding:24px;margin:20px 0}
+.vr h2{font-size:24px;margin:0 0 14px}.vr p{line-height:1.65}
+.vr-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.vr label{font-weight:750;display:block;margin-bottom:8px}
+.vr textarea{width:100%;min-height:205px;padding:12px;border:1px solid #a7c2b4;border-radius:10px;font:13px/1.55 ui-monospace,SFMono-Regular,monospace;resize:vertical;background:#fbfdfb;color:#15352b}
+.vr textarea:focus-visible,.vr button:focus-visible{outline:3px solid #47ae89;outline-offset:2px}
+.vr button{min-height:44px;background:#155e4b;color:white;font:inherit;font-weight:850;border:0;border-radius:10px;padding:11px 19px;cursor:pointer}
+.vr button.alt{background:#eaf4ef;color:#194336;border:1px solid #cbded1}
+.vr button:disabled{opacity:.5;cursor:not-allowed}
+.vr-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.vr-alert{white-space:pre-line;padding:14px;border-radius:10px;background:#fff0e3;border:1px solid #e6cbb0}
+.vr-alert[data-status="ok"]{background:#e9f6ef;border-color:#b4dfc9}
+.vr-statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+.vr-stat{background:#f1f7f3;border-radius:12px;padding:15px}.vr-stat strong{display:block;font-size:27px;font-variant-numeric:tabular-nums}.vr-stat span{color:#4a665b;font-size:13px}
+.vr table{border-collapse:collapse;width:100%;font-size:14px}
+.vr th,.vr td{padding:11px 9px;border-bottom:1px solid #dde9e0;text-align:left}
+.vr td{overflow-wrap:anywhere}.vr .unfilled{background:#fff4e8;color:#754019;font-weight:800}
+.vr .small{font-size:13px;color:#587267}.vr .example{border-left:3px solid #63a98d;padding-left:12px}
+@media(max-width:800px){.vr-grid{grid-template-columns:1fr}.vr-statgrid{grid-template-columns:repeat(2,1fr)}.vr-panel{padding:17px}}
+@media(max-width:480px){.vr-statgrid{grid-template-columns:1fr 1fr}.vr h1{font-size:33px}.vr th,.vr td{padding:8px 5px;font-size:12px}}
+@media print{.top,.vr form,.vr-actions,footer,.vr .nonprint{display:none!important}body{background:white}.vr{width:100%;padding:0}.vr-panel{border:0;padding:0}.vr-statgrid{grid-template-columns:repeat(4,1fr)}}
+</style>
+<script src="translations-bundle.js"></script><script src="i18n.js"></script><script defer src="navigation.js"></script>
+</head><body>
+<header class="top"><div class="wrap"><div class="nav"><a class="brand" href="./"><img src="trizentro-icon.svg" class="brand-icon" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><nav aria-label="Navigatie"><a href="index.html">Home</a><a href="club-race-brief.html">Voor organisatoren</a></nav></div></div></header>
+<main class="vr">
+<div class="eyebrow">TriZentro · Voor sportevenementen</div>
+<h1>Stop met puzzelen.<br>Plan je vrijwilligers.</h1>
+<p class="lede">Voer je diensten en anonieme vrijwilligerscodes met beschikbare tijden en vaardigheden in. TriZentro maakt een voorstelrooster, voorkomt overlappende diensten en laat onmiddellijk zien waar je mensen tekortkomt.</p>
+<p class="small">Gratis werkende demonstratie. Alle berekeningen gebeuren in je browser. Gebruik uitsluitend aliassen, geen echte namen, e-mailadressen of persoonsgegevens. Het resultaat is een voorstel; controleer het vóór gebruik.</p>
+<form id="roster-form" class="vr-panel">
+<h2>01 · Beschikbaarheid en diensten</h2>
+<div class="vr-grid">
+<div><label for="volunteers">Vrijwilligers — CSV</label>
+<textarea id="volunteers" spellcheck="false" aria-describedby="people-help">id,available_from,available_to,skills
+VOL-01,06:00,12:00,water|registration
+VOL-02,06:00,11:00,registration
+VOL-03,07:00,13:00,water|course
+VOL-04,07:00,12:00,course
+VOL-05,06:00,10:00,registration
+VOL-06,08:00,13:00,course</textarea>
+<p class="small" id="people-help">Vereist: id,available_from,available_to,skills. Meerdere vaardigheden scheiden met |. Gebruik anonieme codes.</p></div>
+<div><label for="shifts">Diensten — CSV</label>
+<textarea id="shifts" spellcheck="false" aria-describedby="shift-help">id,from,to,needed,skill
+CHECKIN,06:00,08:00,2,registration
+SWIM,08:00,10:00,2,water
+COURSE,10:00,12:00,3,course
+FINISH,12:00,13:00,2,course</textarea>
+<p class="small" id="shift-help">Vereist: id,from,to,needed,skill. Skill mag leeg zijn voor algemene taken. Alle diensten vallen op één wedstrijddag.</p></div>
+</div>
+<div class="vr-actions"><button type="submit">Maak automatisch rooster</button><button id="reset-roster" class="alt" type="reset">Herstel voorbeeld</button></div>
+</form>
+<section id="roster-results" class="vr-panel" aria-labelledby="roster-title">
+<h2 id="roster-title">02 · Roostervoorstel</h2>
+<p id="roster-status" class="vr-alert" role="status" aria-live="polite">Klik op ‘Maak automatisch rooster’ om het voorbeeld door te rekenen.</p>
+<div id="roster-content" hidden>
+<div class="vr-statgrid">
+<div class="vr-stat"><strong id="total-slots">0</strong><span>Benodigde dienstenplekken</span></div>
+<div class="vr-stat"><strong id="filled-slots">0</strong><span>Ingevuld</span></div>
+<div class="vr-stat"><strong id="missing-slots">0</strong><span>Tekort</span></div>
+<div class="vr-stat"><strong id="used-volunteers">0</strong><span>Vrijwilligers ingezet</span></div>
+</div>
+<div style="overflow-x:auto"><table><thead><tr><th>Dienst</th><th>Tijd</th><th>Vaardigheid</th><th>Toegewezen codes</th><th>Tekort</th></tr></thead><tbody id="roster-rows"></tbody></table></div>
+<div class="vr-actions"><button type="button" id="download-roster">Download rooster (.csv)</button><button type="button" id="print-roster" class="alt">Print / PDF</button></div>
+<p class="small">Dit is een automatisch voorstel, geen garantie voor optimale verdeling. Controleer beschikbaarheid, vereiste kwalificaties, pauzes, rolverantwoordelijkheid en lokale veiligheidsregels. De tool werkt zonder accounts en stuurt niemand berichten.</p>
+</div>
+</section>
+<section class="vr-panel nonprint">
+<h2>Waarom dit belangrijk is voor organisatoren</h2>
+<p>Een wedstrijd kan volledig voorbereid lijken terwijl bij een cruciale post nog twee mensen ontbreken. Dit rooster maakt zulke bezettingsgaten zichtbaar vóór de racedag. Een latere zakelijke versie kan echte inschrijving, teambeheer, bevestigingen en herplanning bij afmeldingen toevoegen. Die functies zijn nog niet beschikbaar.</p>
+<p class="example">Deze demo is bewust eenvoudig: één dag, één tijdzone, een vaardigheid per dienst en per vrijwilliger maximaal één gelijktijdige dienst. Er worden geen officiële veiligheidseisen gevalideerd.</p>
+</section>
+</main><footer><div class="wrap"><a href="transparantie.html">Privacy &amp; transparantie</a></div></footer>
+<script src="volunteer-roster-core.js"></script>
+<script>
+(()=>{'use strict';
+const get=id=>document.getElementById(id);
+const engine=window.TriZentroVolunteerRoster;
+const nl=(window.TriZentroI18n?.lang||'nl')!=='en';
+const localized=(d,e)=>nl?d:e;
+let plan=null;
+function draw(e){
+ if(e)e.preventDefault();
+ try{
+  const people=engine.parseCsv(get('volunteers').value,['id','available_from','available_to','skills']);
+  const shifts=engine.parseCsv(get('shifts').value,['id','from','to','needed','skill']);
+  plan=engine.assign(people,shifts);
+  for(const [id,val] of [['total-slots',plan.required],['filled-slots',plan.assigned],['missing-slots',plan.unfilled],['used-volunteers',plan.utilized]])get(id).textContent=String(val);
+  const out=get('roster-rows');out.replaceChildren();
+  for(const slot of plan.shifts){
+   const tr=document.createElement('tr');
+   const show=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+   for(const v of [slot.id,show(slot.from)+'–'+show(slot.to),slot.skill||'—',slot.assigned.join(', ')||'—',String(slot.unfilled)]){
+    const td=document.createElement('td');td.textContent=v;tr.append(td);
+   }
+   if(slot.unfilled)tr.lastElementChild.className='unfilled';
+   out.append(tr);
+  }
+  get('roster-content').hidden=false;
+  get('roster-status').dataset.status=plan.unfilled?'warn':'ok';
+  get('roster-status').textContent=plan.unfilled?
+    localized('Er zijn '+plan.unfilled+' open dienstenplekken. Bekijk de tekorten hieronder.','There are '+plan.unfilled+' unfilled shift places. Review shortages below.'):
+    localized('Alle dienstenplekken zijn in dit voorstel ingevuld. Controleer het rooster handmatig.','All shift places are filled in this proposal. Review it manually.');
+ }catch(error){
+  plan=null;get('roster-content').hidden=true;get('roster-status').dataset.status='warn';
+  get('roster-status').textContent=localized('Controleer je CSV-koppen, tijden, aantallen en unieke codes.','Check CSV headers, times, counts and unique IDs.');
+ }
+}
+get('roster-form').addEventListener('submit',draw);
+get('roster-form').addEventListener('reset',()=>setTimeout(draw,0));
+get('roster-form').addEventListener('input',()=>{plan=null;get('roster-content').hidden=true;get('roster-status').textContent=localized('Gegevens aangepast. Maak opnieuw een rooster.','Inputs changed. Generate a new roster.');});
+get('download-roster').addEventListener('click',()=>{
+ if(!plan)return;
+ const url=URL.createObjectURL(new Blob([engine.exportCsv(plan)],{type:'text/csv;charset=utf-8'}));
+ const a=document.createElement('a');a.href=url;a.download='trizentro-volunteer-roster.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+get('print-roster').addEventListener('click',()=>window.print());
+draw();
+})();
+</script>
+</body></html>
