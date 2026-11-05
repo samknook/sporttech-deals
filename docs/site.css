@@ -105,3 +105,18 @@ footer p{color:#b0cbd4}
  .tz-lang-switch{gap:1px;padding:2px}
  .tz-lang-switch button{min-height:36px;min-width:29px;padding:5px;font-size:11px}
 }
+
+/* Accordion navigation: mobile shows concise sections instead of 17 open links. */
+@media(max-width:1050px){
+ .tz-mobile-group[open]{background:#f5faf8;border-radius:11px}
+ .tz-mobile-group>.tz-mobile-heading{display:flex;align-items:center;justify-content:space-between;min-height:44px;cursor:pointer;list-style:none;padding:12px 14px;color:#166b70;border-radius:9px}
+ .tz-mobile-group>.tz-mobile-heading::-webkit-details-marker{display:none}
+ .tz-mobile-group>.tz-mobile-heading:hover{background:#e7f3ee}
+ .tz-mobile-group>.tz-mobile-heading:focus-visible{outline:3px solid #31c8ad;outline-offset:2px}
+ .tz-mobile-group .tz-group-chevron{transition:transform .15s ease;font-size:18px;color:#315e63}
+ .tz-mobile-group[open] .tz-group-chevron{transform:rotate(180deg)}
+ .tz-mobile-group-links{padding:0 5px 10px 14px}
+ .tz-mobile-group-links a{border-left:2px solid #d6e7e2;border-radius:0 8px 8px 0}
+ .tz-mobile-group-links a[aria-current="page"]{border-left-color:#168c7e}
+ .tz-mobile-panel{scrollbar-width:thin}
+}
