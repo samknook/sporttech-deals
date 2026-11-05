@@ -72,7 +72,7 @@ FINISH,12:00,13:00,3,course</textarea>
 <div class="vr-stat"><strong id="missing-slots">0</strong><span>Tekort</span></div>
 <div class="vr-stat"><strong id="used-volunteers">0</strong><span>Vrijwilligers ingezet</span></div>
 </div>
-<div style="overflow-x:auto"><table><thead><tr><th>Dienst</th><th>Tijd</th><th>Vaardigheid</th><th>Toegewezen codes</th><th>Tekort</th></tr></thead><tbody id="roster-rows"></tbody></table></div>
+<div style="overflow-x:auto"><table><thead><tr><th>Dienst</th><th>Tijd</th><th>Vaardigheid</th><th>Toegewezen codes</th><th>Tekort</th><th>Oorzaak / actie</th></tr></thead><tbody id="roster-rows"></tbody></table></div>
 <div class="vr-actions"><button type="button" id="download-roster">Download rooster (.csv)</button><button type="button" id="print-roster" class="alt">Print / PDF</button></div>
 <p class="small">Dit is een automatisch voorstel, geen garantie voor optimale verdeling. Controleer beschikbaarheid, vereiste kwalificaties, pauzes, rolverantwoordelijkheid en lokale veiligheidsregels. De tool werkt zonder accounts en stuurt niemand berichten.</p>
 </div>
@@ -103,10 +103,16 @@ function draw(e){
   for(const slot of plan.shifts){
    const tr=document.createElement('tr');
    const show=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
-   for(const v of [slot.id,show(slot.from)+'–'+show(slot.to),slot.skill||'—',slot.assigned.join(', ')||'—',String(slot.unfilled)]){
+   const causes={
+    filled:localized('Voldoende mensen','Covered'),
+    'skill-shortage':localized('Zoek meer mensen met vereiste vaardigheid','Recruit people with this skill'),
+    'availability-shortage':localized('Beschikbaarheid uitbreiden of dienst verschuiven','Extend availability or move shift'),
+    'overlap-or-capacity':localized('Overlappende diensten herverdelen','Reassign overlapping duties')
+   };
+   for(const v of [slot.id,show(slot.from)+'–'+show(slot.to),slot.skill||'—',slot.assigned.join(', ')||'—',String(slot.unfilled),causes[slot.diagnostic.cause]]){
     const td=document.createElement('td');td.textContent=v;tr.append(td);
    }
-   if(slot.unfilled)tr.lastElementChild.className='unfilled';
+   if(slot.unfilled)tr.children[4].className='unfilled';
    out.append(tr);
   }
   get('roster-content').hidden=false;
