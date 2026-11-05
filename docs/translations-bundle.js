@@ -1289,3 +1289,10 @@ TriZentroAddTranslations('products.html','en',[
  ['Open the free Club Race Brief Builder','Open de gratis Club Race Brief Builder'],
  ['Discuss an organizer pilot','Bespreek een pilot voor organisatoren']
 ]);
+
+TriZentroAddTranslations('index.html','nl',[
+ ['Ook voor clubs en organisatoren','Also for clubs and organizers'],
+ ['Eén heldere briefing voor je wedstrijd.','One clear briefing for your event.'],
+ ['Maak een concept met startgroepen, sluitingstijden en controles op tegenstrijdige planning. Gratis demonstratie, in Nederlands en Engels.','Create a draft with wave starts, closing times and checks for contradictory scheduling. Free demo in Dutch and English.'],
+ ['Probeer de Club Brief Builder →','Try the Club Brief Builder →']
+]);
