@@ -93,6 +93,7 @@ async function test(){
   assert.match(await page.locator('#brief-status').innerText(),/Wisselzone sluit nadat startgroep A begint/);
   assert.equal(await page.locator('#brief-content').isVisible(),true);
   await page.locator('#transitionClose').fill('07:30');
+  await page.locator('#guide').fill('https://example.org/athlete-guide');
   await page.locator('#club-form button[type="submit"]').click();
   assert.equal(await page.locator('#brief-status').getAttribute('data-ok'),'true');
   await page.locator('.tz-lang-switch button[lang="en"]').click();
