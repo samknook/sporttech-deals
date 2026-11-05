@@ -1296,3 +1296,13 @@ TriZentroAddTranslations('index.html','nl',[
  ['Maak een concept met startgroepen, sluitingstijden en controles op tegenstrijdige planning. Gratis demonstratie, in Nederlands en Engels.','Create a draft with wave starts, closing times and checks for contradictory scheduling. Free demo in Dutch and English.'],
  ['Probeer de Club Brief Builder →','Try the Club Brief Builder →']
 ]);
+
+/* Standalone event portal export controls, native Dutch -> English */
+TriZentroAddTranslations('club-race-brief.html','nl',[
+ ['04 · Maak een deelnemerspagina','04 · Create a participant page'],
+ ['Maak een zelfstandig HTML-bestand voor deelnemers, met een mobiel tijdschema, NL/EN-knop, bronlink en versiedatum. Het bestand blijft op jouw apparaat; TriZentro publiceert niets automatisch.','Create a standalone HTML page for participants, with a mobile-friendly timeline, NL/EN switch, source link and generation date. The file stays on your device; TriZentro does not publish anything automatically.'],
+ ['Bekijk een fictief voorbeeld van de deelnemerspagina →','View a fictional participant page example →'],
+ ['Ik heb alle tijden en de officiële bron zelf gecontroleerd en mag deze conceptinformatie namens de organisator voorbereiden.','I have reviewed all times against the official source and am authorized to prepare this draft for the organizer.'],
+ ['Download deelnemerspagina (.html)','Download participant page (.html)'],
+ ['Controleer de bron, los waarschuwingen op en bevestig de review voordat je downloadt.','Check the source, resolve warnings and confirm the review before downloading.']
+]);
