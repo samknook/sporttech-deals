@@ -28,3 +28,20 @@ test('race week guide is linked to homepage, Readiness Check and sitemap',()=>{
  assert.match(readiness,/href="first-70-3-race-week-checklist.html"/);
  assert.match(sitemap,/first-70-3-race-week-checklist\.html/);
 });
+
+test('every local script, stylesheet, favicon and image in HTML exists',()=>{
+ const missing=[];
+ for(const name of fs.readdirSync(docs).filter(name=>name.endsWith('.html'))){
+  const html=fs.readFileSync(path.join(docs,name),'utf8');
+  const refs=[...html.matchAll(/<(?:script|img|link)\b[^>]*?\b(?:src|href)=["']([^"']+)["']/gi)];
+  for(const match of refs){
+   const href=match[1].trim();
+   if(!href||href.startsWith('#')||/^(?:https?:|mailto:|tel:|javascript:|data:)/i.test(href))continue;
+   const clean=href.split(/[?#]/)[0];
+   if(!clean||clean.startsWith('/'))continue;
+   const dest=path.resolve(docs,clean);
+   if(!dest.startsWith(docs+path.sep)||!fs.existsSync(dest))missing.push(name+': '+href);
+  }
+ }
+ assert.deepEqual(missing,[],'missing local page dependencies');
+});
