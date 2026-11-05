@@ -45,3 +45,11 @@ test('home page has four obvious destination cards for mobile visitors',()=>{
  assert.match(siteCss,/\.tz-shortcuts-grid/);
  assert.match(siteCss,/@media\(max-width:500px\)/);
 });
+
+test('mobile categories collapse and expand without exposing every page at once',()=>{
+ assert.match(navigation,/details class="tz-mobile-group"/);
+ assert.match(navigation,/summary class="tz-mobile-heading"/);
+ assert.match(navigation,/g\.items\.some\(item=>item\[1\]===path\)/);
+ assert.match(navigation,/mobileGroups\.forEach/);
+ assert.match(siteCss,/tz-mobile-group\[open\]/);
+});
