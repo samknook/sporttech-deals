@@ -5,6 +5,10 @@
 
 [**Merkidentiteit, socialmedia- en Google-accountplan**](docs/BRAND_TRIZENTRO.md) · [**Brand Kit: PNG-avatar en banner**](https://samknook.github.io/sporttech-deals/brand-kit.html) · [**Live website (bestaande GitHub-URL)**](https://samknook.github.io/sporttech-deals/)
 
+## Officiële wedstrijdbronnen — 5 november 2026
+
+In de gratis [Race Pack-preview](docs/race-pack-preview.html#official-sources) kunnen gebruikers optioneel de **HTTPS-link naar de officiële wedstrijdbriefing** en de datum van hun eigen controle vastleggen. Beide verschijnen in het racedossier en Race-Day Passport, en in lokaal opgeslagen concepten. Bestaande concepten worden zonder gegevensverlies gemigreerd. TriZentro haalt de bron niet op en **claimt nooit zelf geverifieerde evenementinformatie**. Regressietests voor de gegevensdoorgifte en compatibiliteit zijn toegevoegd aan [tests/test-race-passport.js](tests/test-race-passport.js).
+
 ## Race-Day Passport — 5 november 2026
 
 De [gratis 70.3 Race Pack-preview](docs/race-pack-preview.html#race-passport-section) bevat nu een mobiel **wedstrijdpaspoort** met verwachte finish, doeltijd, vijf doorkomstklokken, ochtendvertrek, zelf ingevoerde sluiting wisselzone en drie persoonlijke noodplannen. Met **Print alleen paspoort** is een compacte print/PDF-weergave beschikbaar. Geen backend of persoonsgegevensoverdracht.
