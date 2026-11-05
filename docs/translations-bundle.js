@@ -1355,3 +1355,7 @@ TriZentroAddTranslations('index.html','nl',[
 TriZentroAddTranslations('index.html','nl',[
 ['Ontdek de evenementenpilot →','Explore the event operations pilot →']
 ]);
+
+TriZentroAddTranslations('index.html','nl',[
+['Open organisatiewerkruimte →','Open organizer workspace →']
+]);
