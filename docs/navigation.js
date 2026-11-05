@@ -49,11 +49,12 @@ const groupsDesktop=groups.map(g=>
  +g.items.map(([label,href])=>linkHtml(label,href)).join('')
  +'</div></details>'
 ).join('');
-const groupsMobile=groups.map(g=>
- '<div class="tz-mobile-group"><div class="tz-mobile-heading">'+g.title+'</div>'
+const groupsMobile=groups.map(g=>{
+ const active=g.items.some(item=>item[1]===path);
+ return '<details class="tz-mobile-group"'+(active?' open':'')+'><summary class="tz-mobile-heading">'+g.title+'<span aria-hidden="true" class="tz-group-chevron">⌄</span></summary><div class="tz-mobile-group-links">'
  +g.items.map(([label,href])=>linkHtml(label,href)).join('')
- +'</div>'
-).join('');
+ +'</div></details>';
+}).join('');
 const nav=document.createElement('nav');
 nav.className='tz-navigation';
 nav.setAttribute('aria-label',tr('Hoofdnavigatie','Main navigation'));
@@ -84,6 +85,12 @@ for(const lang of ['nl','en']){
 }
 navContainer.appendChild(switcher);
 const menu=nav.querySelector('.tz-mobile-menu');
+const mobileGroups=[...nav.querySelectorAll('.tz-mobile-group[open],.tz-mobile-group:not(.tz-mobile-bottom)')].filter(el=>el.tagName==='DETAILS');
+mobileGroups.forEach(group=>group.addEventListener('toggle',()=>{
+ if(!group.open)return;
+ mobileGroups.forEach(other=>{if(other!==group)other.open=false;});
+}));
+
 const dropdowns=[...nav.querySelectorAll('.tz-nav-dropdown')];
 dropdowns.forEach(d=>d.addEventListener('toggle',()=>{
  if(!d.open)return;
