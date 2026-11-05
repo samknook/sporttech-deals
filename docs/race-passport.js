@@ -3,7 +3,7 @@
  */
 (function(root){
 'use strict';
-function build({name,date,start,locale='en',result,core,morning=[],review,transitionClosure='',decisions={}}){
+function build({name,date,start,locale='en',result,core,morning=[],review,transitionClosure='',sourceUrl='',sourceChecked='',decisions={}}){
  if(!result||!core||!Number.isFinite(result.total)||result.total<=0)throw Error('Valid race calculation required');
  const nl=locale==='nl',tr=(a,b)=>nl?a:b;
  const title=String(name||tr('Mijn wedstrijd','My race')).slice(0,90);
@@ -27,6 +27,8 @@ function build({name,date,start,locale='en',result,core,morning=[],review,transi
  times,plans,morning:Array.isArray(morning)?morning.map(p=>({time:String(p.time),label:String(p.label)})):[],
  review:review&&Number.isFinite(review.done)?review.done+'/'+review.total:'—',
  transitionClosure:String(transitionClosure||'').trim()||tr('Niet opgegeven','Not entered'),
+ sourceUrl:String(sourceUrl||'').slice(0,500)||tr('Niet opgegeven','Not entered'),
+ sourceChecked:String(sourceChecked||'')||tr('Niet opgegeven','Not entered'),
  warning:tr('Persoonlijke rekenschatting. Officiële tijden, regels en veiligheid van de organisatie gaan altijd voor.','Personal arithmetic estimate. Official organizer timings, rules and safety instructions always take priority.')
  };
 }
