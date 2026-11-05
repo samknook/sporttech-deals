@@ -1196,3 +1196,14 @@ TriZentroAddTranslations('index.html','nl',[
  ['of','or'],
  ['alle producten in ontwikkeling','all products in development']
 ]);
+
+
+/* Race Pack opt-in local draft storage */
+TriZentroAddTranslations('race-pack-preview.html','en',[
+ ['Keep working on your race plan','Werk verder aan je raceplan'],
+ ['Save an editable draft only on this device. Nothing is uploaded and the draft is not saved automatically. On a shared device, someone using the same browser profile could access it.','Sla zelf een bewerkbaar concept op dit apparaat op. Er wordt niets geüpload of automatisch opgeslagen. Op een gedeeld apparaat kunnen anderen met hetzelfde browserprofiel het concept mogelijk bekijken.'],
+ ['Save on this device','Bewaar op dit apparaat'],
+ ['Load saved draft','Laad opgeslagen concept'],
+ ['Delete saved draft','Wis opgeslagen concept'],
+ ['No draft loaded. You can save your entries when you choose.','Geen concept geladen. Je kunt zelf kiezen wanneer je invoer opslaat.']
+]);
