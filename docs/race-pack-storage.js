@@ -14,7 +14,9 @@ const fieldRules={
  'transition-close':{type:'text',max:5},
  travel:{type:'text',max:8},parking:{type:'text',max:8},
  setup:{type:'text',max:8},warmup:{type:'text',max:8},buffer:{type:'text',max:8},
- 'race-notes':{type:'text',max:1500}
+ 'race-notes':{type:'text',max:1500},
+ 'shock-swim':{type:'text',max:3},'shock-bike':{type:'text',max:3},
+ 'shock-transition':{type:'text',max:2},'shock-run':{type:'text',max:3}
 };
 const fields=Object.keys(fieldRules);
 function validate(data){
@@ -22,7 +24,8 @@ function validate(data){
  if(!data.values||typeof data.values!=='object'||Array.isArray(data.values))throw Error('Invalid race pack draft.');
  const values={};
  for(const id of fields){
-  const value=id==='transition-close'&&data.values[id]===undefined?'':data.values[id];
+  const defaults={'transition-close':'','shock-swim':'2','shock-bike':'6','shock-transition':'2','shock-run':'4'};
+  const value=data.values[id]===undefined&&Object.prototype.hasOwnProperty.call(defaults,id)?defaults[id]:data.values[id];
   if(typeof value!=='string'||value.length>fieldRules[id].max)throw Error('Invalid draft field: '+id);
   values[id]=value;
  }
