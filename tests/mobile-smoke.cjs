@@ -72,6 +72,19 @@ async function test(){
   await page.goto(base+'/products.html?lang=en');
   assert.match(await page.locator('h1').first().innerText(),/Learn smarter/);
 
+  // Explicit draft persistence: user chooses to save, restore and remove.
+  await page.goto(base+'/race-pack-preview.html?lang=nl');
+  await page.locator('#race-name').fill('Mijn 70.3 test');
+  await page.locator('#save-draft').click();
+  assert.match(await page.locator('#draft-status').innerText(),/opgeslagen/i);
+  await page.reload();
+  await page.locator('#load-draft').click();
+  assert.equal(await page.locator('#race-name').inputValue(),'Mijn 70.3 test');
+  await page.locator('#delete-draft').click();
+  await page.reload();
+  await page.locator('#load-draft').click();
+  assert.match(await page.locator('#draft-status').innerText(),/geen opgeslagen concept/i);
+
   // No unhandled JavaScript errors throughout navigation and calculations.
   assert.deepEqual(errors,[],'uncaught browser errors');
   console.log('PASS: 390px mobile menu, localized navigation, brand homepage, 530 goal and NL/EN product pages');
