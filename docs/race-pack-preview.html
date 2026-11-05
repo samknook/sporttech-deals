@@ -256,12 +256,12 @@ const stressMargin=base.target===null?null:base.target-stressFinish;
 const stressRemaining=base.target===null?null:base.target-(base.swim+base.bike+base.t1+base.t2+60*(stressMinutes[0]+stressMinutes[1]+stressMinutes[2]));
 const stressPace=stressRemaining===null||stressRemaining<=0?null:stressRemaining/21.0975;
 const stressPaceText=stressPace===null?"—":Math.floor(Math.round(stressPace)/60)+":"+String(Math.round(stressPace)%60).padStart(2,"0")+"/km";
-exported+="\\n\\n"+(nl?"RACE STRESS TEST — EIGEN TIJDVERLIES":"RACE STRESS TEST — USER-ENTERED DELAYS")
- +"\\n"+(nl?"Extra minuten zwemmen, fietsen, wissels, lopen: ":"Extra swim, bike, transition, run minutes: ")+stressMinutes.join(" / ")
- +"\\n"+(nl?"Nieuwe eindtijd: ":"New finish time: ")+core.formatDuration(stressFinish)
- +"\\n"+(nl?"Marge tot doel: ":"Goal margin: ")+(stressMargin===null?"—":(stressMargin<0?"−":"+")+core.formatDuration(Math.abs(stressMargin)))
- +"\\n"+(nl?"Benodigd looptempo vóór extra loopvertraging: ":"Required run pace before added run delay: ")+stressPaceText
- +"\\n"+(nl?"Scenario is geen prestatieve voorspelling.":"Scenario is not a performance forecast.");
+exported+="\n\n"+(nl?"RACE STRESS TEST — EIGEN TIJDVERLIES":"RACE STRESS TEST — USER-ENTERED DELAYS")
+ +"\n"+(nl?"Extra minuten zwemmen, fietsen, wissels, lopen: ":"Extra swim, bike, transition, run minutes: ")+stressMinutes.join(" / ")
+ +"\n"+(nl?"Nieuwe eindtijd: ":"New finish time: ")+core.formatDuration(stressFinish)
+ +"\n"+(nl?"Marge tot doel: ":"Goal margin: ")+(stressMargin===null?"—":(stressMargin<0?"−":"+")+core.formatDuration(Math.abs(stressMargin)))
+ +"\n"+(nl?"Benodigd looptempo vóór extra loopvertraging: ":"Required run pace before added run delay: ")+stressPaceText
+ +"\n"+(nl?"Scenario is geen prestatieve voorspelling.":"Scenario is not a performance forecast.");
 
 }catch(e){$("error").hidden=false;$("error").textContent=e.message;$("result-content").hidden=true;$("download").disabled=true;exported="";}
 }
