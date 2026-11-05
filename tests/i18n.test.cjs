@@ -76,3 +76,40 @@ test('dynamic readiness and race-pack exports support Dutch and English',()=>{
  assert.match(exportNl,/VOORBEELD RACEDOSSIER/);
  assert.match(exportNl,/WEDSTRIJDOCHTEND/);
 });
+
+test('language switch works at runtime and preserves language on internal links',()=>{
+ const i18n=script('i18n.js');
+ function simulate(selected,page,originalText){
+  const callbacks={},store=new Map(),seen={};
+  const node={nodeType:3,nodeValue:originalText,parentElement:{closest:()=>false}};
+  const link={href:'products.html',getAttribute(){return this.href},setAttribute(_key,value){this.href=value},closest:()=>false};
+  const document={
+   readyState:'loading',body:{},title:'Original',
+   documentElement:{lang:'nl',getAttribute:()=>page==='index.html'?'nl':'en'},
+   addEventListener(name,cb){callbacks[name]=cb},
+   createTreeWalker(){let consumed=false;return {currentNode:null,nextNode(){if(consumed)return false;consumed=true;this.currentNode=node;return true}}},
+   querySelectorAll(selector){return selector==='a[href]'?[link]:[]}
+  };
+  const localStorage={getItem:key=>store.get(key)||null,setItem:(key,value)=>store.set(key,value)};
+  const location={search:'?lang='+selected,pathname:'/sporttech-deals/'+page,href:'https://example.org/sporttech-deals/'+page+'?lang='+selected,origin:'https://example.org',assign(url){seen.redirect=url}};
+  const context={document,localStorage,location,URL,URLSearchParams,NodeFilter:{SHOW_TEXT:4}};
+  context.window=context;
+  vm.createContext(context);
+  vm.runInContext(script('translations-bundle.js'),context);
+  vm.runInContext(i18n,context);
+  callbacks.DOMContentLoaded();
+  return {context,node,link,store,seen};
+ }
+ const dutch=simulate('nl','products.html','Learn smarter.');
+ assert.equal(dutch.node.nodeValue,'Leer slimmer.');
+ assert.equal(dutch.context.document.documentElement.lang,'nl');
+ assert.ok(dutch.link.href.includes('lang=nl'));
+ assert.equal(dutch.store.get('trizentro.language'),'nl');
+ dutch.context.TriZentroI18n.switchLanguage('en');
+ assert.ok(dutch.seen.redirect.includes('lang=en'));
+ assert.equal(dutch.store.get('trizentro.language'),'en');
+ const english=simulate('en','index.html','Race slimmer.');
+ assert.equal(english.node.nodeValue,'Race smarter.');
+ assert.equal(english.context.document.documentElement.lang,'en');
+ assert.ok(english.link.href.includes('lang=en'));
+});
