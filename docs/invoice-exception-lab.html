@@ -1,0 +1,70 @@
+<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Invoice Exception Desk — Prototype</title><meta name="description" content="Lokaal factuurverschillen analyseren en geschildossiers maken. Privacy-first B2B pilot.">
+<style>:root{font-family:Inter,system-ui,Arial,sans-serif;background:#f4f7f7;color:#142f39}*{box-sizing:border-box}body{margin:0}header{background:#102a35;color:#fff;padding:22px max(20px,calc((100vw - 1100px)/2))}header b{letter-spacing:.1em;font-size:15px}main{max-width:1100px;padding:25px 18px 70px;margin:auto}h1{font-size:clamp(30px,4.5vw,53px);letter-spacing:-.045em;line-height:1.12;margin-bottom:10px}p{line-height:1.6}.sub{max-width:800px;color:#45616d}.panel{background:#fff;border:1px solid #dae5e7;border-radius:16px;padding:22px;margin:20px 0;box-shadow:0 3px 10px #192f3510}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.metric{border-radius:12px;background:#e9f2f1;padding:17px}.metric strong{display:block;font-size:clamp(20px,3vw,29px);font-variant-numeric:tabular-nums}.metric small{color:#50706d}button{padding:11px 15px;border:0;border-radius:9px;background:#126958;color:#fff;font:inherit;font-weight:700;cursor:pointer;min-height:44px}button:disabled{opacity:.5;cursor:not-allowed}button.alt{background:#e0eeee;color:#17463e}.actions{display:flex;flex-wrap:wrap;gap:10px;margin:15px 0}textarea{width:100%;min-height:235px;padding:15px;border:1px solid #b4cccd;border-radius:10px;font:13px/1.55 ui-monospace,monospace;resize:vertical}input{font:inherit;padding:10px;border:1px solid #b4cccd;border-radius:9px;max-width:100%}label{font-weight:700}table{width:100%;border-collapse:collapse;font-size:14px}th,td{border-bottom:1px solid #d9e7e6;padding:11px 9px;text-align:left;vertical-align:top}td{overflow-wrap:anywhere}th{background:#f0f6f5}.scroll{overflow-x:auto}.alert{padding:12px 15px;border-left:4px solid #b67c27;background:#fff5e8;border-radius:7px;white-space:pre-wrap}.fine{color:#5d7377;font-size:13px}.tag{display:inline-block;background:#e0f2e9;color:#12644c;border-radius:100px;padding:5px 10px;font-size:12px;font-weight:800}.row{display:flex;align-items:center;gap:15px;flex-wrap:wrap;justify-content:space-between}select{padding:9px;max-width:230px}a{color:#116855}footer{max-width:1100px;margin:auto;padding:22px 18px 40px;color:#56706e}@media(max-width:750px){.grid{grid-template-columns:1fr 1fr}.panel{padding:15px}th,td{font-size:12px;padding:8px 5px}}@media(max-width:450px){.grid{grid-template-columns:1fr}.actions button{width:100%}}@media print{header,.actions,.input-panel,.fine,footer{display:none!important}main{padding:0}.panel{break-inside:avoid;box-shadow:none}}</style></head>
+<body><header><b>INVOICE EXCEPTION DESK</b><span style="float:right;font-size:13px">Independent venture laboratory · prototype</span></header>
+<main><span class="tag" id="badge">B2B FINANCE • EXPERIMENT</span><h1 id="heading">Maak factuurverschillen zichtbaar.</h1>
+<p class="sub" id="intro">Importeer een CSV met facturen en betalingen. Zie welk bedrag echt openstaat, welk deel door de klant betwist wordt en welke dossiers aandacht nodig hebben. Alles draait lokaal in je browser — niets wordt verzonden of automatisch geïncasseerd.</p>
+<div class="panel input-panel"><div class="row"><h2 id="step1">1. Importeer of plak factuurregels</h2><label><span id="date-label">Peildatum</span> <input id="asof" type="date" value="2026-11-05"></label></div>
+<p class="fine" id="input-help">Kolommen: invoice_id, customer, invoice_total, paid_amount, disputed_amount, due_date, reason. Geldbedragen in EUR met een punt als decimaalteken. Gebruik eerst uitsluitend fictieve gegevens. Het betwiste bedrag moet expliciet worden ingevoerd; niet ieder betalingsverschil is een geschil.</p>
+<textarea id="input" spellcheck="false">invoice_id,customer,invoice_total,paid_amount,disputed_amount,due_date,reason
+INV-1001,Demo Retail,1250.00,1000.00,250.00,2026-10-15,Prijsverschil
+INV-1002,Test Distributie,875.50,0.00,0.00,2026-10-01,Nog geen reactie
+INV-1003,Voorbeeld BV,420.00,420.00,0.00,2026-11-03,Betaald
+INV-1004,Demo Retail,1500.00,1000.00,200.00,2026-10-10,Kwantiteitsverschil</textarea>
+<div class="actions"><button id="calculate" type="button">Analyseer facturen</button><button id="example" type="button" class="alt">Herstel fictief voorbeeld</button><button id="choose" type="button" class="alt">Laad CSV-bestand</button><input id="upload" type="file" accept=".csv,text/csv" hidden></div>
+<p id="status" class="alert" role="status">Alle voorbeeldgegevens zijn fictief.</p></div>
+<section class="panel"><h2 id="step2">2. Bedragen en openstaande dossiers</h2><div class="grid"><div class="metric"><small id="metric-outstanding">Openstaand</small><strong id="outstanding">—</strong></div><div class="metric"><small id="metric-disputed">Betwist</small><strong id="disputed">—</strong></div><div class="metric"><small id="metric-collectible">Niet betwist openstaand</small><strong id="collectible">—</strong></div><div class="metric"><small id="metric-cases">Geschildossiers</small><strong id="cases">—</strong></div></div>
+<div class="scroll"><table><thead><tr><th id="th-id">Factuur</th><th id="th-customer">Klant</th><th id="th-open">Openstaand</th><th id="th-disputed">Betwist</th><th id="th-due">Dagen te laat</th><th id="th-action">Actie</th><th id="th-detail">Dossier</th></tr></thead><tbody id="rows"></tbody></table></div>
+<div class="actions"><button id="csv" type="button" disabled>Download analyse (.csv)</button><button id="print" type="button" class="alt">Print / PDF</button></div></section>
+<section class="panel"><h2 id="step3">3. Factuurdossier voor controle</h2><p class="fine" id="case-note">Selecteer een factuur via ‘Dossier’. Het concept bevat bedragen, achterstand en reden; geen automatisch verstuurde herinnering of juridisch oordeel.</p>
+<pre id="case-detail" style="white-space:pre-wrap;overflow-wrap:anywhere;background:#eef5f4;border-radius:10px;padding:15px">—</pre>
+<div class="actions"><button id="case-copy" disabled type="button">Kopieer conceptdossier</button><button id="case-download" disabled type="button" class="alt">Download dossier (.txt)</button></div></section>
+<section class="panel"><h2 id="validation-title">Voor welke klant bouwen we dit?</h2><p id="validation">De prototypeklant is een B2B leverancier of groothandel met terugkerende verschillen tussen gefactureerd en betaald bedrag. De volgende stap is gesprekken voeren over de huidige workflow, de tijd per geschil en of men betaalt voor een dossier- en opvolgproces. Dit is nog geen actief abonnement of boekhoudintegratie.</p>
+<p><a href="mailto:hello@example.invalid" id="feedback-link" hidden>Feedback</a></p><p class="fine" id="privacy">Geen accounts, tracking of servers. Laad geen echte klant- of financiële data in een gedeeld apparaat. Controleer alle bedragen met het boekhoudsysteem. Alle analyses zijn concepten.</p></section>
+</main><footer><small>Invoice Exception Desk · prototype · niet geregistreerd als onderneming · geen checkout of financiële dienstverlening.</small></footer>
+<script src="invoice-exception-core.js"></script><script>
+(function(){'use strict';
+const e=window.InvoiceExceptionDesk,$=id=>document.getElementById(id);
+let report=null,selected=null;const sample=$('input').value;
+const lang=(new URLSearchParams(location.search).get('lang')==='en')?'en':'nl',nl=lang==='nl';
+const dictionary={
+heading:['Maak factuurverschillen zichtbaar.','Make invoice exceptions visible.'],
+intro:['Importeer een CSV met facturen en betalingen. Zie wat openstaat, welk deel de klant betwist en welke dossiers aandacht verdienen. Alles draait lokaal in de browser.','Import invoice and payment CSV data to see outstanding balances, explicitly disputed amounts and cases needing attention. All processing stays in your browser.'],
+step1:['1. Importeer of plak factuurregels','1. Import or paste invoice records'],step2:['2. Bedragen en openstaande dossiers','2. Outstanding amounts and cases'],step3:['3. Factuurdossier voor controle','3. Review case draft'],
+'date-label':['Peildatum','As-of date'],
+'input-help':['Kolommen: invoice_id, customer, invoice_total, paid_amount, disputed_amount, due_date, reason. EUR-bedragen met punt als decimaalteken. Gebruik eerst fictieve gegevens. Een betalingsverschil is niet automatisch betwist.','Columns: invoice_id, customer, invoice_total, paid_amount, disputed_amount, due_date, reason. EUR amounts with decimal point. Start with fictional data. A payment difference is not automatically a dispute.'],
+calculate:['Analyseer facturen','Analyze invoices'],example:['Herstel fictief voorbeeld','Reset fictional example'],choose:['Laad CSV-bestand','Upload CSV'],
+'metric-outstanding':['Openstaand','Outstanding'],'metric-disputed':['Betwist','Disputed'],'metric-collectible':['Niet betwist openstaand','Undisputed outstanding'],'metric-cases':['Geschildossiers','Dispute cases'],
+'th-id':['Factuur','Invoice'],'th-customer':['Klant','Customer'],'th-open':['Openstaand','Outstanding'],'th-disputed':['Betwist','Disputed'],'th-due':['Dagen te laat','Days overdue'],'th-action':['Actie','Action'],'th-detail':['Dossier','Case'],
+csv:['Download analyse (.csv)','Download analysis (.csv)'],print:['Print / PDF','Print / PDF'],'case-copy':['Kopieer conceptdossier','Copy case draft'],'case-download':['Download dossier (.txt)','Download case (.txt)'],
+'case-note':['Selecteer een factuur via Dossier. Er worden geen mails verzonden en geen juridische conclusies getrokken.','Select an invoice via Case. No emails are sent and no legal conclusions are drawn.'],
+'validation-title':['Voor welke klant bouwen we dit?','Who is this for?'],
+validation:['Voorlopige klant: B2B leveranciers en groothandels met herhaalde betaalverschillen. We moeten nog toetsen hoeveel tijd zij verliezen en of een oplossing waardevol genoeg is om voor te betalen. Geen actieve abonnementen of boekhoudintegraties.','Hypothesis: B2B suppliers and wholesalers with recurring payment discrepancies. We still need to test time lost and willingness to pay. No subscriptions or accounting integrations are active.'],
+privacy:['Geen accounts, tracking of serveruploads. Gebruik geen echte klantgegevens op een gedeeld apparaat. Controleer bedragen met het boekhoudpakket; alle dossiers zijn concepten.','No accounts, tracking or server uploads. Avoid real customer data on shared devices. Reconcile amounts against your accounting system; all cases are drafts.']
+};
+for(const [id,p] of Object.entries(dictionary))$(id).textContent=p[nl?0:1];
+const set=(id,v)=>$(id).textContent=v;
+function download(text,name,type){const u=URL.createObjectURL(new Blob([text],{type}));const a=document.createElement('a');a.href=u;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+function render(){try{report=e.analyze(e.parseCsv($('input').value),$('asof').value);selected=null;
+ for(const [id,n] of [['outstanding',report.totals.outstanding],['disputed',report.totals.disputed],['collectible',report.totals.collectible]])set(id,e.eur(n));
+ set('cases',String(report.totals.cases));$('rows').replaceChildren();
+ for(const i of report.items){const tr=document.createElement('tr'),values=[i.id,i.customer,e.eur(i.remaining),e.eur(i.disputed),String(i.daysPastDue),i.priority];
+ for(const v of values){const td=document.createElement('td');td.textContent=v;tr.append(td)}
+ const td=document.createElement('td'),b=document.createElement('button');b.type='button';b.textContent=nl?'Dossier':'Case';b.addEventListener('click',()=>{selected=i;set('case-detail',e.caseSummary(i,lang));$('case-copy').disabled=false;$('case-download').disabled=false});td.append(b);tr.append(td);$('rows').append(tr)}
+ $('csv').disabled=false;$('case-copy').disabled=true;$('case-download').disabled=true;set('case-detail','—');
+ set('status',nl?'Analyse voltooid. Controleer de bedragen met je boekhouding; deze data worden niet verzonden.':'Analysis complete. Cross-check against accounting records; data was not transmitted.');
+ }catch(err){report=null;selected=null;$('rows').replaceChildren();$('csv').disabled=true;$('case-copy').disabled=true;$('case-download').disabled=true;
+ for(const id of ['outstanding','disputed','collectible','cases'])set(id,'—');set('case-detail','—');set('status',(nl?'Controleer invoer: ':'Check input: ')+err.message)}}
+$('calculate').addEventListener('click',render);
+$('example').addEventListener('click',()=>{$('input').value=sample;$('asof').value='2026-11-05';render()});
+$('choose').addEventListener('click',()=>$('upload').click());
+$('upload').addEventListener('change',async()=>{const f=$('upload').files?.[0];if(!f)return;try{if(f.size>100000)throw Error('File too large');$('input').value=await f.text();render()}catch(err){set('status',err.message)}finally{$('upload').value=''}});
+$('input').addEventListener('input',()=>{report=null;selected=null;$('csv').disabled=true;$('case-copy').disabled=true;$('case-download').disabled=true;set('status',nl?'Gegevens aangepast. Analyseer opnieuw.':'Input changed. Re-run analysis.')});
+$('asof').addEventListener('change',render);
+$('csv').addEventListener('click',()=>{if(report)download(e.exportCsv(report),'invoice-exception-analysis.csv','text/csv;charset=utf-8')});
+$('case-download').addEventListener('click',()=>{if(selected)download(e.caseSummary(selected,lang),'invoice-exception-case.txt','text/plain;charset=utf-8')});
+$('case-copy').addEventListener('click',async()=>{if(!selected)return;try{await navigator.clipboard.writeText(e.caseSummary(selected,lang));set('status',nl?'Dossier gekopieerd.':'Case copied.')}catch(err){set('status',nl?'Kopiëren niet beschikbaar. Gebruik download.':'Copy unavailable; use download.')}});
+$('print').addEventListener('click',()=>window.print());
+render();
+})();
+</script></body></html>
