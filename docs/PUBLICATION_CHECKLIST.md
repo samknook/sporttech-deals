@@ -68,3 +68,17 @@ The workflow installs Playwright Chromium on GitHub Actions and uploads `mobile-
 ### Regression resolved
 An internal `./` homepage link on subpages could previously be turned into an empty path while appending `?lang=nl` or `?lang=en`. That empty path could keep visitors on the same subpage instead of returning home. The i18n link rewriting now preserves `./`, with a regression test.
 
+
+## Post-deployment public verification — 5 November 2026
+The dedicated Pages deployment workflow now checks the actual public homepage **after** `actions/deploy-pages` completes. It requests the deployment URL and confirms that the response contains both the TriZentro brand and the consolidated language bundle. On an absent page, failed request, or unexpected content, it produces a visible workflow failure rather than silently treating deployment as successful.
+
+An English race dossier test had an unnecessarily case-sensitive warning check. That regression assertion is now case-insensitive.
+
+**Current evidence limit:** the assistant can read and update the connected public GitHub repository, but the GitHub Pages public URL could not be opened from the available external web environment and the latest Actions run status could not be retrieved. GitHub Pages publication settings still need owner verification; do not claim the site is live based only on commits or passing syntax checks.
+
+One-time verification:
+1. Open https://github.com/samknook/sporttech-deals/settings/pages and confirm Source is **GitHub Actions**.
+2. Open https://github.com/samknook/sporttech-deals/actions/workflows/deploy-trizentro.yml and inspect the latest run.
+3. A successful run should now include the green step **Verify public homepage after deployment**.
+4. Open https://samknook.github.io/sporttech-deals/?lang=nl in an ordinary browser and verify that content, navigation, and mobile layout render.
+5. If any step fails, capture the error from that exact job; no need to reconfigure a legacy feed workflow.
