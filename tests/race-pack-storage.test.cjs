@@ -93,3 +93,12 @@ test('restoring an incompatible form never partially overwrites user inputs',()=
  assert.throws(()=>storage.apply(incomplete,draft),/not applied/);
  for(const el of nodes.values())assert.equal(el.value,'CURRENT');
 });
+
+test('voluntary tester flow exposes realistic tasks without collecting responses automatically',()=>{
+ const html=fs.readFileSync(path.join(__dirname,'../docs/tester-feedback.html'),'utf8');
+ assert.match(html,/id="tester-instructions"/);
+ assert.equal((html.match(/<li>/g)||[]).length,4);
+ for(const href of ['70-3-readiness-check.html','race-pack-preview.html'])assert.ok(html.includes('href="'+href+'"'));
+ assert.match(html,/No account or purchase required/);
+ assert.match(html,/id="email-feedback"/);
+});
