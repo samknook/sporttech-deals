@@ -1122,3 +1122,55 @@ TriZentroAddTranslations('70-3-readiness-check.html','en',[
 TriZentroAddTranslations('index.html','en',[
  ['Learn smarter. Race prepared.','Leer slimmer. Start voorbereid.']
 ]);
+
+
+/* Homepage polish: ensure English promotional sections become Dutch in NL mode. */
+TriZentroAddTranslations('index.html','en',[
+ ['TRIZENTRO · SWIM / BIKE / RUN','TRIZENTRO · ZWEMMEN / FIETSEN / LOPEN'],
+ ['SWIM. BIKE. RUN. BEYOND.','ZWEM. FIETS. LOOP. VERDER.'],
+ ['Start here · Free 70.3 assessment','BEGIN HIER · GRATIS 70.3-CHECK'],
+ ['What should you prepare next?','Wat moet je nog voorbereiden?'],
+ ['Not sure where to start? Our free','Weet je niet waar je moet beginnen? Onze gratis'],
+ ['reviews 12 practical planning steps and gives you a focused action list — from event rules and transitions to fueling and race-morning logistics. This is a planning checklist, not a medical fitness test.','controleert twaalf voorbereidingspunten en maakt een gerichte actielijst: van wedstrijdregels en wissels tot voeding en wedstrijdochtend. Dit is geen medische of fysieke geschiktheidstest.'],
+ ['Take the free 70.3 Readiness Check','Doe de gratis 70.3-voorbereidingscheck'],
+ ['Explore Blueprint & Race Pack','Bekijk de Blueprint en het Race Pack'],
+ ['70.3 beginner guide','70.3-GIDS VOOR BEGINNERS'],
+ ['The race-week checklist you can actually follow','Een praktische checklist voor je raceweek'],
+ ['Seven days out, check-in, race morning: our new','Zeven dagen vooraf, inchecken en de wedstrijdochtend: onze nieuwe'],
+ ['walks through the steps beginners often overlook, from the official athlete guide to transition logistics. Read it free, then turn missing tasks into an action list.','behandelt stappen die beginners vaak vergeten, van de officiële deelnemersgids tot de wisselzone. Lees hem gratis en maak een actielijst.'],
+ ['Read the race-week guide','Lees de raceweekgids'],
+ ['Check your preparation','Controleer je voorbereiding'],
+ ['Learn smarter. Race prepared.','Leer slimmer. Start voorbereid.']
+]);
+TriZentroAddTranslations('index.html','nl',[
+ ['Let bij oudere modellen op prijs, ondersteuning en specificaties.','For older models, check price, support and specifications.'],
+ ['Controleer verschillen in bediening en kaartgebruik.','Compare controls and map usability.'],
+ ['Groot scherm; bekijk de prijs-kwaliteitverhouding voor jouw gebruik.','Large display; consider value for your needs.'],
+ ['Compacte navigatie- en trainingscomputer. Controleer de generatie.','Compact navigation and training computer. Check the generation.'],
+ ['Gericht op navigatie en trainingen. Vergelijk de exacte versie.','Focused on navigation and training. Compare the exact version.'],
+ ['Groot model; weeg scherm, functies en formaat tegen elkaar af.','Large model; balance screen, features and size.'],
+ ['02 — Praktische keuzehulp','02 — Practical buying guide'],
+ ['Koop met meer zekerheid','Make a more informed purchase'],
+ ['Een fietscomputer is niet automatisch beter omdat hij duurder is. Onze eerste koopgidsen behandelen de factoren die er in de praktijk toe doen.','A bike computer is not automatically better because it costs more. Our guides focus on factors that matter in practice.'],
+ ['Garmin of Wahoo?','Garmin or Wahoo?'],
+ ['Hoe kies je tussen de ecosystemen, bediening, kaarten en trainingsfuncties?','How do you compare ecosystems, controls, maps and training features?'],
+ ['Lees de vergelijking ↗','Read the comparison ↗'],
+ ['Vijf checks vóór aankoop','Five checks before buying'],
+ ['Van modelgeneratie en bundels tot verzending, betrouwbaarheid en garantie.','From model generations and bundles to shipping, reliability and warranties.'],
+ ['Lees de checklist ↗','Read the checklist ↗'],
+ ['Nieuw of tweedehands?','New or used?'],
+ ['Wanneer is een gebruikte fietscomputer interessant, en wat controleer je?','When is a used bike computer a good option, and what should you check?'],
+ ['Lees onze tips ↗','Read our tips ↗'],
+ ['Meer lezen — onafhankelijk advies','Further reading — independent advice'],
+ ['Waar let je op vóór je koopt?','What should you check before buying?'],
+ ['Geen loze aanbiedingen, maar praktische uitleg voor wielrenners en triatleten die hun geld zorgvuldig willen besteden.','No empty deals, just practical advice for cyclists and triathletes making careful purchase decisions.'],
+ ['VERDIEPING / 01','IN DEPTH / 01'],
+ ['Fietscomputer voor triatlon','Bike computer for triathlon'],
+ ['Welke functies zijn echt nuttig voor lange ritten, vermogenstraining en wedstrijden? Van batterijduur tot sensoren.','Which features matter for long rides, power training and races? From battery life to sensors.'],
+ ['Lees de triatlongids ↗','Read the triathlon guide ↗'],
+ ['VERDIEPING / 02','IN DEPTH / 02'],
+ ['Is die aanbieding echt goed?','Is that deal genuinely good?'],
+ ['Acht praktische controles voor de aankoop van een Garmin Edge, Wahoo ELEMNT of andere fietscomputer.','Eight practical checks before buying a Garmin Edge, Wahoo ELEMNT or other bike computer.'],
+ ['Lees de aanbiedingengids ↗','Read the deals guide ↗'],
+ ['Zo beoordelen we prijzen','How we evaluate prices']
+]);
