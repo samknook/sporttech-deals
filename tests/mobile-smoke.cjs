@@ -106,6 +106,18 @@ async function test(){
   assert.equal(await page.locator('#download-portal').isEnabled(),true);
   await page.locator('#transitionClose').fill('08:10');
   assert.equal(await page.locator('#download-portal').isDisabled(),true);
+  // Third wave must be visible, and conflicting waves must block participant export.
+  await page.goto(base+'/club-race-brief.html?lang=nl');
+  await page.locator('#guide').fill('https://example.org/guide');
+  await page.locator('#waveC').fill('08:30');
+  await page.locator('#club-form button[type="submit"]').click();
+  assert.match(await page.locator('#brief-rows').innerText(),/Startgroep C/);
+  await page.locator('#organizer-review').check();
+  assert.equal(await page.locator('#download-portal').isEnabled(),true);
+  await page.locator('#waveC').fill('08:05');
+  await page.locator('#club-form button[type="submit"]').click();
+  assert.match(await page.locator('#brief-status').innerText(),/Startgroep C moet na/);
+  assert.equal(await page.locator('#download-portal').isDisabled(),true);
   await page.goto(base+'/event-portal-demo.html');
   await page.locator('#set-en').click();
   assert.equal(await page.locator('html').getAttribute('lang'),'en');
