@@ -131,6 +131,11 @@ body.passport-only .passport-head{padding:12px 16px}}
 <p id="transition-deadline-result" class="deadline-result" role="status" aria-live="polite"></p>
 <p class="muted">The planner uses your device's local timezone. For a race elsewhere, confirm time-zone differences and DST against the event's official local schedule. It does not check real-time traffic or organizer access rules.</p>
 </section>
+<section class="preview-card" id="official-sources"><h2 id="sources-heading">Official source record</h2>
+<p id="sources-intro">Record the official athlete-guide link and the date you checked it. TriZentro does not automatically verify or monitor the source.</p>
+<div class="form-grid"><label><span id="source-url-label">Official event guide URL (HTTPS)</span><input id="source-url" type="url" maxlength="500" placeholder="https://..."></label>
+<label><span id="source-checked-label">Date reviewed by athlete</span><input id="source-checked" type="date"></label></div>
+<p id="sources-status" class="muted" role="status">Not independently verified.</p></section>
 <section class="preview-card"><h2>05 / Your race-week checklist</h2>
 <div class="preview-checks" id="checklist">
 <label><input type="checkbox">Confirm race briefing, rules and cut-offs</label>
@@ -173,6 +178,7 @@ body.passport-only .passport-head{padding:12px 16px}}
 <div class="passport-head"><small>TRIZENTRO · 70.3 RACE-DAY PASSPORT</small><h3 id="passport-name">—</h3><div id="passport-date">—</div></div>
 <div class="passport-stats"><div><span id="passport-finish-label">Expected finish</span><strong id="passport-finish">—</strong></div><div><span id="passport-target-label">Target</span><strong id="passport-target">—</strong></div><div><span id="passport-review-label">Preparation review</span><strong id="passport-review">—</strong></div></div>
 <div class="passport-details"><div><h4 id="passport-splits-label">Race-day clocks</h4><ul id="passport-clock-list"></ul></div><div><h4 id="passport-morning-label">Morning departure</h4><p id="passport-morning">—</p><h4 id="passport-closure-label">Transition closure (user-entered)</h4><p id="passport-closure">—</p></div></div>
+<div class="passport-details"><div><h4 id="passport-source-label">Official source (user-entered)</h4><p id="passport-source">—</p></div><div><h4 id="passport-source-date-label">Checked by athlete</h4><p id="passport-source-date">—</p></div></div>
 <h4 id="passport-decisions-label">My contingency decisions</h4><ul id="passport-decisions"></ul>
 <p id="passport-disclaimer" class="muted">—</p>
 </div>
@@ -322,10 +328,18 @@ const choices=[
 ];
 exported+="\n\n"+(nl?"MIJN RACEDAGBESLISSINGEN":"MY RACE-DAY DECISIONS")
  +"\n"+choices.map(([heading,value])=>heading+": "+(value.trim()|| (nl?"Nog niet ingevuld":"Not entered"))).join("\n");
+const rawSource=$("source-url").value.trim(),sourceChecked=$("source-checked").value.trim();
+let officialUrl=null;
+if(rawSource){try{officialUrl=new URL(rawSource)}catch(e){throw Error(nl?"Ongeldige bronlink.":"Invalid source URL.");}
+if(officialUrl.protocol!=="https:")throw Error(nl?"Gebruik een HTTPS-bron.":"Use an HTTPS source.");}
+if(sourceChecked&&!/^\d{4}-\d{2}-\d{2}$/.test(sourceChecked))throw Error(nl?"Ongeldige controledatum.":"Invalid source review date.");
+$("sources-status").textContent=nl?"Zelf opgegeven; niet door TriZentro geverifieerd.":"User-entered; not verified by TriZentro.";
+exported+="\n\n"+(nl?"BRON (ZELF OPGEGEVEN)":"SOURCE (USER-ENTERED)")+"\n"+(officialUrl?officialUrl.href:"—")
++"\n"+(nl?"Zelf gecontroleerd: ":"Reviewed by athlete: ")+(sourceChecked||"—");
 const checksForReview=[...document.querySelectorAll('#checklist input[type="checkbox"]')].map(el=>el.checked);
 const review=window.TriZentroPackReview.review({
 locale,name:$("race-name").value,date:$("race-date").value,transitionClose:$("transition-close").value,
-checks:checksForReview,weather:$("plan-weather").value,mechanical:$("plan-mechanical").value,nutrition:$("plan-nutrition").value
+checks:checksForReview,weather:$("plan-weather").value,mechanical:$("plan-mechanical").value,nutrition:$("plan-nutrition").value,sourceUrl:rawSource,sourceChecked
 });
 $("pack-review-title").textContent=nl?"Controleer je racedossier":"Check before race day";
 $("pack-review-intro").textContent=nl?"Dit is een controlelijst voor je eigen voorbereiding, geen officiële verificatie. Openstaande punten blokkeren je download niet.":"This is a preparation checklist, not official verification. Unchecked items do not prevent downloading.";
@@ -338,7 +352,7 @@ exported+="\n\n"+(nl?"VOORBEREIDINGSCONTROLE (ZELF INGEVULD)":"PREPARATION REVIE
 +"\n"+review.items.map(item=>(item.done?"[x] ":"[ ] ")+item.label).join("\n");
 const passport=window.TriZentroRacePassport.build({
 name:$("race-name").value,date:$("race-date").value,start:input.start,locale,
-result:base,core,morning,review,transitionClosure:$("transition-close").value,
+result:base,core,morning,review,transitionClosure:$("transition-close").value,sourceUrl:rawSource,sourceChecked,
 decisions:{weather:$("plan-weather").value,mechanical:$("plan-mechanical").value,nutrition:$("plan-nutrition").value}
 });
 $("passport-name").textContent=passport.title;
@@ -348,11 +362,20 @@ $("passport-target").textContent=passport.target;
 $("passport-review").textContent=passport.review;
 $("passport-morning").textContent=passport.morning.length?passport.morning[0].time:"—";
 $("passport-closure").textContent=passport.transitionClosure;
+$("passport-source").textContent=passport.sourceUrl;
+$("passport-source-date").textContent=passport.sourceChecked;
 $("passport-disclaimer").textContent=passport.warning;
 const clockList=$("passport-clock-list");clockList.replaceChildren();
 for(const row of passport.times){const li=document.createElement("li");li.textContent=row.label+": "+row.clock;clockList.appendChild(li);}
 const decisionsList=$("passport-decisions");decisionsList.replaceChildren();
 for(const row of passport.plans){const li=document.createElement("li");const strong=document.createElement("strong");strong.textContent=row.label+": ";li.appendChild(strong);li.appendChild(document.createTextNode(row.value));decisionsList.appendChild(li);}
+const sourceLabels={
+"sources-heading":["Officiële bron vastleggen","Record official source"],
+"sources-intro":["Noteer de officiële atletenbriefing en de datum waarop je die zelf hebt gecontroleerd. TriZentro verifieert of bewaakt deze bron niet.","Record the official athlete guide and the date you personally checked it. TriZentro does not verify or monitor the source."],
+"source-url-label":["Link naar officiële briefing (HTTPS)","Official event guide URL (HTTPS)"],
+"source-checked-label":["Datum zelf gecontroleerd","Date reviewed by athlete"]
+};
+for(const [id,pair] of Object.entries(sourceLabels))$(id).textContent=pair[nl?0:1];
 const captionMap={
 "passport-heading":["Wedstrijdpaspoort","Race-Day Passport"],
 "passport-intro":["Jouw compacte racedagoverzicht met belangrijke kloktijden, vertrek en eigen noodplannen. Dit zijn schattingen en geen officiële parcours- of wedstrijdtijden.","Your pocket-size summary of key times, morning departure and your own contingency decisions. Times are estimates, not official event timings."],
@@ -361,6 +384,8 @@ const captionMap={
 "passport-splits-label":["Racedag-kloktijden","Race-day clocks"],
 "passport-morning-label":["Vertrek op wedstrijdochtend","Morning departure"],
 "passport-closure-label":["Sluiting wisselzone (zelf ingevuld)","Transition closure (user-entered)"],
+"passport-source-label":["Officiële bron (zelf ingevuld)","Official source (user-entered)"],
+"passport-source-date-label":["Zelf gecontroleerd door atleet","Checked by athlete"],
 "passport-decisions-label":["Mijn noodscenario's","My contingency decisions"],
 "print-passport":["Alleen paspoort printen / PDF","Print passport only / PDF"],
 "passport-print-note":["De printversie uploadt geen racedata. Controleer alle details met de officiële racebriefing.","Printing does not upload race data. Check all details against the official race briefing."]
