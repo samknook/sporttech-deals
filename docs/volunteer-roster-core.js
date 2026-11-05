@@ -57,8 +57,11 @@ function normalize(volunteers,shifts){
  });
  return {people,slots};
 }
-function assign(volunteers,shifts){
- const {people,slots}=normalize(volunteers,shifts);
+function assign(volunteers,shifts,options={}){
+ const normalized=normalize(volunteers,shifts);
+ const absent=new Set(options.absentIds||[]);
+ if([...absent].some(id=>typeof id!=='string'||!normalized.people.some(p=>p.id===id)))throw Error('Unknown absent volunteer ID.');
+ const people=normalized.people.filter(p=>!absent.has(p.id)),slots=normalized.slots;
  const records=new Map(people.map(p=>[p.id,[]]));
  const result=slots.map(s=>({...s,assigned:[],unfilled:s.needed}));
  const eligible=(p,s)=>p.availableFrom<=s.from&&p.availableTo>=s.to&&(!s.skill||p.skills.has(s.skill));
@@ -81,7 +84,7 @@ function assign(volunteers,shifts){
  const uncovered=result.filter(x=>x.unfilled>0);
  const assigned=result.reduce((n,s)=>n+s.assigned.length,0);
  const required=result.reduce((n,s)=>n+s.needed,0);
- return {shifts:result,required,assigned,unfilled:required-assigned,uncovered,volunteers:people.length,utilized:[...records.values()].filter(x=>x.length>0).length};
+ return {shifts:result,required,assigned,unfilled:required-assigned,uncovered,volunteers:people.length,utilized:[...records.values()].filter(x=>x.length>0).length,absent:[...absent]};
 }
 function exportCsv(plan){
  const rows=[['shift_id','from','to','skill','needed','assigned_ids','unfilled']];
