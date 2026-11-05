@@ -1099,3 +1099,26 @@ TriZentroAddTranslations('transparantie.html','nl',[
  ['De website biedt Nederlands en Engels. Je taalkeuze wordt lokaal in je browser opgeslagen onder','The website offers Dutch and English. Your language choice is stored locally in your browser under'],
  ['zodat deze op andere pagina’s behouden blijft. Dit is geen trackingcookie en wordt niet naar TriZentro verstuurd. Je kunt de taal via de NL/EN-knoppen wijzigen of de lokale browseropslag wissen.','so it remains selected across pages. This is not a tracking cookie and is not sent to TriZentro. You can change the language using NL/EN buttons or clear browser storage.']
 ]);
+
+
+/* Post-bundle language consistency refinements. */
+TriZentroAddTranslations('triathlon-calculator.html','nl',[
+ ['Scenario lab / Vergelijking','Scenario lab / Comparison'],
+ ['Wat als je iets sneller of rustiger gaat?','What if you go a little faster or slower?'],
+ [': ±5 seconden per 100 m zwemmen, ±1 km/u fietsen en ±10 seconden per kilometer lopen. De wisseltijden blijven gelijk; bij invoergrenzen kan een verschil kleiner uitvallen.',': ±5 seconds per 100 m swimming, ±1 km/h cycling and ±10 seconds/km running. Transition times stay the same; limits can reduce the difference.'],
+ ['Ten opzichte van jouw invoer','Compared with your inputs'],
+ ['Sneller fietsen kan het hardlopen beïnvloeden. Deze scenario’s houden geen rekening met vermoeidheid, weersomstandigheden of parcours. Het zijn geen voorspellingen.','Riding faster may affect the run. These scenarios do not account for fatigue, weather or course conditions. They are not predictions.'],
+ ['Nieuw in triatlon? Lees onze','New to triathlon? Read our'],
+ ['praktische gids over afstanden, pacing en wisseltijden','practical guide to distances, pacing and transitions'],
+ ['Deel deze gratis tool via WhatsApp','Share this free tool via WhatsApp'],
+ ["Bij delen verstuur je alleen de openbare link naar deze tool, niet je ingevulde tempo's, wedstrijdnaam of notities. Je verlaat TriZentro pas als je de link opent.","Sharing sends only the public tool link, not your paces, race name or notes. You leave TriZentro only when opening the link."],
+ ['📋 Maak een compleet raceplan','📋 Build a complete race plan'],
+ ['Gratis triatlontools zonder account of tracking.','Free triathlon tools without an account or tracking.']
+]);
+TriZentroAddTranslations('70-3-readiness-check.html','en',[
+ ['. To turn your plan into an editable event dossier, try the','. Maak van je plan een aanpasbaar racedossier met het'],
+ ['. These remain free previews; there is no checkout.','. Dit blijven gratis voorbeelden; er is geen betaalmogelijkheid.']
+]);
+TriZentroAddTranslations('index.html','en',[
+ ['Learn smarter. Race prepared.','Leer slimmer. Start voorbereid.']
+]);
