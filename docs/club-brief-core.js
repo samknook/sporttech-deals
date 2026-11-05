@@ -10,7 +10,7 @@ const timeToMinute=x=>{
 function validate(values){
  if(!values||typeof values!=='object')throw Error('Invalid input.');
  const clean={};
- for(const key of ['event','date','venue','guide','checkin','bikeClose','transitionClose','briefing','waveA','waveB','notes']){
+ for(const key of ['event','date','venue','guide','checkin','bikeClose','transitionClose','briefing','waveA','waveB','waveC','waveD','waveE','waveF','notes']){
   const raw=values[key]??'';
   if(typeof raw!=='string'||raw.length>(key==='notes'?500:key==='guide'?300:120))throw Error('Invalid field '+key);
   clean[key]=raw.trim();
@@ -25,7 +25,7 @@ function validate(values){
   try{u=new URL(clean.guide)}catch(_){throw Error('Invalid guide link.');}
   if(!['http:','https:'].includes(u.protocol)||!u.hostname)throw Error('Invalid guide link.');
  }
- const deadlines=['checkin','bikeClose','transitionClose','briefing','waveA','waveB'];
+ const deadlines=['checkin','bikeClose','transitionClose','briefing','waveA','waveB','waveC','waveD','waveE','waveF'];
  for(const key of deadlines)if(clean[key]&&timeToMinute(clean[key])===null)throw Error('Invalid time: '+key);
  return clean;
 }
@@ -33,7 +33,13 @@ function analyze(values){
  const v=validate(values);
  const warnings=[],times=['checkin','bikeClose','transitionClose','briefing','waveA','waveB'];
  const t=Object.fromEntries(times.map(k=>[k,v[k]?timeToMinute(v[k]):null]));
- if(t.waveB!==null&&t.waveB<t.waveA)warnings.push('wave-order');
+ const waves=['waveA','waveB','waveC','waveD','waveE','waveF'];
+ let previous=null;
+ for(const key of waves){
+  if(t[key]===null)continue;
+  if(previous!==null&&t[key]<=t[previous])warnings.push(key==='waveB'?'wave-order':'wave-order-'+key);
+  previous=key;
+ }
  if(t.checkin!==null&&t.bikeClose!==null&&t.checkin>t.bikeClose)warnings.push('checkin-after-bike-close');
  if(t.checkin!==null&&t.transitionClose!==null&&t.checkin>t.transitionClose)warnings.push('checkin-after-transition-close');
  if(t.bikeClose!==null&&t.transitionClose!==null&&t.bikeClose>t.transitionClose)warnings.push('bike-close-after-transition');
@@ -48,13 +54,21 @@ function analyze(values){
   ['transitionClose','Transition closes','Wisselzone sluit'],
   ['briefing','Race briefing','Wedstrijdbriefing'],
   ['waveA','Wave A starts','Startgroep A vertrekt'],
-  ['waveB','Wave B starts','Startgroep B vertrekt']
+  ['waveB','Wave B starts','Startgroep B vertrekt'],
+  ['waveC','Wave C starts','Startgroep C vertrekt'],
+  ['waveD','Wave D starts','Startgroep D vertrekt'],
+  ['waveE','Wave E starts','Startgroep E vertrekt'],
+  ['waveF','Wave F starts','Startgroep F vertrekt']
  ].filter(([key])=>v[key]).map(([key,en,nl])=>({key,time:v[key],minutes:t[key],en,nl}))
  .sort((a,b)=>a.minutes-b.minutes);
  return {values:v,events,warnings,requiresReview:warnings.length>0};
 }
 const warnLabels={
- 'wave-order':['Wave B starts before wave A.','Startgroep B vertrekt vóór startgroep A.'],
+ 'wave-order':['Wave B starts before or at the same time as wave A.','Startgroep B vertrekt vóór of tegelijk met groep A.'],
+ 'wave-order-waveC':['Wave C must start after the previous wave.','Startgroep C moet na de vorige startgroep vertrekken.'],
+ 'wave-order-waveD':['Wave D must start after the previous wave.','Startgroep D moet na de vorige startgroep vertrekken.'],
+ 'wave-order-waveE':['Wave E must start after the previous wave.','Startgroep E moet na de vorige startgroep vertrekken.'],
+ 'wave-order-waveF':['Wave F must start after the previous wave.','Startgroep F moet na de vorige startgroep vertrekken.'],
  'checkin-after-bike-close':['Check-in opens after bike check-in closes.','Incheck opent na sluiting van de fietsincheck.'],
  'checkin-after-transition-close':['Check-in opens after transition closes.','Incheck opent na sluiting van de wisselzone.'],
  'bike-close-after-transition':['Bike check-in closes after transition closes.','Fietsincheck sluit nadat de wisselzone sluit.'],
