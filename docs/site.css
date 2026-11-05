@@ -140,3 +140,5 @@ footer p{color:#b0cbd4}
 .tz-club-strip p{margin:3px 0;color:#d6e9df;max-width:670px;line-height:1.55}
 .tz-club-strip .btn{flex:none;white-space:normal;text-align:center}
 @media(max-width:760px){.tz-club-strip .wrap{display:grid}.tz-club-strip .btn{width:100%}}
+
+.tz-club-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.tz-club-actions .btn{white-space:normal}@media(max-width:760px){.tz-club-actions{display:grid}.tz-club-actions .btn{width:100%}}
