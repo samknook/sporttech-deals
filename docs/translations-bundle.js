@@ -1350,3 +1350,8 @@ TriZentroAddTranslations('index.html','nl',[
 ['Bereken het benodigde looptempo voor je doeltijd en bekijk wat 2, 5, 10 of 15 minuten vertraging betekent.','Calculate the run pace needed for your target and see the effect of a 2, 5, 10 or 15-minute delay.'],
 ['Check jouw doeltijd →','Check your goal time →']
 ]);
+
+// Organizer pilot entry on the homepage.
+TriZentroAddTranslations('index.html','nl',[
+['Ontdek de evenementenpilot →','Explore the event operations pilot →']
+]);
