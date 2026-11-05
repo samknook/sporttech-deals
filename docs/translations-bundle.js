@@ -1222,3 +1222,7 @@ TriZentroAddTranslations('transparantie.html','nl',[
 TriZentroAddTranslations('products.html','en',[
  ['Optional save, load and delete of a local draft on your device','Optioneel een concept opslaan, laden en wissen op je eigen apparaat']
 ]);
+
+TriZentroAddTranslations('race-pack-preview.html','en',[
+ ['Your checklist is not uploaded. It is saved on this device only if you select Save on this device below; otherwise it is lost when this page closes.','Je checklist wordt niet geüpload. Hij wordt alleen op dit apparaat opgeslagen als je hieronder zelf op Bewaar op dit apparaat klikt. Anders verdwijnt hij als je de pagina sluit.']
+]);
