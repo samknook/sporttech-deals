@@ -136,8 +136,10 @@ async function test(){
   await page.locator('#club-form button[type="submit"]').click();
   assert.match(await page.locator('#template-change-list').innerText(),/08:30.*08:35/);
   assert.equal(await page.locator('#download-update').isDisabled(),true);
+  await page.locator('#source-checked-on').fill('2026-11-05');
   await page.locator('#update-review').check();
   assert.equal(await page.locator('#download-update').isEnabled(),true);
+  assert.equal(await page.locator('#download-update-html').isEnabled(),true);
   await page.locator('#waveC').fill('08:05');
   assert.equal(await page.locator('#download-update').isDisabled(),true);
   await page.goto(base+'/event-portal-demo.html');
