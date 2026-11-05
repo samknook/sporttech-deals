@@ -68,9 +68,9 @@ async function test(){
   // English and Dutch product pages remain accessible and correctly labeled.
   await page.goto(base+'/products.html?lang=nl');
   assert.equal(await page.locator('html').getAttribute('lang'),'nl');
-  await page.getByText('Leer slimmer.',{exact:true}).first().waitFor();
+  assert.match(await page.locator('h1').first().innerText(),/Leer slimmer/);
   await page.goto(base+'/products.html?lang=en');
-  await page.getByText('Learn smarter.',{exact:true}).first().waitFor();
+  assert.match(await page.locator('h1').first().innerText(),/Learn smarter/);
 
   // No unhandled JavaScript errors throughout navigation and calculations.
   assert.deepEqual(errors,[],'uncaught browser errors');
