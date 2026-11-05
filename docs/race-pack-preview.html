@@ -120,6 +120,18 @@
 <label><input type="checkbox">Prepare a weather contingency plan</label>
 </div><p class="muted">Your checklist is not uploaded. It is saved on this device only if you select Save on this device below; otherwise it is lost when this page closes.</p>
 </section>
+<section class="preview-card" id="decision-plan">
+<h2 id="decisions-heading">Your race-day decisions</h2>
+<p id="decisions-intro">Write down a practical response to three situations before race day. You decide what is appropriate, using the official athlete guide and what you have tested in training. Your choices are included in the downloadable dossier and printout.</p>
+<div class="form-grid" style="grid-template-columns:1fr;gap:16px">
+<label><span id="weather-heading">If the weather or course changes</span>
+<textarea id="plan-weather" maxlength="350" rows="3" style="width:100%;font:inherit;padding:12px;border:1px solid #b8c9c1;border-radius:10px" placeholder="e.g. Review the organizer’s latest course updates and adjust my goal to the conditions."></textarea></label>
+<label><span id="mechanical-heading">If I have a bike or equipment problem</span>
+<textarea id="plan-mechanical" maxlength="350" rows="3" style="width:100%;font:inherit;padding:12px;border:1px solid #b8c9c1;border-radius:10px" placeholder="e.g. Use the repair steps and equipment I practised; ask course support if needed."></textarea></label>
+<label><span id="nutrition-heading">If my planned nutrition is unavailable</span>
+<textarea id="plan-nutrition" maxlength="350" rows="3" style="width:100%;font:inherit;padding:12px;border:1px solid #b8c9c1;border-radius:10px" placeholder="e.g. Identify only event-supplied products I've previously tested; verify aid-station locations."></textarea></label>
+</div><p id="decisions-warning" class="muted">Never use this planner to override event safety instructions or medical advice. Do not include sensitive medical information in a shared export.</p>
+</section>
 <section class="preview-card"><h2>06 / Your event notes</h2>
 <p>Make a short personal note about transition access, event cut-offs, nutrition pickup or your contingency plan. This note stays in the browser and is included in your text export.</p>
 <label for="race-notes">My notes</label><textarea id="race-notes" maxlength="1500" rows="5" style="width:100%;border:1px solid #b8c9c1;border-radius:10px;padding:12px;font:inherit" placeholder="Example: Check T1 closure time with event organizer."></textarea>
@@ -176,6 +188,21 @@ function update(){
 for(const input of document.querySelectorAll('#stress-test input, #race-name, #target, #swim, #bike, #run, #t1, #t2, #start'))input.addEventListener('input',update);
 document.addEventListener('DOMContentLoaded',update);update();
 })();
+<script>
+(function(){
+'use strict';
+const en=window.TriZentroI18n?.lang==='en';
+const labels={
+'decisions-heading':['Mijn racedagbeslissingen','My race-day decisions'],
+'decisions-intro':['Beschrijf vooraf wat je doet als iets anders loopt dan gepland. Gebruik de officiële racebriefing en alleen strategieën die je tijdens training hebt getest. Je keuzes komen in je download en printversie.','Write down practical responses before race day. Use the official athlete guide and what you have tested in training. Your choices appear in the downloaded and printed dossier.'],
+'weather-heading':['Als het weer of parcours verandert','If the weather or course changes'],
+'mechanical-heading':['Als ik materiaalpech krijg','If I have a bike or equipment problem'],
+'nutrition-heading':['Als mijn geplande voeding niet beschikbaar is','If my planned nutrition is unavailable'],
+'decisions-warning':['Volg altijd de veiligheidsinstructies van de organisatie en professioneel medisch advies. Vermijd gevoelige gezondheidsgegevens in een gedeeld dossier.','Always follow event safety instructions and professional medical advice. Avoid sensitive medical details in shared dossiers.']
+};
+for(const [id,pair] of Object.entries(labels))document.getElementById(id).textContent=pair[en?1:0];
+})();
+</script>
 </script>
 <script src="pace-input.js"></script><script>TriZentroPaceInput.bind(["swim","run"]);TriZentroPaceInput.bindClock(["start"]);TriZentroPaceInput.bindClock(["transition-close"]);TriZentroPaceInput.bindDuration(["target"]);</script>
 <script src="race-planner-core.js"></script>
@@ -243,6 +270,13 @@ notes:$("race-notes").value
 });
 if(deadline.status!=="not-entered")exported+="\n\n"+(nl?"SLUITING WISSELZONE (ZELF INGEVULD)":"TRANSITION CLOSURE (USER-ENTERED)")+"\n"+deadline.message;
 
+const choices=[
+[nl?"WEER / PARCOURS":"WEATHER / COURSE", $("plan-weather").value],
+[nl?"FIETS / MATERIAAL":"BIKE / EQUIPMENT", $("plan-mechanical").value],
+[nl?"VOEDING":"NUTRITION", $("plan-nutrition").value]
+];
+exported+="\\n\\n"+(nl?"MIJN RACEDAGBESLISSINGEN":"MY RACE-DAY DECISIONS")
+ +"\\n"+choices.map(([heading,value])=>heading+": "+(value.trim()|| (nl?"Nog niet ingevuld":"Not entered"))).join("\\n");
 const stressIds=["shock-swim","shock-bike","shock-transition","shock-run"];
 const stressMax=[120,240,60,180];
 const stressMinutes=stressIds.map((id,i)=>{
