@@ -38,6 +38,7 @@
 .preview-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .preview-checks label{display:flex;align-items:flex-start;gap:9px;border:1px solid #dce8de;border-radius:10px;padding:12px}
 .preview-checks input{width:18px;height:18px;flex:none;accent-color:#147e6e}
+.draft-panel{border:1px solid #d6e8e0;background:#f2faf6;border-radius:14px;padding:16px;margin:12px 0 19px}.draft-panel p{line-height:1.55;margin:7px 0 13px}.draft-panel .actions{margin:12px 0}.draft-panel .actions button{min-height:44px}
 .muted{font-size:13px;color:#62766c}.error{color:#a12e25;font-weight:800}
 @media(max-width:850px){.form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:570px){.form-grid,.results,.preview-checks{grid-template-columns:1fr}.preview-card{padding:16px}}
@@ -105,6 +106,12 @@
 <label for="race-notes">My notes</label><textarea id="race-notes" maxlength="1500" rows="5" style="width:100%;border:1px solid #b8c9c1;border-radius:10px;padding:12px;font:inherit" placeholder="Example: Check T1 closure time with event organizer."></textarea>
 </section>
 <section class="preview-card"><h2>07 / Take your sample race pack</h2>
+<div class="draft-panel no-print" aria-labelledby="draft-title">
+<strong id="draft-title">Keep working on your race plan</strong>
+<p>Save an editable draft only on this device. Nothing is uploaded and the draft is not saved automatically. On a shared device, someone using the same browser profile could access it.</p>
+<div class="actions"><button type="button" id="save-draft">Save on this device</button><button type="button" id="load-draft" class="secondary">Load saved draft</button><button type="button" id="delete-draft" class="secondary">Delete saved draft</button></div>
+<p id="draft-status" class="muted" role="status" aria-live="polite">No draft loaded. You can save your entries when you choose.</p>
+</div>
 <div class="actions no-print"><button id="download" type="button">Download sample (.txt)</button><button id="print" class="secondary" type="button">Print / save as PDF</button><a class="secondary" href="products.html">Explore product lineup</a></div>
 <p class="alert warning">This is a prototype, not individualized coaching, nutritional guidance or a guarantee of performance. Course conditions, fatigue and local event rules can change actual results. The future commercial pack would add much more detail, professionally reviewed templates and polished exports. No checkout or payment is active.</p>
 <p>If you are new to 70.3, complete the <a href="70-3-readiness-check.html">free 12-point race preparation check</a> before building your dossier.</p>
@@ -115,6 +122,7 @@
 <script src="pace-input.js"></script><script>TriZentroPaceInput.bind(["swim","run"]);TriZentroPaceInput.bindClock(["start"]);TriZentroPaceInput.bindDuration(["target"]);</script>
 <script src="race-planner-core.js"></script>
 <script src="race-pack-dossier.js"></script>
+<script src="race-pack-storage.js"></script>
 <script>
 (()=>{
 "use strict";
@@ -175,6 +183,33 @@ notes:$("race-notes").value
 }
 document.querySelectorAll("input,textarea").forEach(el=>el.addEventListener("input",render));
 $("download").addEventListener("click",()=>{if(!exported)return;const url=URL.createObjectURL(new Blob([exported],{type:"text/plain;charset=utf-8"}));const link=document.createElement("a");link.href=url;link.download="trizentro-first-70-3-sample.txt";document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+
+const draftStorage=window.TriZentroRacePackStorage;
+const draftText=(english,dutch)=>nl?dutch:english;
+function storageRef(){return window.localStorage;}
+$("save-draft").addEventListener("click",()=>{
+ try{
+  // Only save a user-requested, valid race plan.
+  if(!exported)throw Error(draftText("Please fix the plan inputs before saving.","Controleer eerst de invoer van je plan."));
+  draftStorage.save(storageRef(),draftStorage.capture(document));
+  $("draft-status").textContent=draftText("Draft saved on this device. Use Load saved draft after reopening this page.","Concept opgeslagen op dit apparaat. Gebruik Concept laden als je de pagina opnieuw opent.");
+ }catch(e){$("draft-status").textContent=draftText("Could not save the draft: ","Opslaan is niet gelukt: ")+e.message;}
+});
+$("load-draft").addEventListener("click",()=>{
+ try{
+  const draft=draftStorage.load(storageRef());
+  if(!draft){$("draft-status").textContent=draftText("No saved draft on this device.","Geen opgeslagen concept op dit apparaat.");return;}
+  draftStorage.apply(document,draft);
+  render();
+  $("draft-status").textContent=exported?draftText("Saved draft loaded. Review your plan before relying on it.","Opgeslagen concept geladen. Controleer je plan voordat je het gebruikt."):draftText("Draft loaded, but some values need correction.","Concept geladen, maar sommige waarden moeten worden gecorrigeerd.");
+ }catch(e){$("draft-status").textContent=draftText("Could not load the draft: ","Laden is niet gelukt: ")+e.message;}
+});
+$("delete-draft").addEventListener("click",()=>{
+ try{
+  draftStorage.remove(storageRef());
+  $("draft-status").textContent=draftText("Saved draft deleted from this browser. Your current on-screen inputs remain.","Opgeslagen concept verwijderd uit deze browser. De invoer op dit scherm blijft staan.");
+ }catch(e){$("draft-status").textContent=draftText("Could not delete the draft: ","Wissen is niet gelukt: ")+e.message;}
+});
 $("print").addEventListener("click",()=>window.print());
 render();
 // Refresh text export once the shared translator has localized checklist labels.
