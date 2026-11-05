@@ -4,6 +4,7 @@ const assert=require('node:assert/strict');
 const core=require('../docs/race-planner-core.js');
 const passport=require('../docs/race-passport.js');
 const packReview=require('../docs/race-pack-review.js');
+const storage=require('../docs/race-pack-storage.js');
 function approx(a,b,delta=1e-6){assert.ok(Math.abs(a-b)<=delta,`expected ${a} close to ${b}`);}
 const input={distance:'half',swimPace:'2:00',bikeSpeed:30,runPace:'5:00',t1Minutes:4,t2Minutes:3,start:'08:00',target:'05:30'};
 const result=core.calculate(input);
@@ -27,4 +28,13 @@ const minimal=passport.build({name:'',start:'23:30',locale:'en',result,core,revi
 assert.equal(minimal.review,'0/11');assert.equal(minimal.plans[0].value,'No personal plan yet');
 assert.match(minimal.times[4].clock,/\+1 dag/);
 assert.throws(()=>passport.build({name:'bad',start:'08:00',result:{total:NaN},core}),/Valid race calculation/);
+const sourced=passport.build({name:'Test Race',date:'2027-06-20',start:'08:00',locale:'nl',result,core,review:checked,
+ sourceUrl:'https://example.org/athlete-guide',sourceChecked:'2027-06-10'});
+assert.equal(sourced.sourceUrl,'https://example.org/athlete-guide');
+assert.equal(sourced.sourceChecked,'2027-06-10');
+const oldDraft={version:1,values:Object.fromEntries(storage.fields.filter(id=>!['source-url','source-checked'].includes(id)).map(id=>[id,''])),
+ checks:Array(8).fill(false)};
+const upgraded=storage.validate(oldDraft);
+assert.equal(upgraded.values['source-url'],'');
+assert.equal(upgraded.values['source-checked'],'');
 console.log('TriZentro race passport regression tests passed.');
