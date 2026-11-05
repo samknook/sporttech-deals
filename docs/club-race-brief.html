@@ -30,6 +30,7 @@
 .club small,.club .hint{font-size:13px;color:#5c736d}
 .club-note{padding:12px 15px;background:#f1f7f5;border-radius:10px;font-size:14px}
 .club-workspace{padding-bottom:18px;border-bottom:1px solid #d7e6dd;margin-bottom:23px}
+.template-update{border-top:1px solid #d5e4da;padding-top:14px;margin-top:15px}.template-update h3{font-size:17px}.template-update p{line-height:1.55;font-size:14px}
 .template-changes{background:#f2f8f4;border-radius:12px;padding:13px 16px;margin-top:14px}.template-changes h3{font-size:16px;margin:0 0 9px}.template-changes ul{padding-left:21px;margin:5px 0}.template-changes li{margin:6px 0;font-size:14px;overflow-wrap:anywhere}.club-workspace h2{margin:0 0 9px}.club-workspace p{font-size:14px;line-height:1.55}
 .portal-export{margin-top:22px;border-top:1px solid #d2e4d8;padding-top:18px}
 .portal-export h3{font-size:20px;margin:0 0 8px}
@@ -56,6 +57,13 @@
 <div class="club-actions"><button type="button" id="export-template" class="alt">Download template (.json)</button></div>
 <p id="template-status" class="hint" role="status" aria-live="polite">Het template wordt alleen gedownload als je dat zelf kiest.</p>
 <div class="template-changes" id="template-changes" hidden><h3>Wijzigingen sinds geladen template</h3><ul id="template-change-list"></ul><p class="hint">Controleer alle wijzigingen met de officiële organisatiedocumenten voordat je een nieuwe versie verspreidt.</p></div>
+<div class="template-update nonprint" id="template-update" hidden>
+<h3>Conceptbericht voor deelnemers</h3>
+<p>Maak een update van de verschillen met je vorige template. Je moet de actuele officiële informatie opnieuw controleren. TriZentro verstuurt niets automatisch.</p>
+<label class="portal-review"><input type="checkbox" id="update-review"> Ik heb alle wijzigingen, de officiële bron en de nieuwe versie gecontroleerd.</label>
+<div class="club-actions"><button type="button" id="download-update" disabled>Download wijzigingsbericht (.txt)</button><button type="button" class="alt" id="copy-update" disabled>Kopieer wijzigingsbericht</button></div>
+<p class="hint" id="update-status" role="status" aria-live="polite">Laad een template en breng een wijziging aan.</p>
+</div>
 </div>
 <h2>01 · Wedstrijdinformatie</h2>
 <div class="club-grid">
@@ -111,6 +119,7 @@
 <script src="club-brief-core.js"></script>
 <script src="club-event-portal.js"></script>
 <script src="club-template.js"></script>
+<script src="club-update-notice.js"></script>
 <script>
 (()=>{'use strict';
 const el=id=>document.getElementById(id);
@@ -125,6 +134,7 @@ function update(event){
   const result=window.TriZentroClubBrief.analyze(values);
   currentAnalysis=result;
   updatePortalAvailability();
+  updateNoticeAvailability();
   output=window.TriZentroClubBrief.lines(result,locale).join('\n');
   el('brief-content').hidden=false;
   el('brief-title').textContent=result.values.event;
@@ -137,16 +147,53 @@ function update(event){
   el('brief-note').textContent=result.values.notes||tx('Nog geen bijzonderheden ingevoerd.','No additional notes entered.');
   el('brief-meta').textContent=tx('Concept, gebaseerd op door jou ingevoerde informatie.','Draft based only on information you entered.');
  }catch(e){
-  output='';currentAnalysis=null;updatePortalAvailability();el('brief-content').hidden=true;el('brief-status').dataset.ok='false';
+  output='';currentAnalysis=null;updatePortalAvailability();updateNoticeAvailability();el('brief-content').hidden=true;el('brief-status').dataset.ok='false';
   el('brief-status').textContent=tx('Controleer evenementnaam, datum, officiële URL en starttijden.','Check event name, date, official URL and wave times.');
  }
 }
 
 
+
+function updateNoticeAvailability(){
+ const node=el('template-update');
+ node.hidden=!importedBaseline;
+ const approved=el('update-review').checked;
+ const hasChanges=importedBaseline&&el('template-changes')&&!el('template-changes').hidden&&el('template-change-list').children.length>0&&
+  !el('template-change-list').textContent.includes(tx('Geen wijzigingen sinds het laden.','No changes since loading.'));
+ const permitted=!!importedBaseline&&!!currentAnalysis&&!currentAnalysis.warnings.length&&approved&&hasChanges;
+ el('download-update').disabled=!permitted;
+ el('copy-update').disabled=!permitted;
+ el('update-status').textContent=!importedBaseline?tx('Laad eerst een eerder template.','Load a previous template first.'):
+ !currentAnalysis||currentAnalysis.warnings.length?tx('Controleer eerst alle tijden en corrigeer waarschuwingen.','Check all times and resolve warnings first.'):
+ !hasChanges?tx('Er zijn geen wijzigingen om te melden.','There are no changes to announce.'):
+ !approved?tx('Bevestig de controle van de wijzigingen.','Confirm your review of the changes.'):
+ tx('Het conceptbericht kan nu worden gedownload. Er wordt niets verstuurd.','The draft update can now be downloaded. Nothing is sent.');
+}
+function buildNotice(){
+ if(el('download-update').disabled)return null;
+ const current=Object.fromEntries(keys.map(k=>[k,el(k).value]));
+ return window.TriZentroClubUpdateNotice.build(importedBaseline,current,el('revision').value,window.TriZentroClubBrief,window.TriZentroClubTemplate,locale);
+}
+el('update-review').addEventListener('change',updateNoticeAvailability);
+el('download-update').addEventListener('click',()=>{
+ try{
+  const result=buildNotice();if(!result)return;
+  const url=URL.createObjectURL(new Blob([result.text],{type:'text/plain;charset=utf-8'}));
+  const link=document.createElement('a');link.href=url;link.download='trizentro-event-update-'+result.revision+'.txt';
+  document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  el('update-status').textContent=tx('Conceptbericht gedownload. De organisator moet het zelf controleren en verspreiden.','Draft downloaded. The organizer must review and distribute it.');
+ }catch(e){el('update-status').textContent=tx('Maken van de update mislukt; controleer de invoer.','Could not prepare update; check inputs.');}
+});
+el('copy-update').addEventListener('click',async()=>{
+ try{const result=buildNotice();if(!result)return;
+ await navigator.clipboard.writeText(result.text);
+ el('update-status').textContent=tx('Conceptbericht gekopieerd.','Draft update copied.');
+ }catch(e){el('update-status').textContent=tx('Kopiëren mislukt; gebruik downloaden.','Copy failed; try download.');}
+});
 function refreshTemplateChanges(){
  const box=el('template-changes'),list=el('template-change-list');
  list.replaceChildren();
- if(!importedBaseline){box.hidden=true;return;}
+ if(!importedBaseline){box.hidden=true;updateNoticeAvailability();return;}
  const current=Object.fromEntries(keys.map(k=>[k,el(k).value]));
  try{
   const changes=window.TriZentroClubTemplate.differences(importedBaseline,current,window.TriZentroClubBrief);
@@ -162,6 +209,7 @@ function refreshTemplateChanges(){
    }
   }
  }catch(e){box.hidden=true;}
+ updateNoticeAvailability();
 }
 function templateDownload(){
  try{
@@ -186,6 +234,7 @@ el('import-template').addEventListener('change',async()=>{
   inputs.forEach((input,i)=>{input.value=template.values[keys[i]]});
   el('revision').value=template.revision;
   importedBaseline=template.values;
+  el('update-review').checked=false;
   refreshTemplateChanges();
   el('organizer-review').checked=false;
   update();
@@ -203,6 +252,7 @@ function updatePortalAvailability(){
 }
 el('organizer-review').addEventListener('change',updatePortalAvailability);
 el('club-form').addEventListener('input',()=>{
+ el('update-review').checked=false;
  refreshTemplateChanges();
  el('organizer-review').checked=false;
  currentAnalysis=null;
@@ -217,7 +267,7 @@ el('download-portal').addEventListener('click',()=>{
  }catch(e){el('portal-status').textContent=tx('Kon de pagina niet maken. Controleer de bron en tijden.','Could not create page. Check source and schedule.');}
 });
 el('club-form').addEventListener('submit',update);
-el('club-form').addEventListener('reset',()=>setTimeout(()=>{importedBaseline=null;refreshTemplateChanges();el('organizer-review').checked=false;if(!nl&&el('event').value==='Voorbeeld Triatlon')el('event').value='Sample Triathlon';update();},0));
+el('club-form').addEventListener('reset',()=>setTimeout(()=>{importedBaseline=null;el('update-review').checked=false;refreshTemplateChanges();el('organizer-review').checked=false;if(!nl&&el('event').value==='Voorbeeld Triatlon')el('event').value='Sample Triathlon';update();},0));
 el('download-brief').addEventListener('click',()=>{if(!output)return;const blob=new Blob([output],{type:'text/plain;charset=utf-8'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='trizentro-club-race-brief.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);});
 el('copy-brief').addEventListener('click',async()=>{if(!output)return;try{await navigator.clipboard.writeText(output);el('brief-meta').textContent=tx('Tekst gekopieerd.','Text copied.');}catch(e){el('brief-meta').textContent=tx('Kopiëren niet mogelijk. Gebruik de downloadknop.','Cannot copy. Use download instead.');}});
 el('print-brief').addEventListener('click',()=>window.print());
