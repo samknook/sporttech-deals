@@ -188,6 +188,7 @@ function update(){
 for(const input of document.querySelectorAll('#stress-test input, #race-name, #target, #swim, #bike, #run, #t1, #t2, #start'))input.addEventListener('input',update);
 document.addEventListener('DOMContentLoaded',update);update();
 })();
+</script>
 <script>
 (function(){
 'use strict';
@@ -275,8 +276,8 @@ const choices=[
 [nl?"FIETS / MATERIAAL":"BIKE / EQUIPMENT", $("plan-mechanical").value],
 [nl?"VOEDING":"NUTRITION", $("plan-nutrition").value]
 ];
-exported+="\\n\\n"+(nl?"MIJN RACEDAGBESLISSINGEN":"MY RACE-DAY DECISIONS")
- +"\\n"+choices.map(([heading,value])=>heading+": "+(value.trim()|| (nl?"Nog niet ingevuld":"Not entered"))).join("\\n");
+exported+="\n\n"+(nl?"MIJN RACEDAGBESLISSINGEN":"MY RACE-DAY DECISIONS")
+ +"\n"+choices.map(([heading,value])=>heading+": "+(value.trim()|| (nl?"Nog niet ingevuld":"Not entered"))).join("\n");
 const stressIds=["shock-swim","shock-bike","shock-transition","shock-run"];
 const stressMax=[120,240,60,180];
 const stressMinutes=stressIds.map((id,i)=>{
