@@ -39,6 +39,7 @@
 .preview-checks label{display:flex;align-items:flex-start;gap:9px;border:1px solid #dce8de;border-radius:10px;padding:12px}
 .preview-checks input{width:18px;height:18px;flex:none;accent-color:#147e6e}
 .draft-panel{border:1px solid #d6e8e0;background:#f2faf6;border-radius:14px;padding:16px;margin:12px 0 19px}.draft-panel p{line-height:1.55;margin:7px 0 13px}.draft-panel .actions{margin:12px 0}.draft-panel .actions button{min-height:44px}
+.deadline-result{padding:12px 15px;border-radius:10px;border:1px solid #cbded4;background:#f0f7f4;font-size:14px;line-height:1.55}.deadline-result[data-status="late"],.deadline-result[data-status="invalid"],.deadline-result[data-status="review"]{border-color:#efbd88;background:#fff4e6;color:#713b13}
 .muted{font-size:13px;color:#62766c}.error{color:#a12e25;font-weight:800}
 @media(max-width:850px){.form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:570px){.form-grid,.results,.preview-checks{grid-template-columns:1fr}.preview-card{padding:16px}}
@@ -85,8 +86,11 @@
 <label>Transition setup (minutes)<input id="setup" type="number" min="0" max="240" step="1" value="40"></label>
 <label>Warm-up and starting area (minutes)<input id="warmup" type="number" min="0" max="240" step="1" value="30"></label>
 <label>Extra buffer (minutes)<input id="buffer" type="number" min="0" max="180" step="1" value="20"></label>
+<label>Official race-morning transition closure (optional)<input id="transition-close" type="text" inputmode="numeric" maxlength="5" placeholder="07:00" aria-describedby="transition-close-note"></label>
 </div>
 <div class="tablewrap"><table><thead><tr><th>Local date &amp; time</th><th>Task</th></tr></thead><tbody id="morning"></tbody></table></div>
+<p id="transition-close-note" class="muted">Enter the actual race-morning closure from the official athlete guide. This is not fetched automatically; leave blank if unknown or if bike check-in is on another day.</p>
+<p id="transition-deadline-result" class="deadline-result" role="status" aria-live="polite"></p>
 <p class="muted">The planner uses your device's local timezone. For a race elsewhere, confirm time-zone differences and DST against the event's official local schedule. It does not check real-time traffic or organizer access rules.</p>
 </section>
 <section class="preview-card"><h2>05 / Your race-week checklist</h2>
@@ -119,9 +123,10 @@
 <p>For the full free experience, also use our <a href="race-dashboard.html">Race Dashboard</a>, <a href="race-fuel-planner.html">Race Fuel Planner</a> and <a href="race-day-timeline.html">Race Day Timeline</a>.</p>
 </section></main>
 <footer><div class="wrap"><a class="brand" href="./"><img class="brand-icon" src="trizentro-icon.svg" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><a href="transparantie.html">Privacy &amp; transparency</a></div></footer>
-<script src="pace-input.js"></script><script>TriZentroPaceInput.bind(["swim","run"]);TriZentroPaceInput.bindClock(["start"]);TriZentroPaceInput.bindDuration(["target"]);</script>
+<script src="pace-input.js"></script><script>TriZentroPaceInput.bind(["swim","run"]);TriZentroPaceInput.bindClock(["start","transition-close"]);TriZentroPaceInput.bindDuration(["target"]);</script>
 <script src="race-planner-core.js"></script>
 <script src="race-pack-dossier.js"></script>
+<script src="race-deadline-core.js"></script>
 <script src="race-pack-storage.js"></script>
 <script>
 (()=>{
@@ -155,6 +160,9 @@ const morning=window.TriZentroRaceDossier.morningSchedule({
 date:$("race-date").value,start:input.start,
 travel:minutes("travel"),parking:minutes("parking"),setup:minutes("setup"),warmup:minutes("warmup"),buffer:minutes("buffer"),locale
 });
+const deadline=window.TriZentroRaceDeadline.check({start:input.start,warmup:minutes("warmup"),transitionClose:$("transition-close").value.trim(),locale});
+$("transition-deadline-result").dataset.status=deadline.status;
+$("transition-deadline-result").textContent=deadline.message;
 const morningBody=$("morning");morningBody.replaceChildren();
 for(const item of morning){const tr=document.createElement("tr");for(const value of [item.time,item.label]){const td=document.createElement("td");td.textContent=value;tr.appendChild(td);}morningBody.appendChild(tr);}
 const checkpoints=window.TriZentroRaceDossier.checkpoints(results[1],core,input.start,locale);
@@ -176,6 +184,7 @@ $("goal-note").textContent=goal===null?(nl?"Geen doeltijd ingevuld.":"No finish 
 exported=window.TriZentroRaceDossier.textDossier({
 name:$("race-name").value,date:$("race-date").value,start:input.start,target:input.target,
 scenarios:results,core,morning,locale,
+deadline,
 checks:[...document.querySelectorAll("#checklist label")].map(el=>({checked:el.querySelector("input").checked,label:el.textContent.trim()})),
 notes:$("race-notes").value
 });
