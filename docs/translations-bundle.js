@@ -1306,3 +1306,7 @@ TriZentroAddTranslations('club-race-brief.html','nl',[
  ['Download deelnemerspagina (.html)','Download participant page (.html)'],
  ['Controleer de bron, los waarschuwingen op en bevestig de review voordat je downloadt.','Check the source, resolve warnings and confirm the review before downloading.']
 ]);
+
+TriZentroAddTranslations('products.html','en',[
+ ['turns information you supply from an official athlete guide into a bilingual draft timeline, highlights possible schedule conflicts and now creates a standalone NL/EN participant page after your review.','maakt van de informatie die je uit de officiële deelnemershandleiding overneemt een tweetalige tijdlijn, signaleert mogelijke planningsconflicten en maakt na jouw controle een zelfstandige NL/EN-deelnemerspagina.']
+]);
