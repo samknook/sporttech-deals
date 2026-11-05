@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="nl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Club Race Brief Builder | TriZentro</title>
+<meta name="description" content="Maak gratis een tweetalige concept-wedstrijdbriefing met startgroepen, deadlines, bronvermelding en automatische controles. Voor triatlonverenigingen en organisatoren.">
+<link rel="canonical" href="https://samknook.github.io/sporttech-deals/club-race-brief.html">
+<link rel="icon" type="image/svg+xml" href="trizentro-icon.svg">
+<link rel="stylesheet" href="site.css">
+<style>
+.club{width:min(1020px,calc(100% - 34px));margin:auto;padding:38px 0 75px}
+.club h1{font-size:clamp(34px,5vw,60px);line-height:1.08;letter-spacing:-.055em;margin:10px 0 18px}
+.club .intro{font-size:17px;max-width:760px;color:#536f66}
+.club-panel{background:#fff;border:1px solid #d7e6dd;border-radius:18px;padding:24px;margin:22px 0;box-shadow:0 5px 25px #0a28300c}
+.club h2{font-size:24px;margin:0 0 14px}
+.club-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.club label{display:grid;gap:5px;font-size:14px;font-weight:730}
+.club input,.club textarea{width:100%;min-height:44px;padding:11px 12px;border:1px solid #aabdb5;border-radius:10px;font:inherit;color:#142f28;background:#fff}
+.club textarea{min-height:90px;resize:vertical}
+.club input:focus-visible,.club textarea:focus-visible{outline:3px solid #56c6a3;outline-offset:2px}
+.club .full{grid-column:1/-1}
+.club-actions{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.club-actions button,.club-actions a{padding:12px 17px;min-height:44px;background:#135e51;color:white;border:0;border-radius:10px;font:inherit;font-size:14px;font-weight:800;cursor:pointer;text-decoration:none}
+.club-actions .alt{background:#e8f3ee;color:#144337;border:1px solid #c1dcd0}
+.club-actions button:focus-visible{outline:3px solid #1ba987;outline-offset:2px}
+.club-status{background:#fff5e7;border-left:4px solid #a56823;border-radius:8px;padding:12px 15px;white-space:pre-line;margin:15px 0}
+.club-status[data-ok="true"]{background:#eff9f3;border-color:#237a57}
+.club-table{width:100%;border-collapse:collapse}
+.club-table td,.club-table th{text-align:left;padding:10px;border-bottom:1px solid #dbe8df;vertical-align:top}
+.club-table td:first-child{font-variant-numeric:tabular-nums;font-weight:820;white-space:nowrap}
+.club small,.club .hint{font-size:13px;color:#5c736d}
+.club-note{padding:12px 15px;background:#f1f7f5;border-radius:10px;font-size:14px}
+@media(max-width:610px){.club-grid{grid-template-columns:1fr}.club-panel{padding:16px}.club-actions{display:grid}.club-actions button{width:100%}}
+@media print{.top,.club form,.club-actions,.club .intro,.club .nonprint,footer{display:none!important}.club{padding:0;width:100%}.club-panel{border:0;box-shadow:none;padding:0}.club h1{font-size:30px}body{background:white}.club-table td{font-size:12px}}
+</style>
+<script src="translations-bundle.js"></script><script src="i18n.js"></script><script defer src="navigation.js"></script>
+</head><body>
+<header class="top"><div class="wrap"><div class="nav"><a class="brand" href="./"><img src="trizentro-icon.svg" class="brand-icon" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><nav aria-label="Navigatie"><a href="index.html">Home</a><a href="products.html">Producten</a></nav></div></div></header>
+<main class="club">
+<div class="eyebrow">TriZentro voor clubs en organisatoren · GRATIS DEMO</div>
+<h1>Maak één duidelijke<br><em>wedstrijdbriefing.</em></h1>
+<p class="intro">Voer zelf de gegevens van de officiële deelnemershandleiding in. TriZentro maakt een overzicht voor twee startgroepen en controleert op opvallende tegenstrijdigheden. Download de conceptbriefing of print hem als PDF. Geen account en geen gegevensupload.</p>
+<form id="club-form" class="club-panel" novalidate>
+<h2>01 · Wedstrijdinformatie</h2>
+<div class="club-grid">
+<label>Naam evenement *<input id="event" maxlength="120" required value="Voorbeeld Triatlon"></label>
+<label>Wedstrijddatum *<input id="date" type="date" required value="2027-06-20"></label>
+<label>Locatie<input id="venue" maxlength="120" placeholder="Stad / terrein"></label>
+<label>Officiële deelnemersgids (URL)<input id="guide" type="url" maxlength="300" placeholder="https://..."></label>
+</div>
+<h2 style="margin-top:25px">02 · Tijden uit officiële bron</h2>
+<p class="hint">Alle tijden moeten op dezelfde wedstrijddag vallen, in de lokale tijd van het evenement. Laat niet-bekende tijden leeg. Gebruik de officiële informatie, geen aannames.</p>
+<div class="club-grid">
+<label>Registratie / incheck opent<input id="checkin" type="time" value="06:00"></label>
+<label>Fietsincheck sluit<input id="bikeClose" type="time" value="07:00"></label>
+<label>Wisselzone sluit<input id="transitionClose" type="time" value="07:30"></label>
+<label>Wedstrijdbriefing<input id="briefing" type="time" value="07:40"></label>
+<label>Startgroep A *<input id="waveA" type="time" value="08:00" required></label>
+<label>Startgroep B<input id="waveB" type="time" value="08:15"></label>
+<label class="full">Bijzonderheden<textarea id="notes" maxlength="500" placeholder="Bijvoorbeeld: controleer het reglement en de toegangsroute."></textarea></label>
+</div>
+<div class="club-actions"><button type="submit">Maak conceptbriefing</button><button type="reset" class="alt">Reset voorbeeld</button></div>
+</form>
+<section class="club-panel" aria-label="Voorbeeldbriefing">
+<h2>03 · Voorbeeldbriefing</h2>
+<p class="hint" id="brief-meta">Nog geen definitieve wedstrijdpublicatie — controleer altijd de officiële bron.</p>
+<p class="club-status" id="brief-status" role="status" aria-live="polite">Vul de gegevens in en maak je briefing.</p>
+<div id="brief-content" hidden>
+<h3 id="brief-title"></h3><p id="brief-details"></p>
+<div style="overflow-x:auto"><table class="club-table"><thead><tr><th>Tijd</th><th>Onderdeel</th></tr></thead><tbody id="brief-rows"></tbody></table></div>
+<p class="club-note" id="brief-note"></p>
+<div class="club-actions nonprint"><button id="download-brief" type="button">Download .txt</button><button id="copy-brief" type="button" class="alt">Kopieer tekst</button><button id="print-brief" type="button" class="alt">Print / bewaar als PDF</button></div>
+</div>
+<p class="hint">Deze demonstratie is geen officieel geverifieerd bericht. Een organisator blijft verantwoordelijk voor de juistheid, publicatie en eventuele wijzigingen. Controleer alle sluitingstijden, veiligheidseisen en startgroepen.</p>
+</section>
+<section class="club-panel nonprint">
+<h2>Voor organisaties: wat kan TriZentro later bieden?</h2>
+<p>Dit is een functioneel prototype. Een toekomstige zakelijke editie kan een eigen huisstijl, meerdere startgroepen, bewerkbare exports en herbruikbare evenementtemplates krijgen. Die functies en prijzen zijn nog niet beschikbaar en worden pas aangeboden wanneer ze zijn ontwikkeld.</p>
+<div class="club-actions"><a href="mailto:trizentro.team@gmail.com?subject=TriZentro%20Club%20Brief%20demo">Bespreek een clubversie</a><a class="alt" href="products.html">Bekijk alle tools</a></div>
+</section>
+</main>
+<footer><div class="wrap"><a href="transparantie.html">Transparantie en privacy</a></div></footer>
+<script src="club-brief-core.js"></script>
+<script>
+(()=>{'use strict';
+const el=id=>document.getElementById(id);
+const locale=window.TriZentroI18n?.lang||'nl',nl=locale!=='en';
+const tx=(a,b)=>nl?a:b,keys=['event','date','venue','guide','checkin','bikeClose','transitionClose','briefing','waveA','waveB','notes'];
+let output='';
+function update(event){
+ if(event)event.preventDefault();
+ const values=Object.fromEntries(keys.map(k=>[k,el(k).value]));
+ try{
+  const result=window.TriZentroClubBrief.analyze(values);
+  output=window.TriZentroClubBrief.lines(result,locale).join('\n');
+  el('brief-content').hidden=false;
+  el('brief-title').textContent=result.values.event;
+  el('brief-details').textContent=result.values.date+' · '+(result.values.venue||'—');
+  const rows=el('brief-rows');rows.replaceChildren();
+  for(const item of result.events){const tr=document.createElement('tr');const clock=document.createElement('td'),label=document.createElement('td');clock.textContent=item.time;label.textContent=nl?item.nl:item.en;tr.append(clock,label);rows.append(tr);}
+  const warnings=result.warnings.map(w=>window.TriZentroClubBrief.warnLabels[w][nl?1:0]);
+  el('brief-status').dataset.ok=String(warnings.length===0);
+  el('brief-status').textContent=warnings.length?tx('Controleer deze punten vóór verspreiding:\n','Check before sharing:\n')+warnings.map(w=>'• '+w).join('\n'):tx('Geen opvallende inconsistenties gevonden. Handmatige controle blijft verplicht.','No obvious scheduling contradictions. Manual verification is still required.');
+  el('brief-note').textContent=result.values.notes||tx('Nog geen bijzonderheden ingevoerd.','No additional notes entered.');
+  el('brief-meta').textContent=tx('Concept, gebaseerd op door jou ingevoerde informatie.','Draft based only on information you entered.');
+ }catch(e){
+  output='';el('brief-content').hidden=true;el('brief-status').dataset.ok='false';
+  el('brief-status').textContent=tx('Controleer evenementnaam, datum, officiële URL en starttijden.','Check event name, date, official URL and wave times.');
+ }
+}
+el('club-form').addEventListener('submit',update);
+el('club-form').addEventListener('reset',()=>setTimeout(update,0));
+el('download-brief').addEventListener('click',()=>{if(!output)return;const blob=new Blob([output],{type:'text/plain;charset=utf-8'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='trizentro-club-race-brief.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);});
+el('copy-brief').addEventListener('click',async()=>{if(!output)return;try{await navigator.clipboard.writeText(output);el('brief-meta').textContent=tx('Tekst gekopieerd.','Text copied.');}catch(e){el('brief-meta').textContent=tx('Kopiëren niet mogelijk. Gebruik de downloadknop.','Cannot copy. Use download instead.');}});
+el('print-brief').addEventListener('click',()=>window.print());
+update();
+})();
+</script></body></html>
