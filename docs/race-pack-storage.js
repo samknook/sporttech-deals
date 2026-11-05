@@ -22,7 +22,7 @@ function validate(data){
  if(!data.values||typeof data.values!=='object'||Array.isArray(data.values))throw Error('Invalid race pack draft.');
  const values={};
  for(const id of fields){
-  const value=data.values[id];
+  const value=id==='transition-close'&&data.values[id]===undefined?'':data.values[id];
   if(typeof value!=='string'||value.length>fieldRules[id].max)throw Error('Invalid draft field: '+id);
   values[id]=value;
  }
