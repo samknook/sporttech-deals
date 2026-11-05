@@ -1207,3 +1207,14 @@ TriZentroAddTranslations('race-pack-preview.html','en',[
  ['Delete saved draft','Wis opgeslagen concept'],
  ['No draft loaded. You can save your entries when you choose.','Geen concept geladen. Je kunt zelf kiezen wanneer je invoer opslaat.']
 ]);
+
+
+TriZentroAddTranslations('transparantie.html','nl',[
+ ['Race Pack-concepten en apparaatopslag','Race Pack drafts and local storage'],
+ ['In het gratis 70.3 Race Pack kun je optioneel op','In the free 70.3 Race Pack you may choose'],
+ ['drukken. Alleen dan slaat de website je ingevoerde wedstrijdgegevens, tempo’s, reisplanning, checklist en eventuele notities in de lokale browseropslag (','to save. Only then does the site store the race details, paces, travel plans, checklist and optional notes in the local browser storage ('],
+ [') van dit apparaat op. Er wordt geen raceplan naar een TriZentro-server verzonden. Met',') on your device. Nothing is sent to a TriZentro server. Choose'],
+ ['lees je deze gegevens terug en met','to reload these entries, or'],
+ ['verwijder je ze. Op gedeelde apparaten kan iemand met toegang tot hetzelfde browserprofiel het concept bekijken. Sla daarom geen gevoelige gezondheidsinformatie op.','to delete them. Others with access to the same browser profile on shared devices could read the draft. Do not store sensitive health details.'],
+ ['Bewaar op dit apparaat','Save on this device'],['Laad opgeslagen concept','Load saved draft'],['Wis opgeslagen concept','Delete saved draft']
+]);
