@@ -17,6 +17,7 @@ const fieldRules={
  'race-notes':{type:'text',max:1500},
  'shock-swim':{type:'text',max:3},'shock-bike':{type:'text',max:3},
  'shock-transition':{type:'text',max:2},'shock-run':{type:'text',max:3},
+ 'source-url':{type:'text',max:500},'source-checked':{type:'text',max:10},
  'plan-weather':{type:'text',max:350},'plan-mechanical':{type:'text',max:350},'plan-nutrition':{type:'text',max:350}
 };
 const fields=Object.keys(fieldRules);
@@ -26,7 +27,8 @@ function validate(data){
  const values={};
  for(const id of fields){
   const defaults={'transition-close':'','shock-swim':'2','shock-bike':'6','shock-transition':'2','shock-run':'4',
-    'plan-weather':'','plan-mechanical':'','plan-nutrition':''};
+    'plan-weather':'','plan-mechanical':'','plan-nutrition':'',
+    'source-url':'','source-checked':''};
   const value=data.values[id]===undefined&&Object.prototype.hasOwnProperty.call(defaults,id)?defaults[id]:data.values[id];
   if(typeof value!=='string'||value.length>fieldRules[id].max)throw Error('Invalid draft field: '+id);
   values[id]=value;
