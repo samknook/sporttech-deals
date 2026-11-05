@@ -33,6 +33,7 @@ const groups=[
     [tr('70.3 Race Pack-preview','70.3 Race Pack Preview'),'race-pack-preview.html'],
     [tr('Triathlon Blueprint','Triathlon Blueprint'),'blueprint-preview.html'],
     [tr('Geef feedback','Share Feedback'),'tester-feedback.html'],
+    [tr('Organisatorwerkruimte','Organizer Workspace'),'organizer-workspace.html'],
     [tr('Zakelijke evenementenpilot','Event Operations Pilot'),'organizer-pilot.html'],
     [tr('Voor clubs en organisatoren','For Clubs & Organizers'),'club-race-brief.html'],
     [tr('Vrijwilligersrooster','Volunteer Roster'),'volunteer-roster.html']
