@@ -1174,3 +1174,25 @@ TriZentroAddTranslations('index.html','nl',[
  ['Lees de aanbiedingengids ↗','Read the deals guide ↗'],
  ['Zo beoordelen we prijzen','How we evaluate prices']
 ]);
+
+/* New streamlined homepage onboarding, authored in Dutch and localized to English. */
+TriZentroAddTranslations('index.html','nl',[
+ ['Gratis beginnen met TriZentro','Get started with TriZentro for free'],
+ ['Bereid je wedstrijd in drie stappen voor','Prepare for your race in three steps'],
+ ['Begin met wat jij nu nodig hebt. Alle tools en previews hieronder zijn gratis te gebruiken, zonder account of betaalfunctie.','Start with what you need today. Every tool and preview below is free to use, with no account or checkout.'],
+ ['Controleer je voorbereiding','Check your preparation'],
+ ['Beantwoord twaalf praktische vragen en ontdek welke onderdelen van je 70.3-raceplan nog aandacht vragen.','Answer twelve practical questions and discover which parts of your 70.3 race plan still need attention.'],
+ ['Doe de gratis Readiness Check →','Take the free Readiness Check →'],
+ ['Maak een concreet raceplan','Build a practical race plan'],
+ ['Reken je zwem-, fiets- en looptijden door en maak een plan met de gratis Race Dashboard-tool.','Calculate your swim, bike and run splits and build a plan with the free Race Dashboard tool.'],
+ ['Open het Race Dashboard →','Open the Race Dashboard →'],
+ ['Probeer het Race Pack','Try the Race Pack'],
+ ['Bekijk drie scenario’s, doorkomstpunten en een voorbeeld van jouw racedossier. Deel daarna vrijwillig je ervaring.','Explore three scenarios, checkpoints and a sample race dossier. You can then share feedback if you wish.'],
+ ['Probeer de gratis Race Pack-preview →','Try the free Race Pack preview →'],
+ ['Liever eerst lezen? Bekijk de','Prefer to read first? See the'],
+ ['gratis raceweek-checklist','free race-week checklist'],
+ [', de',', the'],
+ ['Blueprint-voorbeeldhoofdstukken','Blueprint sample chapters'],
+ ['of','or'],
+ ['alle producten in ontwikkeling','all products in development']
+]);
