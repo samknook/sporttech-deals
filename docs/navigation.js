@@ -31,7 +31,8 @@ const groups=[
     [tr('Alle producten','All Products'),'products.html'],
     [tr('70.3 Race Pack-preview','70.3 Race Pack Preview'),'race-pack-preview.html'],
     [tr('Triathlon Blueprint','Triathlon Blueprint'),'blueprint-preview.html'],
-    [tr('Geef feedback','Share Feedback'),'tester-feedback.html']
+    [tr('Geef feedback','Share Feedback'),'tester-feedback.html'],
+    [tr('Voor clubs en organisatoren','For Clubs & Organizers'),'club-race-brief.html']
   ]},
   {title:tr('Materiaal','Equipment'),items:[
     [tr('Fietscomputer-koopgids','Bike Computer Buying Guide'),'koopgids.html'],
