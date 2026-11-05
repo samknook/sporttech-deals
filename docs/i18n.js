@@ -57,7 +57,12 @@ function decorateLinks(){
     const url=new URL(href,root.location.href);
     if(url.origin!==root.location.origin||!(/\.html?$/.test(url.pathname)||url.pathname.endsWith('/')))continue;
     url.searchParams.set('lang',current);
-    a.setAttribute('href',url.pathname.replace(root.location.pathname.slice(0,root.location.pathname.lastIndexOf('/')+1),'')+url.search+url.hash);
+    const base=root.location.pathname.slice(0,root.location.pathname.lastIndexOf('/')+1);
+    const relative=url.pathname.startsWith(base)?url.pathname.slice(base.length):url.pathname;
+    // A directory home link must remain './', not an empty href: an empty
+    // href would reload the current subpage instead of opening the homepage.
+    const safePath=relative===''?'./':relative;
+    a.setAttribute('href',safePath+url.search+url.hash);
   }catch(e){}
  }
 }
