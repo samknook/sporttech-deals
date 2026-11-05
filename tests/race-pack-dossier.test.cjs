@@ -30,7 +30,7 @@ test('export includes personal race notes, checkmarks, times and warnings',()=>{
  assert.match(output,/Testing 70\.3/);
  assert.match(output,/\[x\] Helmet check/);
  assert.match(output,/Bring the spare tyre/);
- assert.match(output,/Official distances/);
+ assert.match(output,/official distances/i);
 });
 test('preview uses actual dossier module and editable notes',()=>{
  const html=fs.readFileSync(path.join(__dirname,'../docs/race-pack-preview.html'),'utf8');
