@@ -1310,3 +1310,11 @@ TriZentroAddTranslations('club-race-brief.html','nl',[
 TriZentroAddTranslations('products.html','en',[
  ['turns information you supply from an official athlete guide into a bilingual draft timeline, highlights possible schedule conflicts and now creates a standalone NL/EN participant page after your review.','maakt van de informatie die je uit de officiële deelnemershandleiding overneemt een tweetalige tijdlijn, signaleert mogelijke planningsconflicten en maakt na jouw controle een zelfstandige NL/EN-deelnemerspagina.']
 ]);
+
+TriZentroAddTranslations('club-race-brief.html','nl',[
+['Herbruikbaar evenementtemplate','Reusable event template'],
+['Versienummer','Version number'],
+['Laad een eerder opgeslagen template','Load a saved template'],
+['Download template (.json)','Download template (.json)'],
+['Startgroep C','Wave C'],['Startgroep D','Wave D'],['Startgroep E','Wave E'],['Startgroep F','Wave F']
+]);
