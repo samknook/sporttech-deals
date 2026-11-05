@@ -113,3 +113,14 @@ A new free `70-3-readiness-check.html` offers a twelve-question planning self-ch
 **Measurement limitation:** No analytics or feedback submission is currently active. Therefore no claims about funnel traffic, completions, leads, conversion or revenue are supportable. The public GitHub Pages URL remains unverified via the available web access. The site owner should check Pages publication source in repository Settings and inspect the site in a regular browser before recruiting testers.
 
 **Next concrete marketing tasks:** Write two original search-intent guides ("first 70.3 checklist" and "70.3 race day schedule"), avoid keyword-stuffed duplicates, confirm Search Console sitemap indexing, and invite a small panel of genuine volunteer users to review both the mobile experience and the product proposition.
+
+## Strategic correction — 5 November 2026
+Recent competitor checks reveal substantial **free** functionality: FORM Endurance provides a browser-local race workspace; Total Athlete has A/B/C race goals and a PDF; TriathlonPace provides a configurable packing checklist. See `COMPETITIVE_POSITIONING_2026.md` for documented sources.
+
+**Decision:** do not commercialize the current prototype at the proposed €19.95 simply because it has split calculators, a checklist and exports. Those features alone are not distinctive. Test whether athletes instead value trustworthy, event-specific execution planning, clearly documented assumptions, printable dossiers and reusable planning workflows.
+
+**Product improvements committed:** a user-triggered browser-local Save/Load/Delete draft in the 70.3 Race Pack and an optional transition-closure conflict check based only on an officially sourced time entered by the athlete. Both remain free preview functionality; they do not imply a paid service or official rule integration. New regressions cover stored-draft compatibility and mismatched transition schedules. See `PRODUCT_RELEASE_0_2.md` and `PRODUCT_RELEASE_0_3.md`.
+
+**BV decision:** TriZentro is not registered as a BV. The new operating plan `TRIZENTRO_OPERATING_PLAN.md` records pre-revenue go/no-go criteria. Incorporation, notarial identity verification, funding, domains and payment-account agreements require the owner's explicit involvement. Defer costly commitments until demand and delivery capability are demonstrated.
+
+**Next dependency:** real testers and confirmed production mobile QA. No fake reviews, leads or sales.
