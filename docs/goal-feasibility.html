@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="TriZentro Goal Feasibility: bereken je benodigde hardlooptempo voor je triatlondoeltijd en ontdek de gevolgen van vertraging bij zwemmen, fietsen of wisselen.">
+<meta name="theme-color" content="#092b2b"><title>Goal Feasibility Calculator | TriZentro</title>
+<link rel="canonical" href="https://samknook.github.io/sporttech-deals/goal-feasibility.html">
+<link rel="icon" href="trizentro-icon.svg" type="image/svg+xml"><link rel="stylesheet" href="site.css">
+<script src="translations-bundle.js"></script><script src="i18n.js"></script><script defer src="navigation.js"></script>
+<style>
+:root{--dark:#092d2c;--line:#dae5df;--accent:#d7f377}body{background:#f4f7f4}.tool-wrap{max-width:1080px;margin:0 auto;padding:38px 20px 80px}.tool-hero{background:var(--dark);color:white;border-radius:24px;padding:clamp(24px,5vw,52px);margin:12px 0 24px}.tool-hero h1{font-size:clamp(32px,5vw,56px);letter-spacing:-.04em;line-height:1.08;margin:12px 0}.tool-hero p{color:#dcebe4;max-width:690px}.tag{color:var(--accent);font-weight:800;letter-spacing:.1em;font-size:12px}.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.panel{background:white;border:1px solid var(--line);border-radius:20px;padding:24px}.panel h2{font-size:22px;margin:0 0 12px}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}label{display:block;font-weight:700;font-size:14px;margin-bottom:5px}.field input,.field select{width:100%;border:1px solid #bed0c6;border-radius:10px;padding:12px;background:#fff;color:#122e28}.field small{display:block;font-size:12px;color:#526a60;margin-top:4px}.big{font-size:clamp(30px,4vw,46px);font-weight:900;letter-spacing:-.04em;color:#103e34}.subtle{color:#557067}.results{display:grid;grid-template-columns:1fr 1fr;gap:14px}.metric{padding:18px;border-radius:14px;background:#f0f6ee}.metric p{margin:0}.metric strong{font-size:25px;display:block}.status{padding:12px 14px;border-radius:12px;background:#eff6df;font-weight:700}.scenario{width:100%;border-collapse:collapse;margin-top:14px;font-size:14px}.scenario th,.scenario td{text-align:left;border-bottom:1px solid var(--line);padding:11px 7px}.scenario th:last-child,.scenario td:last-child{text-align:right}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.actions button{border:0;border-radius:10px;padding:12px 16px;background:var(--dark);color:white;font-weight:700}.actions button.secondary{background:#e7f0e9;color:var(--dark)}.foot{font-size:13px;color:#536b62;margin-top:18px}.message{color:#a23220;min-height:1.5em}@media(max-width:760px){.tool-grid,.results{grid-template-columns:1fr}.panel{padding:17px}.tool-wrap{padding:18px 12px 50px}}@media print{.top,.actions,.no-print{display:none!important}.tool-grid{display:block}.panel{break-inside:avoid;margin-bottom:12px}body{background:white}}
+</style></head><body>
+<header class="top"><div class="wrap"><div class="nav"><a class="brand" href="./"><img class="brand-icon" src="trizentro-icon.svg" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><nav aria-label="Navigatie"><a href="./">Home</a><a href="race-dashboard.html">Race Dashboard</a></nav></div></div></header>
+<main class="tool-wrap">
+<section class="tool-hero"><div class="tag">TRIZENTRO · SWIM / BIKE / RUN</div><h1 id="hero-title">Is jouw doeltijd haalbaar?</h1><p id="hero-text">Bereken precies welk looptempo je nodig hebt na het zwemmen, fietsen en wisselen. Ontdek hoeveel tijd je kunt verliezen voordat je doel in gevaar komt.</p></section>
+<div class="tool-grid"><section class="panel"><h2 id="input-title">1. Stel jouw race samen</h2><div class="fields">
+<div class="field"><label for="dist" id="l-dist">Afstand</label><select id="dist"><option value="sprint">Sprint</option><option value="olympic">Olympisch</option><option value="half" selected>70.3 / Halve</option><option value="full">Full</option><option value="custom">Eigen afstand</option></select></div>
+<div class="field"><label for="goal" id="l-goal">Doeltijd (uu:mm)</label><input id="goal" value="05:00" inputmode="numeric" placeholder="05:00"></div>
+<div class="field"><label for="swimdist" id="l-swimdist">Zwemafstand (km)</label><input id="swimdist" type="number" min="0.1" step="0.1" value="1.9"></div>
+<div class="field"><label for="bikedist" id="l-bikedist">Fietsafstand (km)</label><input id="bikedist" type="number" min="1" step="0.1" value="90"></div>
+<div class="field"><label for="rundist" id="l-rundist">Loopafstand (km)</label><input id="rundist" type="number" min="0.1" step="0.1" value="21.1"></div>
+<div class="field"><label for="swim" id="l-swim">Zwemduur (mm:ss of uu:mm:ss)</label><input id="swim" value="00:35:00" inputmode="numeric"></div>
+<div class="field"><label for="bike" id="l-bike">Fietstijd (uu:mm:ss)</label><input id="bike" value="02:38:00" inputmode="numeric"></div>
+<div class="field"><label for="t1" id="l-t1">T1 (mm:ss)</label><input id="t1" value="03:00" inputmode="numeric"></div>
+<div class="field"><label for="t2" id="l-t2">T2 (mm:ss)</label><input id="t2" value="03:00" inputmode="numeric"></div>
+<div class="field"><label for="runpace" id="l-runpace">Verwacht looptempo (mm:ss/km)</label><input id="runpace" value="04:45" inputmode="numeric"></div>
+</div><p id="error" class="message" role="alert"></p></section>
+<section class="panel"><h2 id="result-title">2. Wat betekent dit voor je race?</h2><p class="subtle" id="required-caption">Benodigd looptempo voor jouw doeltijd</p><div class="big" id="required">—</div><p class="status" id="status" role="status">—</p><div class="results">
+<div class="metric"><p id="projected-caption">Eindtijd met verwacht tempo</p><strong id="projected">—</strong></div>
+<div class="metric"><p id="margin-caption">Marge t.o.v. je doel</p><strong id="margin">—</strong></div>
+<div class="metric"><p id="budget-caption">Tijd over na fiets + T2</p><strong id="budget">—</strong></div>
+<div class="metric"><p id="target-speed-caption">Benodigde loopsnelheid</p><strong id="target-speed">—</strong></div></div>
+<h3 id="scenario-title">Wat als je onderweg tijd verliest?</h3><table class="scenario"><thead><tr><th id="scenario-col">Extra tijdverlies</th><th id="pace-col">Dan benodigd looptempo</th></tr></thead><tbody id="scenarios"></tbody></table>
+<div class="actions no-print"><button id="copy" type="button">Kopieer uitslag</button><button type="button" class="secondary" onclick="window.print()" id="print">Print / PDF</button></div><p class="foot" id="disclaimer">Rekenkundige scenarioanalyse, geen voorspelling van je fysieke mogelijkheden. Gebruik realistische tijden uit training of eerdere wedstrijden; parcours, weer en vermoeidheid zijn niet gemodelleerd. Alle berekeningen gebeuren in je browser.</p></section></div>
+</main><script>
+(function(){'use strict';
+const en=window.TriZentroI18n?.lang==='en',L=(nl,eng)=>en?eng:nl;
+const phrases={
+'hero-title':['Is jouw doeltijd haalbaar?','Can you hit your goal time?'],
+'hero-text':['Bereken precies welk looptempo je nodig hebt na het zwemmen, fietsen en wisselen. Ontdek hoeveel tijd je kunt verliezen voordat je doel in gevaar komt.','Calculate the run pace required after swimming, cycling and transitions. See what happens when you lose time.'],
+'input-title':['1. Stel jouw race samen','1. Build your race'],'l-dist':['Afstand','Distance'],'l-goal':['Doeltijd (uu:mm)','Goal time (hh:mm)'],
+'l-swimdist':['Zwemafstand (km)','Swim distance (km)'],'l-bikedist':['Fietsafstand (km)','Bike distance (km)'],'l-rundist':['Loopafstand (km)','Run distance (km)'],
+'l-swim':['Zwemduur (mm:ss of uu:mm:ss)','Swim duration (mm:ss or hh:mm:ss)'],'l-bike':['Fietstijd (uu:mm:ss)','Bike time (hh:mm:ss)'],
+'l-t1':['T1 (mm:ss)','T1 (mm:ss)'],'l-t2':['T2 (mm:ss)','T2 (mm:ss)'],'l-runpace':['Verwacht looptempo (mm:ss/km)','Expected run pace (mm:ss/km)'],
+'result-title':['2. Wat betekent dit voor je race?','2. Your race numbers'],'required-caption':['Benodigd looptempo voor jouw doeltijd','Run pace needed to reach your goal'],
+'projected-caption':['Eindtijd met verwacht tempo','Finish with your expected pace'],'margin-caption':['Marge t.o.v. je doel','Margin to your goal'],
+'budget-caption':['Tijd over na fiets + T2','Remaining time after bike + T2'],'target-speed-caption':['Benodigde loopsnelheid','Required run speed'],
+'scenario-title':['Wat als je onderweg tijd verliest?','What if you lose time?'],'scenario-col':['Extra tijdverlies','Extra time lost'],
+'pace-col':['Dan benodigd looptempo','New required pace'],'copy':['Kopieer uitslag','Copy results'],'print':['Print / PDF','Print / PDF'],
+'disclaimer':['Rekenkundige scenarioanalyse, geen voorspelling van je fysieke mogelijkheden. Gebruik realistische tijden uit training of eerdere wedstrijden; parcours, weer en vermoeidheid zijn niet gemodelleerd. Alle berekeningen gebeuren in je browser.','Arithmetic scenario analysis, not a prediction of your physical ability. Use realistic training or past-race splits; terrain, weather and fatigue are not modelled. All calculations run locally in your browser.']
+};
+for(const [id,values] of Object.entries(phrases))document.getElementById(id).textContent=values[en?1:0];
+document.title=L('Doeltijdcalculator','Goal Feasibility Calculator')+' | TriZentro';
+const el=id=>document.getElementById(id),dist={sprint:[.75,20,5],olympic:[1.5,40,10],half:[1.9,90,21.1],full:[3.8,180,42.2]};
+function parseClock(v,kind){let s=String(v).trim();if(!/^\d{1,3}:\d{2}(?::\d{2})?$/.test(s))return NaN;let a=s.split(':').map(Number);if(a.slice(1).some(x=>x>=60))return NaN;return a.length===3?a[0]*3600+a[1]*60+a[2]:(kind==='hours'?a[0]*3600+a[1]*60:a[0]*60+a[1]);}
+function fmt(sec){if(!Number.isFinite(sec))return '—';sec=Math.round(sec);const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;return (h?h+':':'')+String(m).padStart(h?2:1,'0')+':'+String(s).padStart(2,'0');}
+function fmtDuration(s){return fmt(s).includes(':')&&s<3600?'0:'+fmt(s):fmt(s)}
+function update(){const goal=parseClock(el('goal').value,'hours'),swim=parseClock(el('swim').value,'minutes'),bike=parseClock(el('bike').value,'hours'),t1=parseClock(el('t1').value,'minutes'),t2=parseClock(el('t2').value,'minutes'),runpace=parseClock(el('runpace').value,'minutes'),rd=+el('rundist').value,sd=+el('swimdist').value,bd=+el('bikedist').value;
+const values=[goal,swim,bike,t1,t2,runpace,rd,sd,bd];if(values.some(v=>!Number.isFinite(v)||v<=0)||goal>172800||rd>250||bd>1000||sd>50){el('error').textContent=L('Controleer alle tijden en afstanden. Gebruik bijvoorbeeld 05:00, 00:35:00 en 04:45.','Check all times and distances. Examples: 05:00, 00:35:00 and 04:45.');['required','projected','margin','budget','target-speed'].forEach(id=>el(id).textContent='—');el('status').textContent='—';el('scenarios').replaceChildren();return;}
+el('error').textContent='';const overhead=swim+bike+t1+t2,left=goal-overhead,projected=overhead+runpace*rd,margin=goal-projected,required=left/rd;
+el('required').textContent=left>0?fmt(required)+'/km':'—';
+el('projected').textContent=fmtDuration(projected);el('margin').textContent=(margin>=0?'+':'−')+fmtDuration(Math.abs(margin));el('budget').textContent=left>0?fmtDuration(left):'0:00';el('target-speed').textContent=left>0?(3600/required).toFixed(1)+' km/h':'—';
+el('status').textContent=left<=0?L('Je geplande swim-, fiets- en wisseltijden overschrijden je doeltijd al.','Your swim, bike and transition splits already exceed the goal.'):margin>=0?L('Met je verwachte looptempo zit je rekenkundig binnen je doel.','Your planned splits fit the goal mathematically.'):L('Met dit looptempo mis je je doel. Herzie je splits of doeltijd.','At this pace you miss your goal. Adjust your splits or target.');
+el('scenarios').replaceChildren();for(const loss of [0,120,300,600,900]){let tr=document.createElement('tr'),a=document.createElement('td'),b=document.createElement('td');a.textContent=loss===0?L('Volgens plan','As planned'):'+'+fmtDuration(loss);b.textContent=left-loss>0?fmt((left-loss)/rd)+'/km':L('Niet haalbaar','Not possible');tr.append(a,b);el('scenarios').appendChild(tr);}
+}
+el('dist').addEventListener('change',()=>{let d=dist[el('dist').value];if(d){['swimdist','bikedist','rundist'].forEach((id,i)=>el(id).value=d[i]);}update()});
+for(const x of document.querySelectorAll('input'))x.addEventListener('input',()=>{if(['swimdist','bikedist','rundist'].includes(x.id))el('dist').value='custom';update()});
+el('copy').addEventListener('click',async()=>{const summary=[L('TriZentro doeltijdcheck','TriZentro goal feasibility'),L('Doel','Goal')+': '+el('goal').value,L('Benodigd looptempo','Required run pace')+': '+el('required').textContent,L('Geplande eindtijd','Projected finish')+': '+el('projected').textContent,L('Marge','Margin')+': '+el('margin').textContent,location.href].join('\n');try{await navigator.clipboard.writeText(summary);el('copy').textContent=L('Gekopieerd!','Copied!')}catch(e){el('copy').textContent=L('Kopiëren niet beschikbaar','Copy unavailable')}});
+update();})();
+</script></body></html>
