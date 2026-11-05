@@ -83,3 +83,12 @@ test('volunteer no-show scenario recalculates staffing without unavailable perso
  assert.deepEqual(absent.absent,['VOL-03']);
  assert.throws(()=>tool.assign(people(),shifts(),{absentIds:['UNKNOWN']}));
 });
+
+test('understaffing is classified as a shortage of qualified people or availability',()=>{
+ const noSkill=tool.assign([{id:'A',available_from:'08:00',available_to:'12:00',skills:'course'}],[{id:'WATER',from:'09:00',to:'10:00',needed:'1',skill:'water'}]);
+ assert.equal(noSkill.shifts[0].diagnostic.cause,'skill-shortage');
+ const noWindow=tool.assign([{id:'B',available_from:'06:00',available_to:'08:00',skills:'water'}],[{id:'WATER',from:'09:00',to:'10:00',needed:'1',skill:'water'}]);
+ assert.equal(noWindow.shifts[0].diagnostic.cause,'availability-shortage');
+ const filled=tool.assign([{id:'C',available_from:'06:00',available_to:'10:00',skills:''}],[{id:'GENERAL',from:'07:00',to:'08:00',needed:'1',skill:''}]);
+ assert.equal(filled.shifts[0].diagnostic.cause,'filled');
+});
