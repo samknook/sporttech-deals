@@ -1318,3 +1318,5 @@ TriZentroAddTranslations('club-race-brief.html','nl',[
 ['Download template (.json)','Download template (.json)'],
 ['Startgroep C','Wave C'],['Startgroep D','Wave D'],['Startgroep E','Wave E'],['Startgroep F','Wave F']
 ]);
+
+TriZentroAddTranslations('club-race-brief.html','nl',[["Bewaar of laad je evenement als JSON-bestand op je eigen apparaat. Geen upload en geen automatische opslag. Na het laden moet je de tijden opnieuw controleren.","Save or load your event as a JSON file on your device. No upload or automatic saving. Recheck the times after loading."],["Het template wordt alleen gedownload als je dat zelf kiest.","The template is downloaded only when you choose to."],["Voer zelf de gegevens van de officiële deelnemershandleiding in. TriZentro maakt een overzicht voor maximaal zes startgroepen en controleert op opvallende tegenstrijdigheden. Download de conceptbriefing of print hem als PDF. Geen account en geen gegevensupload.","Enter information from the official athlete guide. TriZentro builds a timeline for up to six waves and checks for possible conflicts. Download or print the draft. No account or upload."]]);
