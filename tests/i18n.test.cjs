@@ -13,10 +13,10 @@ function loadCatalog(){
  for(const name of modules)vm.runInContext(script(name),context,{filename:name});
  return context.window.TriZentroTranslations;
 }
-test('all eighteen public pages load the single bilingual bundle before calculators and navigation',()=>{
+test('all twenty public pages load the single bilingual bundle before calculators and navigation',()=>{
  const sitemap=script('sitemap.xml');
  const names=[...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m=>new URL(m[1]).pathname.split('/').at(-1)||'index.html');
- assert.equal(names.length,19);
+ assert.equal(names.length,20);
  const scripts=[...modules,'i18n.js','navigation.js'];
  for(const name of names){
   const html=script(name);
