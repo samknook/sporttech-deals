@@ -31,7 +31,7 @@ function validate(values){
 }
 function analyze(values){
  const v=validate(values);
- const warnings=[],times=['checkin','bikeClose','transitionClose','briefing','waveA','waveB'];
+ const warnings=[],times=['checkin','bikeClose','transitionClose','briefing','waveA','waveB','waveC','waveD','waveE','waveF'];
  const t=Object.fromEntries(times.map(k=>[k,v[k]?timeToMinute(v[k]):null]));
  const waves=['waveA','waveB','waveC','waveD','waveE','waveF'];
  let previous=null;
