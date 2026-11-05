@@ -80,6 +80,13 @@ function assign(volunteers,shifts,options={}){
   });
   for(const p of candidates.slice(0,shift.needed)){shift.assigned.push(p.id);records.get(p.id).push(shift)}
   shift.unfilled=shift.needed-shift.assigned.length;
+  const qualified=people.filter(p=>!shift.skill||p.skills.has(shift.skill));
+  const available=qualified.filter(p=>p.availableFrom<=shift.from&&p.availableTo>=shift.to);
+  const busy=available.filter(p=>!shift.assigned.includes(p.id)&&records.get(p.id).some(x=>overlaps(x,shift)));
+  shift.diagnostic={
+   qualified:qualified.length,available:available.length,busy:busy.length,
+   cause:shift.unfilled===0?'filled':available.length<shift.needed?(qualified.length<shift.needed?'skill-shortage':'availability-shortage'):'overlap-or-capacity'
+  };
  }
  const uncovered=result.filter(x=>x.unfilled>0);
  const assigned=result.reduce((n,s)=>n+s.assigned.length,0);
