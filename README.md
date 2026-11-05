@@ -5,6 +5,10 @@
 
 [**Merkidentiteit, socialmedia- en Google-accountplan**](docs/BRAND_TRIZENTRO.md) · [**Brand Kit: PNG-avatar en banner**](https://samknook.github.io/sporttech-deals/brand-kit.html) · [**Live website (bestaande GitHub-URL)**](https://samknook.github.io/sporttech-deals/)
 
+## Strategische koers en organisatorpilot — 5 november 2026
+
+De [marktvergelijking](docs/MARKTSCAN_COMMERCIEEL_2026-11-05.md) toont dat veel consumenten-tools voor triatlonraceplanning al gratis of goedkoop verkrijgbaar zijn. Daarom is een voorgestelde betaalde Race Pack van €19,95 onvoldoende onderscheiden zonder extra bewijs. Consumententools blijven gratis; de potentieel betaalde richting verschuift voorlopig naar [Event Operations Pilot voor clubs en organisatoren](docs/organizer-pilot.html), met briefingtools, versieverschillen en vrijwilligersroostering. Dit is een hypothese en heeft **geen bevestigde klanten, verkopen of omzet**.
+
 ## Officiële wedstrijdbronnen — 5 november 2026
 
 In de gratis [Race Pack-preview](docs/race-pack-preview.html#official-sources) kunnen gebruikers optioneel de **HTTPS-link naar de officiële wedstrijdbriefing** en de datum van hun eigen controle vastleggen. Beide verschijnen in het racedossier en Race-Day Passport, en in lokaal opgeslagen concepten. Bestaande concepten worden zonder gegevensverlies gemigreerd. TriZentro haalt de bron niet op en **claimt nooit zelf geverifieerde evenementinformatie**. Regressietests voor de gegevensdoorgifte en compatibiliteit zijn toegevoegd aan [tests/test-race-passport.js](tests/test-race-passport.js).
