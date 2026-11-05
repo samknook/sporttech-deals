@@ -1218,3 +1218,7 @@ TriZentroAddTranslations('transparantie.html','nl',[
  ['verwijder je ze. Op gedeelde apparaten kan iemand met toegang tot hetzelfde browserprofiel het concept bekijken. Sla daarom geen gevoelige gezondheidsinformatie op.','to delete them. Others with access to the same browser profile on shared devices could read the draft. Do not store sensitive health details.'],
  ['Bewaar op dit apparaat','Save on this device'],['Laad opgeslagen concept','Load saved draft'],['Wis opgeslagen concept','Delete saved draft']
 ]);
+
+TriZentroAddTranslations('products.html','en',[
+ ['Optional save, load and delete of a local draft on your device','Optioneel een concept opslaan, laden en wissen op je eigen apparaat']
+]);
