@@ -69,3 +69,17 @@ An observable external comparator is Absurd Running's race partnership offer at 
 **Priority:** evolve the working Club Race Brief demo into a differentiated, organizer-approved, branded event communication deliverable. Avoid spending the next build cycle on generic 70.3 PDFs, training subscriptions or more calculators. Keep €149 only as an initial low-scope manual service hypothesis; do not present a €249–€499 event portal as available until built and reviewed. No clients, payment capability or live sales are currently verified.
 
 Market research can direct priorities without burdening the owner with repeated tester recruitment. It cannot establish TriZentro-specific purchase conversion or replace QA before publishing deadline-sensitive guidance. Owner input should be limited to business decisions, payments, contracts, account settings and legal formation.
+
+## Product milestone — standalone event portal export (5 November 2026)
+Implemented `club-event-portal.js` and integrated it into `club-race-brief.html`:
+- Builds a **self-contained, downloadable HTML page** for participants, readable on a phone, with a NL/EN switch, times, organizer-entered notes, official source link, document generation date, and static-snapshot disclaimer.
+- Organizer must first resolve every input warning and explicitly confirm reviewing the source and schedule.
+- Editing inputs invalidates the confirmation until another review is performed.
+- User-generated text is HTML-escaped to prevent script or markup injection. No analytics, external JS, cookies, uploads or participant tracking.
+- It is a local **file download**, not a hosted event portal or live information service. The organizer decides if/where the file is distributed and remains responsible for correctness and future updates.
+- Fictional preview: `event-portal-demo.html`, prominently labeled as a **fictional event** and excluded from the public sitemap.
+- Tests in `tests/club-event-portal.test.cjs` and mobile smoke cover validation, gating, safe output and NL/EN language.
+
+**Differentiation hypothesis:** an organizer-approved participant artifact is more useful than a plain text brief alone. It remains free to demonstrate value; paid customization, client support and a reliable update/distribution process are not yet operational.
+
+**Next engineering milestones:** versioned, reusable event templates, clearly marked update history, organizer approval workflow and safe static hosting guidance. Do not claim automatic updates, hosted accounts, user authentication, or official verification until actually built.
