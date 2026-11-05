@@ -1275,3 +1275,17 @@ TriZentroAddTranslations('club-race-brief.html','nl',[
  ['Voorbeeld Triatlon','Sample Triathlon'],['Stad / terrein','City / venue'],['Bijvoorbeeld: controleer het reglement en de toegangsroute.','Example: review race rules and the access route.']
 ]);
 Object.assign(TriZentroTranslations.pageTitles,{'club-race-brief.html':{nl:'Club Race Brief Builder',en:'Club Race Brief Builder'}});
+
+TriZentroAddTranslations('products.html','en',[
+ ['FOR CLUBS & EVENT ORGANIZERS · NEW DEMO','VOOR CLUBS EN ORGANISATOREN · NIEUWE DEMO'],
+ ['Turn race rules into one clear briefing.','Maak van wedstrijdregels één duidelijke briefing.'],
+ ['Preparing different wave starts, transition deadlines and participant instructions is time-consuming. Our free','Verschillende startgroepen, deadlines en deelnemersinstructies voorbereiden kost tijd. Onze gratis'],
+ ['Club Race Brief Builder','Club Race Brief Builder'],
+ ['turns information you supply from an official athlete guide into a bilingual draft timeline and highlights potential schedule conflicts.','maakt van de gegevens die jij uit de officiële deelnemershandleiding overneemt een tweetalige concepttijdlijn en signaleert mogelijke tegenstrijdigheden.'],
+ ['Try it now:','Probeer het nu:'],
+ ['build, copy, download or print a draft for one event. No account and no upload. Event rules are never automatically verified.','maak, kopieer, download of print een concept voor één wedstrijd. Zonder account of upload. Wedstrijdregels worden niet automatisch gecontroleerd op juistheid.'],
+ ['Potential business product — not for sale yet','Mogelijk zakelijk product — nog niet te koop'],
+ ['For clubs and smaller organizers, we are exploring a tailored event briefing service with branding, multiple waves, repeat-event templates and reviewed deliverables. A proposed pilot service could be priced per event; no price or delivery promise is active. Organizations remain responsible for official rules and participant communication.','Voor verenigingen en kleine organisatoren onderzoeken we een maatwerkdienst met eigen huisstijl, meerdere startgroepen, herbruikbare templates en nagekeken opleveringen. Een toekomstige pilot kan per evenement worden geprijsd; er is nog geen actieve prijs of leverbelofte. Organisatoren blijven verantwoordelijk voor officiële regels en deelnemerscommunicatie.'],
+ ['Open the free Club Race Brief Builder','Open de gratis Club Race Brief Builder'],
+ ['Discuss an organizer pilot','Bespreek een pilot voor organisatoren']
+]);
