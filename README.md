@@ -5,6 +5,14 @@
 
 [**Merkidentiteit, socialmedia- en Google-accountplan**](docs/BRAND_TRIZENTRO.md) · [**Brand Kit: PNG-avatar en banner**](https://samknook.github.io/sporttech-deals/brand-kit.html) · [**Live website (bestaande GitHub-URL)**](https://samknook.github.io/sporttech-deals/)
 
+## Race-Day Passport — 5 november 2026
+
+De [gratis 70.3 Race Pack-preview](docs/race-pack-preview.html#race-passport-section) bevat nu een mobiel **wedstrijdpaspoort** met verwachte finish, doeltijd, vijf doorkomstklokken, ochtendvertrek, zelf ingevoerde sluiting wisselzone en drie persoonlijke noodplannen. Met **Print alleen paspoort** is een compacte print/PDF-weergave beschikbaar. Geen backend of persoonsgegevensoverdracht.
+
+Technische onderdelen: [pure passport-viewmodel](docs/race-passport.js), [11-punts checklist](docs/race-pack-review.js), en [Node regressietest](tests/test-race-passport.js) (uitvoeren: `node tests/test-race-passport.js`). De berekeningen zijn steekproefsgewijs uitgevoerd en de code heeft een syntaxcontrole doorstaan; een echte browsertest en live GitHub Pages-controle zijn nog niet bevestigd.
+
+**Commerciële grens:** het paspoort is beschikbaar als gratis prototype, geen betaalproduct. Nooit als exclusieve premiumfunctie aanprijzen.
+
 ## Preparation Review — 5 november 2026
 
 De [70.3 Race Pack-preview](docs/race-pack-preview.html) heeft nu een **Preparation Review** met elf zelfcontrolepunten. Het overzicht onderscheidt ingevulde informatie van openstaande stappen; het is geen officiële wedstrijdverificatie. De punten komen ook in de tekstexport. De onafhankelijke berekeningsmodule staat in [race-pack-review.js](docs/race-pack-review.js). JavaScript-syntax en scriptstructuur zijn gecontroleerd, maar live browserwerking blijft ongeverifieerd.
