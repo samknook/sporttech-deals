@@ -1343,3 +1343,10 @@ TriZentroAddTranslations('index.html','nl',[["Plan niet alleen startgroepen en d
 TriZentroAddTranslations('volunteer-roster.html','nl',[["Wat-als: vrijwilliger afgemeld (code, optioneel)","What-if: volunteer no-show (optional ID)"],["Bijvoorbeeld VOL-03","For example VOL-03"],["Laat leeg voor het normale rooster. Vul een bestaande code in om opnieuw te roosteren zonder deze persoon.","Leave blank for the normal roster. Enter an existing ID to replan without that person."]]);
 
 TriZentroAddTranslations('volunteer-roster.html','nl',[["Oorzaak / actie","Cause / action"]]);
+
+// Goal Feasibility homepage introduction.
+TriZentroAddTranslations('index.html','nl',[
+['Nieuwe tool: Doeltijdcheck.','New tool: Goal Feasibility.'],
+['Bereken het benodigde looptempo voor je doeltijd en bekijk wat 2, 5, 10 of 15 minuten vertraging betekent.','Calculate the run pace needed for your target and see the effect of a 2, 5, 10 or 15-minute delay.'],
+['Check jouw doeltijd →','Check your goal time →']
+]);
