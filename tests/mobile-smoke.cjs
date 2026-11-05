@@ -147,6 +147,19 @@ async function test(){
   assert.equal(await page.locator('html').getAttribute('lang'),'en');
   assert.equal(await page.locator('#set-en').getAttribute('aria-pressed'),'true');
   assert.match(await page.locator('h2').first().innerText(),/Event timeline/);
+  // Volunteer operations: detect shortage and recalculate after one absence.
+  await page.goto(base+'/volunteer-roster.html?lang=nl');
+  await page.locator('#roster-content').waitFor({state:'visible'});
+  const missing=Number(await page.locator('#missing-slots').innerText());
+  assert.ok(missing>=1,'demo should visibly show an understaffed role');
+  await page.locator('#absent-volunteer').fill('VOL-03');
+  await page.locator('#roster-form button[type="submit"]').click();
+  const afterNoShow=Number(await page.locator('#missing-slots').innerText());
+  assert.ok(afterNoShow>=missing,'no-show cannot improve staffing coverage in this demo');
+  assert.doesNotMatch(await page.locator('#roster-rows').innerText(),/VOL-03/);
+  await page.locator('#absent-volunteer').fill('UNKNOWN');
+  await page.locator('#roster-form button[type="submit"]').click();
+  assert.equal(await page.locator('#roster-content').isVisible(),false);
   // No unhandled JavaScript errors throughout navigation and calculations.
   assert.deepEqual(errors,[],'uncaught browser errors');
   console.log('PASS: 390px mobile menu, localized navigation, brand homepage, 530 goal and NL/EN product pages');
