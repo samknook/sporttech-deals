@@ -1236,3 +1236,20 @@ TriZentroAddTranslations('race-pack-preview.html','en',[
 TriZentroAddTranslations('products.html','en',[
  ['Optional conflict check against the race-morning transition closure you enter from the official athlete guide','Optionele controle op een conflict met de sluitingstijd van de wisselzone die je zelf uit de officiële deelnemershandleiding invult']
 ]);
+
+/* Guided opt-in product test */
+TriZentroAddTranslations('tester-feedback.html','en',[
+ ['Try these four tasks before answering','Probeer deze vier opdrachten voordat je antwoordt'],
+ ['Open the','Open de'],
+ ['free Readiness Check','gratis voorbereidingscheck'],
+ ['and mark at least three planning items.','en vul minstens drie voorbereidingspunten in.'],
+ ['Race Pack preview','Race Pack-voorbeeld'],
+ ['. Enter a realistic target, for example','. Vul een realistische doeltijd in, bijvoorbeeld'],
+ ['for 05:30, and review the scenarios.','voor 05:30, en bekijk de scenario’s.'],
+ ['Find the race-morning schedule, enter an official transition closure time','Zoek het schema voor de wedstrijdochtend en vul een officiële sluitingstijd van de wisselzone in'],
+ ['only if you know it','alleen als je die kent'],
+ [', and try the Save / Load draft buttons.',', en probeer de knoppen om een concept te bewaren en te laden.'],
+ ['Download a sample dossier, then return here to share what was useful and what was confusing.','Download een voorbeelddossier en kom dan terug om te vertellen wat nuttig en wat verwarrend was.'],
+ ['About ten minutes.','Ongeveer tien minuten.'],
+ ['No account or purchase required. You can use sample race values; please do not share personal health information or sensitive race notes.','Geen account of aankoop nodig. Je mag voorbeeldwaarden gebruiken; deel geen persoonlijke gezondheidsinformatie of gevoelige wedstrijdnotities.']
+]);
