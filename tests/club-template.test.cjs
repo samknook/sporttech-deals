@@ -40,3 +40,15 @@ test('browser form loads templates only after validation and makes review expire
  assert.match(html,/Version/);
  assert.match(html,/v3\.2/);
 });
+
+test('template differences reveal only changed organizer fields',()=>{
+ const previous=valid(),current={...previous,waveC:'08:35',venue:'Different venue'};
+ const rows=template.differences(previous,current,core);
+ assert.deepEqual(rows.map(row=>row.key),['venue','waveC']);
+ assert.equal(rows.find(row=>row.key==='waveC').before,'08:30');
+ assert.equal(rows.find(row=>row.key==='waveC').after,'08:35');
+ assert.deepEqual(template.differences(previous,previous,core),[]);
+ const page=fs.readFileSync(path.join(__dirname,'../docs/club-race-brief.html'),'utf8');
+ assert.match(page,/id="template-changes"/);
+ assert.match(page,/refreshTemplateChanges/);
+});
