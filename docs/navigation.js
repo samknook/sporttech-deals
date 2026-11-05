@@ -18,6 +18,7 @@ const groups=[
     [tr('Race Dashboard','Race Dashboard'),'race-dashboard.html'],
     [tr('Race Planner','Race Planner'),'race-planner.html'],
     [tr('Eindtijdcalculator','Finish Time Calculator'),'triathlon-calculator.html'],
+    [tr('Doeltijdcheck','Goal Feasibility'),'goal-feasibility.html'],
     [tr('Voedingscalculator','Fuel Planner'),'race-fuel-planner.html'],
     [tr('Wedstrijddagplanning','Race Day Timeline'),'race-day-timeline.html']
   ]},
