@@ -1341,3 +1341,5 @@ TriZentroAddTranslations('products.html','en',[["NEW · EVENT OPERATIONS","NIEUW
 TriZentroAddTranslations('index.html','nl',[["Plan niet alleen startgroepen en deadlines, maar ook vrijwilligers: maak automatisch een roostervoorstel en ontdek waar mensen ontbreken. Gratis demonstraties in Nederlands en Engels.","Plan not only wave starts and deadlines, but volunteers too: generate a roster proposal automatically and see where staffing is missing. Free demos in Dutch and English."],["Plan vrijwilligers →","Schedule volunteers →"]]);
 
 TriZentroAddTranslations('volunteer-roster.html','nl',[["Wat-als: vrijwilliger afgemeld (code, optioneel)","What-if: volunteer no-show (optional ID)"],["Bijvoorbeeld VOL-03","For example VOL-03"],["Laat leeg voor het normale rooster. Vul een bestaande code in om opnieuw te roosteren zonder deze persoon.","Leave blank for the normal roster. Enter an existing ID to replan without that person."]]);
+
+TriZentroAddTranslations('volunteer-roster.html','nl',[["Oorzaak / actie","Cause / action"]]);
