@@ -1253,3 +1253,25 @@ TriZentroAddTranslations('tester-feedback.html','en',[
  ['About ten minutes.','Ongeveer tien minuten.'],
  ['No account or purchase required. You can use sample race values; please do not share personal health information or sensitive race notes.','Geen account of aankoop nodig. Je mag voorbeeldwaarden gebruiken; deel geen persoonlijke gezondheidsinformatie of gevoelige wedstrijdnotities.']
 ]);
+
+/* Club race briefing demo: NL native, English companion. */
+TriZentroAddTranslations('club-race-brief.html','nl',[
+ ['TriZentro voor clubs en organisatoren · GRATIS DEMO','TriZentro for clubs and organizers · FREE DEMO'],
+ ['Maak één duidelijke','Create one clear'],['wedstrijdbriefing.','race briefing.'],
+ ['Voer zelf de gegevens van de officiële deelnemershandleiding in. TriZentro maakt een overzicht voor twee startgroepen en controleert op opvallende tegenstrijdigheden. Download de conceptbriefing of print hem als PDF. Geen account en geen gegevensupload.','Enter the details from the official athlete guide yourself. TriZentro creates a briefing for two wave groups and flags conflicting times. Download the draft or print it as a PDF. No account or upload required.'],
+ ['01 · Wedstrijdinformatie','01 · Event information'],
+ ['Naam evenement *','Event name *'],['Wedstrijddatum *','Race date *'],['Locatie','Venue'],['Officiële deelnemersgids (URL)','Official athlete guide (URL)'],
+ ['02 · Tijden uit officiële bron','02 · Times from the official source'],
+ ['Alle tijden moeten op dezelfde wedstrijddag vallen, in de lokale tijd van het evenement. Laat niet-bekende tijden leeg. Gebruik de officiële informatie, geen aannames.','All times must fall on the same race day, in event-local time. Leave unknown fields blank. Use official information, not guesses.'],
+ ['Registratie / incheck opent','Registration / check-in opens'],['Fietsincheck sluit','Bike check-in closes'],['Wisselzone sluit','Transition closes'],['Wedstrijdbriefing','Race briefing'],['Startgroep A *','Wave A *'],['Startgroep B','Wave B'],
+ ['Bijzonderheden','Additional notes'],['Maak conceptbriefing','Create draft briefing'],['Reset voorbeeld','Reset example'],['03 · Voorbeeldbriefing','03 · Draft briefing'],
+ ['Nog geen definitieve wedstrijdpublicatie — controleer altijd de officiële bron.','Not an official event publication — always verify the source.'],
+ ['Vul de gegevens in en maak je briefing.','Enter your details to build the briefing.'],['Tijd','Time'],['Onderdeel','Item'],
+ ['Download .txt','Download .txt'],['Kopieer tekst','Copy text'],['Print / bewaar als PDF','Print / save as PDF'],
+ ['Deze demonstratie is geen officieel geverifieerd bericht. Een organisator blijft verantwoordelijk voor de juistheid, publicatie en eventuele wijzigingen. Controleer alle sluitingstijden, veiligheidseisen en startgroepen.','This demo is not an officially verified notice. The organizer remains responsible for accuracy, publication and updates. Check all closing times, safety rules and wave groups.'],
+ ['Voor organisaties: wat kan TriZentro later bieden?','For organizations: what could TriZentro offer next?'],
+ ['Dit is een functioneel prototype. Een toekomstige zakelijke editie kan een eigen huisstijl, meerdere startgroepen, bewerkbare exports en herbruikbare evenementtemplates krijgen. Die functies en prijzen zijn nog niet beschikbaar en worden pas aangeboden wanneer ze zijn ontwikkeld.','This is a working prototype. A future business edition could offer your branding, more waves, editable exports and reusable event templates. These features and prices are not available yet.'],
+ ['Bespreek een clubversie','Discuss a club edition'],['Bekijk alle tools','Explore all tools'],['Transparantie en privacy','Transparency and privacy'],
+ ['Voorbeeld Triatlon','Sample Triathlon'],['Stad / terrein','City / venue'],['Bijvoorbeeld: controleer het reglement en de toegangsroute.','Example: review race rules and the access route.']
+]);
+Object.assign(TriZentroTranslations.pageTitles,{'club-race-brief.html':{nl:'Club Race Brief Builder',en:'Club Race Brief Builder'}});
