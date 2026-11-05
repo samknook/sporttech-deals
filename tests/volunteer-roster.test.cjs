@@ -74,3 +74,12 @@ test('public tool is locally computed and explicitly labels the output as a prop
  assert.match(html,/geen echte namen/);
  assert.match(html,/voorstel/);
 });
+
+test('volunteer no-show scenario recalculates staffing without unavailable person',()=>{
+ const normal=tool.assign(people(),shifts());
+ const absent=tool.assign(people(),shifts(),{absentIds:['VOL-03']});
+ assert.ok(absent.unfilled>=normal.unfilled);
+ assert.ok(!absent.shifts.some(s=>s.assigned.includes('VOL-03')));
+ assert.deepEqual(absent.absent,['VOL-03']);
+ assert.throws(()=>tool.assign(people(),shifts(),{absentIds:['UNKNOWN']}));
+});
