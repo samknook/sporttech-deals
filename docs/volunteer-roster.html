@@ -12,6 +12,7 @@
 .vr h2{font-size:24px;margin:0 0 14px}.vr p{line-height:1.65}
 .vr-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .vr label{font-weight:750;display:block;margin-bottom:8px}
+.vr-absence{margin-top:16px;padding:14px;background:#f2f8f4;border-radius:10px}.vr-absence input{width:min(100%,330px);min-height:44px;padding:10px;border:1px solid #a7c2b4;border-radius:9px;font:inherit}
 .vr textarea{width:100%;min-height:205px;padding:12px;border:1px solid #a7c2b4;border-radius:10px;font:13px/1.55 ui-monospace,SFMono-Regular,monospace;resize:vertical;background:#fbfdfb;color:#15352b}
 .vr textarea:focus-visible,.vr button:focus-visible{outline:3px solid #47ae89;outline-offset:2px}
 .vr button{min-height:44px;background:#155e4b;color:white;font:inherit;font-weight:850;border:0;border-radius:10px;padding:11px 19px;cursor:pointer}
@@ -58,6 +59,7 @@ COURSE,10:00,12:00,3,course
 FINISH,12:00,13:00,3,course</textarea>
 <p class="small" id="shift-help">Vereist: id,from,to,needed,skill. Skill mag leeg zijn voor algemene taken. Alle diensten vallen op één wedstrijddag.</p></div>
 </div>
+<div class="vr-absence"><label for="absent-volunteer">Wat-als: vrijwilliger afgemeld (code, optioneel)</label><input id="absent-volunteer" maxlength="32" placeholder="Bijvoorbeeld VOL-03"><p class="small">Laat leeg voor het normale rooster. Vul een bestaande code in om opnieuw te roosteren zonder deze persoon.</p></div>
 <div class="vr-actions"><button type="submit">Maak automatisch rooster</button><button id="reset-roster" class="alt" type="reset">Herstel voorbeeld</button></div>
 </form>
 <section id="roster-results" class="vr-panel" aria-labelledby="roster-title">
@@ -94,7 +96,8 @@ function draw(e){
  try{
   const people=engine.parseCsv(get('volunteers').value,['id','available_from','available_to','skills']);
   const shifts=engine.parseCsv(get('shifts').value,['id','from','to','needed','skill']);
-  plan=engine.assign(people,shifts);
+  const absent=get('absent-volunteer').value.trim();
+  plan=engine.assign(people,shifts,{absentIds:absent?[absent]:[]});
   for(const [id,val] of [['total-slots',plan.required],['filled-slots',plan.assigned],['missing-slots',plan.unfilled],['used-volunteers',plan.utilized]])get(id).textContent=String(val);
   const out=get('roster-rows');out.replaceChildren();
   for(const slot of plan.shifts){
@@ -111,6 +114,7 @@ function draw(e){
   get('roster-status').textContent=plan.unfilled?
     localized('Er zijn '+plan.unfilled+' open dienstenplekken. Bekijk de tekorten hieronder.','There are '+plan.unfilled+' unfilled shift places. Review shortages below.'):
     localized('Alle dienstenplekken zijn in dit voorstel ingevuld. Controleer het rooster handmatig.','All shift places are filled in this proposal. Review it manually.');
+  if(plan.absent.length)get('roster-status').textContent+=localized(' Scenario zonder: ',' Scenario excluding: ')+plan.absent.join(', ')+'.';
  }catch(error){
   plan=null;get('roster-content').hidden=true;get('roster-status').dataset.status='warn';
   get('roster-status').textContent=localized('Controleer je CSV-koppen, tijden, aantallen en unieke codes.','Check CSV headers, times, counts and unique IDs.');
