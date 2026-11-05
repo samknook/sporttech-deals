@@ -242,6 +242,27 @@ checks:[...document.querySelectorAll("#checklist label")].map(el=>({checked:el.q
 notes:$("race-notes").value
 });
 if(deadline.status!=="not-entered")exported+="\n\n"+(nl?"SLUITING WISSELZONE (ZELF INGEVULD)":"TRANSITION CLOSURE (USER-ENTERED)")+"\n"+deadline.message;
+
+const stressIds=["shock-swim","shock-bike","shock-transition","shock-run"];
+const stressMax=[120,240,60,180];
+const stressMinutes=stressIds.map((id,i)=>{
+ const raw=$(id).value.trim(),n=Number(raw);
+ if(raw===""||!Number.isInteger(n)||n<0||n>stressMax[i])throw Error(nl?"Controleer de extra minuten van de Stress Test.":"Check the Stress Test extra minutes.");
+ return n;
+});
+const stressExtraSeconds=stressMinutes.reduce((sum,n)=>sum+n,0)*60;
+const stressFinish=base.total+stressExtraSeconds;
+const stressMargin=base.target===null?null:base.target-stressFinish;
+const stressRemaining=base.target===null?null:base.target-(base.swim+base.bike+base.t1+base.t2+60*(stressMinutes[0]+stressMinutes[1]+stressMinutes[2]));
+const stressPace=stressRemaining===null||stressRemaining<=0?null:stressRemaining/21.0975;
+const stressPaceText=stressPace===null?"—":Math.floor(Math.round(stressPace)/60)+":"+String(Math.round(stressPace)%60).padStart(2,"0")+"/km";
+exported+="\\n\\n"+(nl?"RACE STRESS TEST — EIGEN TIJDVERLIES":"RACE STRESS TEST — USER-ENTERED DELAYS")
+ +"\\n"+(nl?"Extra minuten zwemmen, fietsen, wissels, lopen: ":"Extra swim, bike, transition, run minutes: ")+stressMinutes.join(" / ")
+ +"\\n"+(nl?"Nieuwe eindtijd: ":"New finish time: ")+core.formatDuration(stressFinish)
+ +"\\n"+(nl?"Marge tot doel: ":"Goal margin: ")+(stressMargin===null?"—":(stressMargin<0?"−":"+")+core.formatDuration(Math.abs(stressMargin)))
+ +"\\n"+(nl?"Benodigd looptempo vóór extra loopvertraging: ":"Required run pace before added run delay: ")+stressPaceText
+ +"\\n"+(nl?"Scenario is geen prestatieve voorspelling.":"Scenario is not a performance forecast.");
+
 }catch(e){$("error").hidden=false;$("error").textContent=e.message;$("result-content").hidden=true;$("download").disabled=true;exported="";}
 }
 document.querySelectorAll("input,textarea").forEach(el=>el.addEventListener("input",render));
@@ -263,6 +284,7 @@ $("load-draft").addEventListener("click",()=>{
   const draft=draftStorage.load(storageRef());
   if(!draft){$("draft-status").textContent=draftText("No saved draft on this device.","Geen opgeslagen concept op dit apparaat.");return;}
   draftStorage.apply(document,draft);
+  document.getElementById("shock-swim").dispatchEvent(new Event("input",{bubbles:true}));
   render();
   $("draft-status").textContent=exported?draftText("Saved draft loaded. Review your plan before relying on it.","Opgeslagen concept geladen. Controleer je plan voordat je het gebruikt."):draftText("Draft loaded, but some values need correction.","Concept geladen, maar sommige waarden moeten worden gecorrigeerd.");
  }catch(e){$("draft-status").textContent=draftText("This draft could not be loaded. It may be damaged or from another version. You can delete it.","Dit concept kon niet worden geladen. Het is mogelijk beschadigd of van een andere versie. Je kunt het wissen.");}
