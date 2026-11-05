@@ -1,5 +1,8 @@
 # TriZentro — 10-person beta test launch kit
 
+**Update 5 November 2026:** The [guided four-task product test](tester-feedback.html) now walks volunteers through the Readiness Check, a 05:30 example, Race Pack saving/loading and the sample export before they answer the six feedback questions. Use this single link as the final test step. The form does not submit responses without the tester's action.
+
+
 Date: 4 November 2026
 
 ## Purpose
