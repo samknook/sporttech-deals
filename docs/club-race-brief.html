@@ -29,6 +29,7 @@
 .club-table td:first-child{font-variant-numeric:tabular-nums;font-weight:820;white-space:nowrap}
 .club small,.club .hint{font-size:13px;color:#5c736d}
 .club-note{padding:12px 15px;background:#f1f7f5;border-radius:10px;font-size:14px}
+.club-workspace{padding-bottom:18px;border-bottom:1px solid #d7e6dd;margin-bottom:23px}.club-workspace h2{margin:0 0 9px}.club-workspace p{font-size:14px;line-height:1.55}
 .portal-export{margin-top:22px;border-top:1px solid #d2e4d8;padding-top:18px}
 .portal-export h3{font-size:20px;margin:0 0 8px}
 .portal-export p{line-height:1.55}
@@ -44,8 +45,16 @@
 <main class="club">
 <div class="eyebrow">TriZentro voor clubs en organisatoren · GRATIS DEMO</div>
 <h1>Maak één duidelijke<br><em>wedstrijdbriefing.</em></h1>
-<p class="intro">Voer zelf de gegevens van de officiële deelnemershandleiding in. TriZentro maakt een overzicht voor twee startgroepen en controleert op opvallende tegenstrijdigheden. Download de conceptbriefing of print hem als PDF. Geen account en geen gegevensupload.</p>
+<p class="intro">Voer zelf de gegevens van de officiële deelnemershandleiding in. TriZentro maakt een overzicht voor maximaal zes startgroepen en controleert op opvallende tegenstrijdigheden. Download de conceptbriefing of print hem als PDF. Geen account en geen gegevensupload.</p>
 <form id="club-form" class="club-panel" novalidate>
+<div class="club-workspace">
+<h2>Herbruikbaar evenementtemplate</h2>
+<p>Bewaar of laad je evenement als JSON-bestand op je eigen apparaat. Geen upload en geen automatische opslag. Na het laden moet je de tijden opnieuw controleren.</p>
+<div class="club-grid"><label>Versienummer <input id="revision" value="v1" maxlength="8" pattern="v[0-9]{1,3}(\\.[0-9]{1,3})?"></label>
+<label>Laad een eerder opgeslagen template <input id="import-template" type="file" accept=".json,application/json"></label></div>
+<div class="club-actions"><button type="button" id="export-template" class="alt">Download template (.json)</button></div>
+<p id="template-status" class="hint" role="status" aria-live="polite">Het template wordt alleen gedownload als je dat zelf kiest.</p>
+</div>
 <h2>01 · Wedstrijdinformatie</h2>
 <div class="club-grid">
 <label>Naam evenement *<input id="event" maxlength="120" required value="Voorbeeld Triatlon"></label>
@@ -62,6 +71,10 @@
 <label>Wedstrijdbriefing<input id="briefing" type="time" value="07:40"></label>
 <label>Startgroep A *<input id="waveA" type="time" value="08:00" required></label>
 <label>Startgroep B<input id="waveB" type="time" value="08:15"></label>
+<label>Startgroep C<input id="waveC" type="time"></label>
+<label>Startgroep D<input id="waveD" type="time"></label>
+<label>Startgroep E<input id="waveE" type="time"></label>
+<label>Startgroep F<input id="waveF" type="time"></label>
 <label class="full">Bijzonderheden<textarea id="notes" maxlength="500" placeholder="Bijvoorbeeld: controleer het reglement en de toegangsroute."></textarea></label>
 </div>
 <div class="club-actions"><button type="submit">Maak conceptbriefing</button><button type="reset" class="alt">Reset voorbeeld</button></div>
@@ -95,11 +108,12 @@
 <footer><div class="wrap"><a href="transparantie.html">Transparantie en privacy</a></div></footer>
 <script src="club-brief-core.js"></script>
 <script src="club-event-portal.js"></script>
+<script src="club-template.js"></script>
 <script>
 (()=>{'use strict';
 const el=id=>document.getElementById(id);
 const locale=window.TriZentroI18n?.lang||'nl',nl=locale!=='en';
-const tx=(a,b)=>nl?a:b,keys=['event','date','venue','guide','checkin','bikeClose','transitionClose','briefing','waveA','waveB','notes'];
+const tx=(a,b)=>nl?a:b,keys=['event','date','venue','guide','checkin','bikeClose','transitionClose','briefing','waveA','waveB','waveC','waveD','waveE','waveF','notes'];
 if(!nl&&el('event').value==='Voorbeeld Triatlon')el('event').value='Sample Triathlon';
 let output='',currentAnalysis=null;
 function update(event){
@@ -126,6 +140,35 @@ function update(event){
  }
 }
 
+
+function templateDownload(){
+ try{
+  const values=Object.fromEntries(keys.map(k=>[k,el(k).value]));
+  const template=window.TriZentroClubTemplate.create(values,el('revision').value,window.TriZentroClubBrief);
+  const payload=JSON.stringify(template,null,2);
+  const url=URL.createObjectURL(new Blob([payload],{type:'application/json;charset=utf-8'}));
+  const link=document.createElement('a');link.href=url;link.download=window.TriZentroClubTemplate.filename(template.values.event,template.revision);
+  document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  el('template-status').textContent=tx('Template gedownload. Bewaar het JSON-bestand zelf.','Template downloaded. Keep the JSON file yourself.');
+ }catch(e){el('template-status').textContent=tx('Controleer je evenementgegevens en gebruik een versie zoals v1 of v1.1.','Check event fields and enter a version such as v1 or v1.1.');}
+}
+el('export-template').addEventListener('click',templateDownload);
+el('import-template').addEventListener('change',async()=>{
+ const file=el('import-template').files?.[0];
+ if(!file)return;
+ try{
+  if(file.size>15000)throw Error('too large');
+  const contents=await file.text(),template=window.TriZentroClubTemplate.parse(contents,window.TriZentroClubBrief);
+  // Validation runs first: no partial overwrite if the template is broken.
+  const inputs=keys.map(k=>el(k));if(inputs.some(x=>!x))throw Error('form changed');
+  inputs.forEach((input,i)=>{input.value=template.values[keys[i]]});
+  el('revision').value=template.revision;
+  el('organizer-review').checked=false;
+  update();
+  el('template-status').textContent=tx('Template geladen. Controleer opnieuw alle officiële tijden en de bron.','Template loaded. Review all official times and source again.');
+ }catch(e){el('template-status').textContent=tx('Dit bestand is geen geldig TriZentro-template. Huidige invoer behouden.','This is not a valid TriZentro template. Current inputs preserved.');}
+ finally{el('import-template').value='';}
+});
 function updatePortalAvailability(){
  const allowed=!!currentAnalysis&&currentAnalysis.warnings.length===0&&el('organizer-review').checked;
  el('download-portal').disabled=!allowed;
@@ -143,7 +186,7 @@ el('club-form').addEventListener('input',()=>{
 el('download-portal').addEventListener('click',()=>{
  if(!currentAnalysis||currentAnalysis.warnings.length||!el('organizer-review').checked)return;
  try{
-  const doc=window.TriZentroEventPortal.documentHtml(currentAnalysis,{organizerConfirmed:true});
+  const doc=window.TriZentroEventPortal.documentHtml(currentAnalysis,{organizerConfirmed:true,revision:el('revision').value});
   window.TriZentroEventPortal.download('trizentro-event-participant-brief.html',doc);
   el('portal-status').textContent=tx('HTML-bestand gemaakt. Controleer het bestand zelf vóór je het deelt of publiceert.','HTML file created. Review it yourself before sharing or publishing.');
  }catch(e){el('portal-status').textContent=tx('Kon de pagina niet maken. Controleer de bron en tijden.','Could not create page. Check source and schedule.');}
