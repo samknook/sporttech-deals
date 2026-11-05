@@ -5,6 +5,13 @@
 
 [**Merkidentiteit, socialmedia- en Google-accountplan**](docs/BRAND_TRIZENTRO.md) · [**Brand Kit: PNG-avatar en banner**](https://samknook.github.io/sporttech-deals/brand-kit.html) · [**Live website (bestaande GitHub-URL)**](https://samknook.github.io/sporttech-deals/)
 
+## Ontwikkeling 5 november 2026 — betere racebeslissingen
+
+- Nieuwe [Goal Feasibility Calculator](docs/goal-feasibility.html) voor Sprint, Olympisch, 70.3, Full en eigen afstand. Rekent benodigd looptempo en tijdverlies door; volledig lokaal, NL/EN.
+- De [70.3 Race Pack-preview](docs/race-pack-preview.html) heeft nu een aparte **Race Stress Test** voor vertraging tijdens zwemmen, fietsen, wissels en lopen. De uitkomsten zijn scenario's, geen sportmedische voorspellingen.
+- Beide functies hebben een ontwikkelcommit; de publieke GitHub Pages-publicatie en browserwerking zijn nog niet onafhankelijk geverifieerd.
+- Verdienmodel blijft hypothetisch: er is nog geen betaalproduct, klantbetaling of gevalideerde betalingsbereidheid.
+
 ## Historische SportTech Deals-prijsscanner
 
 **Status: prototype. Niet commercieel gepubliceerd.**
