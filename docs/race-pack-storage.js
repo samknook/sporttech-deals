@@ -41,9 +41,14 @@ function capture(doc){
 }
 function apply(doc,draft){
  const data=validate(draft);
- for(const id of fields)doc.getElementById(id).value=data.values[id];
+ // Check the complete form BEFORE changing a single field. If the UI
+ // has changed or a field is missing, never partially overwrite a plan.
+ const elements=fields.map(id=>doc.getElementById(id));
  const inputs=[...doc.querySelectorAll('#checklist input[type="checkbox"]')];
- if(inputs.length!==data.checks.length)throw Error('Race pack checklist changed.');
+ if(elements.some(el=>!el||typeof el.value!=='string')||inputs.length!==data.checks.length){
+  throw Error('Race pack form changed; saved data was not applied.');
+ }
+ fields.forEach((id,i)=>{elements[i].value=data.values[id]});
  inputs.forEach((el,i)=>{el.checked=data.checks[i]});
  return data;
 }
