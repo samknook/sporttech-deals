@@ -85,6 +85,7 @@
 const el=id=>document.getElementById(id);
 const locale=window.TriZentroI18n?.lang||'nl',nl=locale!=='en';
 const tx=(a,b)=>nl?a:b,keys=['event','date','venue','guide','checkin','bikeClose','transitionClose','briefing','waveA','waveB','notes'];
+if(!nl&&el('event').value==='Voorbeeld Triatlon')el('event').value='Sample Triathlon';
 let output='';
 function update(event){
  if(event)event.preventDefault();
@@ -108,7 +109,7 @@ function update(event){
  }
 }
 el('club-form').addEventListener('submit',update);
-el('club-form').addEventListener('reset',()=>setTimeout(update,0));
+el('club-form').addEventListener('reset',()=>setTimeout(()=>{if(!nl&&el('event').value==='Voorbeeld Triatlon')el('event').value='Sample Triathlon';update();},0));
 el('download-brief').addEventListener('click',()=>{if(!output)return;const blob=new Blob([output],{type:'text/plain;charset=utf-8'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='trizentro-club-race-brief.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);});
 el('copy-brief').addEventListener('click',async()=>{if(!output)return;try{await navigator.clipboard.writeText(output);el('brief-meta').textContent=tx('Tekst gekopieerd.','Text copied.');}catch(e){el('brief-meta').textContent=tx('Kopiëren niet mogelijk. Gebruik de downloadknop.','Cannot copy. Use download instead.');}});
 el('print-brief').addEventListener('click',()=>window.print());
