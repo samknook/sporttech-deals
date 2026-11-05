@@ -113,3 +113,27 @@ test('language switch works at runtime and preserves language on internal links'
  assert.equal(english.context.document.documentElement.lang,'en');
  assert.ok(english.link.href.includes('lang=en'));
 });
+
+test('prominent homepage messages stay in the selected language',()=>{
+ const catalog=loadCatalog();
+ const nl=catalog['index.html'].nl;
+ const en=catalog['index.html'].en;
+ const requiredNl=[
+  'Start here · Free 70.3 assessment',
+  'What should you prepare next?',
+  'The race-week checklist you can actually follow',
+  'Read the race-week guide',
+  'Check your preparation'
+ ];
+ const requiredEn=[
+  'Race slimmer.',
+  'Kies waar je wilt beginnen',
+  'Wat wil je vandaag doen?',
+  'Koop met meer zekerheid',
+  'Fietscomputer voor triatlon'
+ ];
+ for(const text of requiredNl)assert.ok(nl[text], 'Missing Dutch homepage translation for: '+text);
+ for(const text of requiredEn)assert.ok(en[text], 'Missing English homepage translation for: '+text);
+ assert.equal(nl['What should you prepare next?'],'Wat moet je nog voorbereiden?');
+ assert.equal(en['Race slimmer.'],'Race smarter.');
+});
