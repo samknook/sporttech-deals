@@ -53,3 +53,16 @@ test('mobile categories collapse and expand without exposing every page at once'
  assert.match(navigation,/mobileGroups\.forEach/);
  assert.match(siteCss,/tz-mobile-group\[open\]/);
 });
+
+test('homepage has one clear three-step onboarding path on mobile',()=>{
+ const html=fs.readFileSync(path.join(docs,'index.html'),'utf8');
+ const match=html.match(/<section class="section tz-onboarding"[\s\S]*?<\/section>/);
+ assert.ok(match,'three-step onboarding section not found');
+ const onboarding=match[0];
+ assert.equal((onboarding.match(/<article>/g)||[]).length,3,'expected three clear entry steps');
+ for(const href of ['70-3-readiness-check.html','race-dashboard.html','race-pack-preview.html','first-70-3-race-week-checklist.html','products.html']){
+  assert.ok(onboarding.includes('href="'+href+'"'),href+' missing from focused onboarding');
+ }
+ assert.match(siteCss,/\.tz-journey/);
+ assert.match(siteCss,/@media\(max-width:800px\)/);
+});
