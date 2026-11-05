@@ -1,6 +1,13 @@
 name: TriZentro mobile browser smoke test
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - 'tests/mobile-smoke.cjs'
+      - '.github/workflows/mobile-smoke.yml'
   pull_request:
     paths:
       - 'docs/**'
