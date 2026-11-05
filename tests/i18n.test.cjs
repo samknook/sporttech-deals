@@ -4,7 +4,7 @@ const fs=require('node:fs');
 const path=require('node:path');
 const vm=require('node:vm');
 const docs=path.join(__dirname,'..','docs');
-const modules=['translations.js','translations-pages.js','translations-more.js','translations-readiness.js','translations-tools.js','translations-guides.js','translations-race-guides.js','translations-equipment.js','translations-privacy.js'];
+const modules=['translations-bundle.js'];
 const script=name=>fs.readFileSync(path.join(docs,name),'utf8');
 function loadCatalog(){
  const context={};
@@ -13,7 +13,7 @@ function loadCatalog(){
  for(const name of modules)vm.runInContext(script(name),context,{filename:name});
  return context.window.TriZentroTranslations;
 }
-test('all eighteen public pages load bilingual modules in the right order',()=>{
+test('all eighteen public pages load the single bilingual bundle before calculators and navigation',()=>{
  const sitemap=script('sitemap.xml');
  const names=[...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m=>new URL(m[1]).pathname.split('/').at(-1)||'index.html');
  assert.equal(names.length,18);
