@@ -64,3 +64,13 @@ test('Race Pack UI exposes safe explicit save, load and delete controls',()=>{
  assert.match(html,/draftStorage\.remove\(storageRef\(\)\)/);
  assert.match(privacy,/Race Pack-concepten en apparaatopslag/);
 });
+
+test('previously saved Race Pack drafts without new optional deadline still load',()=>{
+ const old=fixture();
+ delete old.values['transition-close'];
+ const db=memoryStorage();
+ db.setItem(storage.KEY,JSON.stringify(old));
+ const actual=storage.load(db);
+ assert.equal(actual.values['transition-close'],'');
+ assert.equal(actual.values['race-name'],'First 70.3');
+});
