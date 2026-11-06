@@ -8,6 +8,7 @@
 <option value="missing">Factuur ontbreekt in de aangeleverde bron</option>
 <option value="unknown">Bron bevat onbekende betaalstatus</option>
 <option value="future">Bronwaarde is gedateerd ná de peildatum</option>
+<option value="stale">Een betaalstatus is weken geleden gecontroleerd</option>
 </select><div class="grid"><div class="fact"><h2>Voorgestelde uitspraak</h2><p id="claim">—</p></div><div class="fact"><h2>Aangeleverde gegevens</h2><pre id="records">—</pre></div></div><div class="result" id="outcome" role="status">—</div><h3>Controlepunten voor de medewerker</h3><ul id="checks"><li>Controleer de identiteit van de klant en het bronsysteem.</li><li>Controleer of de bron actueel en bevoegd toegankelijk is.</li><li>Keurt geen externe reactie goed zonder feitelijke verificatie.</li></ul>
 <p class="muted" id="note">Een overeenkomst met een aangeleverde waarde is geen onafhankelijke bevestiging dat de werkelijkheid klopt.</p></div>
 <div class="panel"><h2>Wat verkopen wij dan?</h2><p>De gratis demonstratie toont alleen de vergelijking met vaste fictieve waarden. Voor een echte klant richten we na overeenkomst de veilige toegang tot diens toegestane bronsystemen, verwerking van AI-concepten, uitzonderingen, autorisaties en acceptatietests in. Er zijn nog geen echte koppelingen of klantinstallaties operationeel.</p>
@@ -22,9 +23,10 @@ matched:{claim:{...base,value:'unpaid'},records:[record('unpaid')]},
 conflict:{claim:{...base,value:'paid'},records:[record('paid'),record('unpaid','2026-11-05','Fictief betaaloverzicht')]},
 missing:{claim:{...base,value:'paid'},records:[]},
 unknown:{claim:{...base,value:'paid'},records:[record('unknown')]},
-future:{claim:{...base,value:'paid'},records:[record('paid','2026-11-08')]}
+future:{claim:{...base,value:'paid'},records:[record('paid','2026-11-08')]},
+stale:{claim:{...base,value:'paid'},records:[record('paid','2026-10-01')]}
 };
-const statuses={contradicted:'Tegenspraak: de uitspraak wijkt af van de bron',matched:'Exacte overeenkomst met aangeleverde waarde — nog niet geverifieerd',conflict:'Bronconflict: meerdere waarden voor dezelfde factuur',missing:'Ontbrekend bewijs: geen relevante bronwaarde',unknown:'Onbekend: bron bevat geen definitieve status','future-only':'Datumconflict: bron is later dan de gekozen peildatum'};
+const statuses={contradicted:'Tegenspraak: de uitspraak wijkt af van de bron',matched:'Exacte overeenkomst met aangeleverde waarde — nog niet geverifieerd',conflict:'Bronconflict: meerdere waarden voor dezelfde factuur',missing:'Ontbrekend bewijs: geen relevante bronwaarde',unknown:'Onbekend: bron bevat geen definitieve status','future-only':'Datumconflict: bron is later dan de gekozen peildatum',stale:'Verouderde bron: registratie is ouder dan zeven dagen'};
 function render(){try{const x=cases[$('scenario').value],result=api.compare(x.claim,x.records,asOf);$('claim').textContent='Factuur '+x.claim.reference+' heeft betaalstatus: '+(x.claim.value==='paid'?'BETAALD':'ONBETAALD');$('records').textContent=x.records.length?x.records.map(r=>r.source+'\nStatus: '+r.value+'\nGecontroleerd op: '+r.checkedOn).join('\n\n'):'Geen gegevens aanwezig';$('outcome').dataset.state=result.status;$('outcome').textContent=statuses[result.status]||'Extra controle vereist';$('note').textContent='Peildatum: '+asOf+'. Alleen exacte vergelijking met aangeleverde gegevens; authentieke broncontrole, actuele gegevens en menselijke goedkeuring blijven noodzakelijk.'}catch(e){$('outcome').removeAttribute('data-state');$('outcome').textContent='Controle mislukt: '+e.message}}
 $('scenario').addEventListener('change',render);render();
 })();
