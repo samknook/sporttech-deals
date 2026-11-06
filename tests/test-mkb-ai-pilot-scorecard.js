@@ -25,6 +25,6 @@ assert.throws(()=>core.assess([row(1),row(2)]),/3 tot 200/);
 assert.throws(()=>core.assess([{...row(1),review:'-1'},row(2),row(3)]),/Ongeldig/);
 assert.match(html,/<html lang="nl">/);
 assert.match(html,/src="pilot-scorecard-core.js"/);
-assert.match(html,/niets op/i);
+assert.match(html,/bewaart of verstuurt niets/i);
 assert.doesNotMatch(html,/fetch\s*\(|XMLHttpRequest|localStorage\.|sessionStorage\.|mailto:/);
 console.log('Pilot scorecard tests passed. Synthetic tasks only.');
