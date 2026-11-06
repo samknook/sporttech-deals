@@ -21,7 +21,9 @@ function assess(raw,locale='nl'){
  for(const id of RISK_IDS)if(typeof raw[id]!=='boolean')throw Error('Missing control answer: '+id);
  const findings=[];
  function flag(key,severity,nlText,enText){findings.push({key,severity,label:tr(nlText,enText)})}
- if(raw.sensitive)flag('sensitive','review', 'Er kunnen gevoelige persoonsgegevens of vertrouwelijke data in het proces zitten; bepaal eerst een toegestane en beveiligde gegevensstroom.', 'Sensitive personal or confidential data may be involved; establish an approved secure data flow first.');
+ if(workflow==='finance')flag('finance','review','Financiële verwerking vraagt expliciete controle op bedragen, bronnen, bevoegdheden en uitzonderingen vóór inzet.','Financial workflows need explicit amount, source, authorization and exception checks before use.');
+ if(volume===0)flag('volume','review','Er zijn geen wekelijkse handelingen opgegeven; er is geen gemeten procesvolume.','No weekly tasks supplied; process volume is not established.');
+  if(raw.sensitive)flag('sensitive','review', 'Er kunnen gevoelige persoonsgegevens of vertrouwelijke data in het proces zitten; bepaal eerst een toegestane en beveiligde gegevensstroom.', 'Sensitive personal or confidential data may be involved; establish an approved secure data flow first.');
  if(raw.external)flag('external','block','Automatisch extern verzenden is buiten het Starter-aanbod; schakel terug naar concepten met menselijke goedkeuring.','Unattended outbound communication is excluded from Starter; use human-approved drafts.');
  if(raw.writeback)flag('writeback','block','Automatisch wijzigen van boekhouding of andere bronsystemen valt buiten Starter.','Unattended writes to accounting or systems are excluded from Starter.');
  if(!raw.approvedWorkspace)flag('workspace','block','Er is nog geen door de klant goedgekeurde zakelijke AI-omgeving.','No customer-approved business AI environment exists yet.');
