@@ -79,3 +79,12 @@ Beoordeling na de eerste gesprekken: een vrijblijvende 'interessant' telt niet a
 ## Commercieel noodzakelijke open punten
 
 Er is nog geen werkend zakelijk contact- of intake-verzendkanaal, geen klantaccount, geen productie- en AI API-test, geen juridische entiteit, geen privacycontract en geen echte klant. De publieke website bevat alleen zelfserviceproeven en offline voorbereiding. Echte klanten moeten deze beperkingen correct kunnen zien.
+
+## Netto businesscase vóór iedere offerte
+
+Gebruik de lokale `docs/ai-studio/businesscase.html` om een door de ondernemer gecontroleerd scenario door te rekenen. Het model gebruikt alleen hypothetische aantallen: instroom per week, aandeel repetitieve vragen, inzetbare fractie, verwerking vóór/na, expliciete menselijke review, correctietijd, wekelijkse beheertijd, uurwaarde, licenties, onderhoud en eenmalige implementatie.
+
+**Voorbeeld (geen klantcijfers):** 120 berichten/week, 60% herhalend, 70% daarvan inzetbaar; 8 minuten nu, 1,5 AI-voorbereiding + 2,5 review + 1 herstel, 20 minuten beheer/week, €40/uur, €40 licenties/maand, €199 care/maand en €995 inrichting. Dit geeft ongeveer 131 minuten potentiële wekelijkse capaciteitsruimte, circa €140 netto berekende maandwaarde en ongeveer 7,1 maanden rekenkundige terugverdientijd. Het is geen gerealiseerde besparing of omzet voor de klant.
+
+De regel in een klantgesprek is: **als review, herstel, aanvullende kosten of kritieke fouten de businesscase negatief maken, niet proberen dat weg te verkopen**. Onderzoek eerst de taak, scope, proceskwaliteit en alternatieven. Een positieve spreadsheet laat nog niets zien over echte betrouwbaarheid, privacy, integratie of klantbereidheid om te betalen.
+
