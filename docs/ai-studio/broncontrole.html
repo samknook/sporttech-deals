@@ -26,7 +26,6 @@ future:{claim:{...base,value:'paid'},records:[record('paid','2026-11-08')]}
 };
 const statuses={contradicted:'Tegenspraak: de uitspraak wijkt af van de bron',matched:'Exacte overeenkomst met aangeleverde waarde — nog niet geverifieerd',conflict:'Bronconflict: meerdere waarden voor dezelfde factuur',missing:'Ontbrekend bewijs: geen relevante bronwaarde',unknown:'Onbekend: bron bevat geen definitieve status','future-only':'Datumconflict: bron is later dan de gekozen peildatum'};
 function render(){try{const x=cases[$('scenario').value],result=api.compare(x.claim,x.records,asOf);$('claim').textContent='Factuur '+x.claim.reference+' heeft betaalstatus: '+(x.claim.value==='paid'?'BETAALD':'ONBETAALD');$('records').textContent=x.records.length?x.records.map(r=>r.source+'\nStatus: '+r.value+'\nGecontroleerd op: '+r.checkedOn).join('\n\n'):'Geen gegevens aanwezig';$('outcome').dataset.state=result.status;$('outcome').textContent=statuses[result.status]||'Extra controle vereist';$('note').textContent='Peildatum: '+asOf+'. Alleen exacte vergelijking met aangeleverde gegevens; authentieke broncontrole, actuele gegevens en menselijke goedkeuring blijven noodzakelijk.'}catch(e){$('outcome').removeAttribute('data-state');$('outcome').textContent='Controle mislukt: '+e.message}}
-}
 $('scenario').addEventListener('change',render);render();
 })();
 </script></body></html>
