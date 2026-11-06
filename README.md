@@ -5,6 +5,7 @@
 **Strategische pivot:** naast het bestaande TriZentro-experiment wordt een nieuwe onderneming verkend die **AI-werkprocessen implementeert bij kleinere B2B-bedrijven**. MKB AI Studio is uitsluitend een werknaam; er bestaat nog geen geregistreerde BV, klantcontract of geverifieerde verkoop.
 
 - [Conceptwebsite en transparante inboxdemo](docs/ai-studio/index.html) — regelgebaseerd, **geen AI-model**.
+- [Volledige fictieve inboxworkflow](docs/ai-studio/inbox-workflow.html) — vier vooraf ingestelde cases met controle, goedkeuring of escalatie; nooit e-mailverzending.
 - [Gratis AI QuickScan](docs/ai-studio/quickscan.html) — scenario voor mogelijke tijdwinst.
 - [AI Pilot Intake](docs/ai-studio/pilot-intake.html) — risicogates, scope en lokaal downloadbaar conceptadvies.
 - [Betaalde pakketten verkennen](docs/ai-studio/pakketten.html) — transparante indicaties en maatwerkuitzonderingen, geen checkout.
