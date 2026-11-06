@@ -1,0 +1,43 @@
+name: Publish website (GitHub Pages)
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/publish-site.yml'
+      - 'tests/test-mkb-ai-businesscase.js'
+      - 'tests/test-mkb-ai-customer-offer.js'
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: https://samknook.github.io/sporttech-deals/
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check buyer-facing offer and business case
+        run: |
+          node tests/test-mkb-ai-customer-offer.js
+          node tests/test-mkb-ai-businesscase.js
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Upload website files only
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs
+      - name: Deploy static website
+        id: deployment
+        uses: actions/deploy-pages@v4
