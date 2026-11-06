@@ -17,14 +17,14 @@ function quote(input){
  if(!Array.isArray(input.extras)||input.extras.length>EXTRAS.size||new Set(input.extras).size!==input.extras.length||input.extras.some(x=>!EXTRAS.has(x)))throw Error('Invalid extras');
  const selected=PACKAGES[input.package],workflowCount=input.workflows.length;
  const reasons=[];
- if(input.package==='quickscan'&&workflowCount)reasons.push('QuickScan is an assessment, not an implementation');
- if(input.package!=='quickscan'&&(!workflowCount||workflowCount>selected.maxWorkflows))reasons.push('Workflow count exceeds selected implementation scope');
+ if(input.package==='quickscan'&&workflowCount)reasons.push('QuickScan is een analyse, geen implementatie');
+ if(input.package!=='quickscan'&&(!workflowCount||workflowCount>selected.maxWorkflows))reasons.push('Aantal werkprocessen past niet binnen het gekozen pakket');
  const labels={
- api:'Custom API or integration work needs separate design, security review and pricing',
- erp:'ERP write-back or live-system modification is excluded from standard packages',
- autonomous:'Unattended customer communication or financial actions are excluded',
- sensitive:'Sensitive data requires additional privacy and security review',
- multisite:'Multiple teams or locations require separately scoped access and onboarding'
+ api:'API-koppelingen en maatwerk vereisen een aparte scope, beveiligingscontrole en offerte',
+ erp:'Gegevens terugschrijven naar ERP of boekhouding valt buiten standaardpakketten',
+ autonomous:'Zelfstandige klantcommunicatie of financiële acties zijn uitgesloten',
+ sensitive:'Gevoelige gegevens vereisen een aanvullende privacy- en beveiligingsbeoordeling',
+ multisite:'Meerdere teams of locaties vereisen aparte afspraken over rechten en inrichting'
  };
  for(const id of input.extras)reasons.push(labels[id]);
  const care=input.care===true;
