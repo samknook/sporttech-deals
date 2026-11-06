@@ -33,6 +33,7 @@ jobs:
           node tests/test-mkb-ai-customer-offer.js
           node tests/test-mkb-ai-businesscase.js
           node tests/test-mkb-ai-site-links.js
+          node tests/test-mkb-ai-site-ux.js
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload website files only
