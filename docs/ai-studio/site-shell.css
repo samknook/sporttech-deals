@@ -18,3 +18,18 @@
 .site-mobile .site-mobile-links a{display:block;min-height:48px;padding:14px;border-bottom:1px solid #39605b}
 .site-mobile .site-mobile-links a:last-child{color:#baf4da!important}
 @media(max-width:860px){.site-nav-links{display:none}.site-mobile{display:block}.site-header .site-nav-wrap{min-height:68px}}
+
+/* Shared accessibility and buyer FAQ pattern */
+.site-header :focus-visible,main :focus-visible,footer :focus-visible{outline:3px solid #169a75;outline-offset:3px}
+.skip-link{position:absolute;left:14px;top:-70px;padding:10px 16px;background:#fff;color:#103e35;z-index:100;text-decoration:none;border-radius:8px;font-weight:800}
+.skip-link:focus{top:8px}
+.site-faq{margin:28px 0 10px}
+.site-faq details{background:#fff;border:1px solid #d5e5de;border-radius:12px;margin:11px 0;overflow:hidden}
+.site-faq summary{list-style:none;cursor:pointer;font-size:16px;font-weight:750;padding:19px 46px 19px 19px;position:relative;line-height:1.5}
+.site-faq summary::-webkit-details-marker{display:none}
+.site-faq summary::after{content:'+';position:absolute;right:19px;top:17px;font-size:23px;font-weight:500;color:#126653}
+.site-faq details[open] summary::after{content:'−'}
+.site-faq details[open] summary{border-bottom:1px solid #e3ede7}
+.site-faq details>p,.site-faq details>div{padding:0 19px 18px;margin:16px 0 0;line-height:1.65;color:#506765}
+@media(max-width:860px){.site-brand{font-size:16px}.site-mobile summary{min-height:44px}.site-mobile .site-mobile-links a{font-size:16px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
