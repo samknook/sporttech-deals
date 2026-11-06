@@ -49,5 +49,11 @@ const response=text=>({ok:true,status:200,json:async()=>({status:'completed',out
  const linkedBad=await require('../ventures/mkb-ai-studio/api-pilot/model-batch.cjs').processLinkedBatch({items:[linkedCase],mode:'live',approvedData:true,model:'synthetic-test',apiKey:'fake-key',fetchImpl:linkedFake('paid')});
  assert.equal(linkedBad.results[0].status,'needs-escalation');
  assert.equal(linkedBad.summary.outboundSent,0);
+ const unlinkedOutput={...linkedOutput('unpaid'),draft:linkedOutput('unpaid').draft+' We also refunded EUR 250.00.'};
+ const unlinkedFake=async()=>({ok:true,status:200,json:async()=>({status:'completed',output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(unlinkedOutput)}]}]})});
+ const unlinked=await require('../ventures/mkb-ai-studio/api-pilot/model-batch.cjs').processLinkedBatch({items:[linkedCase],mode:'live',approvedData:true,model:'synthetic-test',apiKey:'fake-key',fetchImpl:unlinkedFake});
+ assert.equal(unlinked.results[0].status,'needs-escalation');
+ assert.equal(unlinked.results[0].assessment.issues.includes('unlinked:amount'),true);
+ assert.equal(unlinked.summary.outboundSent,0);
  console.log('Offline-first model batch tests passed. All model replies mocked.');
 })().catch(e=>{console.error(e);process.exitCode=1});
