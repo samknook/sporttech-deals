@@ -64,5 +64,7 @@ jobs:
         run: node tests/test-mkb-ai-offer.js
       - name: Test customer-facing offer scope and links
         run: node tests/test-mkb-ai-customer-offer.js
+      - name: Test first pilot funnel and honest no-submit self-service
+        run: node tests/test-mkb-ai-pilot-funnel.js
       - name: Verify Public/Private Boundary
         run: node tests/test-mkb-ai-public-boundary.js
