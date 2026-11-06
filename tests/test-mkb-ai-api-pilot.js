@@ -42,6 +42,17 @@ const sample=require('../ventures/mkb-ai-studio/api-pilot/synthetic-sample.json'
  assert.equal(strong.flagged.length,0);
  assert.equal(strong.approvedForSending,false);
  assert.ok(adapter.assessDraft('Bad output').flagged.length>0);
+ const claimSample={id:'TEST-CLAIMS',message:'Please check this invoice',approvedFacts:[{source:'Synthetic ledger',fact:'INV-123 exists; payment unknown'}]};
+ const unsafe=adapter.auditClaims('CATEGORY: invoice\nDRAFT: Payment has been received for INV-123.\nHUMAN CHECKS: Check payment records and authorize.',claimSample);
+ assert.ok(unsafe.flagged.some(x=>x.key==='confirmed-payment'));
+ assert.equal(unsafe.approvedForSending,false);
+ assert.equal(unsafe.verifiedBySystem,false);
+ const invented=adapter.auditClaims('CATEGORY: order\nDRAFT: We will check order ORD-999 and come back to you.\nHUMAN CHECKS: Verify original order records.',claimSample);
+ assert.ok(invented.flagged.some(x=>x.key==='unverified-reference'));
+ const cautious=adapter.auditClaims('CATEGORY: invoice\nDRAFT: We will check invoice INV-123 using authorized records.\nHUMAN CHECKS: Verify identity and payment status.',claimSample);
+ assert.equal(cautious.flagged.length,0);
+ assert.equal(cautious.verifiedBySystem,false);
+ assert.equal(result.claims.approvedForSending,false);
  assert.equal(requests,1);
  await assert.rejects(adapter.run({sample,mode:'live',approvedData:true,apiKey:'synthetic_test_key',model:'gpt-6-luna',fetchImpl:async()=>({ok:false,status:429})}),/429/);
  assert.throws(()=>adapter.outputText({status:'incomplete',output:[]}));
