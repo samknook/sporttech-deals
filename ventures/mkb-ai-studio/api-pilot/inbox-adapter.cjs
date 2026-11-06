@@ -27,12 +27,12 @@ function instructions(){
  'Never include or ask for secrets, credentials, bank changes or sensitive personal data.'
  ].join(' ');
 }
-function buildRequest(sample,model){
+function buildRequest(sample,model,outputFormat='sections'){
  const clean=validateSample(sample);
  if(typeof model!=='string'||!MODEL_PATTERN.test(model))throw Error('Explicit approved model ID is required');
  const payload={
   model,store:false,max_output_tokens:550,
-  instructions:instructions(),
+  instructions:outputFormat==='linked-json'?'Return a single JSON object with draft string and claims array containing exact quote and evidence fields. No external actions. Human review required.':instructions(),
   input:[{role:'user',content:JSON.stringify({customerMessage:clean.message,approvedFacts:clean.approvedFacts})}]
  };
  return {payload,id:clean.id};
@@ -82,18 +82,18 @@ function auditClaims(text,sample){
  return {flagged:claims,structureFlags:lint.flagged,needsHumanReview:true,approvedForSending:false,verifiedBySystem:false,
   warning:'Heuristic screening only: phrase matching can miss unsupported claims and cannot establish truth.'};
 }
-async function run({sample,mode='dry-run',model,apiKey,fetchImpl=globalThis.fetch,approvedData=false}){
+async function run({sample,mode='dry-run',model,apiKey,fetchImpl=globalThis.fetch,approvedData=false,outputFormat='sections'}){
  if(mode!=='dry-run'&&mode!=='live')throw Error('Unknown mode');
  const clean=validateSample(sample);
  if(mode==='dry-run')return {mode,id:clean.id,reviewRequired:true,sent:false,text:'DRY RUN — No API call. This case requires verified references and employee approval before any customer-facing use.',usedModel:null,quality:null};
  if(!approvedData)throw Error('A responsible operator must approve the exact data for API use');
  if(typeof apiKey!=='string'||!apiKey.trim())throw Error('Missing API key');
- const req=buildRequest(clean,model);
+ const req=buildRequest(clean,model,outputFormat);
  if(typeof fetchImpl!=='function')throw Error('No HTTP client');
  const response=await fetchImpl(ENDPOINT,{method:'POST',headers:{Authorization:'Bearer '+apiKey,'Content-Type':'application/json'},body:JSON.stringify(req.payload),signal:AbortSignal.timeout(30000)});
  if(!response||!response.ok)throw Error('Provider request failed ('+(response?.status||'unknown')+')');
  const data=await response.json();
  const text=outputText(data);
- return {mode,id:clean.id,reviewRequired:true,sent:false,text,usedModel:model,quality:assessDraft(text),claims:auditClaims(text,clean)};
+ return {mode,id:clean.id,reviewRequired:true,sent:false,text,usedModel:model,quality:outputFormat==='sections'?assessDraft(text):null,claims:outputFormat==='sections'?auditClaims(text,clean):null};
 }
 module.exports={ENDPOINT,validateSample,buildRequest,outputText,assessDraft,auditClaims,run};
