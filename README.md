@@ -6,7 +6,7 @@
 
 - [Conceptwebsite en transparante inboxdemo](docs/ai-studio/index.html) — regelgebaseerd, **geen AI-model**.
 - [Volledige fictieve inboxworkflow](docs/ai-studio/inbox-workflow.html) — vier vooraf ingestelde cases met controle, goedkeuring of escalatie; nooit e-mailverzending.
-- [Broncontrole-demo](docs/ai-studio/broncontrole.html) — zes fictieve scenario's voor overeenkomende, tegenstrijdige, ontbrekende of toekomstige bronwaarden.
+- [Broncontrole-demo](docs/ai-studio/broncontrole.html) — zeven fictieve scenario's (inclusief verouderde bronnen) voor overeenkomende, tegenstrijdige, ontbrekende of toekomstige bronwaarden.
 - [Exacte bronwaardenvergelijker](ventures/mkb-ai-studio/api-pilot/source-evidence.cjs) — alleen lokaal aangeleverde gestructureerde data; geen echte bronauthenticatie. Tests: `node tests/test-mkb-ai-source-evidence.js`.
 - [API Inbox pilotadapter](ventures/mkb-ai-studio/api-pilot/README.md) — echte Responses API-aanroep technisch voorbereid; standaard offline, alleen fictieve testdata en expliciete opt-in; nog niet live uitgevoerd.
 - [Gratis AI QuickScan](docs/ai-studio/quickscan.html) — scenario voor mogelijke tijdwinst.
