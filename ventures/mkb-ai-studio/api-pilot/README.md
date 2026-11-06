@@ -61,5 +61,15 @@ The model response is never approved for outbound delivery by the adapter. `appr
 
 Additional synthetic tests: `node tests/test-mkb-ai-claims.js`, also configured in the existing GitHub Actions workflow. The test files are public; real client facts and private implementation templates must never be placed here.
 
+## Exact source-record comparison (synthetic)
+
+`source-evidence.cjs` compares structured, manually supplied assertions against separately supplied, labeled records for `invoice`, `order`, and `credit` fields. It reports `matched`, `contradicted`, `missing`, `conflict`, `unknown`, `future-only`, or `stale`. The default freshness window is **seven calendar days** (configurable `maxAgeDays`, 0–365) for this prototype.
+
+The browser demonstration at `docs/ai-studio/broncontrole.html` presents seven fictitious examples and shares exactly the same rules as the Node module. The separate tests check that the source files remain identical.
+
+**Critical distinction:** a matching value is not real-world validation. These records are not fetched from authenticated ERP systems, are not independently signed, and may contain errors or be updated after the check. Seven days is a prototype warning threshold, not a claim that financial records can safely remain unchecked that long. A qualified operator must verify the latest authorized source before customer communication.
+
+This comparison is independent of the free-form response risk scanner. It requires structured assertions and records to be supplied deliberately; it cannot magically infer or validate every claim made in natural-language AI output. Both checks remain advisory and **never authorize sending**.
+
 ## Evaluation guidance
 Record separate checks for answer format, references, uncertainty, approvals and factual correctness. A passing format check is not evidence that a draft is accurate or safe. Do not deploy based solely on automated checks.
