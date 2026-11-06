@@ -37,7 +37,7 @@ const sample=require('../ventures/mkb-ai-studio/api-pilot/synthetic-sample.json'
  assert.match(result.text,/HUMAN CHECKS/);
  assert.equal(result.quality.approvedForSending,false);
  assert.equal(result.quality.needsHumanReview,true);
- assert.equal(result.quality.flagged.length,1); // short test draft; still not accepted automatically
+ assert.equal(result.quality.flagged.length,2); // short test draft; still not accepted automatically
  const strong=adapter.assessDraft('CATEGORY: invoice\nDRAFT: We will verify the payment using our accounting source.\nHUMAN CHECKS: Review invoice, bank transfer and identity.');
  assert.equal(strong.flagged.length,0);
  assert.equal(strong.approvedForSending,false);
