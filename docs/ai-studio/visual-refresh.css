@@ -73,3 +73,22 @@ main .status,main .notice,main .alert{border-radius:12px}
 .homepage .bottom .btn:not(.secondary){background:linear-gradient(135deg,#12644f,#0f8061)}
 @media(max-width:900px){.homepage .hero{padding-top:60px;padding-bottom:45px}.homepage .card p{min-height:0}.homepage .section{padding:56px 0}}
 @media(max-width:580px){.homepage .hero{padding-top:38px}.homepage .hero h1{font-size:clamp(41px,11vw,60px)}.homepage .visual{padding:17px;border-radius:20px}.homepage .mail,.homepage .reply{padding:18px}.homepage .section{padding:42px 0}.homepage .offer,.homepage .bottom{padding:26px 22px}.homepage .offer .price{font-size:39px}}
+
+/* Product and pricing pages: quiet hierarchy, no misleading checkout elements */
+.pricing-page main>h1,.service-page main>h1,.meeting-page main h1,.toolbox-page main h1{font-weight:850;letter-spacing:-.058em}
+.pricing-page main>h1,.service-page main>h1{max-width:850px}
+.pricing-page .grid[aria-label] .tier{position:relative;background:#fff;border:1px solid #e0ebe5;box-shadow:0 13px 32px #143d3509;border-radius:18px;padding:24px}
+.pricing-page .grid[aria-label] .tier:nth-child(2){background:linear-gradient(155deg,#f0fbf4,#e4f8ea);border:2px solid #69bb95;box-shadow:0 16px 35px #157c5020;transform:translateY(-4px)}
+.pricing-page .grid[aria-label] .tier:nth-child(2) strong{color:#0b7758}
+.pricing-page .featured-label{display:inline-block;border-radius:999px;background:#b9efcf;color:#105a41;font-size:11px;font-weight:850;line-height:1.4;padding:6px 10px;margin-bottom:10px}
+.pricing-page .tier h2{margin:8px 0 10px}
+.pricing-page .tier strong{font-size:32px!important;letter-spacing:-.04em}
+.service-page .card,.meeting-page .card{background:linear-gradient(145deg,#fff,#fcfffd);box-shadow:0 17px 34px #143d3508}
+.service-page main>p.eyebrow{display:inline-block;margin-top:7px}
+.service-page main>h1,.meeting-page h1{font-size:clamp(36px,5.5vw,61px)}
+.meeting-page .card:first-of-type{border-color:#bddfca;box-shadow:0 22px 42px #15583b10}
+.meeting-page .result{border-radius:12px;border-left:4px solid #15916e}
+.toolbox-page .tile{box-shadow:0 12px 30px #123b3408;border-radius:18px;transition:box-shadow .16s ease,transform .16s ease}
+.toolbox-page .tile:hover{transform:translateY(-3px);box-shadow:0 22px 36px #123b3415}
+.toolbox-page .tile .mark{border:1px solid #c5e4d2}
+@media(max-width:700px){.pricing-page .grid[aria-label] .tier:nth-child(2){transform:none}.service-page main>h1,.meeting-page h1{font-size:clamp(35px,9vw,54px)}}
