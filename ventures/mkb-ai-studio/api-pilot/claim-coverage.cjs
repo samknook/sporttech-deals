@@ -7,7 +7,8 @@ const PATTERNS=[
  {key:'date',regex:/\b20\d{2}-\d{2}-\d{2}\b/g},
  {key:'amount',regex:/(?:€\s*|\bEUR\s+)\d[\d.,]*/gi},
  {key:'payment-assertion',regex:/\b(?:is paid|has been paid|was paid|is unpaid|payment received|payment confirmed|factuur is betaald|factuur is onbetaald|betaling ontvangen|betaling bevestigd|status paid|status unpaid)\b/gi},
- {key:'delivery-assertion',regex:/\b(?:delivery confirmed|will be delivered|will arrive|arrives tomorrow|guaranteed delivery|levering bevestigd|wordt morgen geleverd|levering gegarandeerd|leverdatum bevestigd)\b/gi},
+  {key:'indirect-payment-assertion',regex:/\b(?:money (?:is|was) already in (?:our|the) account|funds (?:have|had) arrived|we (?:have|had) received (?:the|your) funds|geld (?:staat|stond) al op onze rekening|bedrag (?:is|was) al bijgeschreven)\b/gi},
+{key:'delivery-assertion',regex:/\b(?:delivery confirmed|will be delivered|will arrive|arrives tomorrow|guaranteed delivery|levering bevestigd|wordt morgen geleverd|levering gegarandeerd|leverdatum bevestigd)\b/gi},
  {key:'refund-assertion',regex:/\b(?:refund issued|refund processed|refund approved|refund\s+(?:of\s+)?(?:EUR\s*|€\s*)?[\d.,]+\s+has been processed|terugbetaling uitgevoerd|terugbetaling verwerkt|terugbetaling goedgekeurd)\b/gi},
  {key:'bank-change',regex:/\b(?:bank account changed|bank details updated|rekeningnummer gewijzigd|bankgegevens aangepast)\b/gi}
 ];
