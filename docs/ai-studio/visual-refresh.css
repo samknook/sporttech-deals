@@ -1,0 +1,75 @@
+/* MKB AI Studio · 2026 visual system v2 · no external fonts, no cookies */
+:root{
+ --brand:#102d33; --mint:#b7f6d3; --teal:#087b62; --ink:#142e35; --line:#dfebe5; --page:#f8fbfa;
+ font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+ color:var(--ink); background:var(--page);font-optical-sizing:auto;
+}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(ellipse 75vw 27rem at 92% 0%,#e9f7f0 0,transparent 70%),#f8fbfa;color:#18323a;-webkit-font-smoothing:antialiased}
+.site-header{background:rgba(16,45,51,.985);border-bottom:1px solid rgba(192,237,216,.14);box-shadow:0 7px 24px #102b2812}
+.site-mark{width:38px;height:38px;background:linear-gradient(145deg,#d0ffe3,#8cebbf);color:#113e32;border-radius:12px;box-shadow:0 6px 20px #7eeabb26}
+.site-brand{letter-spacing:-.045em;font-size:18px}
+.site-nav-links{gap:25px}
+.site-nav-links a{font-size:13px;font-weight:700;transition:color .15s ease}
+.site-nav-links a:hover{color:#bdffda!important}
+.site-nav-links .site-nav-cta{background:linear-gradient(135deg,#caffdf,#9eecc4);box-shadow:0 6px 18px #96f5c91c;color:#0d3b30!important;padding:12px 17px}
+.site-mobile summary{background:#ffffff0d}
+main{position:relative}
+main h1,main h2,main h3{color:#123139;text-wrap:balance}
+main h1{letter-spacing:-.055em}
+main p{line-height:1.7}
+main .lead,main .intro{color:#4f6769}
+main .card,main .panel{box-shadow:0 12px 34px rgba(17,54,46,.035);border-color:#deebe4}
+main a:not(.btn):not(.tile){text-decoration-thickness:1px;text-underline-offset:3px}
+main .btn,main button:not(.case):not(.alt):not(.secondary):not(.remove),main .actions .btn{transition:transform .16s ease,box-shadow .16s ease}
+main .btn:hover,main button:hover{transform:translateY(-1px)}
+main .btn:focus-visible,main button:focus-visible,main input:focus-visible,main select:focus-visible,main textarea:focus-visible{outline:3px solid #39bc91;outline-offset:3px}
+main .btn{box-shadow:0 7px 18px #0b604821}
+main .card,main .tier,main .panel{border-radius:18px}
+main .card h2,main .panel h2{letter-spacing:-.035em}
+main .eyebrow{font-weight:850;letter-spacing:.13em}
+main input:not([type=checkbox]):not([type=radio]),main select,main textarea{background:#fff;accent-color:#07795e;border-color:#bdd7ca}
+main input:not([type=checkbox]):not([type=radio]):focus,main select:focus,main textarea:focus{border-color:#139c77}
+main .muted{color:#667e7a}
+main .status,main .notice,main .alert{border-radius:12px}
+.site-footer{color:#617d73}
+@media(max-width:860px){.site-header .site-nav-wrap{min-height:70px}.site-mobile .site-mobile-links{background:#123942;box-shadow:0 20px 32px #06272136}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+/* Landing page visual composition */
+.homepage .hero{position:relative;isolation:isolate;padding-top:95px;padding-bottom:82px}
+.homepage .hero::before{content:"";position:absolute;width:570px;height:570px;border-radius:50%;z-index:-1;top:-165px;right:-170px;pointer-events:none;background:radial-gradient(circle,#d6f8e6 0,#eaf8ef 42%,transparent 73%);filter:blur(5px)}
+.homepage .hero h1{font-weight:870;letter-spacing:-.074em;line-height:1.015}
+.homepage .hero h1 em{background:linear-gradient(115deg,#08755c,#21a781);background-clip:text;-webkit-background-clip:text;color:transparent}
+.homepage .hero .lead{max-width:575px}
+.homepage .hero .eyebrow{display:inline-flex;align-items:center;gap:9px;border:1px solid #c9e7d7;background:#eaf8f0;padding:9px 12px;border-radius:999px;font-size:11px}
+.homepage .hero .eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:#13a678;box-shadow:0 0 0 4px #15a67715}
+.homepage .hero .btn{border-radius:12px;padding:15px 20px;font-weight:780}
+.homepage .hero .btn:not(.secondary){background:linear-gradient(135deg,#0d6856,#0c8c6e);box-shadow:0 12px 28px #116b532a}
+.homepage .visual{position:relative;background:linear-gradient(145deg,#f4fcf7,#e7f6ed);border:1px solid #cce6d6;border-radius:25px;padding:28px;box-shadow:0 32px 72px #1a60531c,0 3px 12px #0b3b3411}
+.homepage .visual::before{content:"";position:absolute;inset:0;border-radius:25px;border:1px solid #fff9;pointer-events:none}
+.homepage .visual-head{padding-bottom:8px}
+.homepage .visual-head strong{font-size:15px;font-weight:850}
+.homepage .visual .chip{font-size:10px;text-transform:uppercase;letter-spacing:.03em}
+.homepage .mail{border:1px solid #e0ebe3;border-radius:16px;box-shadow:0 14px 28px #0c42330a;padding:23px}
+.homepage .mail .from{letter-spacing:.04em;text-transform:uppercase;font-weight:700}
+.homepage .mail h3{font-weight:800;line-height:1.4}
+.homepage .reply{background:linear-gradient(150deg,#123b37,#0a5445);box-shadow:0 13px 28px #0b493331;border-radius:16px;padding:24px}
+.homepage .reply .foot{border-color:#7da99a70}
+.homepage .section{padding:77px 0}
+.homepage .section-head h2{max-width:670px}
+.homepage .cards{gap:19px}
+.homepage .card{position:relative;background:linear-gradient(145deg,#fff,#fbfefd);border:1px solid #dfeae4;border-radius:20px;padding:30px;box-shadow:0 17px 33px #133f3307;transition:border-color .16s,transform .16s,box-shadow .16s}
+.homepage .card:hover{transform:translateY(-3px);box-shadow:0 19px 43px #143c3a11;border-color:#a7d5be}
+.homepage .card .nr{width:43px;height:43px;border-radius:13px;background:linear-gradient(140deg,#d5f6e4,#eafaf0);font-size:14px}
+.homepage .card h3{font-weight:820}
+.homepage .card p{font-size:14px;min-height:88px}
+.homepage .offer{border-radius:26px;padding:44px 47px;background:radial-gradient(circle at 86% 10%,#1d6357 0,#103940 44%,#0d2e34 100%);border:1px solid #226255;box-shadow:0 25px 60px #072d3030}
+.homepage .offer h2{color:#fff}
+.homepage .offer .price{font-size:44px;letter-spacing:-.055em}
+.homepage .offer .btn{background:linear-gradient(135deg,#d1ffe4,#a0ecc6);color:#0e4232;border-radius:11px}
+.homepage .step{padding-top:23px;border-top:2px solid #a7d7bf}
+.homepage .bottom{background:linear-gradient(120deg,#e7f6ee,#f1fbf5);border:1px solid #d1e8db;border-radius:24px;padding:46px;box-shadow:0 16px 32px #0d483112}
+.homepage .bottom h2{max-width:470px}
+.homepage .bottom .btn:not(.secondary){background:linear-gradient(135deg,#12644f,#0f8061)}
+@media(max-width:900px){.homepage .hero{padding-top:60px;padding-bottom:45px}.homepage .card p{min-height:0}.homepage .section{padding:56px 0}}
+@media(max-width:580px){.homepage .hero{padding-top:38px}.homepage .hero h1{font-size:clamp(41px,11vw,60px)}.homepage .visual{padding:17px;border-radius:20px}.homepage .mail,.homepage .reply{padding:18px}.homepage .section{padding:42px 0}.homepage .offer,.homepage .bottom{padding:26px 22px}.homepage .offer .price{font-size:39px}}
