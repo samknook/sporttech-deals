@@ -17,7 +17,7 @@ function validate(contract,records,asOf){
   if(!contract.draft.includes(c.quote))issues.push('claim-'+i+':quote-not-in-draft');
   const ref=c.evidence;
   if(!ref||typeof ref!=='object'||!allowed.has(ref.kind))throw Error('Invalid structured evidence reference');
-  const tokens=c.quote.toLowerCase().split(/[^a-z0-9._-]+/).filter(Boolean);
+  const tokens=c.quote.toLowerCase().split(/[^a-z0-9_-]+/).filter(Boolean);
   if(!tokens.includes(String(ref.reference).toLowerCase()))issues.push('claim-'+i+':reference-not-in-quote');
   if(!tokens.includes(String(ref.value).toLowerCase()))issues.push('claim-'+i+':value-not-in-quote');
   // A cited span may itself contain unrelated factual claims. No blanket citation of entire paragraphs.
