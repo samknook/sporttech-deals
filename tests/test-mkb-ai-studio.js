@@ -1,0 +1,21 @@
+/* Run: node tests/test-mkb-ai-studio.js */
+'use strict';
+const assert=require('node:assert/strict');
+const demo=require('../docs/ai-studio/inbox-demo-core.js');
+let r=demo.classify('Factuur INV-123 is nog niet betaald','nl');
+assert.equal(r.id,'invoice');assert.equal(r.ambiguous,false);
+assert.match(r.draft,/factuur/);
+r=demo.classify('De bestelling is beschadigd en we willen retour','nl');
+assert.equal(r.ambiguous,true);
+r=demo.classify('Hi there, can you help?','en');
+assert.equal(r.id,'other');assert.match(r.warning,/Keyword/);
+assert.throws(()=>demo.classify(''));
+assert.throws(()=>demo.classify('a'.repeat(10001)));
+const x=demo.estimate({itemsPerDay:20,minutesBefore:8,minutesAfter:4,workingDays:22,hourlyCost:35});
+assert.equal(x.hoursSaved,20*4*22/60);
+assert.equal(x.value,x.hoursSaved*35);
+assert.equal(x.positive,true);
+const negative=demo.estimate({itemsPerDay:10,minutesBefore:2,minutesAfter:5,workingDays:22,hourlyCost:35});
+assert.equal(negative.positive,false);
+assert.throws(()=>demo.estimate({itemsPerDay:20000,minutesBefore:3,minutesAfter:2,hourlyCost:35}));
+console.log('MKB AI Studio test suite passed.');
