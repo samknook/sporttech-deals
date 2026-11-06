@@ -34,6 +34,7 @@ jobs:
           node tests/test-mkb-ai-businesscase.js
           node tests/test-mkb-ai-site-links.js
           node tests/test-mkb-ai-site-ux.js
+          node tests/test-mkb-ai-visual-refresh.js
           node tests/test-mkb-ai-buyer-clarity.js
           node tests/test-mkb-ai-tools-hub.js
           node tests/test-mkb-ai-lead-brief.js
