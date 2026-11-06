@@ -7,7 +7,9 @@
 - [Conceptwebsite en transparante inboxdemo](docs/ai-studio/index.html) — regelgebaseerd, **geen AI-model**.
 - [Gratis AI QuickScan](docs/ai-studio/quickscan.html) — scenario voor mogelijke tijdwinst.
 - [AI Pilot Intake](docs/ai-studio/pilot-intake.html) — risicogates, scope en lokaal downloadbaar conceptadvies.
+- [AI Assistant Configurator](docs/ai-studio/assistant-configurator.html) — herbruikbare GPT-instructies voor Inbox, Document Desk en Finance Desk, zonder automatische installatie of toegang tot accounts.
 - [Implementatiehandleiding](ventures/mkb-ai-studio/IMPLEMENTATION_KIT.md) — Inbox, Document Desk, Finance Desk.
+- [Unit economics](ventures/mkb-ai-studio/UNIT_ECONOMICS.md) — prijs-/urenhypothesen en margestopregels.
 - [Klantoplevertemplate](ventures/mkb-ai-studio/CLIENT_DELIVERY_TEMPLATE.md) — met 8 acceptatietests en menselijk toezicht.
 - [Acquisitie- en interviewplan](ventures/mkb-ai-studio/FIRST_CUSTOMERS_PLAYBOOK.md) — gesprekken nog niet uitgevoerd.
 - [Commercieel startplan](ventures/mkb-ai-studio/LAUNCH_PLAYBOOK.md).
