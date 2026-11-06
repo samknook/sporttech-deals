@@ -21,6 +21,7 @@
 - [Eerste AI Inbox-pilot verkennen](docs/ai-studio/pilot.html) — lokale geschiktheidstoets zonder contactgegevens, verzending of opslag.
 - [Prospects kwalificeren](docs/ai-studio/prospecten.html) — anonieme, offline verkooptoets met budget-, reviewer- en integratieblokkades. Geen klant- of contactgegevens.
 - [Eerste 15 verkoopgesprekken](ventures/mkb-ai-studio/SALES_VALIDATION_15.md) — interne interview- en outreachaanpak, conceptteksten en stopregels; niets verzonden.
+- [Zes onderzoeksprospects in Noord-Holland](ventures/mkb-ai-studio/PROSPECT_RESEARCH_NH.md) — openbare B2B-bedrijven, officiële bronlinks en gerichte interviewvragen; geen vastgestelde klantbehoefte of benaderingen.
 - [AI Inbox-businesscase](docs/ai-studio/businesscase.html) — lokale scenarioberekening met menselijke review, herstelwerk, licenties, support en terugverdientijd; geen bewezen besparingen.
 - [AI Inbox-pilotresultaat meten](docs/ai-studio/pilot-meten.html) — lokale taak-voor-taakmeting met reviewtijd, herstelwerk, uitsluitingen en foutblokkades; geen klantdata-opslag.
 - [Website-publicatie](.github/workflows/publish-site.yml) — publiceert uitsluitend `docs/` na twee controles; GitHub Settings → Pages moet bron GitHub Actions gebruiken.
