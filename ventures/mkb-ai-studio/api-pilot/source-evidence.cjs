@@ -30,7 +30,9 @@ function normalizeRecord(r){
  day(r.checkedOn);
  return {kind,reference,field,value,source,checkedOn:r.checkedOn};
 }
-function compare(assertion,records,asOf){
+function compare(assertion,records,asOf,options={}){
+ const maxAgeDays=options.maxAgeDays===undefined?7:options.maxAgeDays;
+ if(!Number.isInteger(maxAgeDays)||maxAgeDays<0||maxAgeDays>365)throw Error('Invalid evidence age threshold');
  if(!assertion||typeof assertion!=='object')throw Error('Invalid assertion');
  if(!Array.isArray(records)||records.length>100)throw Error('Evidence set exceeds limit');
  const on=day(asOf),wanted=normalizeRecord({...assertion,source:'CLAIM',checkedOn:asOf});
@@ -43,15 +45,19 @@ function compare(assertion,records,asOf){
  if(future.length&&!valid.length)status='future-only';
  else if(versions.length>1)status='conflict';
  else if(valid.length&&valid.some(r=>r.value==='unknown'))status='unknown';
- else if(versions.length===1)status=versions[0]===wanted.value?'matched':'contradicted';
+ else if(versions.length===1){
+  const latest=Math.max(...valid.map(r=>day(r.checkedOn).getTime()));
+  const ageDays=Math.floor((on.getTime()-latest)/86400000);
+  status=ageDays>maxAgeDays?'stale':versions[0]===wanted.value?'matched':'contradicted';
+ }
  return {status,assertion:{kind:wanted.kind,reference:wanted.reference,field:wanted.field,value:wanted.value},
-  evidenceCount:valid.length,sourceLabels:sources,checkedThrough:asOf,
+  evidenceCount:valid.length,sourceLabels:sources,checkedThrough:asOf,maxAgeDays,
   requiresHumanReview:true,verifiedReality:false,approvedForSending:false,
   note:'Matched only means exact agreement with supplied records; it does not verify source authenticity, permissions or current truth.'};
 }
-function batch(assertions,records,asOf){
+function batch(assertions,records,asOf,options={}){
  if(!Array.isArray(assertions)||assertions.length>50)throw Error('Invalid assertions');
- const results=assertions.map(x=>compare(x,records,asOf));
+ const results=assertions.map(x=>compare(x,records,asOf,options));
  const unresolved=results.filter(x=>x.status!=='matched').length;
  return {results,unresolved,total:results.length,approvedForSending:false,requiresHumanReview:true};
 }
