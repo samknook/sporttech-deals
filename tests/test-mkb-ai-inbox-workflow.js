@@ -1,0 +1,27 @@
+/* Run: node tests/test-mkb-ai-inbox-workflow.js */
+'use strict';
+const assert=require('node:assert/strict');
+const wf=require('../docs/ai-studio/inbox-workflow-core.js');
+let q=wf.create();
+assert.equal(q.length,4);assert.equal(wf.stats(q).new,4);assert.equal(wf.stats(q).sent,0);
+assert.equal(wf.stats(q).highRiskUnresolved,2);
+assert.throws(()=>wf.update(q,'DEMO-101','approve',{reviewer:'Teamlead'}));
+q=wf.update(q,'DEMO-101','open');
+assert.equal(wf.stats(q).review,1);
+assert.throws(()=>wf.update(q,'DEMO-101','approve',{reviewer:'Teamlead'}));
+for(let i=0;i<3;i++)q=wf.update(q,'DEMO-101','check',{index:i,value:true});
+assert.throws(()=>wf.update(q,'DEMO-101','approve',{reviewer:''}));
+q=wf.update(q,'DEMO-101','approve',{reviewer:'Teamlead'});
+assert.equal(wf.stats(q).approved,1);
+assert.equal(wf.stats(q).sent,0);
+assert.throws(()=>wf.update(q,'DEMO-101','check',{index:0,value:false}));
+q=wf.update(q,'DEMO-104','open');
+assert.throws(()=>wf.update(q,'DEMO-104','reject',{reason:''}));
+q=wf.update(q,'DEMO-104','reject',{reason:'Verify via independent channel'});
+assert.equal(wf.stats(q).rejected,1);
+assert.equal(wf.stats(q).highRiskUnresolved,0);
+assert.match(wf.report(q),/Werkelijk verzonden: 0/);
+assert.throws(()=>wf.update(q,'NOT-REAL','open'));
+assert.throws(()=>wf.update(q,'DEMO-102','check',{index:4,value:true}));
+assert.throws(()=>wf.validate([{id:'DEMO-101'}]));
+console.log('Inbox workflow regression tests passed.');
