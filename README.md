@@ -6,6 +6,7 @@
 
 - [Conceptwebsite en transparante inboxdemo](docs/ai-studio/index.html) — regelgebaseerd, **geen AI-model**.
 - [Volledige fictieve inboxworkflow](docs/ai-studio/inbox-workflow.html) — vier vooraf ingestelde cases met controle, goedkeuring of escalatie; nooit e-mailverzending.
+- [API Inbox pilotadapter](ventures/mkb-ai-studio/api-pilot/README.md) — echte Responses API-aanroep technisch voorbereid; standaard offline, alleen fictieve testdata en expliciete opt-in; nog niet live uitgevoerd.
 - [Gratis AI QuickScan](docs/ai-studio/quickscan.html) — scenario voor mogelijke tijdwinst.
 - [AI Pilot Intake](docs/ai-studio/pilot-intake.html) — risicogates, scope en lokaal downloadbaar conceptadvies.
 - [Betaalde pakketten verkennen](docs/ai-studio/pakketten.html) — transparante indicaties en maatwerkuitzonderingen, geen checkout.
