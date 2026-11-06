@@ -88,3 +88,9 @@ Gebruik de lokale `docs/ai-studio/businesscase.html` om een door de ondernemer g
 
 De regel in een klantgesprek is: **als review, herstel, aanvullende kosten of kritieke fouten de businesscase negatief maken, niet proberen dat weg te verkopen**. Onderzoek eerst de taak, scope, proceskwaliteit en alternatieven. Een positieve spreadsheet laat nog niets zien over echte betrouwbaarheid, privacy, integratie of klantbereidheid om te betalen.
 
+
+## Taak-voor-taakmeting van de pilot
+
+Voor de eerste klantproef is `docs/ai-studio/pilot-meten.html` beschikbaar als volledig lokale meetkaart. Leg per taak zonder persoons-, factuur- of ordergegevens vast: oude tijd, AI-voorbereiding, menselijke beoordeling, herstelwerk, vergelijkbaarheid en inhoudelijke juistheid. De tool slaat niets op. Een verantwoordelijke medewerker kan het resultatenoverzicht kopiëren.
+
+De technische indicatie is bewust streng: minder dan 20 vergelijkbare taken betekent *onvoldoende bewijs*; geen nettotijdwinst betekent *geen netto voordeel*; **iedere geregistreerde inhoudelijke fout — ook in een uitgesloten taak — blokkeert een positief oordeel**. Een positief rapport autoriseert nooit productie. Twintig taken vormen slechts een praktische minimumgrens, geen statistische powerberekening of bewezen betrouwbaarheid. Een onafhankelijke productiegoedkeuring, privacytoets en klantacceptatie blijven verplicht.
