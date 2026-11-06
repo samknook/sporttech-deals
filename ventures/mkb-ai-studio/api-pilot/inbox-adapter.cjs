@@ -45,10 +45,27 @@ function outputText(response){
  if(!text||text.length>10000)throw Error('Empty or oversized output');
  return text;
 }
+/* Structural screening only. Human reviewers must assess actual source accuracy. */
+function assessDraft(text){
+ if(typeof text!=='string'||!text.trim()||text.length>10000)throw Error('Invalid draft');
+ const labels=['CATEGORY:','DRAFT:','HUMAN CHECKS:'];
+ const points=labels.map(x=>text.toUpperCase().indexOf(x));
+ const formatOk=points.every(x=>x>=0)&&points[0]<points[1]&&points[1]<points[2];
+ const draft=text.match(/DRAFT:\\s*([\\s\\S]*?)\\s*HUMAN CHECKS:/i)?.[1]?.trim()||'';
+ const checks=text.match(/HUMAN CHECKS:\\s*([\\s\\S]*)$/i)?.[1]?.trim()||'';
+ const signals=[
+  {name:'section-order',ok:formatOk},
+  {name:'draft-present',ok:draft.length>=12},
+  {name:'review-checks-present',ok:checks.length>=10}
+ ];
+ return {signals,formatOk,flagged:signals.filter(s=>!s.ok).map(s=>s.name),
+  needsHumanReview:true,approvedForSending:false,
+  disclaimer:'Format lint is not fact checking. Verify facts, promises and data access manually.'};
+}
 async function run({sample,mode='dry-run',model,apiKey,fetchImpl=globalThis.fetch,approvedData=false}){
  if(mode!=='dry-run'&&mode!=='live')throw Error('Unknown mode');
  const clean=validateSample(sample);
- if(mode==='dry-run')return {mode,id:clean.id,reviewRequired:true,sent:false,text:'DRY RUN — No API call. This case requires verified references and employee approval before any customer-facing use.',usedModel:null};
+ if(mode==='dry-run')return {mode,id:clean.id,reviewRequired:true,sent:false,text:'DRY RUN — No API call. This case requires verified references and employee approval before any customer-facing use.',usedModel:null,quality:null};
  if(!approvedData)throw Error('A responsible operator must approve the exact data for API use');
  if(typeof apiKey!=='string'||!apiKey.trim())throw Error('Missing API key');
  const req=buildRequest(clean,model);
@@ -56,6 +73,7 @@ async function run({sample,mode='dry-run',model,apiKey,fetchImpl=globalThis.fetc
  const response=await fetchImpl(ENDPOINT,{method:'POST',headers:{Authorization:'Bearer '+apiKey,'Content-Type':'application/json'},body:JSON.stringify(req.payload),signal:AbortSignal.timeout(30000)});
  if(!response||!response.ok)throw Error('Provider request failed ('+(response?.status||'unknown')+')');
  const data=await response.json();
- return {mode,id:clean.id,reviewRequired:true,sent:false,text:outputText(data),usedModel:model};
+ const text=outputText(data);
+ return {mode,id:clean.id,reviewRequired:true,sent:false,text,usedModel:model,quality:assessDraft(text)};
 }
-module.exports={ENDPOINT,validateSample,buildRequest,outputText,run};
+module.exports={ENDPOINT,validateSample,buildRequest,outputText,assessDraft,run};
