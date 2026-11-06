@@ -14,6 +14,8 @@ assert.equal(intake.assess({...base,approvedWorkspace:false}).status,'blocked');
 assert.equal(intake.assess({...base,humanApproval:false}).status,'blocked');
 assert.equal(intake.assess({...base,sourceOwner:false}).status,'blocked');
 assert.equal(intake.assess({...base,sensitive:true}).status,'review');
+assert.equal(intake.assess({...base,workflow:'finance'}).status,'review');
+assert.equal(intake.assess({...base,volume:0}).status,'review');
 const negative=intake.assess({...base,after:12});
 assert.equal(negative.status,'review');assert.ok(negative.netHours<0);
 assert.ok(negative.capacityValue<0);
