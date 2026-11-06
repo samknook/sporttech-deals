@@ -8,6 +8,7 @@ const evidence=require('./source-evidence.cjs');
 function prepare({sample,draft,assertions,records,asOf}){
  const safe=validateSample(sample);
  if(!Array.isArray(assertions)||!Array.isArray(records)||typeof draft!=='string')throw Error('Invalid case payload');
+ if(assertions.length<1)throw Error('At least one structured assertion is required for this pilot');
  const structure=assessDraft(draft);
  const warnings=auditClaims(draft,safe);
  const comparison=evidence.batch(assertions,records,asOf,{maxAgeDays:7});
