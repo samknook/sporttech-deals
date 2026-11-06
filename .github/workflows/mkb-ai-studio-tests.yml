@@ -44,6 +44,10 @@ jobs:
         run: node tests/test-mkb-ai-claim-coverage.js
       - name: Run adversarial synthetic acceptance suite
         run: node tests/test-mkb-ai-acceptance.js
+      - name: Test pilot commercial and security readiness gates
+        run: node tests/test-mkb-ai-pilot-readiness.js
+      - name: Print current pilot readiness blockers
+        run: node ventures/mkb-ai-studio/api-pilot/readiness-report.cjs
       - name: Execute offline mock model batch demo
         run: node ventures/mkb-ai-studio/api-pilot/model-batch-demo.cjs
       - name: Test net pilot task measurements
