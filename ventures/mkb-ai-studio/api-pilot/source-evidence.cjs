@@ -55,4 +55,6 @@ function batch(assertions,records,asOf){
  const unresolved=results.filter(x=>x.status!=='matched').length;
  return {results,unresolved,total:results.length,approvedForSending:false,requiresHumanReview:true};
 }
-module.exports={normalizeRecord,compare,batch};
+const api={normalizeRecord,compare,batch};
+if(typeof module!=='undefined'&&module.exports)module.exports=api;
+if(typeof window!=='undefined')window.MkbAiEvidence=api;
