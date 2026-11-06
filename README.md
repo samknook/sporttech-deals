@@ -9,6 +9,7 @@
 - [Broncontrole-demo](docs/ai-studio/broncontrole.html) — zeven fictieve scenario's (inclusief verouderde bronnen) voor overeenkomende, tegenstrijdige, ontbrekende of toekomstige bronwaarden.
 - [Exacte bronwaardenvergelijker](ventures/mkb-ai-studio/api-pilot/source-evidence.cjs) — alleen lokaal aangeleverde gestructureerde data; geen echte bronauthenticatie. Tests: `node tests/test-mkb-ai-source-evidence.js`.
 - [Geïntegreerde fictieve pilot](ventures/mkb-ai-studio/api-pilot/review-demo.cjs) — concept → kwaliteitscontrole → exacte bronvergelijking → menselijke beoordeling of escalatie. Alleen Node en testgegevens, geen klantintegratie.
+- [AI-modelbatch met testprovider](ventures/mkb-ai-studio/api-pilot/model-batch-demo.cjs) — twee fictieve berichten door een nagebootste Responses API, daarna broncontrole en controle- of escalatiestatus; geen API-kosten of verzending.
 - [Batch-evaluatie](ventures/mkb-ai-studio/api-pilot/batch-demo.cjs) — drie fictieve cases, afwijkingen en een voorzichtige scenarioberekening (geen gemeten besparing).
 - [Netto pilot-meetmodule](ventures/mkb-ai-studio/api-pilot/measure.cjs) — rekent verwerking, menselijke controle en herstelwerk mee; uitsluitend operator-ingevulde geanonimiseerde tijden.
 - [API Inbox pilotadapter](ventures/mkb-ai-studio/api-pilot/README.md) — echte Responses API-aanroep technisch voorbereid; standaard offline, alleen fictieve testdata en expliciete opt-in; nog niet live uitgevoerd.
