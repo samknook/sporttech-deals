@@ -8,6 +8,7 @@ const record={...assertion,source:'Synthetic ledger',checkedOn:'2026-11-06'};
 const safeDraft='CATEGORY: invoice\nDRAFT: We will investigate invoice INV-218 and follow up after reviewing the records.\nHUMAN CHECKS: Confirm customer and invoice status in the approved system.';
 const base={sample,draft:safeDraft,assertions:[assertion],records:[record],asOf:'2026-11-06'};
 const clean=pipe.prepare(base);
+assert.throws(()=>pipe.prepare({...base,assertions:[]}),/structured assertion/);
 assert.equal(clean.state,'pending-review');assert.deepEqual(clean.problems,[]);
 assert.equal(clean.comparison.results[0].status,'matched');
 assert.equal(pipe.summary(clean).sent,false);
