@@ -71,5 +71,18 @@ The browser demonstration at `docs/ai-studio/broncontrole.html` presents seven f
 
 This comparison is independent of the free-form response risk scanner. It requires structured assertions and records to be supplied deliberately; it cannot magically infer or validate every claim made in natural-language AI output. Both checks remain advisory and **never authorize sending**.
 
+## Integrated offline review walkthrough
+
+Run `node ventures/mkb-ai-studio/api-pilot/review-demo.cjs` from the repository root. This runs two fixed **fictional** records through four observable states:
+
+- a draft that passes the structural/claim checks and matches a supplied record, still pending human review;
+- the same draft marked **reviewed-draft** after a synthetic reviewer explicitly confirms source verification (not permission to send);
+- an asserted paid status contradicted by a synthetic unpaid ledger record, triggering a warning;
+- the contradicted case manually escalated.
+
+The `review-pipeline.cjs` module combines the existing draft format lint, conservative high-risk phrase detection and structured evidence comparison. It **does not** extract structured claims from AI text: assertions must be supplied independently. It does not authenticate the source, communicate with accounts, keep logs, grant access or authorize any outbound action. Review decisions are in-memory only, with no authentication or audit trail; don't use them as production controls.
+
+The GitHub Actions configuration includes `node tests/test-mkb-ai-review-pipeline.js`, covering conflicting, missing and stale evidence, forced escalations and review-state transitions.
+
 ## Evaluation guidance
 Record separate checks for answer format, references, uncertainty, approvals and factual correctness. A passing format check is not evidence that a draft is accurate or safe. Do not deploy based solely on automated checks.
