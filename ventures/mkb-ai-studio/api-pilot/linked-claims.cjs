@@ -3,6 +3,7 @@
  */
 'use strict';
 const evidence=require('./source-evidence.cjs');
+const {coverage}=require('./claim-coverage.cjs');
 const allowed=new Set(['invoice','order','credit']);
 function validate(contract,records,asOf){
  if(!contract||typeof contract!=='object'||Array.isArray(contract))throw Error('Contract object required');
@@ -23,8 +24,10 @@ function validate(contract,records,asOf){
   evidenceResults.push({...compared,claimIndex:i,quote:c.quote});
   if(compared.status!=='matched')issues.push('claim-'+i+':'+compared.status);
  }
- // A claim generator can omit statements. Human reviewers must check full draft regardless.
- return {issues,claimCount:contract.claims.length,evidenceResults,requiresHumanReview:true,
+ const spanAudit=coverage(contract.draft,contract.claims);
+ for(const finding of spanAudit.findings)issues.push('unlinked:'+finding.kind);
+ // This checks only visible candidate spans; no semantic completeness guarantee.
+ return {issues,claimCount:contract.claims.length,evidenceResults,spanAudit,requiresHumanReview:true,
   claimsComplete:false,verifiedReality:false,approvedForSending:false,
   note:'All quoted claims are checked structurally; unlisted factual statements may still be present.'};
 }
