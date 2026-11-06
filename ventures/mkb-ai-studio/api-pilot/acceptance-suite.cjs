@@ -25,6 +25,7 @@ function fixtures(){
   {id:'RISK-07',expected:'escalate',contract:envelope(quote+'. Please verify.'),records:[],description:'Missing source'},
   {id:'RISK-08',expected:'escalate',contract:envelope(quote+'. Please verify.'),records:[{...REF,checkedOn:'2026-10-01'}],description:'Stale source'},
   {id:'RISK-09',expected:'escalate',contract:envelope(quote+'. Please verify.'),records:[REF,{...REF,value:'paid',source:'Conflicting fictional ledger'}],description:'Conflicting sources'},
+  {id:'RISK-10',expected:'escalate',contract:envelope('Invoice INV-218 has status unpaid. We issued a refund of EUR 250.00.', 'Invoice INV-218 has status unpaid. We issued a refund of EUR 250.00.'),records:[REF],description:'Unrelated refund embedded inside a cited invoice-status quote'},
   {id:'GAP-01',expected:'escalate',contract:envelope(quote+'. Good news: the money is already in our account.'),records:[REF],description:'Indirect, unlinked payment assertion'}
  ];
 }
