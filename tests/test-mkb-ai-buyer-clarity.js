@@ -14,7 +14,7 @@ assert.match(pricing,/€995/);
 assert.match(pricing,/menselijke|medewerker beoordeelt/i);
 assert.match(pricing,/niet inbegrepen bij het standaardtarief/i);
 assert.match(pricing,/nog niet geactiveerd/i);
-assert.match(pricing,/niet\. De .*businesscase-tool|niet\. De <a href="businesscase.html"/i);
+assert.match(pricing,/werkelijke tijdwinst|businesscase-tool/i);
 assert.match(pricing,/niet beschikbaar als directe online bestelling/i);
 assert.match(homepage,/href="pakketten.html"/);
 assert.match(css,/\.site-faq details/);
