@@ -107,3 +107,7 @@ The tests `node tests/test-mkb-ai-claim-coverage.js` and `node tests/test-mkb-ai
 ## Adversarial acceptance test
 
 Run `node tests/test-mkb-ai-acceptance.js` to check eleven fixed fictional examples of source-backed business claims. The first evaluation found one missed indirect payment statement (9 of 10 risk cases flagged); the added phrase detector now flags all 10 known cases. This is a regression baseline, **not an accuracy percentage or authorization for production**. Refer to [ACCEPTANCE_CRITERIA.md](ACCEPTANCE_CRITERIA.md) for pilot rollout gates and limitations.
+
+## Customer pilot release readiness
+
+Run `node ventures/mkb-ai-studio/api-pilot/readiness-report.cjs` to print thirteen unresolved legal, operational, technical, privacy, security and quality checks for a future customer pilot. Run `node tests/test-mkb-ai-pilot-readiness.js` for regression tests. The module `pilot-readiness.cjs` accepts evidence status and a bounded operator-supplied reference per item. Missing evidence remains pending, failed evidence blocks release candidacy, and even a fully completed checklist **never authorizes production** without independent sign-off. The current report deliberately claims no verified evidence, no paying customer and no production deployment.
