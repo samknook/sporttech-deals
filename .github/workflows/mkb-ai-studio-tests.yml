@@ -68,6 +68,8 @@ jobs:
         run: node tests/test-mkb-ai-pilot-funnel.js
       - name: Test local meeting preparation without fake submission
         run: node tests/test-mkb-ai-lead-brief.js
+      - name: Test anonymous prospect routing and sales guardrails
+        run: node tests/test-mkb-ai-prospects.js
       - name: Test net AI Inbox buyer business case and bad economics gates
         run: node tests/test-mkb-ai-businesscase.js
       - name: Test client-facing pilot measurement and review accuracy gates
