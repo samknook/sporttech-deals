@@ -1,0 +1,47 @@
+<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Pilot Intake | MKB AI Studio</title><meta name="description" content="Onderzoek veilig of een MKB administratief proces geschikt is voor een begeleide AI-pilot. Genereer lokaal een intakerapport.">
+<style>:root{font-family:Inter,system-ui,sans-serif;background:#f4f7f7;color:#17323a}*{box-sizing:border-box}body{margin:0}header{background:#112f39;padding:19px;color:white}header .wrap{max-width:930px;margin:auto;display:flex;justify-content:space-between;gap:16px}header a{color:#c4f0e4}main{width:min(930px,calc(100% - 32px));margin:auto;padding:25px 0 70px}h1{font-size:clamp(34px,5vw,52px);letter-spacing:-.05em}h2{font-size:24px}.lead{font-size:18px;color:#4f6969;line-height:1.55}.panel{border:1px solid #d7e5e2;border-radius:16px;background:white;padding:24px;margin:19px 0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}label{display:block;font-weight:700;font-size:14px}input:not([type=checkbox]),select{display:block;width:100%;padding:11px;margin-top:6px;border:1px solid #aac3be;border-radius:9px;font:inherit}.check{display:flex;gap:12px;align-items:flex-start;margin:14px 0;line-height:1.5}.check input{accent-color:#176a59;width:20px;height:20px;margin:3px 0 0;flex-shrink:0}.check span{flex:1}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{padding:12px 18px;border:0;border-radius:10px;font:inherit;font-weight:750;background:#126a59;color:white;cursor:pointer;min-height:44px}.btn.secondary{background:#e2f2eb;color:#144b3d}.btn:disabled{opacity:.5;cursor:not-allowed}.metric{display:flex;align-items:baseline;gap:15px;flex-wrap:wrap}.metric strong{font-size:30px}.status{padding:14px;border-left:4px solid #aa752b;background:#fff6e8;border-radius:8px}.status[data-level=candidate]{background:#eaf6ed;border-color:#31825c}.status[data-level=blocked]{background:#fff0ea;border-color:#bc5a43}.notice{color:#5d7173;font-size:13px;line-height:1.6}ul{line-height:1.7}@media(max-width:600px){.grid{grid-template-columns:1fr}.panel{padding:17px}.actions .btn{width:100%}}@media print{header,.actions,.input-panel,.notice{display:none!important}.panel{border:0;break-inside:avoid}main{padding:0}}</style>
+</head><body><header><div class="wrap"><strong>MKB AI STUDIO · PILOT INTAKE</strong><a href="index.html">Terug naar diensten</a></div></header>
+<main><h1>Is jouw proces geschikt voor een AI-pilot?</h1><p class="lead">Deze intake helpt om tijdwinst, menselijke controle en noodzakelijke randvoorwaarden in kaart te brengen. Je kunt een rapport downloaden zonder je gegevens te versturen.</p>
+<section class="panel input-panel"><h2>1. Bedrijf en proces</h2><div class="grid">
+<label>Bedrijfsnaam (optioneel)<input id="company" maxlength="90" placeholder="Fictieve Demo BV"></label>
+<label>Procesverantwoordelijke (optioneel)<input id="owner" maxlength="90" placeholder="Functie, geen persoonsnaam nodig"></label>
+<label>Proces<select id="workflow"><option value="inbox">Klantmail / inbox</option><option value="documents">Documentverwerking</option><option value="finance">Financiële voorcontrole</option></select></label>
+<label>Gebruikte systemen (optioneel)<input id="tools" maxlength="250" placeholder="Bijvoorbeeld Gmail, Microsoft 365 of ERP"></label>
+<label>Handelingen per week<input id="volume" type="number" min="0" max="5000" value="80"></label>
+<label>Minuten per handeling nu<input id="before" type="number" min="0" max="240" value="8"></label>
+<label>Geschatte minuten ná, inclusief controles<input id="after" type="number" min="0" max="240" value="4"></label>
+<label>Interne uurkosten (EUR)<input id="hourly" type="number" min="0" max="500" value="35"></label>
+</div></section>
+<section class="panel input-panel"><h2>2. Beveiliging en verantwoordelijkheid</h2><p class="notice">Antwoord voor de voorgestelde werkwijze, niet voor wat je hoopt dat de software ooit zelfstandig kan. Vink alleen aan als de voorwaarde echt geldt.</p>
+<label class="check"><input id="sensitive" type="checkbox"><span>Dit proces kan gevoelige persoonsgegevens of vertrouwelijke bedrijfsinformatie bevatten.</span></label>
+<label class="check"><input id="external" type="checkbox"><span>De AI moet zelfstandig berichten naar klanten sturen zonder controle door medewerkers.</span></label>
+<label class="check"><input id="writeback" type="checkbox"><span>De AI moet zelfstandig boekhoudkundige of andere bedrijfsgegevens aanpassen.</span></label>
+<label class="check"><input id="approvedWorkspace" type="checkbox"><span>Er is een door ons bedrijf goedgekeurde zakelijke AI-omgeving met passende rechten.</span></label>
+<label class="check"><input id="humanApproval" type="checkbox" checked><span>Een aangewezen medewerker keurt externe berichten en belangrijke acties goed.</span></label>
+<label class="check"><input id="sourceOwner" type="checkbox" checked><span>Een medewerker is verantwoordelijk voor de brondocumenten en het proces.</span></label>
+<div class="actions"><button id="analyze" class="btn" type="button">Maak intakebeoordeling</button><button id="reset" class="btn secondary" type="button">Terug naar voorbeeld</button></div></section>
+<section class="panel" id="outcome"><h2>3. Voorlopige uitkomst</h2><p id="result" class="status" role="status">Vul de intake in en kies ‘Maak intakebeoordeling’.</p>
+<div class="grid"><div><span>Indicatieve capaciteitsruimte per maand</span><div class="metric"><strong id="hours">—</strong><span>uur</span></div></div><div><span>Indicatieve economische waarde per maand</span><div class="metric"><strong id="value">—</strong></div></div></div>
+<h3>Aandachtspunten</h3><ul id="findings"></ul><p id="scope"></p>
+<div class="actions"><button id="download" class="btn secondary" type="button" disabled>Download intakerapport (.txt)</button><button id="print" class="btn secondary" type="button">Print / PDF</button></div>
+<p class="notice">Geen offerte, geschiktheidscertificaat of juridische toets. Een officiële pilot vraagt nog een overeenkomst, gegevens- en toegangsafspraken, tests en goedkeuring door de klant. Negatieve berekende tijdwinst wordt niet weggepoetst.</p></section>
+<section class="panel"><h2>Wat is de volgende stap?</h2><p>Bij een geschikte pilot kiezen we samen een proces met één verantwoordelijke medewerker, testen we op fictieve voorbeelden en leggen we vast wat AI niet zelfstandig mag doen. MKB AI Studio accepteert nog geen opdrachten; deze omgeving is een productdemonstratie.</p></section>
+</main><script src="intake-core.js"></script><script>
+(function(){'use strict';const $=id=>document.getElementById(id),app=window.MkbAiIntake;
+const example={company:'',owner:'',tools:'',workflow:'inbox',volume:'80',before:'8',after:'4',hourly:'35',sensitive:false,external:false,writeback:false,approvedWorkspace:false,humanApproval:true,sourceOwner:true};
+let report='';
+function snapshot(){const a={};for(const k of ['company','owner','tools','workflow','volume','before','after','hourly'])a[k]=$(k).value;for(const k of ['sensitive','external','writeback','approvedWorkspace','humanApproval','sourceOwner'])a[k]=$(k).checked;return a}
+function setExample(){for(const [k,v] of Object.entries(example)){if(typeof v==='boolean')$(k).checked=v;else $(k).value=v}evaluate()}
+const money=n=>new Intl.NumberFormat('nl-NL',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n);
+function evaluate(){try{const input=snapshot(),r=app.assess(input);report=app.textReport(input);$('result').dataset.level=r.status;$('result').textContent=r.statusLabel;$('hours').textContent=r.netHours.toLocaleString('nl-NL',{maximumFractionDigits:1});$('value').textContent=money(r.capacityValue);
+$('findings').replaceChildren();if(!r.findings.length){let li=document.createElement('li');li.textContent='Geen onmiddellijke blokkades ingevuld. Een veiligheids- en privacyevaluatie blijft nodig.';$('findings').append(li)}
+for(const x of r.findings){let li=document.createElement('li');li.textContent=x.label;$('findings').append(li)}
+$('scope').textContent='Conceptscope: '+r.proposedScope;$('download').disabled=false;
+}catch(e){report='';$('download').disabled=true;$('result').removeAttribute('data-level');$('result').textContent='Controleer je invoer: '+e.message;$('hours').textContent='—';$('value').textContent='—';$('findings').replaceChildren();$('scope').textContent=''}}
+$('analyze').addEventListener('click',evaluate);$('reset').addEventListener('click',setExample);
+document.querySelectorAll('input,select').forEach(e=>e.addEventListener('input',()=>{$('download').disabled=true;$('result').textContent='Invoer gewijzigd. Maak een nieuwe beoordeling.'}));
+$('download').addEventListener('click',()=>{if(!report)return;const url=URL.createObjectURL(new Blob([report],{type:'text/plain;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='mkb-ai-studio-intakerapport.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)});
+$('print').addEventListener('click',()=>{evaluate();if(report)window.print()});setExample();
+})();
+</script></body></html>
