@@ -8,6 +8,9 @@ const claim={kind:'invoice',reference:'INV-218',field:'payment_status',value:'pa
 assert.equal(ev.compare(claim,[source],asOf).status,'contradicted');
 assert.equal(ev.compare({...claim,value:'unpaid'},[source],asOf).status,'matched');
 assert.equal(ev.compare(claim,[],asOf).status,'missing');
+assert.equal(ev.compare({...claim,value:'unpaid'},[{...source,checkedOn:'2026-10-01'}],asOf).status,'stale');
+assert.equal(ev.compare({...claim,value:'unpaid'},[source],asOf,{maxAgeDays:0}).status,'stale');
+assert.throws(()=>ev.compare(claim,[source],asOf,{maxAgeDays:-1}));
 assert.equal(ev.compare(claim,[{...source,checkedOn:'2026-11-10'}],asOf).status,'future-only');
 assert.equal(ev.compare(claim,[source,{...source,value:'paid',source:'Other synthetic export'}],asOf).status,'conflict');
 assert.equal(ev.compare(claim,[{...source,value:'unknown'}],asOf).status,'unknown');
