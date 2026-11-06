@@ -31,11 +31,19 @@ function assess(x){
  x.budget==='995-plus'?10:x.budget==='295-994'?5:0,
  x.decision==='decision-maker'?10:x.decision==='researcher'?4:0
  ]).reduce((a,b)=>a+b,0);
- const fit=blockers.length?'review-required':score>=70?'starter-candidate':score>=40?'quickscan-candidate':'low-fit';
+ const budgetFitsStarter=x.budget==='995-plus';
+ const decisionConfirmed=x.decision==='decision-maker';
+ const volumeFits=x.volume!=='under-20'&&x.repetition!=='low';
+ const fit=blockers.length?'review-required':
+   x.budget==='under-295'?'low-fit':
+   !budgetFitsStarter||!decisionConfirmed?'discovery-needed':
+   volumeFits&&x.sources==='approved-digital'&&score>=70?'starter-candidate':
+   score>=40?'quickscan-candidate':'low-fit';
  const canOfferStandard=fit==='starter-candidate';
  return {score,fit,blockers,canOfferStandard,
   nextStep:fit==='starter-candidate'?'Plan een scopegesprek; verifieer uren, rechten en betalingsbereidheid':
   fit==='review-required'?'Bespreek blokkades; beloof geen vast Starter-tarief':
+  fit==='discovery-needed'?'Eerst budgethouder, budget en waarde van de dienst expliciet bespreken':
   fit==='quickscan-candidate'?'Onderzoek een betaalde QuickScan, pas na zakelijke gereedheid':
   'Onderzoek eerst of het proces echt urgent en herhalend is',
   prices:{quickscan:295,starter:995},
