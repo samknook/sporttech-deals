@@ -9,6 +9,7 @@ on:
   pull_request:
     paths:
       - 'docs/ai-studio/**'
+      - 'ventures/mkb-ai-studio/api-pilot/**'
       - 'tests/test-mkb-ai-*.js'
       - '.github/workflows/mkb-ai-studio-tests.yml'
 jobs:
