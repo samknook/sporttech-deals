@@ -49,5 +49,17 @@ Actual live API verification; data protection assessment; real or simulated cust
 
 Provider technical references: https://platform.openai.com/docs/api-reference/responses and https://platform.openai.com/docs/guides/text .
 
+## Draft claim screening — conservative and advisory
+
+The API adapter now attaches two independent diagnostics to a live **draft-only** response:
+1. **Structure quality:** CATEGORY, DRAFT and HUMAN CHECKS sections, with basic content-length checks.
+2. **Claim warnings:** literal indicators of asserted payment receipt, refunded payments, completed bank detail changes, guaranteed delivery, or concrete invoice/order references and dates that are absent from the supplied approved reference facts.
+
+A flagged result means **manual verification is necessary**. An unflagged result is **not evidence of correctness**: paraphrases, negation, currencies, dates in other formats, claims implied by context, deceptive text and facts contradicting source materials can escape detection. Literal matches cannot verify source accuracy, nor validate that the supplied approved facts are themselves trustworthy.
+
+The model response is never approved for outbound delivery by the adapter. `approvedForSending` and `verifiedBySystem` remain `false`, even if all checks appear clear. No mailing, bookkeeping or automatic actions exist.
+
+Additional synthetic tests: `node tests/test-mkb-ai-claims.js`, also configured in the existing GitHub Actions workflow. The test files are public; real client facts and private implementation templates must never be placed here.
+
 ## Evaluation guidance
 Record separate checks for answer format, references, uncertainty, approvals and factual correctness. A passing format check is not evidence that a draft is accurate or safe. Do not deploy based solely on automated checks.
