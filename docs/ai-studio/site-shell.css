@@ -1,0 +1,20 @@
+/* MKB AI Studio — shared navigation and design tokens, NL-only site */
+:root{--brand:#122f38;--mint:#baf4da;--teal:#0b6856;--ink:#17343b;--line:#d5e5de;--page:#f7faf8}
+.site-header{background:#102d36;color:#fff;padding:0 18px;position:relative;z-index:15}
+.site-header .site-nav-wrap{max-width:1100px;margin:auto;min-height:76px;display:flex;align-items:center;gap:28px;justify-content:space-between}
+.site-brand{display:flex;align-items:center;gap:10px;color:#fff!important;text-decoration:none;font-size:17px;font-weight:850;letter-spacing:-.025em}
+.site-mark{background:#baf4da;color:#123b34;border-radius:10px;display:inline-grid;place-items:center;width:35px;height:35px;font-size:19px;font-weight:900}
+.site-nav-links{display:flex;align-items:center;gap:21px;margin-left:auto}
+.site-nav-links a,.site-mobile a{color:#e7f6f1!important;text-decoration:none;font-size:14px;font-weight:650}
+.site-nav-links a:hover,.site-mobile a:hover,.site-nav-links a:focus-visible,.site-mobile a:focus-visible{text-decoration:underline}
+.site-nav-links a[aria-current=page],.site-mobile a[aria-current=page]{color:#baf4da!important}
+.site-nav-links .site-nav-cta{color:#14372e!important;background:#baf4da;border-radius:9px;padding:11px 14px;font-weight:800}
+.site-mobile{display:none}
+.site-mobile summary{cursor:pointer;border:1px solid #8eb4a9;padding:10px 14px;border-radius:9px;font-weight:750;list-style:none}
+.site-mobile summary::-webkit-details-marker{display:none}
+.site-mobile summary::before{content:'☰';margin-right:8px}
+.site-mobile[open] summary::before{content:'×'}
+.site-mobile .site-mobile-links{position:absolute;top:100%;left:0;right:0;background:#123741;border-top:1px solid #456b67;padding:10px 18px 20px;display:grid;gap:0;box-shadow:0 14px 20px #061c2450}
+.site-mobile .site-mobile-links a{display:block;min-height:48px;padding:14px;border-bottom:1px solid #39605b}
+.site-mobile .site-mobile-links a:last-child{color:#baf4da!important}
+@media(max-width:860px){.site-nav-links{display:none}.site-mobile{display:block}.site-header .site-nav-wrap{min-height:68px}}
