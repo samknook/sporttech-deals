@@ -18,6 +18,8 @@
 - [AI Pilot Intake](docs/ai-studio/pilot-intake.html) — risicogates, scope en lokaal downloadbaar conceptadvies.
 - [Betaalde pakketten verkennen](docs/ai-studio/pakketten.html) — transparante indicaties en maatwerkuitzonderingen, geen checkout.
 - [Wat krijgt een klant?](docs/ai-studio/wat-krijg-je.html) — concreet AI Inbox Starter-aanbod, opleveringen, prijsgrenzen en uitsluitingen.
+- [Eerste AI Inbox-pilot verkennen](docs/ai-studio/pilot.html) — lokale geschiktheidstoets zonder contactgegevens, verzending of opslag.
+- [Uitvoeringsprotocol eerste betaalde pilot](ventures/mkb-ai-studio/PAID_PILOT_EXECUTION.md) — discovery, scope, veiligheidsvoorwaarden en metingen.
 - [Eerste betaalde klantaanbod](ventures/mkb-ai-studio/FIRST_CUSTOMER_OFFER.md) — intern scope-, kwalificatie- en rendabiliteitskader (nog niet gevalideerd).
 - [Publiek/privé releasebeleid](ventures/mkb-ai-studio/PUBLIC_PRIVATE_RELEASE_POLICY.md) — commerciële implementaties en klantgegevens blijven buiten de openbare repository.
 - [AI-assistenten voor bedrijven](docs/ai-studio/assistant-configurator.html) — openbaar dienstenoverzicht, zonder gratis configuratiegenerator of template-download.
