@@ -18,6 +18,8 @@ async function main(){
   approvedData:live&&process.env.AI_STUDIO_APPROVED_DATA==='yes'});
  console.log('\nCASE '+result.id+' | '+result.mode.toUpperCase()+' | HUMAN APPROVAL REQUIRED | SENT: NO');
  console.log(result.text);
+ if(result.quality)console.log('Format warnings: '+(result.quality.flagged.join(', ')||'none')+'; employee review required.');
+ if(result.claims)console.log('Content flags: '+(result.claims.flagged.map(x=>x.key).join(', ')||'none detected')+'; no source verification performed.');
  if(live)console.log('No customer email has been sent. Review the result against approved records.');
 }
 main().catch(e=>{console.error('Pilot stopped: '+e.message);process.exitCode=1});
