@@ -44,3 +44,17 @@ Vraag vervolgens: "Over hoeveel vergelijkbare vragen gaat het per week? Wie cont
 5. Bied pas bij behoefte, geschikte data, getoetste beveiliging en geverifieerd budget een schriftelijke scope aan.
 
 **Commercial readiness:** een zakelijke contact-/verzendidentiteit voor *MKB AI Studio* is niet bevestigd; geen prospect is benaderd.
+
+## Verificatie van zakelijke contactkanalen — 6 november 2026
+
+Alleen algemene, openbaar gepubliceerde zakelijke adressen, niet de persoonsgegevens van individuele medewerkers:
+
+| Code | Algemeen zakelijk contact | Uit openbare bron | Status |
+|---|---|---|---|
+| P-01 S-Line Products | info@s-lineproducts.nl | LinkedIn-bedrijfsprofiel, https://nl.linkedin.com/company/s-line-products-bv ; officiële contactpagina https://s-lineproducts.nl/contact/ toont afgeschermd e-mailadres | Onderzoek, niet benaderd |
+| P-02 Baas Verpakkingen | info@baasverpakkingen.nl | Bedrijfsprivacyverklaring https://baasverpakkingen.nl/c/privacy | Onderzoek, niet benaderd |
+| P-06 Peters Verpakkingen | info@petersverpakkingen.nl | Officiële contactpagina https://petersverpakkingen.nl/contact/ | Onderzoek, niet benaderd |
+
+**Correctie bronadres P-06:** officiële contactpagina vermeldt *Handelsweg 21, 5121 NH Wormerveer*; andere adressites noemen afwijkende postcode. Gebruik voor contact bij voorkeur het e-mailadres op de bedrijfswebsite en controleer adresgegevens voordat een fysieke zending wordt gedaan.
+
+Deze kanalen zijn gepubliceerd voor algemene zakelijke vragen; dat geeft geen automatische toestemming voor ongevraagde commerciële bulkmail. Verzend geen berichten zonder menselijke keuze en controle van relevante communicatievereisten.
