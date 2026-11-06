@@ -40,6 +40,8 @@ jobs:
         run: node tests/test-mkb-ai-batch-evaluation.js
       - name: Test model-to-review batch integration (mocked API)
         run: node tests/test-mkb-ai-model-batch.js
+      - name: Execute offline mock model batch demo
+        run: node ventures/mkb-ai-studio/api-pilot/model-batch-demo.cjs
       - name: Test net pilot task measurements
         run: node tests/test-mkb-ai-measure.js
       - name: Run fictional batch evaluation example
