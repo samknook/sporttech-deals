@@ -8,6 +8,7 @@
 - [Volledige fictieve inboxworkflow](docs/ai-studio/inbox-workflow.html) — vier vooraf ingestelde cases met controle, goedkeuring of escalatie; nooit e-mailverzending.
 - [Broncontrole-demo](docs/ai-studio/broncontrole.html) — zeven fictieve scenario's (inclusief verouderde bronnen) voor overeenkomende, tegenstrijdige, ontbrekende of toekomstige bronwaarden.
 - [Exacte bronwaardenvergelijker](ventures/mkb-ai-studio/api-pilot/source-evidence.cjs) — alleen lokaal aangeleverde gestructureerde data; geen echte bronauthenticatie. Tests: `node tests/test-mkb-ai-source-evidence.js`.
+- [Geïntegreerde fictieve pilot](ventures/mkb-ai-studio/api-pilot/review-demo.cjs) — concept → kwaliteitscontrole → exacte bronvergelijking → menselijke beoordeling of escalatie. Alleen Node en testgegevens, geen klantintegratie.
 - [API Inbox pilotadapter](ventures/mkb-ai-studio/api-pilot/README.md) — echte Responses API-aanroep technisch voorbereid; standaard offline, alleen fictieve testdata en expliciete opt-in; nog niet live uitgevoerd.
 - [Gratis AI QuickScan](docs/ai-studio/quickscan.html) — scenario voor mogelijke tijdwinst.
 - [AI Pilot Intake](docs/ai-studio/pilot-intake.html) — risicogates, scope en lokaal downloadbaar conceptadvies.
