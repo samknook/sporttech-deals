@@ -39,5 +39,15 @@ const response=text=>({ok:true,status:200,json:async()=>({status:'completed',out
  assert.equal(failed.summary.stoppedEarly,true);
  assert.equal(failed.summary.processed,1);
  assert.equal(failed.results[0].reason.includes('429'),false);
+ const linkedSource={kind:'invoice',reference:'INV-218',field:'payment_status',value:'unpaid',source:'Synthetic ledger',checkedOn:'2026-11-06'};
+ const linkedOutput=value=>({draft:'Invoice INV-218 has status '+value+'. Please verify against records.',claims:[{quote:'Invoice INV-218 has status '+value,evidence:{kind:'invoice',reference:'INV-218',field:'payment_status',value}}]});
+ const linkedFake=value=>async()=>({ok:true,status:200,json:async()=>({status:'completed',output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(linkedOutput(value))}]}]})});
+ const linkedCase={...item('CASE-006'),records:[linkedSource]};
+ const linkedGood=await require('../ventures/mkb-ai-studio/api-pilot/model-batch.cjs').processLinkedBatch({items:[linkedCase],mode:'live',approvedData:true,model:'synthetic-test',apiKey:'fake-key',fetchImpl:linkedFake('unpaid')});
+ assert.equal(linkedGood.results[0].status,'needs-human-review');
+ assert.equal(linkedGood.results[0].assessment.claimsComplete,false);
+ const linkedBad=await require('../ventures/mkb-ai-studio/api-pilot/model-batch.cjs').processLinkedBatch({items:[linkedCase],mode:'live',approvedData:true,model:'synthetic-test',apiKey:'fake-key',fetchImpl:linkedFake('paid')});
+ assert.equal(linkedBad.results[0].status,'needs-escalation');
+ assert.equal(linkedBad.summary.outboundSent,0);
  console.log('Offline-first model batch tests passed. All model replies mocked.');
 })().catch(e=>{console.error(e);process.exitCode=1});
