@@ -1,0 +1,31 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const root=path.join(__dirname,'../docs/ai-studio');
+const pages=['index.html','wat-krijg-je.html','pakketten.html','pilot.html','kennismaking.html','businesscase.html','pilot-meten.html','quickscan.html','pilot-intake.html','inbox-workflow.html','broncontrole.html','assistant-configurator.html','prospecten.html','hulpmiddelen.html'];
+const css=fs.readFileSync(path.join(root,'visual-refresh.css'),'utf8');
+const shell=fs.readFileSync(path.join(root,'site-shell.css'),'utf8');
+assert.ok(fs.existsSync(path.join(root,'visual-refresh.css')));
+for(const p of pages){
+ const html=fs.readFileSync(path.join(root,p),'utf8');
+ assert.match(html,/<html lang="nl">/);
+ assert.match(html,/href="site-shell.css"/);
+ assert.match(html,/href="visual-refresh.css"/);
+ assert.ok(html.indexOf('site-shell.css')<html.indexOf('visual-refresh.css'),'Stylesheets must cascade from shell to visual theme: '+p);
+ assert.ok(html.indexOf('visual-refresh.css')<html.indexOf('</head>'),'Theme must be in head: '+p);
+ assert.match(html,/<details class="site-mobile">/);
+}
+const home=fs.readFileSync(path.join(root,'index.html'),'utf8');
+const pricing=fs.readFileSync(path.join(root,'pakketten.html'),'utf8');
+assert.match(home,/<body class="homepage">/);
+assert.match(home,/Prototype met fictieve gegevens|Prototypefase/);
+assert.match(pricing,/<body class="pricing-page">/);
+assert.match(pricing,/Meest concreet voor één workflow/);
+assert.match(pricing,/€295/);
+assert.match(pricing,/€995/);
+assert.match(css,/prefers-reduced-motion/);
+assert.match(shell,/site-mobile/);
+assert.doesNotMatch(css,/@import|url\(https?:/i,'Do not load remote fonts or assets for cosmetic design');
+assert.doesNotMatch(css,/position:\s*fixed/i,'No obstructive fixed overlays');
+console.log('Visual refresh checks passed across '+pages.length+' public pages.');
