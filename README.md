@@ -1,4 +1,20 @@
 # TriZentro — Triathlon Race Tools
+
+## Nieuw onafhankelijk ondernemingsexperiment — MKB AI Studio (6 november 2026)
+
+**Strategische pivot:** naast het bestaande TriZentro-experiment wordt een nieuwe onderneming verkend die **AI-werkprocessen implementeert bij kleinere B2B-bedrijven**. MKB AI Studio is uitsluitend een werknaam; er bestaat nog geen geregistreerde BV, klantcontract of geverifieerde verkoop.
+
+- [Conceptwebsite en transparante inboxdemo](docs/ai-studio/index.html) — regelgebaseerd, **geen AI-model**.
+- [Gratis AI QuickScan](docs/ai-studio/quickscan.html) — scenario voor mogelijke tijdwinst.
+- [AI Pilot Intake](docs/ai-studio/pilot-intake.html) — risicogates, scope en lokaal downloadbaar conceptadvies.
+- [Implementatiehandleiding](ventures/mkb-ai-studio/IMPLEMENTATION_KIT.md) — Inbox, Document Desk, Finance Desk.
+- [Klantoplevertemplate](ventures/mkb-ai-studio/CLIENT_DELIVERY_TEMPLATE.md) — met 8 acceptatietests en menselijk toezicht.
+- [Acquisitie- en interviewplan](ventures/mkb-ai-studio/FIRST_CUSTOMERS_PLAYBOOK.md) — gesprekken nog niet uitgevoerd.
+- [Commercieel startplan](ventures/mkb-ai-studio/LAUNCH_PLAYBOOK.md).
+- Regressietests: `node tests/test-mkb-ai-studio.js`, `node tests/test-mkb-ai-studio-quickscan.js`, `node tests/test-mkb-ai-pilot-intake.js`. GitHub Actions-configuratie in `.github/workflows/mkb-ai-studio-tests.yml`; live CI-uitvoering is nog niet onafhankelijk gecontroleerd.
+
+**Repo-isolatie:** het prototype staat in een afzonderlijke submap van de bestaande `sporttech-deals`-repository. Er is nog **geen afzonderlijke nieuwe repository of eigen domein**. Het nieuwe bedrijf is niet gekoppeld aan of onderschreven door OpenAI; de klanten moeten hun eigen softwarelicenties en veilige werkomgeving regelen.
+
 **Internationale werknaam, 4 november 2026 · voorheen SportTech Deals / TriKoers.**
 
 **TriZentro** maakt gratis triatloncalculators en raceplanners voor Sprint, Olympisch, 70.3, Full en eigen afstanden. De huidige tools werken in de browser; digitale producten en geautoriseerde affiliateprijsvergelijkingen zijn mogelijke toekomstige verdienmodellen. De naam, domeinen en socialmediahandles zijn juridisch en technisch nog niet volledig gecontroleerd. Er zijn nog geen accounts of domeinen onder TriZentro geregistreerd.
