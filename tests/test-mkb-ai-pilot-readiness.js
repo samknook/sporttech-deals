@@ -1,0 +1,26 @@
+/* Run: node tests/test-mkb-ai-pilot-readiness.js */
+'use strict';
+const assert=require('node:assert/strict');
+const readiness=require('../ventures/mkb-ai-studio/api-pilot/pilot-readiness.cjs');
+const empty=readiness.assess({});
+assert.equal(empty.total,13);
+assert.equal(empty.verified,0);
+assert.equal(empty.pending,13);
+assert.equal(empty.releaseCandidate,false);
+assert.equal(empty.productionAuthorized,false);
+assert.match(readiness.report(empty),/Production authorized by this tool: NEVER/);
+assert.throws(()=>readiness.assess({'unknown-step':{status:'verified',reference:'fake'}}),/Unknown/);
+assert.throws(()=>readiness.assess({'customer-tenant':{status:'verified'}}),/reference/);
+assert.throws(()=>readiness.assess({'customer-tenant':{status:'complete',reference:'fake'}}),/status/);
+const one=readiness.assess({'registered-business':{status:'verified',reference:'Synthetic registration evidence for test only'}});
+assert.equal(one.verified,1);
+assert.equal(one.releaseCandidate,false);
+const mixed=readiness.assess({'registered-business':{status:'failed'}});
+assert.equal(mixed.failed,1);
+const all=Object.fromEntries(readiness.REQUIREMENTS.map(x=>[x.id,{status:'verified',reference:'synthetic-'+x.id}]));
+const submitted=readiness.assess(all);
+assert.equal(submitted.verified,13);
+assert.equal(submitted.releaseCandidate,true);
+assert.equal(submitted.productionAuthorized,false);
+assert.match(readiness.report(submitted),/independent sign-off/);
+console.log('Customer pilot readiness checklist tests passed. No production permission.');
