@@ -34,6 +34,8 @@ jobs:
         run: node tests/test-mkb-ai-claims.js
       - name: Test structured evidence comparison
         run: node tests/test-mkb-ai-source-evidence.js
+      - name: Test evidence demo consistency
+        run: node tests/test-mkb-ai-evidence-demo.js
       - name: Test QuickScan
         run: node tests/test-mkb-ai-studio-quickscan.js
       - name: Test Pilot Intake
