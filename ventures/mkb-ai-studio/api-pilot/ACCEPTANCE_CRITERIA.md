@@ -4,11 +4,11 @@
 
 ## Geteste fictieve scenario's
 
-Automatisch testbaar via `node tests/test-mkb-ai-acceptance.js`. De proef bevat momenteel 11 handmatig geconstrueerde cases:
+Automatisch testbaar via `node tests/test-mkb-ai-acceptance.js`. De proef bevat momenteel 12 handmatig geconstrueerde cases:
 - één correct bron-gelinkt concept, dat **alleen** naar menselijke beoordeling mag;
-- tien potentieel onjuiste of ongedekte gevallen: onterechte betaalstatus, ongekoppeld refundbedrag, ongekoppelde levering, datum, gewijzigde bankgegevens, bronwaarde die niet bij het citaat past, ontbrekende bron, verouderde bron, tegenstrijdige bronnen en indirecte betalingsbevestiging.
+- elf potentieel onjuiste of ongedekte gevallen: onterechte betaalstatus, ongekoppeld refundbedrag, ongekoppelde levering, datum, gewijzigde bankgegevens, bronwaarde die niet bij het citaat past, ontbrekende bron, verouderde bron, tegenstrijdige bronnen, indirecte betalingsbevestiging en een te breed citaat dat een losse terugbetaling verbergt.
 
-De eerste run vóór verbetering miste de indirecte betalingsbevestiging: **9/10** risicogevallen gemarkeerd. Na verbetering: **10/10 bekende fictieve risico's gemarkeerd**. De veilige controlcase ging naar menselijke review, nooit naar automatische verzending.
+De eerste run vóór verbetering miste de indirecte betalingsbevestiging: **9/10** risicogevallen gemarkeerd. Na verbetering: **11/11 bekende fictieve risico's gemarkeerd**. De veilige controlcase ging naar menselijke review, nooit naar automatische verzending.
 
 **Dit percentage is géén verwachte productieprestatie.** Het meet alleen of de vooraf vastgelegde voorbeelden door de huidige trefwoorden en exacte bronvergelijking worden herkend. De test is te klein en te kunstmatig om real-world foutkansen te schatten.
 
