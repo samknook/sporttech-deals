@@ -24,6 +24,8 @@ jobs:
           node-version: '22'
       - name: Test Inbox
         run: node tests/test-mkb-ai-studio.js
+      - name: Test Inbox Review Workflow
+        run: node tests/test-mkb-ai-inbox-workflow.js
       - name: Test QuickScan
         run: node tests/test-mkb-ai-studio-quickscan.js
       - name: Test Pilot Intake
