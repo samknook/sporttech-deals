@@ -1,0 +1,21 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const dir=path.join(__dirname,'../docs/ai-studio');
+const hub=fs.readFileSync(path.join(dir,'hulpmiddelen.html'),'utf8');
+const home=fs.readFileSync(path.join(dir,'index.html'),'utf8');
+const meeting=fs.readFileSync(path.join(dir,'kennismaking.html'),'utf8');
+const files=['inbox-workflow.html','quickscan.html','businesscase.html','pilot.html','broncontrole.html','pilot-meten.html','pilot-intake.html','assistant-configurator.html'];
+assert.match(hub,/<html lang="nl">/);
+assert.match(hub,/href="site-shell.css"/);
+assert.match(hub,/<details class="site-mobile">/);
+assert.match(hub,/name="viewport"/);
+for(const file of files){assert.match(hub,new RegExp('href="'+file.replace('.','\\.')+'"'));assert.ok(fs.existsSync(path.join(dir,file)))}
+assert.match(home,/href="hulpmiddelen.html"/);
+assert.match(meeting,/Begin met één concrete vraag/);
+assert.match(meeting,/geen zakelijk ontvangstkanaal aangesloten/i);
+assert.match(meeting,/<details class="extra">/);
+assert.match(meeting,/src="lead-brief-core.js"/);
+assert.doesNotMatch(meeting,/fetch\s*\(|XMLHttpRequest|localStorage\.|sessionStorage\.|mailto:/);
+console.log('Tools hub and simplified meeting preparation verified.');
