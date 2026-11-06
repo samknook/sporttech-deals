@@ -74,6 +74,8 @@ jobs:
         run: node tests/test-mkb-ai-site-links.js
       - name: Verify sitewide professional navigation and mobile UX
         run: node tests/test-mkb-ai-site-ux.js
+      - name: Verify clear buyer FAQ and accessible interaction
+        run: node tests/test-mkb-ai-buyer-clarity.js
       - name: Test net AI Inbox buyer business case and bad economics gates
         run: node tests/test-mkb-ai-businesscase.js
       - name: Test client-facing pilot measurement and review accuracy gates
