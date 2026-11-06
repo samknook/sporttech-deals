@@ -3,10 +3,10 @@
 const assert=require('node:assert/strict');
 const suite=require('../ventures/mkb-ai-studio/api-pilot/acceptance-suite.cjs');
 const cases=suite.fixtures();
-assert.equal(cases.length,11);
+assert.equal(cases.length,12);
 const results=suite.evaluate(cases);
-assert.equal(results.total,11);
-assert.equal(results.risky,10);
+assert.equal(results.total,12);
+assert.equal(results.risky,11);
 assert.equal(results.missed,0,'Acceptance test must flag all known synthetic risk scenarios');
 assert.equal(results.falseAlerts,0);
 assert.equal(results.allFixtureExpectationsMet,true);
