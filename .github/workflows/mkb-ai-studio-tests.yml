@@ -38,6 +38,8 @@ jobs:
         run: node tests/test-mkb-ai-review-pipeline.js
       - name: Test batch pilot metrics and review boundaries
         run: node tests/test-mkb-ai-batch-evaluation.js
+      - name: Test model-to-review batch integration (mocked API)
+        run: node tests/test-mkb-ai-model-batch.js
       - name: Test net pilot task measurements
         run: node tests/test-mkb-ai-measure.js
       - name: Run fictional batch evaluation example
