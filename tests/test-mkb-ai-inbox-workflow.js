@@ -24,4 +24,13 @@ assert.match(wf.report(q),/Werkelijk verzonden: 0/);
 assert.throws(()=>wf.update(q,'NOT-REAL','open'));
 assert.throws(()=>wf.update(q,'DEMO-102','check',{index:4,value:true}));
 assert.throws(()=>wf.validate([{id:'DEMO-101'}]));
+// The published workflow is intentionally a synthetic, disconnected demo.
+const fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../docs/ai-studio/inbox-workflow.html'),'utf8');
+const engine=fs.readFileSync(path.join(__dirname,'../docs/ai-studio/inbox-workflow-core.js'),'utf8');
+assert.match(html,/geen live AI/i);
+assert.match(html,/Er wordt geen e-mail gelezen, verzonden of opgeslagen/i);
+assert.doesNotMatch(html,/fetch\s*\(|XMLHttpRequest|localStorage\.|sessionStorage\.|navigator\.sendBeacon/);
+assert.doesNotMatch(engine,/fetch\s*\(|XMLHttpRequest|localStorage\.|sessionStorage\./);
+assert.match(html,/href="pakketten.html"/);
 console.log('Inbox workflow regression tests passed.');
