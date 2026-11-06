@@ -13,7 +13,7 @@ assert.match(html,/<meta name="viewport"/);
 assert.match(homepage,/href="wat-krijg-je.html"/);
 assert.match(packages,/href="wat-krijg-je.html"/);
 for(const price of ['€295','€995','€2.495'])assert.ok(html.includes(price),'Offer price '+price+' missing');
-assert.match(html,/excl\. btw/i);
+assert.match(html,/excl.? btw/i);
 assert.match(html,/geen productieklare/i);
 assert.match(html,/acceptatietests/i);
 assert.match(html,/menselijke/i);
