@@ -86,3 +86,6 @@ The GitHub Actions configuration includes `node tests/test-mkb-ai-review-pipelin
 
 ## Evaluation guidance
 Record separate checks for answer format, references, uncertainty, approvals and factual correctness. A passing format check is not evidence that a draft is accurate or safe. Do not deploy based solely on automated checks.
+
+## Batch pilot and net time measurement
+Run `node ventures/mkb-ai-studio/api-pilot/batch-demo.cjs` to review three synthetic cases together. The batch report contains scenario assumptions only, not realized savings. The `measure.cjs` module compares previous task time to new processing PLUS human review PLUS correction time, and counts quality exceptions. These observations are supplied by an operator and are not independently verified. Neither tool sends mail or authorizes deployment.
