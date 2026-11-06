@@ -49,4 +49,34 @@ async function processBatch({items,mode='dry-run',model,apiKey,approvedData=fals
  };
  return {mode,results,summary,requiresHumanReview:true,sendEnabled:false};
 }
-module.exports={validateCases,processBatch};
+
+async function processLinkedBatch({items,mode='dry-run',model,apiKey,approvedData=false,fetchImpl}){
+ const linked=require('./linked-claims.cjs');
+ if(!['dry-run','live'].includes(mode))throw Error('Unknown mode');
+ const cases=validateCases(items);
+ if(mode==='live'&&(approvedData!==true||typeof apiKey!=='string'||!apiKey.trim()||typeof model!=='string'||!model.trim()))throw Error('Explicit live approval, model and credentials required');
+ const results=[];
+ for(const item of cases){
+  if(mode==='dry-run'){
+   results.push({id:item.sample.id,status:'not-executed',sent:false});
+   continue;
+  }
+  try{
+   const generated=await adapter.run({sample:item.sample,mode,model,apiKey,approvedData,fetchImpl,outputFormat:'linked-json'});
+   const contract=linked.parse(generated.text);
+   const assessment=linked.validate(contract,item.records,item.asOf);
+   results.push({id:item.sample.id,status:assessment.issues.length?'needs-escalation':'needs-human-review',
+    assessment,draft:contract.draft,sent:false});
+  }catch(error){
+   results.push({id:item.sample.id,status:'processing-error',reason:'Linked response or provider failed',sent:false});
+   break;
+  }
+ }
+ return {mode,results,summary:{
+  requested:cases.length,processed:results.length,linkedDrafts:results.filter(x=>x.assessment).length,
+  escalations:results.filter(x=>x.status==='needs-escalation').length,
+  errors:results.filter(x=>x.status==='processing-error').length,
+  outboundSent:0,goLiveApproved:false
+ },requiresHumanReview:true,sendEnabled:false};
+}
+module.exports={validateCases,processBatch,processLinkedBatch};
