@@ -62,6 +62,26 @@ function assessDraft(text){
   needsHumanReview:true,approvedForSending:false,
   disclaimer:'Format lint is not fact checking. Verify facts, promises and data access manually.'};
 }
+/* Conservative claim flags: literal screening only, not factual verification. */
+function auditClaims(text,sample){
+ const clean=validateSample(sample);
+ const lint=assessDraft(text);
+ const boundaries=['CATEGORY:','DRAFT:','HUMAN CHECKS:'].map(x=>text.toUpperCase().indexOf(x));
+ const draft=boundaries.every(n=>n>=0)?text.slice(boundaries[1]+6,boundaries[2]):text;
+ const claims=[];
+ const rules=[
+  ['confirmed-payment',/\b(?:payment (?:was|has been) received|invoice (?:is|has been) paid|betaling (?:is|werd) ontvangen|factuur (?:is|werd) betaald)\b/i],
+  ['refund-committed',/\b(?:refund (?:has been|was|will be) (?:issued|processed|sent)|terugbetaling (?:is|wordt|zal worden) (?:gedaan|uitgevoerd|verwerkt))\b/i],
+  ['bank-change',/\b(?:bank (?:details|account) (?:has been|was) (?:changed|updated)|rekeningnummer (?:is|werd) gewijzigd)\b/i],
+  ['delivery-guaranteed',/\b(?:guarantee delivery|delivery (?:is|has been) confirmed|levering (?:is|wordt) gegarandeerd|leverdatum (?:is|werd) bevestigd)\b/i]
+ ];
+ for(const [key,pattern] of rules)if(pattern.test(draft))claims.push({key,reason:'Sensitive business commitment needs independent verification'});
+ const allowed=clean.approvedFacts.map(x=>x.fact).join(' ').toUpperCase();
+ const tokens=draft.match(/\b(?:INV|ORD)[-_ ]?\d{2,12}\b|\b20\d{2}-\d{2}-\d{2}\b|(?:€|EUR\s*)\d[\d.,]*/gi)||[];
+ for(const token of [...new Set(tokens)])if(!allowed.includes(token.toUpperCase()))claims.push({key:'unverified-reference',reason:'A concrete reference or date was not present in approved fact text'});
+ return {flagged:claims,structureFlags:lint.flagged,needsHumanReview:true,approvedForSending:false,verifiedBySystem:false,
+  warning:'Heuristic screening only: phrase matching can miss unsupported claims and cannot establish truth.'};
+}
 async function run({sample,mode='dry-run',model,apiKey,fetchImpl=globalThis.fetch,approvedData=false}){
  if(mode!=='dry-run'&&mode!=='live')throw Error('Unknown mode');
  const clean=validateSample(sample);
@@ -74,6 +94,6 @@ async function run({sample,mode='dry-run',model,apiKey,fetchImpl=globalThis.fetc
  if(!response||!response.ok)throw Error('Provider request failed ('+(response?.status||'unknown')+')');
  const data=await response.json();
  const text=outputText(data);
- return {mode,id:clean.id,reviewRequired:true,sent:false,text,usedModel:model,quality:assessDraft(text)};
+ return {mode,id:clean.id,reviewRequired:true,sent:false,text,usedModel:model,quality:assessDraft(text),claims:auditClaims(text,clean)};
 }
-module.exports={ENDPOINT,validateSample,buildRequest,outputText,assessDraft,run};
+module.exports={ENDPOINT,validateSample,buildRequest,outputText,assessDraft,auditClaims,run};
