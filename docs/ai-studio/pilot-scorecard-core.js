@@ -17,7 +17,8 @@ function assess(rows,options={}){
  });
  const eligible=valid.filter(x=>x.comparable);
  const excluded=valid.length-eligible.length;
- const errors=eligible.filter(x=>!x.correct).length;
+ const errors=valid.filter(x=>!x.correct).length;
+ const excludedErrors=valid.filter(x=>!x.comparable&&!x.correct).length;
  const before=eligible.reduce((a,x)=>a+x.before,0);
  const after=eligible.reduce((a,x)=>a+x.processing+x.review+x.rework,0);
  const saved=before-after;
@@ -26,7 +27,7 @@ function assess(rows,options={}){
  const qualityPass=errors===0;
  const speedPass=saved>0;
  const state=!qualityPass?'quality-block':confidence==='insufficient-sample'?'insufficient-evidence':!speedPass?'no-net-gain':'further-review';
- return {observed:valid.length,eligible:eligible.length,excluded,errors,beforeMinutes:before,afterMinutes:after,
+ return {observed:valid.length,eligible:eligible.length,excluded,errors,excludedErrors,beforeMinutes:before,afterMinutes:after,
   savedMinutes:saved,meanMinutesSaved:meanSaving,
   capacityValue:saved/60*hourly,
   state,confidence,qualityPass,speedPass,
@@ -35,7 +36,8 @@ function assess(rows,options={}){
 }
 function report(x){const euro=new Intl.NumberFormat('nl-NL',{style:'currency',currency:'EUR'});const label={ 'quality-block':'STOP — kritieke fout(en) in vergelijkbare taken', 'insufficient-evidence':'ONVOLDOENDE BEWIJS — verzamel ten minste 20 vergelijkbare taken', 'no-net-gain':'GEEN NETTO TIJDWINST — onderzochte taken werden niet sneller', 'further-review':'VERDERE BEOORDELING — netto tijdwinst binnen een kleine steekproef' };
 return ['MKB AI STUDIO — PILOTMEETRAPPORT','Verwerkte taken: '+x.observed,'Vergelijkbare taken: '+x.eligible,'Uitgesloten taken: '+x.excluded,
- 'Kritieke/inhoudelijke fouten: '+x.errors,'Totale handmatige tijd vóór: '+x.beforeMinutes.toFixed(1)+' min',
+ 'Kritieke/inhoudelijke fouten (inclusief uitgesloten taken): '+x.errors,
+ 'Waarvan fouten in uitgesloten taken: '+x.excludedErrors,'Totale handmatige tijd vóór: '+x.beforeMinutes.toFixed(1)+' min',
  'AI-verwerking + menselijke controle + correcties: '+x.afterMinutes.toFixed(1)+' min',
  'Netto tijdsverschil: '+x.savedMinutes.toFixed(1)+' min',
  'Capaciteitswaarde op basis van opgegeven uurwaarde: '+euro.format(x.capacityValue),
