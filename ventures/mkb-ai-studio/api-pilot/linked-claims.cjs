@@ -20,6 +20,18 @@ function validate(contract,records,asOf){
   const tokens=c.quote.toLowerCase().split(/[^a-z0-9._-]+/).filter(Boolean);
   if(!tokens.includes(String(ref.reference).toLowerCase()))issues.push('claim-'+i+':reference-not-in-quote');
   if(!tokens.includes(String(ref.value).toLowerCase()))issues.push('claim-'+i+':value-not-in-quote');
+  // A cited span may itself contain unrelated factual claims. No blanket citation of entire paragraphs.
+  const indicators=coverage(c.quote,[]).findings;
+  if(c.quote.length>180)issues.push('claim-'+i+':citation-too-broad');
+  for(const indicator of indicators){
+   const kind=indicator.kind;
+   if(kind==='reference'&&indicator.text.toUpperCase()!==String(ref.reference).toUpperCase())issues.push('claim-'+i+':unrelated-reference');
+   if(kind==='amount'&&ref.field!=='amount_due')issues.push('claim-'+i+':unrelated-amount');
+   if(kind==='date'&&ref.field!=='delivery_date')issues.push('claim-'+i+':unrelated-date');
+   if(kind==='refund-assertion'&&ref.field!=='refund_status')issues.push('claim-'+i+':unrelated-refund');
+   if(kind==='delivery-assertion'&&!String(ref.field).startsWith('delivery_'))issues.push('claim-'+i+':unrelated-delivery');
+   if(kind==='bank-change')issues.push('claim-'+i+':bank-change-needs-separate-review');
+  }
   const key=[ref.kind,ref.reference,ref.field,ref.value].join('|');
   if(seen.has(key))issues.push('claim-'+i+':duplicate');
   seen.add(key);
