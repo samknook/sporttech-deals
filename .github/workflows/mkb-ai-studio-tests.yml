@@ -1,0 +1,30 @@
+name: MKB AI Studio prototype tests
+on:
+  push:
+    paths:
+      - 'docs/ai-studio/**'
+      - 'tests/test-mkb-ai-*.js'
+      - '.github/workflows/mkb-ai-studio-tests.yml'
+  pull_request:
+    paths:
+      - 'docs/ai-studio/**'
+      - 'tests/test-mkb-ai-*.js'
+      - '.github/workflows/mkb-ai-studio-tests.yml'
+jobs:
+  node-tests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test Inbox
+        run: node tests/test-mkb-ai-studio.js
+      - name: Test QuickScan
+        run: node tests/test-mkb-ai-studio-quickscan.js
+      - name: Test Pilot Intake
+        run: node tests/test-mkb-ai-pilot-intake.js
