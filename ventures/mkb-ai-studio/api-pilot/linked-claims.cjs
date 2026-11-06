@@ -17,6 +17,9 @@ function validate(contract,records,asOf){
   if(!contract.draft.includes(c.quote))issues.push('claim-'+i+':quote-not-in-draft');
   const ref=c.evidence;
   if(!ref||typeof ref!=='object'||!allowed.has(ref.kind))throw Error('Invalid structured evidence reference');
+  const tokens=c.quote.toLowerCase().split(/[^a-z0-9._-]+/).filter(Boolean);
+  if(!tokens.includes(String(ref.reference).toLowerCase()))issues.push('claim-'+i+':reference-not-in-quote');
+  if(!tokens.includes(String(ref.value).toLowerCase()))issues.push('claim-'+i+':value-not-in-quote');
   const key=[ref.kind,ref.reference,ref.field,ref.value].join('|');
   if(seen.has(key))issues.push('claim-'+i+':duplicate');
   seen.add(key);
