@@ -1,0 +1,32 @@
+<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Broncontrole Demo | MKB AI Studio</title><meta name="description" content="Bekijk hoe MKB AI Studio uitspraken over facturen en orders vergelijkt met fictieve, gestructureerde bedrijfsgegevens."><style>
+:root{font-family:Inter,system-ui,sans-serif;background:#f4f7f7;color:#18353e}*{box-sizing:border-box}body{margin:0}header{background:#102f39;color:white;padding:20px}header>div,main{max-width:960px;margin:auto}header a{color:#d3f3e5}main{padding:35px 18px 80px}h1{font-size:clamp(34px,5vw,55px);line-height:1.08;letter-spacing:-.05em}.lead{font-size:18px;color:#587276;line-height:1.6}.panel{background:white;border:1px solid #d5e5e0;border-radius:16px;padding:23px;margin:20px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.fact{background:#edf6f1;padding:17px;border-radius:11px;overflow-wrap:anywhere}label{display:block;font-weight:750}select{font:inherit;padding:12px;border:1px solid #b1cbc2;border-radius:9px;width:100%;margin-top:9px}button,.btn{background:#126a59;color:white;border:0;border-radius:10px;padding:12px 17px;font:inherit;font-weight:750;cursor:pointer;display:inline-block;text-decoration:none;min-height:45px}.result{background:#fff6eb;border-left:4px solid #bb853d;border-radius:9px;padding:15px;margin:15px 0;font-weight:800}.result[data-state=matched]{background:#e8f4ea;border-color:#36815c}.result[data-state=contradicted],.result[data-state=conflict]{background:#fff0e8;border-color:#b1543c}.muted{color:#647879;font-size:13px;line-height:1.6}ul{line-height:1.75}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.55 ui-monospace,monospace}@media(max-width:700px){.grid{grid-template-columns:1fr}.panel{padding:17px}}</style></head><body>
+<header><div><b>MKB AI STUDIO</b> · <a href="index.html">Terug naar diensten</a></div></header><main><h1>Klopt het antwoord met de bron?</h1><p class="lead">Een AI kan overtuigend klinken en toch verkeerde betalingsinformatie geven. Deze demonstratie vergelijkt een zakelijke uitspraak met fictieve bronwaarden en signaleert tegenstrijdigheden, ontbrekende gegevens en conflicten.</p>
+<div class="panel"><label for="scenario">Kies een fictieve situatie</label><select id="scenario">
+<option value="contradicted">AI zegt betaald; bron zegt onbetaald</option>
+<option value="matched">AI zegt onbetaald; bron zegt onbetaald</option>
+<option value="conflict">Twee bronnen geven een andere betaalstatus</option>
+<option value="missing">Factuur ontbreekt in de aangeleverde bron</option>
+<option value="unknown">Bron bevat onbekende betaalstatus</option>
+<option value="future">Bronwaarde is gedateerd ná de peildatum</option>
+</select><div class="grid"><div class="fact"><h2>Voorgestelde uitspraak</h2><p id="claim">—</p></div><div class="fact"><h2>Aangeleverde gegevens</h2><pre id="records">—</pre></div></div><div class="result" id="outcome" role="status">—</div><h3>Controlepunten voor de medewerker</h3><ul id="checks"><li>Controleer de identiteit van de klant en het bronsysteem.</li><li>Controleer of de bron actueel en bevoegd toegankelijk is.</li><li>Keurt geen externe reactie goed zonder feitelijke verificatie.</li></ul>
+<p class="muted" id="note">Een overeenkomst met een aangeleverde waarde is geen onafhankelijke bevestiging dat de werkelijkheid klopt.</p></div>
+<div class="panel"><h2>Wat verkopen wij dan?</h2><p>De gratis demonstratie toont alleen de vergelijking met vaste fictieve waarden. Voor een echte klant richten we na overeenkomst de veilige toegang tot diens toegestane bronsystemen, verwerking van AI-concepten, uitzonderingen, autorisaties en acceptatietests in. Er zijn nog geen echte koppelingen of klantinstallaties operationeel.</p>
+<a class="btn" href="pakketten.html">Bekijk onze implementatiepakketten</a><p class="muted">Geen AI-model of API-sleutel in deze demo; er worden geen gegevens geüpload of opgeslagen. Geen betaling, e-mail of boekhoudmutatie mogelijk.</p></div>
+</main><script src="evidence-demo-core.js"></script><script>
+(function(){'use strict';const api=window.MkbAiEvidence,$=id=>document.getElementById(id);
+const base={kind:'invoice',reference:'INV-218',field:'payment_status'},asOf='2026-11-06';
+const record=(value,date='2026-11-05',source='Fictief boekhoudingsexport')=>({...base,value,source,checkedOn:date});
+const cases={
+contradicted:{claim:{...base,value:'paid'},records:[record('unpaid')]},
+matched:{claim:{...base,value:'unpaid'},records:[record('unpaid')]},
+conflict:{claim:{...base,value:'paid'},records:[record('paid'),record('unpaid','2026-11-05','Fictief betaaloverzicht')]},
+missing:{claim:{...base,value:'paid'},records:[]},
+unknown:{claim:{...base,value:'paid'},records:[record('unknown')]},
+future:{claim:{...base,value:'paid'},records:[record('paid','2026-11-08')]}
+};
+const statuses={contradicted:'Tegenspraak: de uitspraak wijkt af van de bron',matched:'Exacte overeenkomst met aangeleverde waarde — nog niet geverifieerd',conflict:'Bronconflict: meerdere waarden voor dezelfde factuur',missing:'Ontbrekend bewijs: geen relevante bronwaarde',unknown:'Onbekend: bron bevat geen definitieve status','future-only':'Datumconflict: bron is later dan de gekozen peildatum'};
+function render(){try{const x=cases[$('scenario').value],result=api.compare(x.claim,x.records,asOf);$('claim').textContent='Factuur '+x.claim.reference+' heeft betaalstatus: '+(x.claim.value==='paid'?'BETAALD':'ONBETAALD');$('records').textContent=x.records.length?x.records.map(r=>r.source+'\nStatus: '+r.value+'\nGecontroleerd op: '+r.checkedOn).join('\n\n'):'Geen gegevens aanwezig';$('outcome').dataset.state=result.status;$('outcome').textContent=statuses[result.status]||'Extra controle vereist';$('note').textContent='Peildatum: '+asOf+'. Alleen exacte vergelijking met aangeleverde gegevens; authentieke broncontrole, actuele gegevens en menselijke goedkeuring blijven noodzakelijk.'}catch(e){$('outcome').removeAttribute('data-state');$('outcome').textContent='Controle mislukt: '+e.message}}
+}
+$('scenario').addEventListener('change',render);render();
+})();
+</script></body></html>
