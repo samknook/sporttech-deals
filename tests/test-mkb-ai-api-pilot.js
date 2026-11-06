@@ -35,6 +35,13 @@ const sample=require('../ventures/mkb-ai-studio/api-pilot/synthetic-sample.json'
  assert.equal(result.sent,false);
  assert.equal(result.reviewRequired,true);
  assert.match(result.text,/HUMAN CHECKS/);
+ assert.equal(result.quality.approvedForSending,false);
+ assert.equal(result.quality.needsHumanReview,true);
+ assert.equal(result.quality.flagged.length,1); // short test draft; still not accepted automatically
+ const strong=adapter.assessDraft('CATEGORY: invoice\nDRAFT: We will verify the payment using our accounting source.\nHUMAN CHECKS: Review invoice, bank transfer and identity.');
+ assert.equal(strong.flagged.length,0);
+ assert.equal(strong.approvedForSending,false);
+ assert.ok(adapter.assessDraft('Bad output').flagged.length>0);
  assert.equal(requests,1);
  await assert.rejects(adapter.run({sample,mode:'live',approvedData:true,apiKey:'synthetic_test_key',model:'gpt-6-luna',fetchImpl:async()=>({ok:false,status:429})}),/429/);
  assert.throws(()=>adapter.outputText({status:'incomplete',output:[]}));
