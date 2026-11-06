@@ -26,7 +26,8 @@
 - [Commerciële releaseblokkades](https://github.com/samknook/sporttech-deals/issues/8) — officiële MKB AI Studio-afzender, merkkeuze en GitHub Pages-publicatie controleren.
 - [AI Inbox-businesscase](docs/ai-studio/businesscase.html) — lokale scenarioberekening met menselijke review, herstelwerk, licenties, support en terugverdientijd; geen bewezen besparingen.
 - [AI Inbox-pilotresultaat meten](docs/ai-studio/pilot-meten.html) — lokale taak-voor-taakmeting met reviewtijd, herstelwerk, uitsluitingen en foutblokkades; geen klantdata-opslag.
-- [Website-publicatie](.github/workflows/publish-site.yml) — publiceert uitsluitend `docs/` na twee controles; GitHub Settings → Pages moet bron GitHub Actions gebruiken.
+- [Website-publicatie](.github/workflows/publish-site.yml) — publiceert uitsluitend `docs/` na aanbod-, businesscase-, navigatie- en UX-controles; GitHub Settings → Pages moet bron GitHub Actions gebruiken.
+- [Oprichtersacties](ventures/mkb-ai-studio/FOUNDER_ACTIONS.md) — welke drie beslissingen direct nodig zijn, en wat voor latere echte verkoop en klantpilots geregeld moet worden.
 - [Kennismaking voorbereiden](docs/ai-studio/kennismaking.html) — lokaal een zakelijke gespreksaanvraag opstellen, kopiëren of als tekstbestand bewaren; geen ontvanger of verzending.
 - [Uitvoeringsprotocol eerste betaalde pilot](ventures/mkb-ai-studio/PAID_PILOT_EXECUTION.md) — discovery, scope, veiligheidsvoorwaarden en metingen.
 - [Eerste betaalde klantaanbod](ventures/mkb-ai-studio/FIRST_CUSTOMER_OFFER.md) — intern scope-, kwalificatie- en rendabiliteitskader (nog niet gevalideerd).
