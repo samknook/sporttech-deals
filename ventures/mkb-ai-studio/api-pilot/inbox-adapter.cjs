@@ -51,8 +51,8 @@ function assessDraft(text){
  const labels=['CATEGORY:','DRAFT:','HUMAN CHECKS:'];
  const points=labels.map(x=>text.toUpperCase().indexOf(x));
  const formatOk=points.every(x=>x>=0)&&points[0]<points[1]&&points[1]<points[2];
- const draft=text.match(/DRAFT:\\s*([\\s\\S]*?)\\s*HUMAN CHECKS:/i)?.[1]?.trim()||'';
- const checks=text.match(/HUMAN CHECKS:\\s*([\\s\\S]*)$/i)?.[1]?.trim()||'';
+ const draft=formatOk?text.slice(points[1]+6,points[2]).trim():'';
+ const checks=formatOk?text.slice(points[2]+13).trim():'';
  const signals=[
   {name:'section-order',ok:formatOk},
   {name:'draft-present',ok:draft.length>=12},
