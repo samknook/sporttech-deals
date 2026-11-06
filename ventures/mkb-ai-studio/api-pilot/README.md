@@ -48,3 +48,6 @@ The sample path is fixed to `synthetic-sample.json`; the CLI intentionally does 
 Actual live API verification; data protection assessment; real or simulated customer ERP lookups; true inbox ingestion; permissions/authentication; hardened logging and error sanitization; commercial contracts; deployment; full browser acceptance tests. None of these can be replaced by a clever prompt.
 
 Provider technical references: https://platform.openai.com/docs/api-reference/responses and https://platform.openai.com/docs/guides/text .
+
+## Evaluation guidance
+Record separate checks for answer format, references, uncertainty, approvals and factual correctness. A passing format check is not evidence that a draft is accurate or safe. Do not deploy based solely on automated checks.
