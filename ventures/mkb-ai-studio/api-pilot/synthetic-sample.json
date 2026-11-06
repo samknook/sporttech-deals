@@ -1,0 +1,10 @@
+{
+  "id": "DEMO-INV-218",
+  "message": "Goedemorgen, volgens ons is factuur INV-218 al betaald. Kunnen jullie dit controleren?",
+  "approvedFacts": [
+    {
+      "source": "Fictief factuuroverzicht v1",
+      "fact": "INV-218 bestaat in de voorbeelddataset; betalingsstatus niet gecontroleerd."
+    }
+  ]
+}
