@@ -8,7 +8,7 @@ const assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'../docs/ai-studio');
 const entrypoints=[
  'index.html','wat-krijg-je.html','pakketten.html','pilot.html',
- 'kennismaking.html','businesscase.html','pilot-meten.html','prospecten.html'
+ 'kennismaking.html','businesscase.html','pilot-meten.html','prospecten.html','hulpmiddelen.html'
 ];
 let checked=0;
 for(const entry of entrypoints){
