@@ -70,5 +70,7 @@ jobs:
         run: node tests/test-mkb-ai-lead-brief.js
       - name: Test net AI Inbox buyer business case and bad economics gates
         run: node tests/test-mkb-ai-businesscase.js
+      - name: Test client-facing pilot measurement and review accuracy gates
+        run: node tests/test-mkb-ai-pilot-scorecard.js
       - name: Verify Public/Private Boundary
         run: node tests/test-mkb-ai-public-boundary.js
