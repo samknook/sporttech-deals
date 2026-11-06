@@ -74,6 +74,8 @@ jobs:
         run: node tests/test-mkb-ai-site-links.js
       - name: Verify sitewide professional navigation and mobile UX
         run: node tests/test-mkb-ai-site-ux.js
+      - name: Verify refreshed responsive visual identity
+        run: node tests/test-mkb-ai-visual-refresh.js
       - name: Verify clear buyer FAQ and accessible interaction
         run: node tests/test-mkb-ai-buyer-clarity.js
       - name: Verify consolidated tools navigation and simplified meeting page
