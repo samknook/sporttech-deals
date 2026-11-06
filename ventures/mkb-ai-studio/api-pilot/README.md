@@ -89,3 +89,11 @@ Record separate checks for answer format, references, uncertainty, approvals and
 
 ## Batch pilot and net time measurement
 Run `node ventures/mkb-ai-studio/api-pilot/batch-demo.cjs` to review three synthetic cases together. The batch report contains scenario assumptions only, not realized savings. The `measure.cjs` module compares previous task time to new processing PLUS human review PLUS correction time, and counts quality exceptions. These observations are supplied by an operator and are not independently verified. Neither tool sends mail or authorizes deployment.
+
+## End-to-end AI-to-review batch (new)
+
+Run `node ventures/mkb-ai-studio/api-pilot/model-batch-demo.cjs` to see two fictional emails processed through a **mock provider**, then through claim warnings, source-record comparison and human-review status assignment. The demo performs **zero** provider requests or outgoing actions. `node tests/test-mkb-ai-model-batch.js` tests the same connection with fake Responses API payloads.
+
+The reusable `model-batch.cjs` processes at most ten explicitly supplied cases. **Dry-run is the default**, skips calls and deliberately returns `not-executed` rather than inventing AI outputs. Its live mode requires explicit approval, an operator-specified model and API credentials; it stops the batch on the first API/validation error and never includes confidential error details in summaries. All outputs remain internal drafts, never approved for sending.
+
+**Limitations:** the structured assertions are currently prepared separately from generated text; their completeness and semantic correspondence to the AI answer have *not* been proven. A clean source comparison cannot prove that every factual statement in a free-form draft was checked. Human confirmation in the in-memory review pipeline does not amount to a production approval or verified audit trail. There is no live customer connection, authentication, service-level monitoring or guaranteed idempotency. Before a paid deployment, add a genuine private tenant, scoped permissions, reliable claim extraction, auditability, source ownership and a representative acceptance test. No real OpenAI API request was made in this development round.
