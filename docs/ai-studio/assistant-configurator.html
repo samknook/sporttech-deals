@@ -1,0 +1,31 @@
+<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AI Assistant Configurator — MKB AI Studio</title>
+<style>:root{font-family:Inter,system-ui,sans-serif;background:#f4f7f7;color:#152f36}*{box-sizing:border-box}body{margin:0}header{background:#112f39;color:white;padding:18px}header div,main{max-width:940px;margin:auto}header a{color:#d3f4e9}main{padding:30px 18px 70px}h1{font-size:clamp(32px,5vw,53px);letter-spacing:-.05em}.lead{font-size:18px;color:#536e70;line-height:1.6}.panel{background:white;border:1px solid #d6e5e1;border-radius:15px;padding:24px;margin:20px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}label{font-weight:730;font-size:14px;display:block}input,select,textarea{font:inherit;border:1px solid #a6c0bc;border-radius:9px;padding:10px;width:100%;margin-top:6px}textarea{min-height:90px;resize:vertical}.output{font:13px/1.55 ui-monospace,SFMono-Regular,monospace;white-space:pre-wrap;overflow-wrap:anywhere;min-height:310px;border-radius:9px;background:#e8f1ef;padding:17px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin:17px 0}button{border:0;border-radius:10px;padding:12px 16px;background:#146b59;color:white;font:inherit;font-weight:750;cursor:pointer;min-height:44px}button.secondary{background:#e1f0eb;color:#184940}button:disabled{opacity:.55}.note{color:#617677;font-size:13px;line-height:1.6}.warning{background:#fff6e7;border-left:4px solid #ba8331;padding:14px;border-radius:8px}@media(max-width:620px){.grid{grid-template-columns:1fr}.panel{padding:17px}.actions button{width:100%}}</style></head><body>
+<header><div><b>MKB AI STUDIO</b> · <a href="index.html">Terug naar de website</a></div></header>
+<main><h1>AI Assistant Configurator</h1><p class="lead">Maak een veilige eerste versie van de instructies voor een AI-assistent. Kies één proces, geef eventueel een teamnaam en een naam van het goedgekeurde beleidsdocument op, en download het resultaat.</p>
+<section class="panel"><h2>1. Kies het werkproces</h2><div class="grid">
+<label>Assistent<select id="type"><option value="inbox">Inbox Assistant</option><option value="documents">Document Desk</option><option value="finance">Finance Desk</option></select></label>
+<label>Team / organisatie (optioneel)<input id="team" maxlength="80" placeholder="Fictieve klantenservice"></label>
+<label>Naam of versie goedgekeurde beleidsbron (optioneel)<input id="policy" maxlength="150" placeholder="Klantenservicebeleid v2"></label>
+<label>Aanvullende instructiepunten (optioneel)<textarea id="details" maxlength="300" placeholder="Alleen instructies zonder klantgegevens of geheimen."></textarea></label></div>
+<div class="actions"><button id="generate" type="button">Genereer instructies</button><button id="reset" class="secondary" type="button">Leegmaken</button></div>
+<p class="note">Voer hier geen wachtwoorden, persoonsgegevens, klantdocumenten of vertrouwelijke bedrijfsinformatie in. Deze configurator gebruikt vaste instructies en geen generatieve AI.</p>
+</section>
+<section class="panel"><h2>2. Controleer en exporteer</h2><p id="status" class="warning" role="status">De instructies zijn een starttemplate. Ze zijn nog niet geïnstalleerd in een ChatGPT-account en moeten door de klant worden gecontroleerd.</p>
+<div id="instructions" class="output" aria-label="Voorgestelde instructies">—</div>
+<div class="actions"><button id="copy" type="button" class="secondary">Kopieer instructies</button><button id="download" type="button" class="secondary">Download (.txt)</button></div>
+<p class="note">De klant moet zelf een geschikte zakelijke AI-omgeving bezitten. Beschikbaarheid van functies en GPT-configuratie hangt af van product, plan en rechten. Er zijn geen live connectoren of automatische acties. Test de configuratie met fictieve gegevens en zorg voor menselijke controle.</p>
+</section>
+<section class="panel"><h2>3. Volgende stap in een echte klantpilot</h2><p>Neem de gegenereerde instructies als uitgangspunt, voeg uitsluitend door de klant geautoriseerde brongegevens toe in diens eigen werkomgeving en doorloop het acceptatieprotocol. De template is geen garantie op betrouwbare antwoorden.</p>
+<p><a href="pilot-intake.html">Open eerst de Pilot Intake</a> als de gegevens, goedkeuring of risicocontroles nog onbekend zijn.</p></section>
+</main>
+<script src="assistant-config-core.js"></script><script>
+(function(){'use strict';const $=id=>document.getElementById(id),core=window.MkbAiAssistantConfig;let content='';
+function build(){try{const r=core.build({type:$('type').value,team:$('team').value,policy:$('policy').value,details:$('details').value,locale:'nl'});content=r.text;$('instructions').textContent=content;$('status').textContent=r.title+' — concept klaar voor menselijke controle. Niet automatisch geïnstalleerd.'}catch(e){content='';$('instructions').textContent='—';$('status').textContent='Controleer invoer: '+e.message}}
+$('generate').addEventListener('click',build);
+$('reset').addEventListener('click',()=>{$('type').value='inbox';$('team').value='';$('policy').value='';$('details').value='';build()});
+for(const el of document.querySelectorAll('input,textarea,select'))el.addEventListener('input',()=>{$('status').textContent='Invoer gewijzigd. Genereer opnieuw voor export.';content=''});
+$('copy').addEventListener('click',async()=>{if(!content){$('status').textContent='Genereer eerst de instructies.';return}try{await navigator.clipboard.writeText(content);$('status').textContent='Instructies gekopieerd.'}catch(e){$('status').textContent='Kopiëren niet beschikbaar; download het bestand.'}});
+$('download').addEventListener('click',()=>{if(!content){$('status').textContent='Genereer eerst de instructies.';return}const url=URL.createObjectURL(new Blob([content],{type:'text/plain;charset=utf-8'})),link=document.createElement('a');link.href=url;link.download='mkb-ai-studio-assistant-instructions.txt';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)});
+build();
+})();
+</script></body></html>
