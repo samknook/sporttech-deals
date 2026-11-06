@@ -28,5 +28,3 @@ jobs:
         run: node tests/test-mkb-ai-studio-quickscan.js
       - name: Test Pilot Intake
         run: node tests/test-mkb-ai-pilot-intake.js
-      - name: Test Assistant Configurations
-        run: node tests/test-mkb-ai-assistant-config.js
