@@ -24,7 +24,7 @@ assert.equal(core.assess({...base,decision:'researcher'}).fit,'discovery-needed'
 assert.equal(core.assess({...base,sensitive:'yes'}).fit,'review-required');
 assert.equal(core.assess({...base,reviewer:'no'}).fit,'review-required');
 assert.equal(core.assess({...base,sources:'none'}).fit,'review-required');
-assert.equal(core.assess({...base,sector:'other',sources:'manual',volume:'under-20',repetition:'low',budget:'unknown',decision:'unknown'}).fit,'low-fit');
+assert.equal(core.assess({...base,sector:'other',sources:'manual',volume:'under-20',repetition:'low'}).fit,'low-fit');
 assert.throws(()=>core.assess({...base,volume:'20000'}),/Invalid input/);
 assert.match(html,/src="prospect-fit-core.js"/);
 assert.match(html,/<meta name="viewport"/);
