@@ -1,0 +1,24 @@
+/* Run: node tests/test-mkb-ai-customer-offer.js */
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const root=path.resolve(__dirname,'..');
+const html=fs.readFileSync(path.join(root,'docs/ai-studio/wat-krijg-je.html'),'utf8');
+const homepage=fs.readFileSync(path.join(root,'docs/ai-studio/index.html'),'utf8');
+const packages=fs.readFileSync(path.join(root,'docs/ai-studio/pakketten.html'),'utf8');
+const offer=fs.readFileSync(path.join(root,'ventures/mkb-ai-studio/FIRST_CUSTOMER_OFFER.md'),'utf8');
+assert.match(html,/<html lang="nl">/);
+assert.match(html,/<meta name="viewport"/);
+assert.match(homepage,/href="wat-krijg-je.html"/);
+assert.match(packages,/href="wat-krijg-je.html"/);
+for(const price of ['€295','€995','€2.495'])assert.ok(html.includes(price),'Offer price '+price+' missing');
+assert.match(html,/excl\. btw/i);
+assert.match(html,/geen productieklare/i);
+assert.match(html,/acceptatietests/i);
+assert.match(html,/menselijke/i);
+assert.match(offer,/geen eigen API-integraties/i);
+assert.match(offer,/menselijke review/i);
+assert.doesNotMatch(html,/<script/i);
+assert.doesNotMatch(html,/<form/i);
+console.log('Customer-facing offer checks passed: prices, scope, links and prototype caveats.');
