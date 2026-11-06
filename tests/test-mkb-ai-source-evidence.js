@@ -1,0 +1,27 @@
+/* Run with Node: node tests/test-mkb-ai-source-evidence.js */
+'use strict';
+const assert=require('node:assert/strict');
+const ev=require('../ventures/mkb-ai-studio/api-pilot/source-evidence.cjs');
+const asOf='2026-11-06';
+const source={kind:'invoice',reference:'INV-218',field:'payment_status',value:'unpaid',source:'Synthetic ledger export',checkedOn:'2026-11-05'};
+const claim={kind:'invoice',reference:'INV-218',field:'payment_status',value:'paid'};
+assert.equal(ev.compare(claim,[source],asOf).status,'contradicted');
+assert.equal(ev.compare({...claim,value:'unpaid'},[source],asOf).status,'matched');
+assert.equal(ev.compare(claim,[],asOf).status,'missing');
+assert.equal(ev.compare(claim,[{...source,checkedOn:'2026-11-10'}],asOf).status,'future-only');
+assert.equal(ev.compare(claim,[source,{...source,value:'paid',source:'Other synthetic export'}],asOf).status,'conflict');
+assert.equal(ev.compare(claim,[{...source,value:'unknown'}],asOf).status,'unknown');
+const dueClaim={kind:'order',reference:'ORD-007',field:'delivery_date',value:'2026-12-01'};
+assert.equal(ev.compare(dueClaim,[{...dueClaim,source:'Demo schedule',checkedOn:asOf}],asOf).status,'matched');
+assert.equal(ev.compare(dueClaim,[{...dueClaim,value:'2026-12-02',source:'Demo schedule',checkedOn:asOf}],asOf).status,'contradicted');
+assert.throws(()=>ev.compare({...dueClaim,value:'2026-02-30'},[],asOf));
+assert.throws(()=>ev.normalizeRecord({...source,checkedOn:'2026-13-05'}));
+assert.throws(()=>ev.normalizeRecord({...source,field:'password'}));
+assert.throws(()=>ev.normalizeRecord({...source,value:'received'}));
+const batch=ev.batch([claim,{...claim,value:'unpaid'}],[source],asOf);
+assert.equal(batch.unresolved,1);
+assert.equal(batch.approvedForSending,false);
+assert.equal(batch.requiresHumanReview,true);
+assert.equal(batch.results[1].verifiedReality,false);
+assert.deepEqual(batch.results[1].sourceLabels,['Synthetic ledger export']);
+console.log('Evidence cross-check tests passed. Only synthetic sources; no live verification.');
