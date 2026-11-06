@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'docs/ai-studio/**'
+      - 'ventures/mkb-ai-studio/api-pilot/**'
       - 'tests/test-mkb-ai-*.js'
       - '.github/workflows/mkb-ai-studio-tests.yml'
   pull_request:
@@ -26,6 +27,8 @@ jobs:
         run: node tests/test-mkb-ai-studio.js
       - name: Test Inbox Review Workflow
         run: node tests/test-mkb-ai-inbox-workflow.js
+      - name: Test offline-first API pilot
+        run: node tests/test-mkb-ai-api-pilot.js
       - name: Test QuickScan
         run: node tests/test-mkb-ai-studio-quickscan.js
       - name: Test Pilot Intake
