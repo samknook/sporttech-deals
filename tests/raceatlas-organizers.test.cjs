@@ -58,3 +58,11 @@ test('Race event submission is private and requires no Github account',()=>{
  assert.doesNotMatch(page,/issues\/new|GitHub-account nodig|GitHub-venster/);
  assert.match(page,/ter beoordeling ingediend/);
 });
+
+test('Organizer FAQ and duathlon choice are available',()=>{
+ assert.match(page,/id="orgFaqTitle"/);
+ assert.match(page,/Duatlon \/ run-bike-run/);
+ assert.match(page,/Wanneer staat mijn evenement online\?/);
+ assert.match(page,/formulier is dus niet hetzelfde als publicatie/);
+ assert.match(page,/We delen eventuele mogelijkheden en afspraken persoonlijk/);
+});
