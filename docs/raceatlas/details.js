@@ -22,14 +22,14 @@ function detail(e,fromLink=false){
  const fmtDate=s=>{if(!s)return '';const day=String(s).slice(0,10);return /^\d{4}-\d{2}-\d{2}$/.test(day)?new Date(day+'T12:00:00').toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'}):String(s)};
  const fee=typeof e.priceEur==='number'?'€ '+e.priceEur.toFixed(2).replace('.',',')+(e.priceNote?' · '+e.priceNote:''):'Nog niet gepubliceerd';
  const when=e.registrationOpenAt?fmtDate(e.registrationOpenAt):e.registrationDate?fmtDate(e.registrationDate):e.registrationWindow?'Verwacht: '+e.registrationWindow+' (exacte dag onbekend)':'Openingsdatum nog niet gepubliceerd';
- const status=e.registrationStatus==='sold_out'?'Uitverkocht / geen reguliere startbewijzen':e.registrationStatus==='late_bird'?'Late-bird-inschrijving vermeld':e.registrationStatus==='link_available'?'Inschrijfpagina beschikbaar':e.registrationStatus==='window'?'Verwachte openingsperiode bekend':'Actuele beschikbaarheid controleren bij organisator';
+ const status=e.registrationStatus==='sold_out'?'Bij laatst gecontroleerde bron: uitverkocht':e.registrationStatus==='late_bird'?'Late-bird-inschrijving vermeld (controleer beschikbaarheid)':e.registrationStatus==='link_available'?'Inschrijfpagina vermeld (controleer beschikbaarheid)':e.registrationStatus==='window'?'Verwachte openingsperiode bekend':'Actuele beschikbaarheid controleren bij organisator';
  const factsData=[['Wedstrijddatum',formatDate(e)],['Locatie',e.place+' · '+e.country],['Afstanden',e.distance],['Inschrijfprijs',fee],['Opening inschrijving',when],['Inschrijfstatus',status],['Datumstatus',category(e)]];
  if(e.preregistrationDate)factsData.push(['Pre-registratie vanaf',fmtDate(e.preregistrationDate)]);
  if(e.registrationOpenInfo)factsData.push(['Verdere openingsinformatie',e.registrationOpenInfo]);
  if(e.registrationStatusNote)factsData.push(['Extra informatie',e.registrationStatusNote]);
  for(const [label,value] of factsData){const item=el('div');item.append(el('span',label),el('strong',value));facts.append(item)}
  dlg.append(facts);
- const note=el('p','Prijs en inschrijfdatum zijn alleen ingevuld wanneer er broninformatie beschikbaar is. Controleer wijzigingen, verschillende tarieven en beschikbaarheid altijd bij de organisator. Een maand zonder specifieke dag is geen bevestigde openingsdatum.','ra-detail-warning');dlg.append(note);
+ const note=el('p',(e.officialEventUrl||e.source?'Prijs en inschrijfdatum zijn alleen ingevuld wanneer er broninformatie beschikbaar is. Controleer wijzigingen, verschillende tarieven en beschikbaarheid altijd bij de organisator. Een maand zonder specifieke dag is geen bevestigde openingsdatum.':'Voor dit evenement ontbreekt nog een specifieke bronlink. De vermelde wedstrijddatum en gegevens moeten nog gecontroleerd worden bij de organisator. Je kunt via Gegevens corrigeren een officiële bron doorgeven.'),'ra-detail-warning');dlg.append(note);
  if(typeof e.priceEur==='number'&&isValidUrl(e.priceSource)){const priceSource=el('p',null,'ra-detail-registration-source');priceSource.append(el('strong','Bron prijs: '));const a=el('a','Bekijk prijs bij organisator ↗');a.href=e.priceSource;a.target='_blank';a.rel='noopener noreferrer';priceSource.append(a);dlg.append(priceSource)}
  if(isValidUrl(e.registrationInfoUrl)){
    const source=el('p',null,'ra-detail-registration-source');
