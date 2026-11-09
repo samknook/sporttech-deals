@@ -27,3 +27,14 @@ CREATE TABLE IF NOT EXISTS deliveries (
   PRIMARY KEY(subscription_id,kind,target)
 );
 CREATE INDEX IF NOT EXISTS subscriptions_event_verified_idx ON subscriptions(event_id,verified);
+
+-- Aggregate outbound link clicks. Only event ID, link kind, date and count are stored.
+-- No visitor identifiers, IP addresses, emails, or URLs are written to this table.
+CREATE TABLE IF NOT EXISTS outbound_click_daily (
+  event_id TEXT NOT NULL,
+  link_kind TEXT NOT NULL CHECK(link_kind IN ('registration','organizer','source')),
+  day TEXT NOT NULL,
+  clicks INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY(event_id,link_kind,day)
+);
+CREATE INDEX IF NOT EXISTS outbound_click_day_idx ON outbound_click_daily(day);
