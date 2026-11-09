@@ -90,7 +90,8 @@ const EVENTS=[{"id":"ra-0","date":"2027-01-10","name":"Egmond Halve Marathon","p
 window.RACEATLAS_EVENTS=EVENTS;
 const $=id=>document.getElementById(id), months=['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'],STORE='raceatlas-saved-v2';
 let saved=[];try{const s=JSON.parse(localStorage.getItem(STORE)||'[]');if(Array.isArray(s))saved=s.filter(x=>typeof x==='string')}catch{}
-let quick='all',limit=24,mode='explore',view='grid';const safe=(s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let quick='all',limit=24,mode='explore',view='grid';
+// Keep the default view scannable; preferences remain on this device only.const safe=(s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function getDate(e){if(!e.date)return {day:"—",month:e.expectedMonth?months[Number(e.expectedMonth)-1]:"n.t.b."};const d=new Date(e.date+'T12:00:00');return {day:d.getDate(),month:months[d.getMonth()]}}
 function source(e){return e.source||null}
 function eventCard(e){
@@ -121,7 +122,7 @@ function eventCard(e){
  card.querySelector('.save').onclick=()=>{saved=saved.includes(e.id)?saved.filter(id=>id!==e.id):[...saved,e.id];try{localStorage.setItem(STORE,JSON.stringify(saved))}catch{};render()};
  return card
 }
-function renderCards(id,arr){const el=$(id);el.replaceChildren();if(!arr.length){const div=document.createElement('div');div.className='empty';div.textContent='Geen evenementen gevonden. Pas je filters aan of ontdek andere wedstrijden.';el.append(div)}else{const frag=document.createDocumentFragment();arr.forEach(e=>frag.append(eventCard(e)));el.append(frag)}}
+function renderCards(id,arr){const el=$(id);el.replaceChildren();if(!arr.length){const div=document.createElement('div');div.className='empty';div.textContent='Geen wedstrijden voor deze combinatie van filters.';const reset=document.createElement('button');reset.type='button';reset.className='miniBtn';reset.textContent='Wis filters en bekijk alle evenementen';reset.onclick=()=>{$('reset').click()};div.append(document.createElement('p'),reset);el.append(div)}else{const frag=document.createDocumentFragment();arr.forEach(e=>frag.append(eventCard(e)));el.append(frag)}}
 function sortKey(e){return e.date || (e.expectedMonth?'2027-'+e.expectedMonth+'-15':'9999-12-31')}
 function isFuture(e){const d=sortKey(e);const t=new Date();const today=t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');return d>=today}
 function isDuathlon(e){return /duat(h)?lon|run[ -]?bike[ -]?run|\brbr\b|wintertria/i.test([e.name,e.discipline].join(' '))}
@@ -165,8 +166,9 @@ function renderQualitySummary(){
  const openings=EVENTS.filter(e=>!!(e.registrationOpenAt||e.registrationDate||e.registrationWindow)).length;
  el.textContent='Datakwaliteit · '+sourced+'/'+EVENTS.length+' met bronlink · '+official+' officieel gemarkeerde wedstrijddatums · '+price+' met prijs · '+openings+' met inschrijfdatum of -periode. Ontbrekende gegevens worden niet geschat.';
 }
-function setPills(){document.querySelectorAll('[data-quick]').forEach(b=>b.classList.toggle('on',b.dataset.quick===quick))}
+function setPills(){document.querySelectorAll('[data-quick]').forEach(b=>{const active=b.dataset.quick===quick;b.classList.toggle('on',active);b.setAttribute('aria-pressed',String(active))})}
 function switchPage(p){mode=p;$('explore').style.display=p==='explore'?'block':'none';$('savedPage').style.display=p==='saved'?'block':'none';$('navExplore').classList.toggle('current',p==='explore');$('navSaved').classList.toggle('current',p==='saved');render();scrollTo({top:0,behavior:'smooth'})}
+setPills();
 document.querySelectorAll('[data-quick]').forEach(b=>b.onclick=()=>{quick=b.dataset.quick;limit=24;setPills();render()});
 for(const id of ['q','sport','country','year','month','certainty','distanceCategory','registrationFilter','sort','future'])$(id).addEventListener(id==='q'?'input':'change',()=>{limit=24;render()});
 for(const name of [...new Set(EVENTS.map(e=>e.country))].sort((a,b)=>a.localeCompare(b,'nl'))){const o=document.createElement('option');o.textContent=name;$('country').append(o)}
