@@ -95,8 +95,10 @@ function getDate(e){if(!e.date)return {day:"—",month:e.expectedMonth?months[Nu
 function source(e){return e.source||(e.sport==='Fietsen'?'https://www.fietssport.nl/toertochten':e.sport==='Triatlon'?'https://www.triathlonbond.nl/':'https://www.hardlopen.nl/evenementen/')}
 function eventCard(e){
  const d=getDate(e),sportClass=e.sport==='Fietsen'?'bike':e.sport==='Triatlon'?'tri':'';
- const visualClass=e.sport==='Fietsen'?'biking':e.sport==='Triatlon'?'triathlon':'running';
- const sportIcon=e.sport==='Fietsen'?'🚴':e.sport==='Triatlon'?'🏊':'🏃';
+ const duo=/duat(h)?lon|run[ -]?bike[ -]?run|\\brbr\\b|wintertria/i.test([e.name,e.discipline].join(' '));
+ const visualClass=duo?'duathlon':e.sport==='Fietsen'?'biking':e.sport==='Triatlon'?'triathlon':'running';
+ const sportIcon=duo?'🏃🚴':e.sport==='Fietsen'?'🚴':e.sport==='Triatlon'?'🏊🚴':'🏃';
+ const sportLabel=duo?'Duatlon':e.sport;
  const isSaved=saved.includes(e.id),hasLink=!!(e.registrationUrl||e.officialEventUrl);
  const dateStatus=e.dateEvidence==='official'?'✓ Bevestigd op organisatorsite':e.status==='date_pending'?(e.expectedMonth?'◷ Verwachte maand — exacte datum onbekend':'◷ Datum nog onbekend'):e.status==='source'?'Kalenderbron beschikbaar · controleer datum':'Datum controleren bij organisator';
  const distanceKm=window.RaceAtlasRadius?.enabled?window.RaceAtlasRadius.km(e):null;
@@ -108,13 +110,13 @@ function eventCard(e){
  (e.major?'<div class="raFeatureBadge">★ Groot evenement</div>':'')+'</div>'+
  '<div class="raCardBody"><h3 class="eventname">'+safe(e.name)+'</h3>'+
  '<div class="raCardLocation">⌖ '+safe(e.place)+' · '+safe(e.country)+'</div>'+
- '<div class="raCardTags"><span class="raSportTag '+sportClass+'">'+sportIcon+' '+safe(e.sport)+'</span><span class="raDistanceTag">'+safe(e.distance)+' · '+safe(e.discipline)+'</span></div>'+
+ '<div class="raCardTags"><span class="raSportTag '+sportClass+'">'+sportIcon+' '+safe(sportLabel)+'</span><span class="raDistanceTag">'+safe(e.distance)+' · '+safe(e.discipline)+'</span></div>'+
  (distanceKm!==null?'<div class="raCardInfo">📏 '+distanceKm+' km hemelsbreed</div>':'')+
  (e.registrationWindow?'<div class="raCardInfo">Inschrijving verwacht: '+safe(e.registrationWindow)+'</div>':'')+
  '<div class="raCardInfo '+(e.dateEvidence==='official'?'confirmed':'')+'">'+safe(dateStatus)+'</div>'+
  '</div><div class="raCardActions">'+
  '<button type="button" class="ra-detail-btn" data-ra-detail="'+safe(e.id)+'">Details</button>'+
- '<button type="button" class="ra-alert-btn" data-ra-alert="'+safe(e.id)+'">♧ Meldingen</button>'+
+ '<button type="button" class="ra-alert-btn" data-ra-alert="'+safe(e.id)+'">🔔 Meldingen</button>'+
  '<button class="save '+(isSaved?'selected':'')+'" type="button" aria-label="'+(isSaved?'Verwijder uit mijn seizoen':'Bewaar in mijn seizoen')+'">'+(isSaved?'✓ Bewaard':'+ Bewaar')+'</button>'+
  '<a class="'+(hasLink?'registerLink':'source')+'" href="'+safe(e.registrationUrl||e.officialEventUrl||source(e))+'" rel="noopener noreferrer" target="_blank">'+(e.registrationUrl?'Evenementpagina ↗':e.officialEventUrl?'Organisator ↗':'Bron ↗')+'</a></div>';
  card.querySelector('.save').onclick=()=>{saved=saved.includes(e.id)?saved.filter(id=>id!==e.id):[...saved,e.id];try{localStorage.setItem(STORE,JSON.stringify(saved))}catch{};render()};
