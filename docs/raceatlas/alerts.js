@@ -17,14 +17,15 @@
       alarms.forEach(([trigger,description]) => lines.push('BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+icsEscape(description),'TRIGGER:'+trigger,'END:VALARM'));
       lines.push('END:VEVENT');
     }
-    if(event.date && settings.date) {
+    if(event.date && event.dateEvidence==='official' && settings.date) {
       const alarms=settings.race ? [['-P7D','Over 1 week: '+event.name],['-P1D','Morgen: '+event.name],['PT0S','Vandaag: '+event.name]] : [];
-      eventEntry(event.date, 'Wedstrijd: '+event.name, alarms);
+      const start=event.eventStartDate&&/^20\d{2}-\d{2}-\d{2}$/.test(event.eventStartDate)?event.eventStartDate:event.date;
+      eventEntry(start, 'Wedstrijd: '+event.name, alarms);
     }
     if(event.registrationDate && settings.registration) {
       eventEntry(event.registrationDate,'Inschrijving opent: '+event.name,[['-P7D','Inschrijving opent over 1 week'],['-P1D','Inschrijving opent morgen'],['PT0S','Inschrijving opent vandaag']]);
     }
-    if(lines.length===3) {alert('Er is nog geen bekende datum voor dit evenement. Bewaar je voorkeuren; later kun je agenda-alarmen downloaden.');return;}
+    if(lines.length===3) {alert('Er is nog geen officieel bevestigde wedstrijddatum of exacte inschrijfdatum voor dit evenement. Je voorkeuren kunnen wel worden bewaard.');return;}
     lines.push('END:VCALENDAR');
     const blob=new Blob([lines.join('\r\n')+'\r\n'],{type:'text/calendar;charset=utf-8'});
     const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='raceatlas-alert-'+event.id+'.ics';
@@ -43,6 +44,9 @@
       const line=document.createElement('label');const input=document.createElement('input');input.type='checkbox';input.checked=current[key]!==false;fields[key]=input;
       const text=document.createElement('span');text.textContent=label;line.append(input,text);form.append(line);
     });
+    if(event.dateEvidence!=='official'){
+      const verification=document.createElement('p');verification.className='ra-notice';verification.textContent='De wedstrijddatum is nog niet officieel bevestigd. Daarom maken we hiervoor geen kalenderherinnering. Een bevestigde openingsdatum voor inschrijving kan wel apart worden toegevoegd.';dialog.append(verification);
+    }
     const notice=document.createElement('p');notice.className='ra-notice';
     notice.textContent='Automatische e-mails zijn nog niet actief: daarvoor moeten een beveiligde verzenddienst, bevestiging van e-mailadressen en afmeldfunctie worden aangesloten. We verzamelen nu geen e-mailadressen. Voorkeuren blijven op dit apparaat.';
     const actions=document.createElement('div');actions.className='ra-actions';
