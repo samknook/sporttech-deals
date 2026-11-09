@@ -27,3 +27,27 @@
 De wekelijkse GitHub bronchecker controleert **alleen URL-bereikbaarheid**, geen wedstrijddatum of daadwerkelijke inschrijvingsopening. Een link met HTTP 200 bewijst geen datum. De cronmailmodule kijkt voor definitieve datummeldingen uitsluitend naar `dateEvidence: "official"`. Er moet dus een apart redactioneel of geautoriseerd proces zijn dat een officiële datum inclusief bewijs goedkeurt.
 
 Dit is een ontwikkelimplementatie. Voor productie moeten vooral herhaalde aanvragen, eventwijzigingen, datakwaliteit, opt-in en securitytests aantoonbaar functioneren.
+
+## Doorverwijsklikken meten — voorbereid, niet actief
+
+De site bevat een optionele tracker in `docs/raceatlas/tracking.js`. De `ENDPOINT` is bewust leeg. Zolang dat zo is, worden **geen klikmetingen naar deze backend verzonden**.
+
+Na goedgekeurde livegang kunnen `POST /track` en `GET /stats` worden gebruikt:
+- `POST /track` accepteert een event-ID `ra-N` en één linksoort (`registration`, `organizer`, `source`); een geldige `Origin` is verplicht.
+- Alleen dagelijkse totalen per evenement en linksoort worden in D1 bijgehouden. Geen namen, e-mails, IP-adressen, trackingcookies of individuele bezoekrecords worden door deze app opgeslagen.
+- De hostingpartij kan wel technische verzoeklogs hebben; beoordeel bewaartermijnen en privacyinformatie voor activering.
+- `GET /stats?from=YYYY-MM-DD&to=YYYY-MM-DD` is afgeschermd met een server-side `STATS_ADMIN_TOKEN` (max. 93 dagen).
+- **Klikken zijn geen unieke bezoekers, geen geverifieerde inschrijvingen en geen aantoonbare conversies.** Automatische bots en misbruik zijn zonder aanvullende beveiliging niet volledig uitgesloten.
+- Zet `STATS_ADMIN_TOKEN` via `wrangler secret put STATS_ADMIN_TOKEN`, nooit als JavaScript-constante of in GitHub.
+- Activeer alleen nadat Worker, D1, abuse-preventie, analyticsvalidatie en privacyinformatie zijn getest. Controleer de `Origin` en CORS-configuratie vóór livegang.
+- Voor externe rapportages: noem de meetperiode, definitie (uitgaande klik), hoeveel data beschikbaar is en geen claims over unieke deelnemers of registratieconversies.
+
+## Organisatoren opvolgen
+
+Inzendingen en vragen komen via FormSubmit op `trizentro.team@gmail.com` terecht **pas na succesvolle activatie en werkende aflevering**. Organisatoren kunnen zonder GitHub-account inzenden. Correcties vanuit de evenementdetailpagina vullen nu het privé contactformulier met naam en evenement-ID voor. Publicatie van correcties en nieuwe evenementen gebeurt pas na redactionele controle.
+
+Aanbevolen eenvoudige inbox-werkwijze zonder extra klantgegevensbank:
+1. Label binnenkomende berichten `RaceAtlas / Nieuwe aanmelding`, `RaceAtlas / Correctie` of `RaceAtlas / Samenwerking`.
+2. Controleer link, naam, locatie, datum, inschrijftarieven en doublures vóór publicatie.
+3. Bevestig ontvangst, vraag ontbrekende details op en houd commerciële voorwaarden buiten de publieke website.
+4. Verwijder onnodige persoonsgegevens volgens een vastgestelde bewaartermijn; leg die termijn vast voordat aanmeldingen op schaal worden verwerkt.
