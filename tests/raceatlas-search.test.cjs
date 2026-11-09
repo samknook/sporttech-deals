@@ -108,3 +108,20 @@ test('Upcoming is enabled on first load and active filters can be removed',()=>{
  assert.match(page,/Verwijder filter/);
  assert.match(page,/Wis filters en bekijk alle evenementen/);
 });
+
+test('Calendar exports only verified events and correctly handles multi-day races',()=>{
+ const confirmed=sourceFunction('isConfirmedEventDate');
+ const fn=new Function(confirmed+';return isConfirmedEventDate')();
+ assert.equal(fn({date:'2027-06-20',dateEvidence:'official'}),true);
+ assert.equal(fn({date:'2027-06-20',dateEvidence:'calendar'}),false);
+ assert.equal(fn({date:'2027-06-20',status:'source'}),false);
+ assert.equal(fn({date:null,dateEvidence:'official'}),false);
+ assert.match(page,/EVENTS\.filter\(e=>saved\.includes\(e\.id\)&&isConfirmedEventDate\(e\)\)/);
+ assert.match(page,/e\.eventStartDate&&\/\^20/);
+ assert.match(page,/Officiële wedstrijddatum op moment van export/);
+});
+test('Calendar reminders never treat unconfirmed dates as verified',()=>{
+ assert.match(alerts,/event\.dateEvidence==='official' && settings\.date/);
+ assert.match(alerts,/event\.eventStartDate/);
+ assert.match(alerts,/geen kalenderherinnering/);
+});
