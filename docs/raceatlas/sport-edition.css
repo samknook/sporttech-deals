@@ -230,3 +230,18 @@ header{position:relative;z-index:12;background:#071927!important;border-bottom:1
  .onlyFuture input{flex:0 0 auto}
  .viewSwitch{flex:0 0 auto}
 }
+
+/* Thumb-friendly navigation, with safe-area support on iPhone */
+.raMobileNav{display:none}
+@media(max-width:700px){
+ body{padding-bottom:calc(74px + env(safe-area-inset-bottom))}
+ .raMobileNav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:70;min-height:65px;padding:7px 10px calc(7px + env(safe-area-inset-bottom));background:#081e2bea;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid #ffffff27;box-shadow:0 -6px 24px #09253229}
+ .raMobileNav button{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;border:0;border-radius:10px;background:transparent;color:#bed4dd;min-height:49px;cursor:pointer}
+ .raMobileNav button span{font-size:22px;line-height:1}
+ .raMobileNav button strong{font-size:10px;font-weight:850;letter-spacing:.01em}
+ .raMobileNav button.selected{color:#caff3e;background:#caff3e14}
+ .raMobileNav button:focus-visible{outline:2px solid #caff3e;outline-offset:-2px}
+ .ra-detail-overlay,.ra-overlay{z-index:110}
+ .ra-detail-dialog,.ra-dialog{max-height:calc(100dvh - 45px - env(safe-area-inset-bottom))}
+ #explore{scroll-margin-top:12px}
+}
