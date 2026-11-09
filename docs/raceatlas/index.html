@@ -95,7 +95,7 @@ function getDate(e){if(!e.date)return {day:"—",month:e.expectedMonth?months[Nu
 function source(e){return e.source||(e.sport==='Fietsen'?'https://www.fietssport.nl/toertochten':e.sport==='Triatlon'?'https://www.triathlonbond.nl/':'https://www.hardlopen.nl/evenementen/')}
 function eventCard(e){
  const d=getDate(e),sportClass=e.sport==='Fietsen'?'bike':e.sport==='Triatlon'?'tri':'';
- const duo=/duat(h)?lon|run[ -]?bike[ -]?run|\\brbr\\b|wintertria/i.test([e.name,e.discipline].join(' '));
+ const duo=/duat(h)?lon|run[ -]?bike[ -]?run|\brbr\b|wintertria/i.test([e.name,e.discipline].join(' '));
  const visualClass=duo?'duathlon':e.sport==='Fietsen'?'biking':e.sport==='Triatlon'?'triathlon':'running';
  const sportIcon=duo?'🏃🚴':e.sport==='Fietsen'?'🚴':e.sport==='Triatlon'?'🏊🚴':'🏃';
  const sportLabel=duo?'Duatlon':e.sport;
