@@ -209,3 +209,24 @@ header{position:relative;z-index:12;background:#071927!important;border-bottom:1
 .raSourceMissing{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:7px 11px;border:1px dashed #c6d2d9;background:#f7f9fa;color:#70818b;border-radius:8px;font-size:11px;font-weight:750}
 .raQualitySummary{margin:20px 0 8px;border:1px solid #d5e7dc;background:#edf7f0;color:#355845;border-radius:11px;padding:13px 17px;font-size:12px;line-height:1.6;font-weight:700}
 @media(max-width:700px){.raQualitySummary{font-size:11px;padding:11px 13px}.raSourceMissing{min-width:0;font-size:10px;padding:7px}}
+
+/* RaceAtlas discovery refinements */
+.raActiveFilters{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:3px 0 12px}
+.raActiveFilters[hidden]{display:none!important}
+.raFilterChip{appearance:none;display:inline-flex;align-items:center;min-height:34px;padding:7px 12px;background:#eaf4ec;color:#234c39;border:1px solid #cce0d0;border-radius:100px;font:inherit;font-size:11px;font-weight:750;white-space:nowrap;cursor:pointer}
+.raFilterChip:hover{background:#d4eddb;border-color:#88c39a}
+.raFilterChip:focus-visible{outline:3px solid #96ce58;outline-offset:2px}
+.quick .pill[aria-pressed="true"]{background:#122e3d!important;color:white!important;border-color:#122e3d!important}
+.cards .empty{grid-column:1/-1;min-height:190px;padding:30px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;border:1px dashed #c8d7dc;background:white;border-radius:16px;color:#4b6270;font-weight:750}
+.cards .empty p{display:none}
+.cards .empty .miniBtn{background:var(--ra-lime)!important;border-color:var(--ra-lime)!important;color:#11281e!important;min-height:42px;padding:10px 16px!important}
+@media(max-width:700px){
+ .raActiveFilters{display:flex;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:2px 0 9px;padding:4px 0 9px;gap:6px}
+ .raActiveFilters::-webkit-scrollbar{display:none}
+ .raFilterChip{flex:0 0 auto;min-height:36px;font-size:11px;padding:7px 11px}
+ .cards .empty{min-height:175px;padding:24px 15px;font-size:13px}
+ .resultTools{justify-content:space-between!important}
+ .onlyFuture{flex:1 1 auto;min-width:0}
+ .onlyFuture input{flex:0 0 auto}
+ .viewSwitch{flex:0 0 auto}
+}
