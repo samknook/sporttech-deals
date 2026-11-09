@@ -28,3 +28,22 @@ test('Main navigation points to organizer info, not pricing',()=>{
   assert.match(index,/href="organisatoren\.html"/);
   assert.doesNotMatch(index,/promoot\.html|pakketten\.html/);
 });
+test('Organizer form posts to external form backend without opening user mail app',()=>{
+ assert.match(page,/id="contactForm" action="https:\/\/formsubmit\.co\/ajax\/trizentro\.team@gmail\.com" method="POST"/);
+ assert.match(page,/fetch\(CONTACT_ENDPOINT/);
+ assert.match(page,/id="contactWebsite"/);
+ assert.match(page,/_template:'table'/);
+ assert.match(page,/formSubmitResult\(data\)/);
+ assert.match(page,/isPendingActivation\(data\)/);
+ assert.doesNotMatch(page,/window\.location\.href=mailto/);
+});
+test('Submission success checks explicit boolean and string true, never a false string',()=>{
+ const match=page.match(/function formSubmitResult\(data\)\{[^}]+\}/);
+ assert.ok(match);
+ const ok=new Function(match[0]+';return formSubmitResult')();
+ assert.equal(ok({success:true}),true);
+ assert.equal(ok({success:'true'}),true);
+ assert.equal(ok({success:'false'}),false);
+ assert.equal(ok({success:false}),false);
+ assert.equal(ok({message:'This form needs Activation',success:'false'}),false);
+});
