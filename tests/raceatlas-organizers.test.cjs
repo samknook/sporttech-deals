@@ -47,3 +47,14 @@ test('Submission success checks explicit boolean and string true, never a false 
  assert.equal(ok({success:false}),false);
  assert.equal(ok({message:'This form needs Activation',success:'false'}),false);
 });
+
+test('Race event submission is private and requires no Github account',()=>{
+ assert.match(page,/id="eventForm" action="https:\/\/formsubmit\.co\/ajax\/trizentro\.team@gmail\.com" method="POST"/);
+ assert.match(page,/id="eventSend"/);
+ assert.match(page,/id="eventWebsiteTrap"/);
+ assert.match(page,/\$\('eventForm'\)\.addEventListener\('submit',async e=>/);
+ assert.match(page,/formSubmitResult\(result\)/);
+ assert.match(page,/isPendingActivation\(result\)/);
+ assert.doesNotMatch(page,/issues\/new|GitHub-account nodig|GitHub-venster/);
+ assert.match(page,/ter beoordeling ingediend/);
+});
