@@ -30,6 +30,7 @@ function detail(e,fromLink=false){
  for(const [label,value] of factsData){const item=el('div');item.append(el('span',label),el('strong',value));facts.append(item)}
  dlg.append(facts);
  const note=el('p','Prijs en inschrijfdatum zijn alleen ingevuld wanneer er broninformatie beschikbaar is. Controleer wijzigingen, verschillende tarieven en beschikbaarheid altijd bij de organisator. Een maand zonder specifieke dag is geen bevestigde openingsdatum.','ra-detail-warning');dlg.append(note);
+ if(typeof e.priceEur==='number'&&isValidUrl(e.priceSource)){const priceSource=el('p',null,'ra-detail-registration-source');priceSource.append(el('strong','Bron prijs: '));const a=el('a','Bekijk prijs bij organisator ↗');a.href=e.priceSource;a.target='_blank';a.rel='noopener noreferrer';priceSource.append(a);dlg.append(priceSource)}
  if(isValidUrl(e.registrationInfoUrl)){
    const source=el('p',null,'ra-detail-registration-source');
    source.append(el('strong','Bron inschrijfgegevens: '));
@@ -38,6 +39,7 @@ function detail(e,fromLink=false){
  const actions=el('div',null,'ra-detail-actions');
  const url=e.registrationUrl||e.officialEventUrl||e.source;
  if(isValidUrl(url)){const a=el('a',e.registrationUrl?'Bekijk evenement / inschrijving ↗':e.officialEventUrl?'Bekijk organisator ↗':'Bekijk kalenderbron ↗','ra-detail-primary');a.href=url;a.rel='noopener noreferrer';a.target='_blank';actions.append(a)}
+ const notify=el('button','🔔 Meldingen instellen','ra-detail-secondary');notify.onclick=()=>{closeDialog();if(window.RaceAtlasAlerts?.openForEvent)window.RaceAtlasAlerts.openForEvent(e.id);};actions.append(notify);
  const share=el('button','Deel evenement','ra-detail-secondary');share.onclick=async()=>{const u=eventLink(e);if(navigator.share){try{await navigator.share({title:e.name,url:u});return}catch{}}share.textContent=await copy(u)?'Link gekopieerd ✓':'Kopiëren niet gelukt';};actions.append(share);
  const report=el('button','Gegevens corrigeren','ra-detail-secondary');report.onclick=async()=>{
  const body='Evenement: '+e.name+'\nPlaats: '+e.place+'\nHuidige datum: '+(e.date||'onbekend')+'\nBron: '+(e.officialEventUrl||e.source||'niet opgegeven')+'\n\nWat klopt er niet?\n\n\nLink naar officiële bevestiging:\n';
