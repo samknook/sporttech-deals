@@ -92,3 +92,19 @@ test('Race detail shows different pricing models and enrollment windows',()=>{
  assert.match(detail,/eventStartDate/);
  assert.match(detail,/statuses=/);
 });
+
+test('New search matches words in any order and ignores punctuation',()=>{
+ const fn=sourceFunction('searchMatches');
+ const matches=new Function(sourceFunction('searchNormalized')+';'+fn+';return searchMatches')();
+ const event={name:'Egmond Halve Marathon',place:'Egmond aan Zee',distance:'21,1 km',discipline:'Weg',country:'Nederland'};
+ assert.equal(matches(event,normalize('marathon egmond')),true);
+ assert.equal(matches(event,normalize('EGMOND  21,1')),true);
+ assert.equal(matches(event,normalize('triathlon egmond')),false);
+});
+test('Upcoming is enabled on first load and active filters can be removed',()=>{
+ assert.match(page,/id="future" type="checkbox" checked/);
+ assert.match(page,/id="raActiveFilters"/);
+ assert.match(page,/function renderActiveFilters/);
+ assert.match(page,/Verwijder filter/);
+ assert.match(page,/Wis filters en bekijk alle evenementen/);
+});
