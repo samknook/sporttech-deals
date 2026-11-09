@@ -19,7 +19,9 @@ test('Organizer contact collects necessary fields, does not send business email 
   assert.ok(start>=0&&stop>start);
   assert.doesNotMatch(page.slice(start,stop),/contactEmail/);
   assert.match(page,/function privateContactText/);
-  assert.match(page,/GitHub Issues zijn openbaar/);
+  assert.match(page,/mailto:trizentro\.team@gmail\.com/);
+  assert.match(page,/id="contactSend"/);
+  assert.doesNotMatch(page,/contactGithub/);
 });
 test('Main navigation points to organizer info, not pricing',()=>{
   assert.match(index,/Voor organisatoren/);
