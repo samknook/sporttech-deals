@@ -46,13 +46,13 @@ function detail(e,fromLink=false){
  if(isValidUrl(url)){const a=el('a',e.registrationUrl?'Bekijk evenement / inschrijving ↗':e.officialEventUrl?'Bekijk organisator ↗':'Bekijk kalenderbron ↗','ra-detail-primary');a.href=url;a.rel='noopener noreferrer';a.target='_blank';actions.append(a)}
  const notify=el('button','🔔 Meldingen instellen','ra-detail-secondary');notify.onclick=()=>{closeDialog();if(window.RaceAtlasAlerts?.openForEvent)window.RaceAtlasAlerts.openForEvent(e.id);};actions.append(notify);
  const share=el('button','Deel evenement','ra-detail-secondary');share.onclick=async()=>{const u=eventLink(e);if(navigator.share){try{await navigator.share({title:e.name,url:u});return}catch{}}share.textContent=await copy(u)?'Link gekopieerd ✓':'Kopiëren niet gelukt';};actions.append(share);
- const report=el('button','Gegevens corrigeren','ra-detail-secondary');report.onclick=async()=>{
- const body='Evenement: '+e.name+'\nPlaats: '+e.place+'\nHuidige datum: '+(e.date||'onbekend')+'\nBron: '+(e.officialEventUrl||e.source||'niet opgegeven')+'\n\nWat klopt er niet?\n\n\nLink naar officiële bevestiging:\n';
- const title='RaceAtlas correctie: '+e.name;
- const reportUrl='https://github.com/samknook/sporttech-deals/issues/new?'+new URLSearchParams({title,body}).toString();
- const confirmed=window.confirm('Correctie melden via GitHub? Je opent een vooraf ingevuld voorstel in een nieuw tabblad. Hiervoor is een GitHub-account nodig. Neem geen persoonlijke gegevens op in een openbaar issue.');
- if(confirmed){window.open(reportUrl,'_blank','noopener,noreferrer');report.textContent='Correctieformulier geopend ↗'}
- else {const ok=await copy('RaceAtlas correctie\n'+title+'\n'+body);report.textContent=ok?'Correctietekst gekopieerd ✓':'Correctie niet gekopieerd'}
+ const report=el('button','Gegevens corrigeren','ra-detail-secondary');report.onclick=()=>{
+ const link=new URL('organisatoren.html',location.href);
+ link.hash='contact';
+ link.searchParams.set('onderwerp','Evenementgegevens aanpassen');
+ link.searchParams.set('event',e.name);
+ link.searchParams.set('eventId',e.id);
+ window.location.href=link.toString();
  };actions.append(report);
  dlg.append(actions);overlay.append(dlg);overlay.addEventListener('click',ev=>{if(ev.target===overlay)closeDialog()});document.body.append(overlay);close.focus();
  const urlObj=new URL(location.href);if(urlObj.searchParams.get('event')!==e.id){urlObj.searchParams.set('event',e.id);history.replaceState(null,'',urlObj.pathname+urlObj.search+urlObj.hash)}
