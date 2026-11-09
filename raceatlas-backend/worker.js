@@ -67,6 +67,26 @@ export default {
   if(req.method==='OPTIONS')return new Response(null,{status:204,headers:cors(req,env)});
   if(origin&&origin!==env.PUBLIC_ORIGIN)return json({error:'Origin not allowed'},403);
   const url=new URL(req.url);
+  if(req.method==='POST'&&url.pathname==='/track'){
+   // Non-identifying aggregate counts only; raw click totals are not unique people or confirmed signups.
+   if(origin!==env.PUBLIC_ORIGIN)return json({error:'Origin required'},403,cors(req,env));
+   const contentType=(req.headers.get('Content-Type')||'').split(';')[0];
+   if(!['application/json','text/plain'].includes(contentType))return json({error:'Unsupported content type'},415,cors(req,env));
+   const raw=await req.text();if(raw.length>300)return json({error:'Payload too large'},413,cors(req,env));
+   let input;try{input=JSON.parse(raw)}catch{return json({error:'Invalid JSON'},400,cors(req,env))}
+   if(!/^ra-\d{1,6}$/.test(input?.eventId||'')||!['registration','organizer','source'].includes(input?.kind))return json({error:'Invalid click'},400,cors(req,env));
+   const day=todayAmsterdam();
+   await env.DB.prepare('INSERT INTO outbound_click_daily(event_id,link_kind,day,clicks) VALUES(?,?,?,1) ON CONFLICT(event_id,link_kind,day) DO UPDATE SET clicks=clicks+1').bind(input.eventId,input.kind,day).run();
+   return new Response(null,{status:204,headers:cors(req,env)});
+  }
+  if(req.method==='GET'&&url.pathname==='/stats'){
+   const authorization=req.headers.get('Authorization')||'';
+   if(!env.STATS_ADMIN_TOKEN||authorization!=='Bearer '+env.STATS_ADMIN_TOKEN)return json({error:'Unauthorized'},401);
+   const from=url.searchParams.get('from')||todayAmsterdam(),to=url.searchParams.get('to')||todayAmsterdam();
+   if(!/^\d{4}-\d{2}-\d{2}$/.test(from)||!/^\d{4}-\d{2}-\d{2}$/.test(to)||from>to||deltaDays(from,to)>93)return json({error:'Date range must be at most 93 days'},400);
+   const rows=(await env.DB.prepare('SELECT event_id,link_kind,SUM(clicks) AS clicks FROM outbound_click_daily WHERE day>=? AND day<=? GROUP BY event_id,link_kind ORDER BY clicks DESC LIMIT 1000').bind(from,to).all()).results;
+   return json({from,to,metric:'outbound_clicks_not_unique_visitors_or_registrations',rows},200,{'Cache-Control':'no-store'});
+  }
   if(req.method==='POST'&&url.pathname==='/subscribe'){
    if(req.headers.get('Content-Type')?.split(';')[0]!=='application/json')return json({error:'Use JSON'},415,cors(req,env));
    const content=await req.text();if(content.length>2500)return json({error:'Payload too large'},413,cors(req,env));
