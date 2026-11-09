@@ -1,0 +1,24 @@
+name = "raceatlas-mail-alerts"
+main = "worker.js"
+compatibility_date = "2026-11-09"
+
+# Do not deploy until D1, domain, email verification and Turnstile are configured.
+# Replace all placeholders through Cloudflare settings before deployment.
+[vars]
+PUBLIC_ORIGIN = "https://samknook.github.io"
+BASE_URL = "https://REPLACE-WITH-YOUR-WORKER-DOMAIN"
+EVENTS_URL = "https://samknook.github.io/sporttech-deals/raceatlas/"
+MAIL_FROM = "RaceAtlas <notifications@REPLACE-WITH-VERIFIED-DOMAIN>"
+
+[triggers]
+crons = ["*/15 * * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "raceatlas-alerts"
+database_id = "REPLACE-WITH-D1-DATABASE-ID"
+
+# Secrets added with 'wrangler secret put' (not committed):
+# TOKEN_SECRET
+# RESEND_API_KEY
+# TURNSTILE_SECRET
