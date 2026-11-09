@@ -26,9 +26,13 @@ function detail(e,fromLink=false){
  const url=e.registrationUrl||e.officialEventUrl||e.source;
  if(isValidUrl(url)){const a=el('a',e.registrationUrl?'Bekijk evenement / inschrijving ↗':e.officialEventUrl?'Bekijk organisator ↗':'Bekijk kalenderbron ↗','ra-detail-primary');a.href=url;a.rel='noopener noreferrer';a.target='_blank';actions.append(a)}
  const share=el('button','Deel evenement','ra-detail-secondary');share.onclick=async()=>{const u=eventLink(e);if(navigator.share){try{await navigator.share({title:e.name,url:u});return}catch{}}share.textContent=await copy(u)?'Link gekopieerd ✓':'Kopiëren niet gelukt';};actions.append(share);
- const report=el('button','Meld verkeerde gegevens','ra-detail-secondary');report.onclick=async()=>{
- const text='RaceAtlas — correctievoorstel\nEvenement: '+e.name+'\nPlaats: '+e.place+'\nHuidige datum: '+(e.date||'onbekend')+'\nBron: '+(e.officialEventUrl||e.source||'niet opgegeven')+'\nGewenste correctie:\n';
- const ok=await copy(text);report.textContent=ok?'Correctietekst gekopieerd ✓':'Selecteer en kopieer tekst';if(!ok){const area=el('textarea');area.value=text;area.rows=7;area.style.width='100%';dlg.append(area);area.focus();area.select()}
+ const report=el('button','Gegevens corrigeren','ra-detail-secondary');report.onclick=async()=>{
+ const body='Evenement: '+e.name+'\nPlaats: '+e.place+'\nHuidige datum: '+(e.date||'onbekend')+'\nBron: '+(e.officialEventUrl||e.source||'niet opgegeven')+'\n\nWat klopt er niet?\n\n\nLink naar officiële bevestiging:\n';
+ const title='RaceAtlas correctie: '+e.name;
+ const reportUrl='https://github.com/samknook/sporttech-deals/issues/new?'+new URLSearchParams({title,body}).toString();
+ const confirmed=window.confirm('Correctie melden via GitHub? Je opent een vooraf ingevuld voorstel in een nieuw tabblad. Hiervoor is een GitHub-account nodig. Neem geen persoonlijke gegevens op in een openbaar issue.');
+ if(confirmed){window.open(reportUrl,'_blank','noopener,noreferrer');report.textContent='Correctieformulier geopend ↗'}
+ else {const ok=await copy('RaceAtlas correctie\n'+title+'\n'+body);report.textContent=ok?'Correctietekst gekopieerd ✓':'Correctie niet gekopieerd'}
  };actions.append(report);
  dlg.append(actions);overlay.append(dlg);overlay.addEventListener('click',ev=>{if(ev.target===overlay)closeDialog()});document.body.append(overlay);close.focus();
  const urlObj=new URL(location.href);if(urlObj.searchParams.get('event')!==e.id){urlObj.searchParams.set('event',e.id);history.replaceState(null,'',urlObj.pathname+urlObj.search+urlObj.hash)}
