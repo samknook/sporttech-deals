@@ -50,7 +50,7 @@ header{position:relative;z-index:12;background:#071927!important;border-bottom:1
 .raCardVisual::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,#051a2066 0%,#00000009 65%)}
 .raCardVisual.running{background-image:url("https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=900&q=80")}
 .raCardVisual.biking{background-image:url("https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=900&q=80")}
-.raCardVisual.triathlon{background-image:url("https://images.unsplash.com/photo-1530549387789-4c1017266635?auto=format&fit=crop&w=900&q=80")}
+.raCardVisual.triathlon{background-image:linear-gradient(0deg,#09253025,#09253025),url("https://images.pexels.com/photos/18457222/pexels-photo-18457222.jpeg?cs=srgb&dl=pexels-runffwpu-18457222.jpg&fm=jpg");background-position:center 53%}
 .raDateBadge{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:63px;min-height:61px;background:#fff;color:#122034;border-radius:11px;padding:6px;box-shadow:0 4px 12px #07182745}
 .raDateBadge strong{font-weight:950;font-size:25px;line-height:1}.raDateBadge span{font-size:11px;font-weight:850;text-transform:uppercase;margin-top:4px}
 .raFeatureBadge{background:var(--ra-lime);color:#17251a;border-radius:9px;padding:7px 10px;font-size:11px;font-weight:850}
@@ -201,3 +201,6 @@ header{position:relative;z-index:12;background:#071927!important;border-bottom:1
  .cards.listMode .card{grid-template-columns:80px minmax(0,1fr)!important}
  .cards.listMode .raCardActions button,.cards.listMode .raCardActions a{font-size:9px!important}
 }
+
+/* Filters and prices: readable without overwhelming the mobile screen */
+.advancedGrid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important}.raCardInfo{color:#607280!important}.raCardInfo.price{font-weight:850!important;color:#1a4736!important}.raCardInfo.registration{color:#48647b!important}.raSportTag.duo{background:#f6ecd8!important;color:#6e481c!important}.raCardVisual.triathlon::before{content:'SWIM · BIKE · RUN';position:absolute;bottom:11px;right:12px;z-index:1;background:#071b2cc9;color:white;border:1px solid #ffffff65;border-radius:7px;padding:6px 9px;font-size:10px;font-weight:900;letter-spacing:.08em}@media(max-width:650px){.advancedGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.raCardInfo{line-height:1.4!important}.raCardVisual.triathlon::before{font-size:9px!important;right:8px;bottom:8px;padding:5px 7px}}
