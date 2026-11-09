@@ -66,3 +66,29 @@ test('Registration-page filter only matches an actual registration link',()=>{
  assert.equal(hasLink({registrationStatus:'link_available'}),false);
  assert.equal(hasLink({registrationUrl:'https://example.org/register'}),true);
 });
+
+test('All RaceAtlas events have a linked named event, club, or calendar source',()=>{
+ for(const e of dataset)assert.match(e.officialEventUrl||e.source,/^https:\/\/[^/]+/,'Missing source for '+e.name);
+});
+test('Opening dates, price values and currency metadata are coherent',()=>{
+ for(const e of dataset){
+  if(e.registrationDate)assert.match(e.registrationDate,/^20\d{2}-\d{2}-\d{2}$/);
+  if(e.registrationEndDate)assert.match(e.registrationEndDate,/^20\d{2}-\d{2}-\d{2}$/);
+  if(e.priceEur!==undefined)assert.ok(Number.isFinite(e.priceEur)&&e.priceEur>=0,e.name);
+  if(e.priceAmount!==undefined){assert.ok(Number.isFinite(e.priceAmount)&&e.priceAmount>=0,e.name);assert.match(e.priceCurrency,/^[A-Z]{3}$/)}
+ }
+});
+test('Known London weekend and unconfirmed Groningen date are represented without false precision',()=>{
+ const london=dataset.find(e=>e.name==='London Marathon');
+ assert.equal(london.eventStartDate,'2027-04-24');
+ assert.equal(london.date,'2027-04-25');
+ const groningen=dataset.find(e=>e.name==='4 Mijl van Groningen');
+ assert.equal(groningen.date,null);assert.equal(groningen.expectedMonth,'10');
+});
+test('Race detail shows different pricing models and enrollment windows',()=>{
+ assert.match(detail,/priceCurrency/);
+ assert.match(detail,/priceNote/);
+ assert.match(detail,/registrationEndDate/);
+ assert.match(detail,/eventStartDate/);
+ assert.match(detail,/statuses=/);
+});
