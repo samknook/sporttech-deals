@@ -44,3 +44,25 @@ test('Fees, signup dates and official fee source appear only in details',()=>{
  assert.match(detail,/Opening inschrijving/);
  assert.match(detail,/Bron prijs:/);
 });
+
+test('Missing source links are never silently replaced by generic calendars',()=>{
+ const fn=sourceFunction('source');
+ assert.match(fn,/e\.source\|\|null/);
+ const card=page.slice(page.indexOf('function eventCard(e)'),page.indexOf('function renderCards('));
+ assert.match(card,/raSourceMissing/);
+ assert.match(card,/eventUrl\?/);
+ assert.doesNotMatch(fn,/fietssport\.nl|triathlonbond\.nl|hardlopen\.nl/);
+});
+test('Data-quality summary is derived from records and source evidence',()=>{
+ assert.match(page,/id="raQualitySummary"/);
+ assert.match(page,/function renderQualitySummary/);
+ assert.match(page,/Bron ontbreekt/);
+ assert.match(detail,/specifieke bronlink/);
+});
+test('Registration-page filter only matches an actual registration link',()=>{
+ const fn=sourceFunction('hasRegistrationPage');
+ const hasLink=new Function(fn+';return hasRegistrationPage')();
+ assert.equal(hasLink({registrationStatus:'sold_out'}),false);
+ assert.equal(hasLink({registrationStatus:'link_available'}),false);
+ assert.equal(hasLink({registrationUrl:'https://example.org/register'}),true);
+});
