@@ -49,6 +49,9 @@ test('Submission success checks explicit boolean and string true, never a false 
 });
 
 test('Race event submission is private and requires no Github account',()=>{
+ assert.match(page,/id="eventContactEmail" type="email" required/);
+ assert.match(page,/email:\$\('eventContactEmail'\)\.value\.trim\(\)/);
+ assert.match(page,/we publiceren het niet op de evenementpagina/);
  assert.match(page,/id="eventForm" action="https:\/\/formsubmit\.co\/ajax\/trizentro\.team@gmail\.com" method="POST"/);
  assert.match(page,/id="eventSend"/);
  assert.match(page,/id="eventWebsiteTrap"/);
