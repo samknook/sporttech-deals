@@ -20,10 +20,15 @@ function detail(e,fromLink=false){
  const close=el('button','✕','ra-detail-close');close.type='button';close.setAttribute('aria-label','Sluiten');close.onclick=closeDialog;heading.append(close);dlg.append(heading);
  const facts=el('div',null,'ra-detail-facts');
  const fmtDate=s=>{if(!s)return '';const day=String(s).slice(0,10);return /^\d{4}-\d{2}-\d{2}$/.test(day)?new Date(day+'T12:00:00').toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'}):String(s)};
- const fee=typeof e.priceEur==='number'?'€ '+e.priceEur.toFixed(2).replace('.',',')+(e.priceNote?' · '+e.priceNote:''):'Nog niet gepubliceerd';
+ const priceText=typeof e.priceEur==='number'?'€ '+e.priceEur.toFixed(2).replace('.',','):typeof e.priceAmount==='number'?(e.priceCurrency==='USD'?'$ ':e.priceCurrency==='AUD'?'A$ ':e.priceCurrency+' ')+e.priceAmount.toLocaleString('nl-NL',{minimumFractionDigits:0,maximumFractionDigits:2}):null;
+ const fee=priceText?(e.priceNote?priceText+' · '+e.priceNote:priceText):e.priceNote||'Nog niet gepubliceerd';
  const when=e.registrationOpenAt?fmtDate(e.registrationOpenAt):e.registrationDate?fmtDate(e.registrationDate):e.registrationWindow?'Verwacht: '+e.registrationWindow+' (exacte dag onbekend)':'Openingsdatum nog niet gepubliceerd';
- const status=e.registrationStatus==='sold_out'?'Bij laatst gecontroleerde bron: uitverkocht':e.registrationStatus==='late_bird'?'Late-bird-inschrijving vermeld (controleer beschikbaarheid)':e.registrationStatus==='link_available'?'Inschrijfpagina vermeld (controleer beschikbaarheid)':e.registrationStatus==='window'?'Verwachte openingsperiode bekend':'Actuele beschikbaarheid controleren bij organisator';
- const factsData=[['Wedstrijddatum',formatDate(e)],['Locatie',e.place+' · '+e.country],['Afstanden',e.distance],['Inschrijfprijs',fee],['Opening inschrijving',when],['Inschrijfstatus',status],['Datumstatus',category(e)]];
+ const statuses={sold_out:'Bij laatst gecontroleerde bron: reguliere startbewijzen uitverkocht',closed:'Reguliere inschrijfperiode gesloten (alternatieven mogelijk)',mixed:'Verschilt per onderdeel; zie aanvullende informatie',upcoming:'Inschrijving opent later volgens bron',on_site:'Alleen op locatie inschrijven',late_bird:'Late-bird-inschrijving vermeld',link_available:'Inschrijfpagina beschikbaar; controleer actuele status',window:'Verwachte openingsperiode bekend',unknown:'Openingsdatum of actuele status niet bevestigd'};
+ const status=statuses[e.registrationStatus]||'Actuele beschikbaarheid controleren bij organisator';
+ const eventDate=e.eventStartDate&&e.eventStartDate!==e.date?fmtDate(e.eventStartDate)+' t/m '+fmtDate(e.date):formatDate(e);
+ const factsData=[['Wedstrijddatum',eventDate],['Locatie',e.place+' · '+e.country],['Afstanden',e.distance],['Inschrijfprijs',fee],['Opening inschrijving',when],['Inschrijfstatus',status],['Datumstatus',category(e)]];
+ if(e.registrationEndDate)factsData.push(['Einde inschrijfperiode',fmtDate(e.registrationEndDate)]);
+ if(e.dateNote)factsData.push(['Programma/datumtoelichting',e.dateNote]);
  if(e.preregistrationDate)factsData.push(['Pre-registratie vanaf',fmtDate(e.preregistrationDate)]);
  if(e.registrationOpenInfo)factsData.push(['Verdere openingsinformatie',e.registrationOpenInfo]);
  if(e.registrationStatusNote)factsData.push(['Extra informatie',e.registrationStatusNote]);
