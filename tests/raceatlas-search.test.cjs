@@ -125,3 +125,14 @@ test('Calendar reminders never treat unconfirmed dates as verified',()=>{
  assert.match(alerts,/event\.eventStartDate/);
  assert.match(alerts,/geen kalenderherinnering/);
 });
+
+test('Mobile bottom navigation is wired to event discovery, filters and saved races',()=>{
+ assert.match(page,/id="raMobileExplore"/);
+ assert.match(page,/id="raMobileFilters"/);
+ assert.match(page,/id="raMobileSaved"/);
+ assert.match(page,/\$\('raMobileFilters'\)\.onclick=/);
+ assert.match(page,/\$\('raMobileSaved'\)\.onclick=/);
+ const css=fs.readFileSync(path.join(base,'sport-edition.css'),'utf8');
+ assert.match(css,/\.raMobileNav/);
+ assert.match(css,/safe-area-inset-bottom/);
+});
