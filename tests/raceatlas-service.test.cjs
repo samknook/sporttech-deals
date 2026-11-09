@@ -7,7 +7,8 @@ const root=path.resolve(__dirname,'..');
 test('RaceAtlas organizer submission form has required fields',()=>{
  const c=fs.readFileSync(path.join(root,'docs/raceatlas/organisatoren.html'),'utf8');
  for(const id of ['name','sport','city','country','url','confirm'])assert.match(c,new RegExp('id="'+id+'"'));
- assert.match(c,/issues\/new/);
+ assert.match(c,/id="eventForm" action="https:\/\/formsubmit\.co\/ajax\/trizentro\.team@gmail\.com"/);
+ assert.doesNotMatch(c,/GitHub-account nodig|issues\/new/);
  assert.match(c,/organisator/i);
 });
 test('RaceAtlas backend is gated behind setup and includes opt-in primitives',()=>{
