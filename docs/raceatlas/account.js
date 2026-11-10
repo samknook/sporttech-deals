@@ -146,6 +146,42 @@ function renderStatusControls(){
  }
  if(cloudEvents.length)content.append(container);
 }
+function exportSeason(){
+ if(!user||mode!=='cloud')return;
+ const payload={
+  format:'RaceAtlas season export',
+  version:1,
+  exportedAt:new Date().toISOString(),
+  events:cloudEvents.map(item=>({eventId:item.event_id,status:item.season_status}))
+ };
+ const blob=new Blob([JSON.stringify(payload,null,2)+'\\n'],{type:'application/json;charset=utf-8'});
+ const url=URL.createObjectURL(blob);
+ const link=el('a');link.href=url;link.download='raceatlas-mijn-seizoen.json';
+ document.body.append(link);link.click();link.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1500);
+ setStatus('Je seizoensgegevens zijn geëxporteerd. Het bestand bevat geen wachtwoorden of toegangstokens.');
+}
+async function eraseCloudSeason(){
+ if(!user||mode!=='cloud')return;
+ if(saving||pending.size){setStatus('Synchroniseer eerst alle wijzigingen voordat je jouw cloudseizoen wist.');return}
+ if(!window.confirm('Wil je al jouw opgeslagen wedstrijden en meldingsvoorkeuren uit dit RaceAtlas-account verwijderen? Je account zelf blijft bestaan. Dit kan niet ongedaan worden gemaakt.'))return;
+ const owner=user.id,version=authVersion;
+ setStatus('Cloudseizoen verwijderen…');
+ try{
+  // Delete preferences first: do not retain notification choices for removed events.
+  const a=await client.from('raceatlas_alert_preferences').delete().eq('user_id',owner);
+  if(a.error)throw a.error;
+  if(owner!==user?.id||version!==authVersion)return;
+  const b=await client.from('raceatlas_saved_events').delete().eq('user_id',owner);
+  if(b.error)throw b.error;
+  if(owner!==user?.id||version!==authVersion)return;
+  cloudEvents=[];savedApi().useCloud([]);showSignedIn();
+  setStatus('Je cloudseizoen en meldingsvoorkeuren zijn verwijderd. Je account en apparaatfavorieten zijn behouden.');
+ }catch{
+  if(owner===user?.id&&version===authVersion)
+   setStatus('Verwijderen is niet volledig gelukt. Controleer het cloudseizoen opnieuw en probeer het later opnieuw.');
+ }
+}
 async function disconnect(){
  if((saving||pending.size)&&!window.confirm('Niet alle wijzigingen zijn gesynchroniseerd. Als je nu uitlogt, kunnen ze verloren gaan. Toch uitloggen?'))return;
  const {error}=await client.auth.signOut();
@@ -161,6 +197,8 @@ function showSignedIn(){
   content.append(button('Seizoen verversen',chooseCloud));
   renderStatusControls();
   content.append(button('Synchronisatie opnieuw proberen',()=>{void flushPending()}));
+  content.append(button('Download mijn seizoensgegevens',exportSeason));
+  content.append(button('Verwijder cloudseizoen',eraseCloudSeason));
  }else{
   appendNotice('Je kunt jouw lokale favorieten toevoegen aan je account of uitsluitend het al opgeslagen cloudseizoen gebruiken. Er wordt niets automatisch overschreven.');
   content.append(button('Lokale favorieten toevoegen aan account',importLocal));
