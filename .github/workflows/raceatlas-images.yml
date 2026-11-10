@@ -1,0 +1,60 @@
+name: Publish RaceAtlas image batches
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'raceatlas-assets/batch4.zip'
+      - 'raceatlas-assets/batch5.zip'
+      - '.github/workflows/raceatlas-images.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: raceatlas-images
+  cancel-in-progress: false
+jobs:
+  install-and-publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: https://samknook.github.io/sporttech-deals/raceatlas/
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Extract and validate 20 unique RaceAtlas event images
+        run: |
+          set -euo pipefail
+          unzip -oq raceatlas-assets/batch4.zip 'docs/raceatlas/images/featured/*.webp' -d .
+          unzip -oq raceatlas-assets/batch5.zip 'docs/raceatlas/images/featured/*.webp' -d .
+          python3 - <<'PY'
+          from pathlib import Path
+          ids=[2,4,6,7,10,213,216,222,224,227,232,233,234,241,242,243,255,258,259,261]
+          root=Path('docs/raceatlas/images/featured')
+          for i in ids:
+              path=root/f'ra-{i}.webp'
+              data=path.read_bytes()
+              assert data[:4]==b'RIFF' and data[8:12]==b'WEBP', f'Not valid WebP: {path}'
+              assert len(data)>10000, f'Too small: {path}'
+              print(f'{path}: {len(data)} bytes')
+          assert len(ids)==20
+          PY
+      - name: Commit images into site
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/raceatlas/images/featured/*.webp
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish 20 unique RaceAtlas event images"
+            git push
+          fi
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs
+      - name: Deploy RaceAtlas and full website
+        uses: actions/deploy-pages@v4
