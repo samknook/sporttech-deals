@@ -125,7 +125,7 @@ function source(e){return e.source||null}
 // A licensed event photograph can later replace this through e.imageUrl + imageRights.
 function raceArtwork(e){
  if(!e.major)return null;
- if(e.imageRights==='original'&&/^images\/[a-z0-9-]+\.svg$/.test(e.imageUrl||''))return e.imageUrl;
+ if(e.imageRights==='original'&&/^images\/(?:featured\/)?[a-z0-9-]+\.svg$/.test(e.imageUrl||''))return e.imageUrl;
  if(e.imageRights==='licensed'&&e.imageCredit&&e.imageSourceUrl&&/^https:\/\/[^\s"'<>]+$/i.test(e.imageUrl||''))return e.imageUrl;
  // Every major event has its own illustrated scene, varied by sport, location and stable event ID.
  const key=e.id+'|'+e.name,hash=[...key].reduce((n,c)=>((n*31+c.charCodeAt(0))>>>0),2166136261);
