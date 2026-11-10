@@ -82,30 +82,35 @@ async function flushPending(){
  }finally{saving=false}
 }
 async function chooseCloud(){
- if(pending.size){setStatus('Er staan nog niet gesynchroniseerde wijzigingen klaar. Probeer eerst opnieuw.');return}
+ if(!user)return;
+ if(pending.size||saving){setStatus('Er worden nog wijzigingen gesynchroniseerd. Probeer eerst opnieuw.');return}
+ const owner=user.id,version=authVersion;
  try{
   const cloud=await readCloud();
+  if(owner!==user?.id||version!==authVersion)return;
   cloudEvents=cloud;
   savedApi().useCloud(cloud.map(e=>e.event_id));
   mode='cloud';setStatus('Cloudseizoen geladen. Nieuwe wijzigingen synchroniseren automatisch.');showSignedIn();
- }catch{setStatus('Cloudseizoen ophalen mislukt. Je lokale gegevens zijn behouden.')}
+ }catch{if(owner===user?.id&&version===authVersion)setStatus('Cloudseizoen ophalen mislukt. Je lokale gegevens zijn behouden.')}
 }
 async function importLocal(){
+ if(!user)return;
+ const owner=user.id,version=authVersion;
  const ids=savedApi().guest().filter(id=>/^ra-\d{1,8}$/.test(id));
  try{
   if(ids.length){
-   const rows=ids.map(event_id=>({user_id:user.id,event_id,season_status:'interested'}));
+   const rows=ids.map(event_id=>({user_id:owner,event_id,season_status:'interested'}));
    const {error}=await client.from('raceatlas_saved_events').upsert(rows,{onConflict:'user_id,event_id',ignoreDuplicates:true});if(error)throw error;
   }
-  await chooseCloud();
- }catch{setStatus('Importeren is mislukt. Je lokale favorieten zijn niet verwijderd.')}
+  if(owner===user?.id&&version===authVersion)await chooseCloud();
+ }catch{if(owner===user?.id&&version===authVersion)setStatus('Importeren is mislukt. Je lokale favorieten zijn niet verwijderd.')}
 }
 async function setSeasonStatus(eventId,statusValue){
  if(!user||mode!=='cloud'||!['interested','registered','completed'].includes(statusValue))return;
- const currentUser=user.id;
+ const currentUser=user.id,version=authVersion;
  const {error}=await client.from('raceatlas_saved_events').update({season_status:statusValue,updated_at:new Date().toISOString()}).eq('user_id',currentUser).eq('event_id',eventId);
- if(error){setStatus('Status opslaan is mislukt. Probeer het opnieuw.');return}
- if(currentUser!==user?.id)return;
+ if(error){if(currentUser===user?.id&&version===authVersion)setStatus('Status opslaan is mislukt. Probeer het opnieuw.');return}
+ if(currentUser!==user?.id||version!==authVersion)return;
  cloudEvents=cloudEvents.map(item=>item.event_id===eventId?{...item,season_status:statusValue}:item);
  showSignedIn();setStatus('Wedstrijdstatus opgeslagen.');
 }
@@ -127,6 +132,7 @@ function renderStatusControls(){
  if(cloudEvents.length)content.append(container);
 }
 async function disconnect(){
+ if((saving||pending.size)&&!window.confirm('Niet alle wijzigingen zijn gesynchroniseerd. Als je nu uitlogt, kunnen ze verloren gaan. Toch uitloggen?'))return;
  const {error}=await client.auth.signOut();
  if(error){setStatus('Uitloggen is mislukt. Probeer opnieuw.');return}
  authVersion++;pending.clear();cloudEvents=[];user=null;mode='local';savedApi().useGuest();showAuth();setStatus('Uitgelogd. Je persoonlijke seizoen is verborgen; de favorieten van dit apparaat zijn hersteld.');
@@ -152,7 +158,7 @@ async function onAuth(){
   user=data?.user||null;mode='local';authVersion++;pending.clear();cloudEvents=[];savedApi().useGuest();
   if(!user){showAuth();return}
   showSignedIn();
- }catch{showAuth();setStatus('Accountstatus kon niet worden gecontroleerd.')}
+ }catch{authVersion++;pending.clear();cloudEvents=[];user=null;mode='local';savedApi().useGuest();showAuth();setStatus('Accountstatus kon niet worden gecontroleerd.')}
 }
 window.addEventListener('raceatlas:saved-change',e=>{
  if(e.detail&&typeof e.detail.id==='string')writeOne(e.detail.id,!!e.detail.saved);
