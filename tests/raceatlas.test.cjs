@@ -118,3 +118,18 @@ test('Price data filters distinguish sourced amounts from conflicting informatio
   assert.match(html,/registrationFilter==='conflict'&&e\.priceStatus==='conflicting'/);
   assert.match(html,/Prijs onduidelijk — zie details/);
 });
+
+test('Calendar exports derive end date from the same start date',()=>{
+  assert.match(html,/const d=new Date\(start\+'T12:00:00'\)/);
+  assert.doesNotMatch(html,/const d=new Date\(e\.date\+'T12:00:00'\);d\.setDate\(d\.getDate\(\)\+1\);lines\.push/);
+  assert.match(html,/'DTSTAMP:'\+stamp/);
+  const alertScript=fs.readFileSync(path.join(root,'alerts.js'),'utf8');
+  assert.match(alertScript,/'DTSTAMP:'\+stamp/);
+});
+test('North Holland filter includes Egmond and Zandvoort events',()=>{
+  for(const id of ['ra-0','ra-22','ra-277','ra-305']){
+    const e=events.find(e=>e.id===id);
+    assert.ok(e,'Event exists: '+id);
+    assert.equal(e.region,'Noord-Holland');
+  }
+});
