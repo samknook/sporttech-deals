@@ -3,8 +3,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'raceatlas-assets/batch4.zip'
-      - 'raceatlas-assets/batch5.zip'
+      - 'raceatlas-assets/batch*.zip'
       - '.github/workflows/raceatlas-images.yml'
   workflow_dispatch:
 permissions:
@@ -24,22 +23,46 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: true
-      - name: Extract and validate 20 unique RaceAtlas event images
+      - name: Extract and validate RaceAtlas event images
         run: |
           set -euo pipefail
-          unzip -oq raceatlas-assets/batch4.zip 'docs/raceatlas/images/featured/*.webp' -d .
-          unzip -oq raceatlas-assets/batch5.zip 'docs/raceatlas/images/featured/*.webp' -d .
           python3 - <<'PY'
+          import json, re, zipfile
           from pathlib import Path
-          ids=[2,4,6,7,10,213,216,222,224,227,232,233,234,241,242,243,255,258,259,261]
+          import hashlib
+
           root=Path('docs/raceatlas/images/featured')
-          for i in ids:
-              path=root/f'ra-{i}.webp'
-              data=path.read_bytes()
-              assert data[:4]==b'RIFF' and data[8:12]==b'WEBP', f'Not valid WebP: {path}'
-              assert len(data)>10000, f'Too small: {path}'
-              print(f'{path}: {len(data)} bytes')
-          assert len(ids)==20
+          root.mkdir(parents=True, exist_ok=True)
+          packs=sorted(Path('raceatlas-assets').glob('batch*.zip'))
+          if not packs:
+              raise SystemExit('No RaceAtlas image batches available')
+          images={}
+          for pack in packs:
+              with zipfile.ZipFile(pack) as archive:
+                  files=[n for n in archive.namelist() if n.endswith('.webp')]
+                  if len(files)!=10:
+                      raise ValueError(f'{pack} must contain exactly 10 WebP files, found {len(files)}')
+                  for filename in files:
+                      expected=re.fullmatch(r'docs/raceatlas/images/featured/(ra-\\d+\\.webp)',filename)
+                      if not expected:
+                          raise ValueError(f'Unexpected image path: {filename}')
+                      key=expected.group(1)
+                      if key in images:
+                          raise ValueError(f'Duplicate event image: {key}')
+                      data=archive.read(filename)
+                      if data[:4]!=b'RIFF' or data[8:12]!=b'WEBP' or len(data)<10000:
+                          raise ValueError(f'Invalid WebP: {filename}')
+                      images[key]=data
+          if len({hashlib.sha256(data).digest() for data in images.values()})!=len(images):
+              raise ValueError('Identical image payloads found across event IDs')
+          for key,data in images.items():
+              (root/key).write_bytes(data)
+              print(f'Validated {key}: {len(data)} bytes')
+          index=Path('docs/raceatlas/index.html').read_text()
+          for key in images:
+              if key not in index:
+                  raise ValueError(f'Event ID for image not found in catalogue: {key}')
+          print(f'Validated {len(images)} images in {len(packs)} batches')
           PY
       - name: Commit images into site
         run: |
@@ -47,7 +70,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/raceatlas/images/featured/*.webp
           if ! git diff --cached --quiet; then
-            git commit -m "Publish 20 unique RaceAtlas event images"
+            git commit -m "Publish validated RaceAtlas event images"
             git push
           fi
       - name: Configure GitHub Pages
