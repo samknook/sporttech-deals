@@ -43,7 +43,7 @@ jobs:
                   if len(files)!=10:
                       raise ValueError(f'{pack} must contain exactly 10 WebP files, found {len(files)}')
                   for filename in files:
-                      expected=re.fullmatch(r'docs/raceatlas/images/featured/(ra-\\d+\\.webp)',filename)
+                      expected=re.fullmatch(r'docs/raceatlas/images/featured/(ra-\d+\.webp)',filename)
                       if not expected:
                           raise ValueError(f'Unexpected image path: {filename}')
                       key=expected.group(1)
