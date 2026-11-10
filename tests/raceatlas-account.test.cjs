@@ -105,3 +105,19 @@ test('Email alerts are described as unavailable until opt-in and sending are imp
   assert.match(moduleCode,/E-mailmeldingen zijn nog niet actief/);
   assert.match(moduleCode,/aparte, expliciete aanmelding/);
 });
+
+test('Users can export their own cloud season without private auth tokens',()=>{
+ assert.match(moduleCode,/function exportSeason\(\)/);
+ assert.match(moduleCode,/raceatlas-mijn-seizoen\.json/);
+ assert.match(moduleCode,/cloudEvents\.map\(item=>\(\{eventId:item\.event_id,status:item\.season_status\}\)\)/);
+ assert.match(moduleCode,/Download mijn seizoensgegevens/);
+});
+test('Cloud season deletion requires confirmation and removes alert preferences before saved events',()=>{
+ assert.match(moduleCode,/async function eraseCloudSeason\(\)/);
+ assert.match(moduleCode,/if\(!window\.confirm\('Wil je al jouw opgeslagen wedstrijden/);
+ const section=moduleCode.slice(moduleCode.indexOf('async function eraseCloudSeason'),moduleCode.indexOf('async function disconnect'));
+ assert.ok(section.indexOf("'raceatlas_alert_preferences'")<section.indexOf("'raceatlas_saved_events'"));
+ assert.match(section,/\.delete\(\)\.eq\('user_id',owner\)/);
+ assert.match(section,/if\(owner!==user\?\.id\|\|version!==authVersion\)return/);
+ assert.match(moduleCode,/Verwijder cloudseizoen/);
+});
