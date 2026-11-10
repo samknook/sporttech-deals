@@ -215,7 +215,7 @@ test('Rotterdam now uses its requested AI race image',()=>{
  const race=events.find(e=>e.id==='ra-5');
  assert.ok(race&&race.major);
  assert.equal(race.imageRights,'generated');
- assert.equal(race.imageUrl,'images/featured/ra-5.jpg');
+ assert.equal(race.imageUrl,'images/featured/ra-5.webp');
  assert.doesNotMatch(html,/raArtworkCredit/);
 });
 
@@ -230,39 +230,43 @@ test('National championships have their own tier rather than automatic major sta
  assert.match(details,/not_open:'Inschrijving nog niet geopend/);
 });
 
-test('Featured race images are actual JPEG files for Amsterdam, Dam tot Dam, Hoorn and Egmond',()=>{
- const expected=['ra-418','ra-8','ra-11','ra-0','ra-5'];
- for(const id of expected){
+test('First featured race images are actual optimized WebP files',()=>{
+ const ids=['ra-418','ra-8','ra-11','ra-0','ra-5'];
+ for(const id of ids){
   const race=events.find(e=>e.id===id);
   assert.ok(race&&race.major);
   assert.equal(race.imageRights,'generated');
-  assert.equal(race.imageUrl,'images/featured/'+id+'.jpg');
+  assert.equal(race.imageUrl,'images/featured/'+id+'.webp');
   const asset=fs.readFileSync(path.join(root,race.imageUrl));
-  assert.equal(asset[0],0xff);
-  assert.equal(asset[1],0xd8);
-  assert.equal(asset[2],0xff);
+  assert.equal(asset.subarray(0,4).toString(),'RIFF');
+  assert.equal(asset.subarray(8,12).toString(),'WEBP');
  }
 });
 
-test('Every major event has an uploaded local photographic-looking image',()=>{
+test('All major event covers have valid local or credited Wikimedia images',()=>{
  const majors=events.filter(e=>e.major);
  assert.equal(majors.length,70);
  for(const e of majors){
-  assert.equal(e.imageRights,'generated',e.id);
-  assert.match(e.imageUrl,/^images\/featured\/ra-\d+\.(?:webp|jpg)$/);
-  const bytes=fs.readFileSync(path.join(root,e.imageUrl));
-  if(e.imageUrl.endsWith('.webp')){
-   assert.equal(bytes.subarray(0,4).toString(),'RIFF',e.id);
-   assert.equal(bytes.subarray(8,12).toString(),'WEBP',e.id);
+  if(e.imageRights==='licensed'){
+   assert.match(e.imageUrl,/^https:\/\/upload\.wikimedia\.org\//);
+   assert.match(e.imageSourceUrl,/^https:\/\/commons\.wikimedia\.org\/wiki\/File:/);
+   assert.ok(e.imageCredit&&e.imageLicenseUrl,e.id);
   }else{
-   assert.equal(bytes[0],0xff,e.id);
-   assert.equal(bytes[1],0xd8,e.id);
+   assert.equal(e.imageRights,'generated',e.id);
+   assert.match(e.imageUrl,/^images\/featured\/ra-\d+\.(?:webp|jpg)$/);
+   const bytes=fs.readFileSync(path.join(root,e.imageUrl));
+   if(e.imageUrl.endsWith('.webp')){
+    assert.equal(bytes.subarray(0,4).toString(),'RIFF',e.id);
+    assert.equal(bytes.subarray(8,12).toString(),'WEBP',e.id);
+   }else{
+    assert.equal(bytes[0],0xff,e.id);
+    assert.equal(bytes[1],0xd8,e.id);
+   }
+   assert.ok(bytes.length>10000,e.id);
   }
-  assert.ok(bytes.length>10000,e.id);
  }
  assert.equal(new Set(majors.map(e=>e.imageUrl)).size,70);
 });
-
 
 test('Source credits and missing-source labels stay off overview cards',()=>{
  const start=html.indexOf('function eventCard(e)');
@@ -283,4 +287,17 @@ test('First 10 curated majors use dedicated new WebP assets',()=>{
   assert.equal(event.imageUrl,'images/featured/ra-'+id+'.webp');
   assert.equal(event.imageRights,'generated');
  }
+});
+
+test('Second group of ten is event-specific and has source credit only in details',()=>{
+ const next=[12,18,15,16,9,3,265,260,244,248];
+ for(const id of next){
+  const e=events.find(e=>e.id==='ra-'+id);
+  assert.equal(e.imageRights,'licensed');
+  assert.ok(e.imageUrl.startsWith('https://upload.wikimedia.org/'));
+  assert.ok(e.imageCredit&&e.imageSourceUrl&&e.imageLicenseUrl);
+  assert.ok(e.imageEventYear<2027);
+ }
+ const cards=html.slice(html.indexOf('function eventCard(e)'),html.indexOf('function renderCards('));
+ assert.doesNotMatch(cards,/raArtworkCredit|Foto: /);
 });
