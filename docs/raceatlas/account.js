@@ -16,6 +16,7 @@ where.insertAdjacentElement('afterend',wrapper);
 let client=null,user=null,mode='local',saving=false;
 const pending=new Map();
 let authVersion=0;
+let cloudEvents=[];
 const setStatus=text=>{status.textContent=text;status.setAttribute('role','status')};
 const button=(label,action)=>{const b=el('button',label);b.type='button';b.addEventListener('click',action);return b};
 function appendNotice(text){content.append(el('p',text))}
@@ -41,7 +42,7 @@ function showAuth(){
 async function readCloud(){
  const {data,error}=await client.from('raceatlas_saved_events').select('event_id,season_status').eq('user_id',user.id);
  if(error)throw error;
- return data||[];
+ return (data||[]).filter(item=>/^ra-\d{1,8}$/.test(item.event_id));
 }
 // Keep a per-event queue so fast saves/unsaves cannot be lost while a request is in flight.
 function writeOne(id,active){
@@ -79,6 +80,7 @@ async function chooseCloud(){
  if(pending.size){setStatus('Er staan nog niet gesynchroniseerde wijzigingen klaar. Probeer eerst opnieuw.');return}
  try{
   const cloud=await readCloud();
+  cloudEvents=cloud;
   savedApi().set(cloud.map(e=>e.event_id));
   mode='cloud';setStatus('Cloudseizoen geladen. Nieuwe wijzigingen synchroniseren automatisch.');showSignedIn();
  }catch{setStatus('Cloudseizoen ophalen mislukt. Je lokale gegevens zijn behouden.')}
@@ -93,10 +95,36 @@ async function importLocal(){
   await chooseCloud();
  }catch{setStatus('Importeren is mislukt. Je lokale favorieten zijn niet verwijderd.')}
 }
+async function setSeasonStatus(eventId,statusValue){
+ if(!user||mode!=='cloud'||!['interested','registered','completed'].includes(statusValue))return;
+ const currentUser=user.id;
+ const {error}=await client.from('raceatlas_saved_events').update({season_status:statusValue,updated_at:new Date().toISOString()}).eq('user_id',currentUser).eq('event_id',eventId);
+ if(error){setStatus('Status opslaan is mislukt. Probeer het opnieuw.');return}
+ if(currentUser!==user?.id)return;
+ cloudEvents=cloudEvents.map(item=>item.event_id===eventId?{...item,season_status:statusValue}:item);
+ showSignedIn();setStatus('Wedstrijdstatus opgeslagen.');
+}
+function renderStatusControls(){
+ const container=el('div'),heading=el('h3','Mijn wedstrijdstatus');
+ container.className='raAccountStatuses';
+ container.append(heading);
+ const known=new Map((window.RACEATLAS_EVENTS||[]).map(event=>[event.id,event.name]));
+ for(const entry of cloudEvents.filter(item=>known.has(item.event_id))){
+  const line=el('label'),name=el('span',known.get(entry.event_id)),select=el('select');
+  select.setAttribute('aria-label','Status '+known.get(entry.event_id));
+  for(const [value,label] of [['interested','Interesse'],['registered','Ingeschreven'],['completed','Voltooid']]){
+   const option=el('option',label);option.value=value;select.append(option);
+  }
+  select.value=entry.season_status||'interested';
+  select.addEventListener('change',async()=>{select.disabled=true;try{await setSeasonStatus(entry.event_id,select.value)}finally{select.disabled=false}});
+  line.append(name,select);container.append(line);
+ }
+ if(cloudEvents.length)content.append(container);
+}
 async function disconnect(){
  const {error}=await client.auth.signOut();
  if(error){setStatus('Uitloggen is mislukt. Probeer opnieuw.');return}
- authVersion++;pending.clear();user=null;mode='local';showAuth();setStatus('Uitgelogd. Je bestaande lokale favorieten blijven op dit apparaat.');
+ authVersion++;pending.clear();cloudEvents=[];user=null;mode='local';showAuth();setStatus('Uitgelogd. Je bestaande lokale favorieten blijven op dit apparaat.');
 }
 function showSignedIn(){
  content.replaceChildren();
@@ -104,6 +132,7 @@ function showSignedIn(){
  if(mode==='cloud'){
   appendNotice('Je wedstrijdseizoen wordt veilig gesynchroniseerd.');
   content.append(button('Seizoen verversen',chooseCloud));
+  renderStatusControls();
   content.append(button('Synchronisatie opnieuw proberen',()=>{void flushPending()}));
  }else{
   appendNotice('Je kunt jouw lokale favorieten toevoegen aan je account of uitsluitend het al opgeslagen cloudseizoen gebruiken. Er wordt niets automatisch overschreven.');
@@ -115,7 +144,7 @@ function showSignedIn(){
 async function onAuth(){
  try{
   const {data,error}=await client.auth.getUser();if(error)throw error;
-  user=data?.user||null;mode='local';authVersion++;pending.clear();
+  user=data?.user||null;mode='local';authVersion++;pending.clear();cloudEvents=[];
   if(!user){showAuth();return}
   showSignedIn();
  }catch{showAuth();setStatus('Accountstatus kon niet worden gecontroleerd.')}
@@ -124,7 +153,7 @@ window.addEventListener('raceatlas:saved-change',e=>{
  if(e.detail&&typeof e.detail.id==='string')writeOne(e.detail.id,!!e.detail.saved);
 });
 const style=el('style');
-style.textContent='.raAccount{background:#fff;border:1px solid #dce7de;border-radius:16px;padding:18px;margin:16px 0 22px}.raAccount h2{font-size:19px;margin:0 0 10px}.raAccount p{font-size:13px;line-height:1.5;color:#506558}.raAccount form{display:flex;flex-wrap:wrap;gap:8px}.raAccount input{min-height:44px;min-width:210px;flex:1;border-radius:9px;border:1px solid #a9bfb0;padding:10px}.raAccount button{border:1px solid #b7ceb9;border-radius:9px;background:#eaf9db;color:#1a3b29;font-weight:750;padding:11px;min-height:44px;margin:4px 7px 4px 0;cursor:pointer}';
+style.textContent='.raAccount{background:#fff;border:1px solid #dce7de;border-radius:16px;padding:18px;margin:16px 0 22px}.raAccount h2{font-size:19px;margin:0 0 10px}.raAccount p{font-size:13px;line-height:1.5;color:#506558}.raAccount form{display:flex;flex-wrap:wrap;gap:8px}.raAccount input{min-height:44px;min-width:210px;flex:1;border-radius:9px;border:1px solid #a9bfb0;padding:10px}.raAccount button{border:1px solid #b7ceb9;border-radius:9px;background:#eaf9db;color:#1a3b29;font-weight:750;padding:11px;min-height:44px;margin:4px 7px 4px 0;cursor:pointer}.raAccountStatuses{margin:14px 0}.raAccountStatuses label{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #edf1ed;padding:8px 0;font-size:13px}.raAccountStatuses select{min-height:44px;max-width:180px;width:48%;border:1px solid #b7ceb9;border-radius:8px;padding:8px;background:#fff}@media(max-width:520px){.raAccountStatuses label{align-items:stretch;flex-direction:column}.raAccountStatuses select{max-width:none;width:100%}}';
 document.head.append(style);
 const script=el('script');
 script.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
@@ -133,7 +162,7 @@ script.onload=async()=>{
  client=window.supabase.createClient(cfg.supabaseUrl,cfg.publishableKey,{auth:{detectSessionInUrl:true,persistSession:true,autoRefreshToken:true}});
  client.auth.onAuthStateChange((_event,session)=>{
   const id=session?.user?.id||null;
-  if(id!==user?.id){authVersion++;pending.clear();user=session?.user||null;mode='local';if(user)showSignedIn();else showAuth()}
+  if(id!==user?.id){authVersion++;pending.clear();cloudEvents=[];user=session?.user||null;mode='local';if(user)showSignedIn();else showAuth()}
  });
  await onAuth();
 };
