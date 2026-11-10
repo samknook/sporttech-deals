@@ -163,6 +163,7 @@ test('Shared link round-trip restores valid selections and preserves deep links'
    URL,URLSearchParams,
    location:{href:'https://example.test/raceatlas/?event=ra-11&ra_sport=Triatlon&ra_month=06&ra_quick=major&ra_future=0&other=ok',search:'?event=ra-11&ra_sport=Triatlon&ra_month=06&ra_quick=major&ra_future=0&other=ok'},
    document:{getElementById:id=>inputs[id],querySelectorAll:()=>buttons},
+   $:id=>inputs[id],
    history:{state:null,replaceState(){}},
    setPills(){},quick:'all'
  };
@@ -210,4 +211,14 @@ test('Major event artwork is per-event and clearly not represented as licensed p
  assert.match(details,/window\.RaceAtlasArtwork\(e\)/);
  assert.match(details,/ra-detail-artwork/);
  assert.match(details,/geen officiële evenementfoto/);
+});
+
+test('Rotterdam Marathon photography has explicit CC license and an attribution source',()=>{
+ const rotterdam=events.find(e=>e.id==='ra-5');
+ assert.ok(rotterdam&&rotterdam.major);
+ assert.equal(rotterdam.imageRights,'licensed');
+ assert.match(rotterdam.imageCredit,/Peter van der Sluijs/);
+ assert.match(rotterdam.imageSourceUrl,/commons\.wikimedia\.org/);
+ assert.match(rotterdam.imageLicenseUrl,/creativecommons\.org\/licenses\/by-sa\/3\.0/);
+ assert.match(html,/raArtworkCredit isLicensed/);
 });
