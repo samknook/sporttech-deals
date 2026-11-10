@@ -133,3 +133,14 @@ test('North Holland filter includes Egmond and Zandvoort events',()=>{
     assert.equal(e.region,'Noord-Holland');
   }
 });
+
+test('Search selection can be shared and safely restored from URL',()=>{
+ assert.match(html,/id="shareSearch"/);
+ assert.match(html,/function restoreSearchFromUrl\(\)/);
+ assert.match(html,/function searchUrl\(\)/);
+ assert.match(html,/history\.replaceState\(history\.state/);
+ assert.match(html,/url\.searchParams\.delete\('event'\)/);
+ assert.match(html,/input\.tagName==='SELECT'&&![\s\S]*?Array\.from\(input\.options\)/);
+ assert.match(html,/restoreSearchFromUrl\(\);/);
+ assert.match(html,/\$\('shareSearch'\)\.onclick=shareSearch/);
+});
