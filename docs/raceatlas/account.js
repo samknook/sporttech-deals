@@ -14,6 +14,8 @@ const where=document.querySelector('#savedPage .sectionHeading');
 if(!where)return;
 where.insertAdjacentElement('afterend',wrapper);
 let client=null,user=null,mode='local',saving=false;
+const pending=new Map();
+let authVersion=0;
 const setStatus=text=>{status.textContent=text;status.setAttribute('role','status')};
 const button=(label,action)=>{const b=el('button',label);b.type='button';b.addEventListener('click',action);return b};
 function appendNotice(text){content.append(el('p',text))}
@@ -41,21 +43,40 @@ async function readCloud(){
  if(error)throw error;
  return data||[];
 }
-async function writeOne(id,active){
- if(!user||mode!=='cloud'||saving)return;
- if(!/^ra-\d{1,8}$/.test(id))return;
+// Keep a per-event queue so fast saves/unsaves cannot be lost while a request is in flight.
+function writeOne(id,active){
+ if(!user||mode!=='cloud'||!/^ra-\\d{1,8}$/.test(id))return;
+ pending.set(id,active);
+ void flushPending();
+}
+async function flushPending(){
+ if(saving||!user||mode!=='cloud'||!pending.size)return;
  saving=true;
+ const version=authVersion,owner=user.id;
  try{
-  if(active){
-   const {error}=await client.from('raceatlas_saved_events').upsert({user_id:user.id,event_id:id},{onConflict:'user_id,event_id'});if(error)throw error;
-  }else{
-   const {error}=await client.from('raceatlas_saved_events').delete().eq('user_id',user.id).eq('event_id',id);if(error)throw error;
+  while(pending.size&&version===authVersion&&user?.id===owner&&mode==='cloud'){
+   const [id,active]=pending.entries().next().value;
+   // Remove before sending so another click can enqueue a newer desired state.
+   pending.delete(id);
+   try{
+    if(active){
+     const {error}=await client.from('raceatlas_saved_events').upsert({user_id:owner,event_id:id},{onConflict:'user_id,event_id'});
+     if(error)throw error;
+    }else{
+     const {error}=await client.from('raceatlas_saved_events').delete().eq('user_id',owner).eq('event_id',id);
+     if(error)throw error;
+    }
+   }catch{
+    // Keep the latest pending value. Never silently drop a failed change.
+    if(!pending.has(id))pending.set(id,active);
+    setStatus('Synchronisatie mislukt. Je favorieten staan op dit apparaat; probeer opnieuw.');
+    break;
+   }
   }
- }catch{
-  setStatus('Synchroniseren mislukt; je wijzigingen staan nog op dit apparaat.');
  }finally{saving=false}
 }
 async function chooseCloud(){
+ if(pending.size){setStatus('Er staan nog niet gesynchroniseerde wijzigingen klaar. Probeer eerst opnieuw.');return}
  try{
   const cloud=await readCloud();
   savedApi().set(cloud.map(e=>e.event_id));
@@ -73,8 +94,9 @@ async function importLocal(){
  }catch{setStatus('Importeren is mislukt. Je lokale favorieten zijn niet verwijderd.')}
 }
 async function disconnect(){
- await client.auth.signOut();
- user=null;mode='local';showAuth();setStatus('Uitgelogd. Je bestaande lokale favorieten blijven op dit apparaat.');
+ const {error}=await client.auth.signOut();
+ if(error){setStatus('Uitloggen is mislukt. Probeer opnieuw.');return}
+ authVersion++;pending.clear();user=null;mode='local';showAuth();setStatus('Uitgelogd. Je bestaande lokale favorieten blijven op dit apparaat.');
 }
 function showSignedIn(){
  content.replaceChildren();
@@ -82,6 +104,7 @@ function showSignedIn(){
  if(mode==='cloud'){
   appendNotice('Je wedstrijdseizoen wordt veilig gesynchroniseerd.');
   content.append(button('Seizoen verversen',chooseCloud));
+  content.append(button('Synchronisatie opnieuw proberen',()=>{void flushPending()}));
  }else{
   appendNotice('Je kunt jouw lokale favorieten toevoegen aan je account of uitsluitend het al opgeslagen cloudseizoen gebruiken. Er wordt niets automatisch overschreven.');
   content.append(button('Lokale favorieten toevoegen aan account',importLocal));
@@ -92,7 +115,7 @@ function showSignedIn(){
 async function onAuth(){
  try{
   const {data,error}=await client.auth.getUser();if(error)throw error;
-  user=data?.user||null;mode='local';
+  user=data?.user||null;mode='local';authVersion++;pending.clear();
   if(!user){showAuth();return}
   showSignedIn();
  }catch{showAuth();setStatus('Accountstatus kon niet worden gecontroleerd.')}
@@ -110,7 +133,7 @@ script.onload=async()=>{
  client=window.supabase.createClient(cfg.supabaseUrl,cfg.publishableKey,{auth:{detectSessionInUrl:true,persistSession:true,autoRefreshToken:true}});
  client.auth.onAuthStateChange((_event,session)=>{
   const id=session?.user?.id||null;
-  if(id!==user?.id){user=session?.user||null;mode='local';if(user)showSignedIn();else showAuth()}
+  if(id!==user?.id){authVersion++;pending.clear();user=session?.user||null;mode='local';if(user)showSignedIn();else showAuth()}
  });
  await onAuth();
 };
