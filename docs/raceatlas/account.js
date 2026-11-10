@@ -1,0 +1,119 @@
+(() => {
+'use strict';
+// Disabled by default. Enable only after Supabase Auth, SMTP, RLS and privacy flows are tested.
+const cfg=window.RACEATLAS_ACCOUNT_CONFIG||{};
+if(cfg.enabled!==true)return;
+const validUrl=u=>{try{const x=new URL(u);return x.protocol==='https:'}catch{return false}};
+if(!validUrl(cfg.supabaseUrl)||!/^sb_publishable_|^eyJ/.test(cfg.publishableKey||''))return;
+const savedApi=()=>window.RaceAtlasSaved;
+const el=(tag,txt)=>{const n=document.createElement(tag);if(txt!==undefined)n.textContent=txt;return n};
+const status=el('p',''),wrapper=el('section'),title=el('h2','Mijn RaceAtlas-account'),content=el('div');
+wrapper.id='raAccount';wrapper.className='raAccount';
+wrapper.append(title,content,status);
+const where=document.querySelector('#savedPage .sectionHeading');
+if(!where)return;
+where.insertAdjacentElement('afterend',wrapper);
+let client=null,user=null,mode='local',saving=false;
+const setStatus=text=>{status.textContent=text;status.setAttribute('role','status')};
+const button=(label,action)=>{const b=el('button',label);b.type='button';b.addEventListener('click',action);return b};
+function appendNotice(text){content.append(el('p',text))}
+function showAuth(){
+ content.replaceChildren();
+ appendNotice('Bewaar je wedstrijdseizoen op verschillende apparaten. Zonder account blijven je favorieten op dit apparaat staan.');
+ const form=el('form'),email=el('input'),submit=el('button','Stuur inloglink');
+ email.type='email';email.required=true;email.autocomplete='email';email.placeholder='E-mailadres';email.setAttribute('aria-label','E-mailadres');
+ submit.type='submit';
+ form.append(email,submit);
+ form.addEventListener('submit',async event=>{
+  event.preventDefault();submit.disabled=true;
+  setStatus('Inloglink aanvragen…');
+  try{
+   const result=await client.auth.signInWithOtp({email:email.value.trim(),options:{emailRedirectTo:location.origin+location.pathname}});
+   if(result.error)throw result.error;
+   setStatus('Controleer je inbox voor de eenmalige inloglink.');email.value='';
+  }catch{setStatus('Inloggen is niet gelukt. Probeer opnieuw.')}
+  finally{submit.disabled=false}
+ });
+ content.append(form);
+}
+async function readCloud(){
+ const {data,error}=await client.from('raceatlas_saved_events').select('event_id,season_status').eq('user_id',user.id);
+ if(error)throw error;
+ return data||[];
+}
+async function writeOne(id,active){
+ if(!user||mode!=='cloud'||saving)return;
+ if(!/^ra-\d{1,8}$/.test(id))return;
+ saving=true;
+ try{
+  if(active){
+   const {error}=await client.from('raceatlas_saved_events').upsert({user_id:user.id,event_id:id},{onConflict:'user_id,event_id'});if(error)throw error;
+  }else{
+   const {error}=await client.from('raceatlas_saved_events').delete().eq('user_id',user.id).eq('event_id',id);if(error)throw error;
+  }
+ }catch{
+  setStatus('Synchroniseren mislukt; je wijzigingen staan nog op dit apparaat.');
+ }finally{saving=false}
+}
+async function chooseCloud(){
+ try{
+  const cloud=await readCloud();
+  savedApi().set(cloud.map(e=>e.event_id));
+  mode='cloud';setStatus('Cloudseizoen geladen. Nieuwe wijzigingen synchroniseren automatisch.');showSignedIn();
+ }catch{setStatus('Cloudseizoen ophalen mislukt. Je lokale gegevens zijn behouden.')}
+}
+async function importLocal(){
+ const ids=savedApi().get().filter(id=>/^ra-\d{1,8}$/.test(id));
+ try{
+  if(ids.length){
+   const rows=ids.map(event_id=>({user_id:user.id,event_id,season_status:'interested'}));
+   const {error}=await client.from('raceatlas_saved_events').upsert(rows,{onConflict:'user_id,event_id',ignoreDuplicates:true});if(error)throw error;
+  }
+  await chooseCloud();
+ }catch{setStatus('Importeren is mislukt. Je lokale favorieten zijn niet verwijderd.')}
+}
+async function disconnect(){
+ await client.auth.signOut();
+ user=null;mode='local';showAuth();setStatus('Uitgelogd. Je bestaande lokale favorieten blijven op dit apparaat.');
+}
+function showSignedIn(){
+ content.replaceChildren();
+ appendNotice('Ingelogd als '+(user.email||'RaceAtlas-gebruiker')+'.');
+ if(mode==='cloud'){
+  appendNotice('Je wedstrijdseizoen wordt veilig gesynchroniseerd.');
+  content.append(button('Seizoen verversen',chooseCloud));
+ }else{
+  appendNotice('Je kunt jouw lokale favorieten toevoegen aan je account of uitsluitend het al opgeslagen cloudseizoen gebruiken. Er wordt niets automatisch overschreven.');
+  content.append(button('Lokale favorieten toevoegen aan account',importLocal));
+  content.append(button('Alleen cloudseizoen gebruiken',chooseCloud));
+ }
+ content.append(button('Uitloggen',disconnect));
+}
+async function onAuth(){
+ try{
+  const {data,error}=await client.auth.getUser();if(error)throw error;
+  user=data?.user||null;mode='local';
+  if(!user){showAuth();return}
+  showSignedIn();
+ }catch{showAuth();setStatus('Accountstatus kon niet worden gecontroleerd.')}
+}
+window.addEventListener('raceatlas:saved-change',e=>{
+ if(e.detail&&typeof e.detail.id==='string')writeOne(e.detail.id,!!e.detail.saved);
+});
+const style=el('style');
+style.textContent='.raAccount{background:#fff;border:1px solid #dce7de;border-radius:16px;padding:18px;margin:16px 0 22px}.raAccount h2{font-size:19px;margin:0 0 10px}.raAccount p{font-size:13px;line-height:1.5;color:#506558}.raAccount form{display:flex;flex-wrap:wrap;gap:8px}.raAccount input{min-height:44px;min-width:210px;flex:1;border-radius:9px;border:1px solid #a9bfb0;padding:10px}.raAccount button{border:1px solid #b7ceb9;border-radius:9px;background:#eaf9db;color:#1a3b29;font-weight:750;padding:11px;min-height:44px;margin:4px 7px 4px 0;cursor:pointer}';
+document.head.append(style);
+const script=el('script');
+script.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
+script.onload=async()=>{
+ if(!window.supabase?.createClient){setStatus('Accountdienst niet beschikbaar.');return}
+ client=window.supabase.createClient(cfg.supabaseUrl,cfg.publishableKey,{auth:{detectSessionInUrl:true,persistSession:true,autoRefreshToken:true}});
+ client.auth.onAuthStateChange((_event,session)=>{
+  const id=session?.user?.id||null;
+  if(id!==user?.id){user=session?.user||null;mode='local';if(user)showSignedIn();else showAuth()}
+ });
+ await onAuth();
+};
+script.onerror=()=>setStatus('Accountdienst niet beschikbaar.');
+document.head.append(script);
+})();
