@@ -1,3 +1,14 @@
+## Testtoegang accounts — 10 november 2026
+
+- Publieke login staat bewust **uit** (`enabled:false`), maar gebruikers kunnen een expliciete **QA-preview** openen via:
+  `https://samknook.github.io/sporttech-deals/raceatlas/?ra_account_preview=1`.
+- `previewEnabled:true` in `account-config.js` activeert alleen voor deze link de bestaande UI. Dit is **geen toegangsbeveiliging**: iedereen met de testlink kan de login proberen. De Supabase RLS beveiligt echte gebruikersgegevens.
+- Magic-link-login behoudt de queryparameter `ra_account_preview=1` in het callbackadres, zodat testers na terugkomst nog toegang hebben.
+- De geconfigureerde toegestane Supabase Auth-redirect moet de URL **inclusief eventuele queryparameter** accepteren. Gebruik bijvoorbeeld `https://samknook.github.io/sporttech-deals/raceatlas/**` als passende toegestane redirect, en beperk overige origins. Stel als site-URL `https://samknook.github.io/sporttech-deals/raceatlas/` in.
+- Controleer de e-mailtemplate en verzending voordat de publieke vlag op `enabled:true` wordt gezet. De huidige toolkoppeling kan de hosted Supabase Auth-configuratie niet wijzigen.
+- Test eerst met een eigen testadres: e-maillink, geldige sessie na refresh, lokale import, cloud-sync, uitloggen, meldingsvoorkeuren en accountverwijdering.
+- Geef de testlink **niet als productieaccount** aan bezoekers totdat een volledige twee-gebruikers-RLS-test is geslaagd.
+
 # RaceAtlas — optionele accounts en e-mailmeldingen (implementatieplan)
 
 ## Werkelijke projectstatus — 10 november 2026
