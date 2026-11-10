@@ -180,3 +180,11 @@ test('Magic link callback retains opt-in test access without turning on public a
  assert.match(moduleCode,/emailRedirectTo:callback\.toString\(\)/);
  assert.match(config,/enabled:false/);
 });
+
+test('Account browser SDK uses the documented Supabase CDN and exposes useful sign-in errors',()=>{
+ assert.match(moduleCode,/https:\/\/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js@2'/);
+ assert.doesNotMatch(moduleCode,/dist\/umd\/supabase\.min\.js/);
+ assert.match(moduleCode,/function notused|const formatAuthError=error/);
+ assert.match(moduleCode,/const callbackError=authErrorParams\.get\('error_description'\)/);
+ assert.match(moduleCode,/callback\.searchParams\.set\('ra_account_preview','1'\)/);
+});
