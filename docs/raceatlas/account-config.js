@@ -1,8 +1,8 @@
-// RaceAtlas accounts are deliberately disabled until production setup and security checks are complete.
-// Public project URL and publishable key are safe to expose only after RLS is configured and verified.
-// Never place a service_role key, SMTP password, API secret or private user information in this file.
+// Public RaceAtlas Supabase project configuration.
+// Credentials below are the browser-safe project URL and publishable key, NOT a service role key.
+// Keep disabled until Auth redirect URLs, email delivery and end-to-end RLS tests are verified.
 window.RACEATLAS_ACCOUNT_CONFIG={
   enabled:false,
-  supabaseUrl:'',
-  publishableKey:''
+  supabaseUrl:'https://lpzndnxloykcthbsqcet.supabase.co',
+  publishableKey:'sb_publishable_AE_Qr8VLmWb2020QCOEAKQ_Nl5mZ5Sw'
 };
