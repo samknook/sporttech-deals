@@ -21,6 +21,7 @@ let cloudEvents=[];
 let alertPrefs=new Map();
 let alertBusy=false;
 const setStatus=text=>{status.textContent=text;status.setAttribute('role','status')};
+const formatAuthError=error=>{const code=String(error?.code||'').toLowerCase();if(/rate.limit|over_email_send_rate_limit|email.rate/.test(code))return 'Je vraagt te snel een inloglink aan. Probeer over ongeveer een minuut opnieuw.';if(/email|smtp|mailer|sending/.test(code))return 'De inlogmail kon niet worden verzonden. Controleer de e-mailinstellingen in Supabase.';if(/redirect|validation/.test(code))return 'Het terugkeeradres van RaceAtlas is nog niet toegestaan in Supabase Auth.';return 'De inlogaanvraag is mislukt. Controleer de Supabase Auth-instellingen en probeer opnieuw.'};
 const accountNav=el('button','Mijn account');
 accountNav.id='raAccountNav';accountNav.type='button';accountNav.className='raAccountNav';
 accountNav.addEventListener('click',()=>{document.getElementById('navSaved')?.click();wrapper.scrollIntoView({behavior:'smooth',block:'start'})});
@@ -43,7 +44,7 @@ function showAuth(){
    const result=await client.auth.signInWithOtp({email:email.value.trim(),options:{emailRedirectTo:callback.toString()}});
    if(result.error)throw result.error;
    setStatus('Als de accountdienst je e-mail kan verzenden, ontvang je een eenmalige inloglink. Controleer je inbox en spam.');email.value='';
-  }catch{setStatus('Inloggen is niet gelukt. Probeer opnieuw.')}
+  }catch(error){setStatus(formatAuthError(error))}
   finally{submit.disabled=false}
  });
  content.append(form);
@@ -326,16 +327,19 @@ style.textContent='.raAccount{background:#fff;border:1px solid #dce7de;border-ra
 style.textContent+='.raAccountNav{margin-left:5px}.raAccount{scroll-margin-top:24px}@media(max-width:660px){.raAccountNav{display:none}}.raAccountAlerts{margin:20px 0}.raAccountAlerts h3{font-size:17px;margin:0 0 8px}.raAlertItem{border:1px solid #dde9dd;border-radius:10px;margin:10px 0;padding:12px}.raAlertOptions{display:grid;gap:8px;margin-top:10px}.raAlertOptions label{display:flex;gap:9px;align-items:center;font-size:13px}.raAlertOptions input{width:18px;height:18px;accent-color:#317845}';
 document.head.append(style);
 const script=el('script');
-script.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
+script.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
 script.onload=async()=>{
  if(!window.supabase?.createClient){setStatus('Accountdienst niet beschikbaar.');return}
  client=window.supabase.createClient(cfg.supabaseUrl,cfg.publishableKey,{auth:{detectSessionInUrl:true,persistSession:true,autoRefreshToken:true}});
+ const authErrorParams=new URLSearchParams(location.hash.slice(1));
+ const callbackError=authErrorParams.get('error_description')||new URLSearchParams(location.search).get('error_description');
+ if(callbackError)setStatus('Inloggen via de e-maillink is niet gelukt: '+callbackError.slice(0,170));
  client.auth.onAuthStateChange((_event,session)=>{
   const id=session?.user?.id||null;
   if(id!==user?.id){authVersion++;pending.clear();cloudEvents=[];alertPrefs.clear();savedApi().useGuest();user=session?.user||null;mode='local';if(user)showSignedIn();else showAuth()}
  });
  await onAuth();
 };
-script.onerror=()=>setStatus('Accountdienst niet beschikbaar.');
+script.onerror=()=>setStatus('Accountdienst niet beschikbaar. Controleer je verbinding of schakel scriptblokkering uit voor deze site.');
 document.head.append(script);
 })();
