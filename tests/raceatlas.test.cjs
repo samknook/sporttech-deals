@@ -245,7 +245,7 @@ test('First featured race images are actual optimized WebP files',()=>{
 
 test('All major event covers have valid local or credited Wikimedia images',()=>{
  const majors=events.filter(e=>e.major);
- assert.equal(majors.length,70);
+ assert.equal(majors.length,73);
  for(const e of majors){
   if(e.imageRights==='licensed'){
    assert.match(e.imageUrl,/^https:\/\/upload\.wikimedia\.org\//);
@@ -289,17 +289,18 @@ test('First 10 curated majors use dedicated new WebP assets',()=>{
  }
 });
 
-test('Second group of ten is event-specific and has source credit only in details',()=>{
- const next=[12,18,15,16,9,3,265,260,244,248];
- for(const id of next){
-  const e=events.find(e=>e.id==='ra-'+id);
-  assert.equal(e.imageRights,'licensed');
-  assert.ok(e.imageUrl.startsWith('https://upload.wikimedia.org/'));
-  assert.ok(e.imageCredit&&e.imageSourceUrl&&e.imageLicenseUrl);
-  assert.ok(e.imageEventYear<2027);
+test('Second batch of 10 now uses locally hosted, event-specific AI WebP files',()=>{
+ const ids=[12,18,15,16,9,3,265,260,244,248];
+ for(const id of ids){
+  const event=events.find(e=>e.id==='ra-'+id);
+  assert.ok(event&&event.major,id);
+  assert.equal(event.imageRights,'generated');
+  assert.equal(event.imageUrl,'images/featured/ra-'+id+'.webp');
+  assert.equal(event.imageSourceUrl,undefined);
+  const image=fs.readFileSync(path.join(root,event.imageUrl));
+  assert.equal(image.subarray(0,4).toString(),'RIFF',id);
+  assert.equal(image.subarray(8,12).toString(),'WEBP',id);
  }
- const cards=html.slice(html.indexOf('function eventCard(e)'),html.indexOf('function renderCards('));
- assert.doesNotMatch(cards,/raArtworkCredit|Foto: /);
 });
 
 test('External event photographs have a local image fallback',()=>{
@@ -308,4 +309,25 @@ test('External event photographs have a local image fallback',()=>{
  const detail=fs.readFileSync(path.join(root,'details.js'),'utf8');
  assert.match(detail,/reserve-sfeerbeeld/);
  assert.match(detail,/image\.addEventListener\('error'/);
+});
+
+test('Third batch and newly added international marathons use distinct AI cover files',()=>{
+ const ids=[420,218,421,281,422,294,11,226,296,220];
+ for(const id of ids){
+  const event=events.find(e=>e.id==='ra-'+id);
+  assert.ok(event&&event.major,id);
+  assert.equal(event.imageRights,'generated');
+  assert.equal(event.imageUrl,'images/featured/ra-'+id+'.webp');
+ }
+ const paris=events.find(e=>e.id==='ra-420');
+ const dublin=events.find(e=>e.id==='ra-421');
+ const athens=events.find(e=>e.id==='ra-422');
+ assert.equal(paris.date,'2027-04-04');
+ assert.equal(paris.dateEvidence,'official');
+ assert.equal(dublin.date,'2027-10-24');
+ assert.equal(dublin.registrationDate,'2026-11-12');
+ assert.equal(athens.date,null);
+ assert.equal(athens.status,'date_pending');
+ assert.equal(athens.expectedMonth,'11');
+ assert.equal(new Set(events.map(e=>e.id)).size,423);
 });
