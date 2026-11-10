@@ -22,3 +22,11 @@
 - De 73 grote evenementen verwijzen naar lokale WebP/JPEG-assets, inclusief unieke bestandspaden per evenement.
 - Tijdens de eerste volledige echte browsercontrole moet worden nagegaan of alle afbeeldingen correct laden en goed worden uitgesneden.
 - Later kan de site evenement-specifieke authentieke foto's gebruiken die organisatoren direct aanleveren, zonder de overzichtskaarten met credits te belasten.
+
+## Batch 4 — voorbereid, nog niet gepubliceerd (10 november 2026)
+
+Tien nieuwe fotorealistische AI-sfeerbeelden zijn gegenereerd en lokaal geoptimaliseerd als 960 × 448 WebP. **De assets zijn nog niet geüpload naar GitHub en de website verwijst nog naar de bestaande JPG's**; beschouw deze batch daarom niet als live.
+
+Te vervangen event-ID's: `ra-2` Groet uit Schoorl Run, `ra-4` Venloop, `ra-6` Enschede Marathon, `ra-7` Leiden Marathon, `ra-10` Limburgs Mooiste, `ra-213` IRONMAN 70.3 Vilamoura-Algarve, `ra-216` Challenge Mogán-Gran Canaria, `ra-222` IRONMAN 70.3 Alcúdia-Mallorca, `ra-224` Challenge Salou-Costa Daurada en `ra-227` Challenge Cesenatico.
+
+De publicatiestap vereist upload van de tien WebP-bestanden naar `docs/raceatlas/images/featured/ra-ID.webp`, wijziging van de tien `imageUrl`-velden in `docs/raceatlas/index.html`, en verificatie op de live site. De beelden zijn illustratief; controleer per evenement of de achtergrond voldoende plaats-specifiek is voordat ze worden gepubliceerd.
