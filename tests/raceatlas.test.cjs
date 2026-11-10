@@ -71,3 +71,12 @@ test('Event results distinguish verified from unverified event dates',()=>{
   assert.match(html,/all\.filter\(e=>e\.dateEvidence==='official'\)\.length/);
   assert.match(html,/met nog te controleren datum/);
 });
+
+test('Data quality separates official organizer URLs from calendar citations',()=>{
+  assert.match(html,/met officiële evenementwebsite/);
+  assert.match(html,/Een kalenderbron is geen officiële bevestiging/);
+  assert.match(html,/EVENTS\.filter\(e=>!!e\.officialEventUrl\)/);
+});
+test('Uncertain dates remain visible through the end of their expected month',()=>{
+  assert.match(html,/const lastDay=new Date\(year,month,0\)\.getDate\(\)/);
+});
