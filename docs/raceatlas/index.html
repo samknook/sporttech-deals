@@ -136,8 +136,8 @@ function eventCard(e){
  const visualClass=duo?'duathlon':e.sport==='Fietsen'?'biking':e.sport==='Triatlon'?'triathlon':'running';
  const sportIcon=duo?'🏃🚴':e.sport==='Fietsen'?'🚴':e.sport==='Triatlon'?'🏊🚴':'🏃';
  const sportLabel=duo?'Duatlon':e.sport;
- const isSaved=saved.includes(e.id),eventUrl=e.registrationUrl||e.officialEventUrl||source(e),hasLink=!!(e.registrationUrl||e.officialEventUrl);
- const dateStatus=e.dateEvidence==='official'?'✓ Bevestigd op organisatorsite':e.status==='date_pending'?(e.expectedMonth?'◷ Verwachte maand — exacte datum onbekend':'◷ Datum nog onbekend'):e.status==='source'?'Kalenderbron beschikbaar · controleer datum':'Datum controleren bij organisator';
+ const isSaved=saved.includes(e.id),eventUrl=e.registrationUrl||e.officialEventUrl||null;
+ const dateStatus=e.dateEvidence==='official'?'✓ Bevestigd op organisatorsite':e.status==='date_pending'?(e.expectedMonth?'◷ Verwachte maand — exacte datum onbekend':'◷ Datum nog onbekend'):e.status==='source'?'Datum controleren bij organisator':'Datum controleren bij organisator';
  const distanceKm=window.RaceAtlasRadius?.enabled?window.RaceAtlasRadius.km(e):null;
  const visualDate=e.date?{day:d.day,label:d.month}:e.expectedMonth?{day:'—',label:d.month}:{day:'?',label:'N.T.B.'};
  const card=document.createElement('article');card.className='card';
@@ -156,7 +156,7 @@ function eventCard(e){
  '<button type="button" class="ra-detail-btn" data-ra-detail="'+safe(e.id)+'">Details</button>'+
  '<button type="button" class="ra-alert-btn" data-ra-alert="'+safe(e.id)+'">🔔 Meldingen</button>'+
  '<button class="save '+(isSaved?'selected':'')+'" type="button" aria-label="'+(isSaved?'Verwijder uit mijn seizoen':'Bewaar in mijn seizoen')+'">'+(isSaved?'✓ Bewaard':'+ Bewaar')+'</button>'+
- (eventUrl?'<a class="'+(hasLink?'registerLink':'source')+'" href="'+safe(eventUrl)+'" data-ra-event="'+safe(e.id)+'" data-ra-outbound="'+(e.registrationUrl?'registration':e.officialEventUrl?'organizer':'source')+'" rel="noopener noreferrer" target="_blank">'+(e.registrationUrl?'Evenementpagina ↗':e.officialEventUrl?'Organisator ↗':'Kalenderbron ↗')+'</a>':'<span class="raSourceMissing" title="Er is nog geen specifieke bronlink voor dit evenement">Bron ontbreekt</span>')+'</div>';
+ (eventUrl?'<a class="registerLink" href="'+safe(eventUrl)+'" data-ra-event="'+safe(e.id)+'" data-ra-outbound="'+(e.registrationUrl?'registration':'organizer')+'" rel="noopener noreferrer" target="_blank">'+(e.registrationUrl?'Evenementpagina ↗':'Organisator ↗')+'</a>':'')+'</div>';
  if(visualArt){
   const visual=card.querySelector('.raCardVisual');
   visual.style.backgroundImage='url("'+visualArt+'")';
