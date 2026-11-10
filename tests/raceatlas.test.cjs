@@ -126,14 +126,14 @@ test('Calendar exports derive end date from the same start date',()=>{
   const alertScript=fs.readFileSync(path.join(root,'alerts.js'),'utf8');
   assert.match(alertScript,/'DTSTAMP:'\+stamp/);
 });
-test('North Holland filter includes Egmond and Zandvoort events',()=>{
-  for(const id of ['ra-0','ra-22','ra-277','ra-305']){
-    const e=events.find(e=>e.id===id);
-    assert.ok(e,'Event exists: '+id);
-    assert.equal(e.region,'Noord-Holland');
-  }
+test('No region-specific quick filter is displayed, but existing events remain searchable',()=>{
+  assert.doesNotMatch(html,/data-quick="nh"/);
+  assert.doesNotMatch(html,/quick==='nh'/);
+  for(const id of ['ra-0','ra-22','ra-277','ra-305'])assert.ok(events.some(e=>e.id===id));
+  const radiusScript=fs.readFileSync(path.join(root,'distance.js'),'utf8');
+  assert.doesNotMatch(radiusScript,/placeholder="[^"]*Oosthuizen/);
+  assert.match(radiusScript,/placeholder="Bijv. Utrecht, Rotterdam, Amsterdam"/);
 });
-
 test('Search selection can be shared and safely restored from URL',()=>{
  assert.match(html,/id="shareSearch"/);
  assert.match(html,/function restoreSearchFromUrl\(\)/);
