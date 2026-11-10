@@ -236,10 +236,10 @@ test('National championships have their own tier rather than automatic major sta
 
 test('Priority majors have original event-specific hero images instead of generic placeholders',()=>{
  const expected={
-  'ra-418':'images/amsterdam-marathon.svg',
-  'ra-8':'images/dam-tot-damloop.svg',
-  'ra-11':'images/westfriesland-triathlon.svg',
-  'ra-0':'images/egmond-half-marathon.svg'
+  'ra-418':'images/featured/ra-418.svg',
+  'ra-8':'images/featured/ra-8.svg',
+  'ra-11':'images/featured/ra-11.svg',
+  'ra-0':'images/featured/ra-0.svg'
  };
  for(const [id,filename] of Object.entries(expected)){
   const race=events.find(e=>e.id===id);
