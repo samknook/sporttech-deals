@@ -1,3 +1,13 @@
+## Nieuwe volledige beeldserie — 10 november 2026
+
+- Alle **70 als `major` gemarkeerde evenementen** hebben nu een eigen gebruikte afbeeldingsbron.
+- **69 originele RaceAtlas-beelden** zijn als afzonderlijke SVG-bestanden opgeslagen in `docs/raceatlas/images/featured/ra-N.svg`.
+- **Marathon Rotterdam** behoudt de bestaande CC BY-SA-foto met vermelding van fotograaf, bron en licentie.
+- De illustraties combineren deelnemers in actie met locatiegebonden decors (stad, kust/haven, historische binnenstad, heuvels). Ze zijn originele beelden, **geen foto's of authentieke registraties** van de betreffende edities.
+- De evenementendata koppelen ze expliciet via `imageUrl`, `imageRights:'original'` en `imageCredit`. `raceArtwork()` gebruikt deze bestanden zowel op kaarten als in details, met een gegenereerd vangnet als een locatieafbeelding niet aanwezig is.
+- Deze aanpak is geschikt als voorlopige standaard. Voor een volledige fotorealistische reeks of officiële wedstrijdfoto's zijn aparte uitgewerkte assets en verificatie van beeldrechten nodig.
+- De evenementendatabase bevat nog steeds 420 unieke ID's en 70 `major`-markeringen.
+
 # RaceAtlas — grote evenementen en beeldgebruik
 
 ## Curatie van evenementen
