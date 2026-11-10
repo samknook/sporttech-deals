@@ -249,11 +249,16 @@ test('Every major event has an uploaded local photographic-looking image',()=>{
  assert.equal(majors.length,70);
  for(const e of majors){
   assert.equal(e.imageRights,'generated',e.id);
-  assert.match(e.imageUrl,/^images\/featured\/ra-\d+\.jpg$/);
-  const jpeg=fs.readFileSync(path.join(root,e.imageUrl));
-  assert.equal(jpeg[0],0xff,e.id);
-  assert.equal(jpeg[1],0xd8,e.id);
-  assert.ok(jpeg.length>10000,e.id);
+  assert.match(e.imageUrl,/^images\/featured\/ra-\d+\.(?:webp|jpg)$/);
+  const bytes=fs.readFileSync(path.join(root,e.imageUrl));
+  if(e.imageUrl.endsWith('.webp')){
+   assert.equal(bytes.subarray(0,4).toString(),'RIFF',e.id);
+   assert.equal(bytes.subarray(8,12).toString(),'WEBP',e.id);
+  }else{
+   assert.equal(bytes[0],0xff,e.id);
+   assert.equal(bytes[1],0xd8,e.id);
+  }
+  assert.ok(bytes.length>10000,e.id);
  }
  assert.equal(new Set(majors.map(e=>e.imageUrl)).size,70);
 });
@@ -269,4 +274,13 @@ test('Source credits and missing-source labels stay off overview cards',()=>{
  const details=fs.readFileSync(path.join(root,'details.js'),'utf8');
  assert.match(details,/Bron: RaceAtlas/);
  assert.match(details,/isValidUrl\(e\.imageSourceUrl\)/);
+});
+
+test('First 10 curated majors use dedicated new WebP assets',()=>{
+ const first=[418,5,8,11,0,292,17,14,19,13];
+ for(const id of first){
+  const event=events.find(e=>e.id==='ra-'+id);
+  assert.equal(event.imageUrl,'images/featured/ra-'+id+'.webp');
+  assert.equal(event.imageRights,'generated');
+ }
 });
