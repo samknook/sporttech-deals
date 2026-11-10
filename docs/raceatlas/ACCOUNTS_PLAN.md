@@ -1,5 +1,27 @@
 # RaceAtlas — optionele accounts en e-mailmeldingen (implementatieplan)
 
+## Werkelijke projectstatus — 10 november 2026
+
+- Supabase-project **RaceAtlas** is aangemaakt binnen organisatie Raceplan in **eu-central-1 (Frankfurt)**.
+- Projectdashboard: https://supabase.com/dashboard/project/lpzndnxloykcthbsqcet
+- SQL-migratie `raceatlas_private_season_and_alerts` is toegepast; beide tabellen zijn aanwezig en RLS is ingeschakeld.
+- Zowel `anon` als `authenticated` toegangsrechten zijn gecontroleerd: anonieme bezoekers hebben geen SELECT-recht; ingelogde gebruikers wel, met RLS-beperking tot eigen rijen.
+- Supabase security advisors gaven **geen waarschuwingen** tijdens de eerste controle. Dit vervangt geen praktijktest met twee verschillende gebruikers.
+- `docs/raceatlas/account-config.js` bevat nu uitsluitend de **publieke** project-URL en publishable key. `enabled:false` blijft staan totdat authenticatie en e-mail zijn getest.
+- De accounttabellen bevatten nog geen echte gebruikersgegevens.
+
+## Nog vereist voor activatie
+
+1. Ga naar [Supabase Auth URL Configuration](https://supabase.com/dashboard/project/lpzndnxloykcthbsqcet/auth/url-configuration) en stel **Site URL** in op `https://samknook.github.io/sporttech-deals/raceatlas/`; voeg dezelfde exacte URL toe aan de redirect-allowlist.
+2. Stel een geverifieerde SMTP-afzender in via de [Supabase Auth-instellingen](https://supabase.com/dashboard/project/lpzndnxloykcthbsqcet/auth/providers). Zonder betrouwbare mailverzending niet publiek inschakelen.
+3. Test het e-mailinloggen daadwerkelijk op een toestel en controleer na opnieuw laden de sessie.
+4. Test met **twee afzonderlijke accounts** dat gebruiker A geen gegevens van gebruiker B kan lezen, bijwerken of verwijderen.
+5. Test favorietenimport, snel bewaren/verwijderen, statuswijziging, uitloggen, export en verwijderen van het seizoen.
+6. Voer accountverwijdering en privacyverklaring uit vóór publieke lancering; schakel daarna pas `enabled:true` in.
+
+Opmerking: de connector biedt nu project-, migratie- en SQL-beheer, maar geen directe wijzigingsactie voor gehoste Auth Site URL/redirect-allowlist of custom SMTP-configuratie. Die instellingen moeten in het dashboard worden bevestigd.
+
+
 ## Productbesluit
 - **Geen account verplicht** voor zoeken, bekijken, lokaal bewaren en kalenderexport.
 - Gratis account met e-mail magic link, geen wachtwoord en geen publieke gebruikersprofielen.
