@@ -80,3 +80,16 @@ test('Data quality separates official organizer URLs from calendar citations',()
 test('Uncertain dates remain visible through the end of their expected month',()=>{
   assert.match(html,/const lastDay=new Date\(year,month,0\)\.getDate\(\)/);
 });
+
+test('Verified registration updates are grounded in organizer sources',()=>{
+  const egmond=events.find(e=>e.id==='ra-0');
+  assert.equal(egmond.registrationDate,'2026-07-27');
+  assert.equal(egmond.preregistrationDate,'2026-07-13');
+  assert.match(egmond.registrationInfoUrl,/lechampion\.nl/);
+  const schoorl=events.find(e=>e.id==='ra-2');
+  assert.equal(schoorl.registrationStatus,'mixed');
+  assert.match(schoorl.registrationInfoUrl,/lechampion\.nl/);
+  const westfriesland=events.find(e=>e.id==='ra-11');
+  assert.equal(westfriesland.registrationStatus,'sold_out');
+  assert.equal(typeof westfriesland.priceEur,'undefined','Do not present enhanced-package price as a general entry fee');
+});
