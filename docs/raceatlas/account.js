@@ -154,7 +154,7 @@ function exportSeason(){
   exportedAt:new Date().toISOString(),
   events:cloudEvents.map(item=>({eventId:item.event_id,status:item.season_status}))
  };
- const blob=new Blob([JSON.stringify(payload,null,2)+'\\n'],{type:'application/json;charset=utf-8'});
+ const blob=new Blob([JSON.stringify(payload,null,2)+'\n'],{type:'application/json;charset=utf-8'});
  const url=URL.createObjectURL(blob);
  const link=el('a');link.href=url;link.download='raceatlas-mijn-seizoen.json';
  document.body.append(link);link.click();link.remove();
