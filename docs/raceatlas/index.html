@@ -121,6 +121,34 @@ let quick='all',limit=24,mode='explore',view='grid';
 const safe=(s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function getDate(e){if(!e.date)return {day:"—",month:e.expectedMonth?months[Number(e.expectedMonth)-1]:"n.t.b."};const d=new Date(e.date+'T12:00:00');return {day:d.getDate(),month:months[d.getMonth()]}}
 function source(e){return e.source||null}
+// Original, event-specific graphic for featured races. Not an organizer photograph.
+// A licensed event photograph can later replace this through e.imageUrl + imageRights.
+function raceArtwork(e){
+ if(!e.major)return null;
+ if(e.imageRights==='licensed'&&/^https:\/\/[^\s"'<>]+$/i.test(e.imageUrl||''))return e.imageUrl;
+ const key=e.id+'|'+e.name,hash=[...key].reduce((n,c)=>((n*31+c.charCodeAt(0))>>>0),2166136261);
+ const palettes=[['#082a35','#1a6980','#c2fb87'],['#221d41','#7859a9','#c5ffad'],['#082c28','#276d56','#e8fc96'],['#262b3a','#b15e4c','#f7e9a1'],['#102441','#4388b7','#bcf3e4'],['#312332','#835a88','#edcdef']];
+ const [dark,medium,accent]=palettes[hash%palettes.length];
+ const title=String(e.name||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').slice(0,65);
+ const place=String(e.place||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').slice(0,48);
+ const motif=e.id==='ra-418'?'stadium':/Rotterdam|Dam tot Dam|Berlin|Chicago|New York|London|Tokyo|Boston/i.test(e.name)?'skyline':/IRONMAN|Challenge|Triatlon/i.test(e.name)?'triathlon':e.sport==='Fietsen'?'cycling':'running';
+ const base='<path d="M0 228 Q180 175 355 216 T800 212 V340 H0Z" fill="'+medium+'" opacity=".50"/>';
+ const skyline=Array.from({length:13},(_,i)=>{const x=i*66-12,h=60+((hash>>>i)%84);return '<rect x="'+x+'" y="'+(216-h)+'" width="'+(33+(i%3)*9)+'" height="'+h+'" rx="2" fill="'+accent+'" opacity=".18"/>';}).join('');
+ const stadium='<ellipse cx="635" cy="205" rx="169" ry="67" fill="none" stroke="'+accent+'" stroke-width="10" opacity=".48"/><ellipse cx="635" cy="205" rx="121" ry="36" fill="none" stroke="'+accent+'" stroke-width="3" opacity=".7"/><path d="M473 194 L503 146 L774 146 L800 194" fill="none" stroke="'+accent+'" stroke-width="8" opacity=".35"/>';
+ const motion='<path d="M510 100 Q610 45 780 92 M490 136 Q640 80 800 132 M535 180 Q690 150 800 185" fill="none" stroke="'+accent+'" stroke-width="9" opacity=".28"/>';
+ const triangle='<path d="M605 94 L754 252 L463 252 Z" fill="none" stroke="'+accent+'" stroke-width="15" opacity=".35"/><circle cx="605" cy="180" r="38" fill="none" stroke="'+accent+'" stroke-width="5" opacity=".65"/>';
+ const bike='<circle cx="575" cy="206" r="67" fill="none" stroke="'+accent+'" stroke-width="9" opacity=".5"/><circle cx="739" cy="206" r="67" fill="none" stroke="'+accent+'" stroke-width="9" opacity=".5"/><path d="M575 206 L638 129 L692 206 L575 206 M638 129 L739 206" fill="none" stroke="'+accent+'" stroke-width="7" opacity=".62"/>';
+ const artwork=motif==='stadium'?stadium:motif==='skyline'?skyline:motif==='triathlon'?triangle:motif==='cycling'?bike:motion;
+ const svg='<svg xmlns="http://www.w3.org/2000/svg" width="800" height="340" viewBox="0 0 800 340">'+
+ '<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="'+dark+'"/><stop offset="1" stop-color="'+medium+'"/></linearGradient></defs>'+
+ '<rect width="800" height="340" fill="url(#bg)"/><circle cx="625" cy="100" r="194" fill="'+accent+'" opacity=".065"/>'+base+artwork+
+ '<path d="M20 282 H365" stroke="'+accent+'" stroke-width="4" opacity=".75"/>'+
+ '<text x="25" y="269" font-family="Arial,sans-serif" font-size="37" font-weight="800" fill="#fff">'+title.slice(0,27)+'</text>'+
+ (title.length>27?'<text x="25" y="307" font-family="Arial,sans-serif" font-size="30" font-weight="750" fill="#fff">'+title.slice(27,53)+'</text>':'')+
+ '<text x="25" y="328" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="'+accent+'">'+place+'  ·  RACEATLAS</text></svg>';
+ return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg);
+}
+
 function eventCard(e){
  const d=getDate(e),sportClass=e.sport==='Fietsen'?'bike':e.sport==='Triatlon'?'tri':'';
  const duo=/duat(h)?lon|run[ -]?bike[ -]?run|\brbr\b|wintertria/i.test([e.name,e.discipline].join(' '));
@@ -132,6 +160,7 @@ function eventCard(e){
  const distanceKm=window.RaceAtlasRadius?.enabled?window.RaceAtlasRadius.km(e):null;
  const visualDate=e.date?{day:d.day,label:d.month}:e.expectedMonth?{day:'—',label:d.month}:{day:'?',label:'N.T.B.'};
  const card=document.createElement('article');card.className='card';
+ const visualArt=raceArtwork(e);
  card.innerHTML=
  '<div class="raCardVisual '+visualClass+'" role="img" aria-label="Sfeerbeeld '+safe(e.sport)+'; niet de wedstrijdlocatie">'+
  '<div class="raDateBadge"><strong>'+safe(visualDate.day)+'</strong><span>'+safe(visualDate.label)+'</span></div>'+
@@ -147,6 +176,7 @@ function eventCard(e){
  '<button type="button" class="ra-alert-btn" data-ra-alert="'+safe(e.id)+'">🔔 Meldingen</button>'+
  '<button class="save '+(isSaved?'selected':'')+'" type="button" aria-label="'+(isSaved?'Verwijder uit mijn seizoen':'Bewaar in mijn seizoen')+'">'+(isSaved?'✓ Bewaard':'+ Bewaar')+'</button>'+
  (eventUrl?'<a class="'+(hasLink?'registerLink':'source')+'" href="'+safe(eventUrl)+'" data-ra-event="'+safe(e.id)+'" data-ra-outbound="'+(e.registrationUrl?'registration':e.officialEventUrl?'organizer':'source')+'" rel="noopener noreferrer" target="_blank">'+(e.registrationUrl?'Evenementpagina ↗':e.officialEventUrl?'Organisator ↗':'Kalenderbron ↗')+'</a>':'<span class="raSourceMissing" title="Er is nog geen specifieke bronlink voor dit evenement">Bron ontbreekt</span>')+'</div>';
+ if(visualArt){const v=card.querySelector('.raCardVisual');v.style.backgroundImage='url("'+visualArt+'")';v.setAttribute('aria-label',e.imageRights==='licensed'?'Evenementafbeelding: '+e.name:'Unieke RaceAtlas-illustratie voor '+e.name+'; geen officiële wedstrijdfoto');v.classList.add('raUniqueVisual');if(e.imageRights!=='licensed'){const note=document.createElement('small');note.className='raArtworkCredit';note.textContent='RaceAtlas-illustratie';v.append(note)}}
  card.querySelector('.save').onclick=()=>{saved=saved.includes(e.id)?saved.filter(id=>id!==e.id):[...saved,e.id];if(!cloudSeasonActive){guestSaved=[...saved];try{localStorage.setItem(STORE,JSON.stringify(guestSaved))}catch{}}window.dispatchEvent(new CustomEvent('raceatlas:saved-change',{detail:{id:e.id,saved:saved.includes(e.id)}}));render()};
  return card
 }
