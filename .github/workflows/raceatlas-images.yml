@@ -60,7 +60,7 @@ jobs:
               print(f'Validated {key}: {len(data)} bytes')
           index=Path('docs/raceatlas/index.html').read_text()
           for key in images:
-              if key not in index:
+              if ('"id":"'+key.removesuffix('.webp')+'"') not in index:
                   raise ValueError(f'Event ID for image not found in catalogue: {key}')
           print(f'Validated {len(images)} images in {len(packs)} batches')
           PY
