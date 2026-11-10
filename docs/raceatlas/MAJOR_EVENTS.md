@@ -30,3 +30,22 @@ Tien nieuwe fotorealistische AI-sfeerbeelden zijn gegenereerd en lokaal geoptima
 Te vervangen event-ID's: `ra-2` Groet uit Schoorl Run, `ra-4` Venloop, `ra-6` Enschede Marathon, `ra-7` Leiden Marathon, `ra-10` Limburgs Mooiste, `ra-213` IRONMAN 70.3 Vilamoura-Algarve, `ra-216` Challenge Mogán-Gran Canaria, `ra-222` IRONMAN 70.3 Alcúdia-Mallorca, `ra-224` Challenge Salou-Costa Daurada en `ra-227` Challenge Cesenatico.
 
 De publicatiestap vereist upload van de tien WebP-bestanden naar `docs/raceatlas/images/featured/ra-ID.webp`, wijziging van de tien `imageUrl`-velden in `docs/raceatlas/index.html`, en verificatie op de live site. De beelden zijn illustratief; controleer per evenement of de achtergrond voldoende plaats-specifiek is voordat ze worden gepubliceerd.
+
+## Batch 5 — volgende tien evenementen (selectie 10 november 2026)
+
+Nog te vervangen bestaande JPG's (geen live wijziging):
+
+| Event-ID | Evenement | Gewenste visuele signatuur |
+|---|---|---|
+| ra-232 | IRONMAN 70.3 Aix-en-Provence | Provence, kalksteenheuvels en triatlonfiets |
+| ra-233 | IRONMAN 70.3 Kraichgau | Duitse glooiende wijngaarden, renner |
+| ra-234 | IRONMAN 70.3 St. Pölten | Oostenrijkse meren, zwemstart |
+| ra-241 | IRONMAN 70.3 Bolton | Noord-Engelse heuvels, uitdagende racefietsroute |
+| ra-242 | IRONMAN 70.3 Switzerland | Alpenmeer en Zwitserse bergachtergrond |
+| ra-243 | IRONMAN 70.3 Tours Métropole | Loiregebied, Franse architectuur, lopers |
+| ra-255 | Challenge Gdańsk | Baltische kust, Poolse kuststad, triatlon |
+| ra-258 | Challenge Kaiserwinkl-Walchsee | Walchsee, Tiroler bergdecor, zwemmen |
+| ra-259 | IRONMAN 70.3 Elsinore | Deens kasteel, haven, triatlon |
+| ra-261 | IRONMAN Les Sables d'Olonne | Atlantische kust, strandboulevard, triatlon |
+
+Vereisten: afzonderlijke AI-fotobeelden, zonder tekst/logo, 960×448 WebP, per kaart onderscheidende omgeving. Nog niet gegenereerd als complete passende set of gepubliceerd. Voor batch 4 ontbreekt een geautoriseerde binaire uploadroute van lokale WebP naar de gekoppelde GitHub-repository; daarom géén verwijzingen naar nog niet bestaande assets in de publieke HTML instellen.
