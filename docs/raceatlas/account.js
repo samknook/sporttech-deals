@@ -256,6 +256,31 @@ function renderAlertControls(){
  }
  if(cloudEvents.length)content.append(section);
 }
+async function deleteAccount(){
+ if(!user)return;
+ if(saving||pending.size){setStatus('Synchroniseer eerst alle wijzigingen voordat je jouw account verwijdert.');return}
+ const answer=window.prompt('Account definitief verwijderen? Alle opgeslagen wedstrijden en meldingsvoorkeuren verdwijnen. Typ VERWIJDER MIJN ACCOUNT om te bevestigen:');
+ if(answer!=='VERWIJDER MIJN ACCOUNT')return;
+ const owner=user.id,version=authVersion;
+ setStatus('Account veilig verwijderen…');
+ try{
+  const {data:auth,error:sessionError}=await client.auth.getSession();
+  if(sessionError||!auth?.session?.access_token)throw new Error('No active session');
+  const {data,error}=await client.functions.invoke('raceatlas-delete-account',{
+   body:{confirm:'VERWIJDER MIJN ACCOUNT'},
+   headers:{Authorization:'Bearer '+auth.session.access_token}
+  });
+  if(error||data?.deleted!==true)throw new Error('Delete failed');
+  if(user?.id!==owner||authVersion!==version)return;
+  // The server has removed the Auth user; clear any local credentials immediately.
+  try{await client.auth.signOut({scope:'local'})}catch{}
+  authVersion++;pending.clear();cloudEvents=[];alertPrefs.clear();user=null;mode='local';
+  savedApi().useGuest();showAuth();
+  setStatus('Je RaceAtlas-account is verwijderd. Je apparaatfavorieten zijn behouden.');
+ }catch{
+  if(user?.id===owner&&authVersion===version)setStatus('Account verwijderen is mislukt. Je account blijft actief; probeer later opnieuw.');
+ }
+}
 async function disconnect(){
  if((saving||pending.size)&&!window.confirm('Niet alle wijzigingen zijn gesynchroniseerd. Als je nu uitlogt, kunnen ze verloren gaan. Toch uitloggen?'))return;
  const {error}=await client.auth.signOut();
@@ -280,6 +305,7 @@ function showSignedIn(){
   content.append(button('Alleen cloudseizoen gebruiken',chooseCloud));
  }
  content.append(button('Uitloggen',disconnect));
+ content.append(button('Verwijder mijn account definitief',deleteAccount));
 }
 async function onAuth(){
  try{
