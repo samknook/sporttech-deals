@@ -253,3 +253,20 @@ test('Priority majors have original event-specific hero images instead of generi
  }
  assert.match(html,/e\.imageRights==='original'/);
 });
+
+test('Every major event has a dedicated and documented image source',()=>{
+ for(const e of events.filter(e=>e.major)){
+  assert.ok(e.imageUrl,'Missing imageUrl '+e.id);
+  assert.ok(e.imageRights==='original'||e.imageRights==='licensed','Unknown rights '+e.id);
+  if(e.imageRights==='original'){
+   assert.match(e.imageUrl,/^images\/featured\/ra-\d+\.svg$/);
+   const asset=fs.readFileSync(path.join(root,e.imageUrl),'utf8');
+   assert.match(asset,/<svg /);
+   assert.match(asset,/<title>/);
+   assert.match(asset,/<\/svg>\s*$/);
+  }else{
+   assert.ok(e.imageCredit&&e.imageSourceUrl&&e.imageLicenseUrl);
+  }
+ }
+ assert.equal(new Set(events.filter(e=>e.major).map(e=>e.imageUrl)).size,events.filter(e=>e.major).length);
+});
