@@ -42,3 +42,18 @@ test('Rapid event saves are queued, failed writes are retryable and account swit
   assert.match(moduleCode,/authVersion\+\+;pending\.clear\(\)/);
   assert.match(moduleCode,/\^ra-\\d\{1,8\}\$/);
 });
+
+test('Logged-in season status has three explicit states and stays per-user',()=>{
+  assert.match(moduleCode,/function renderStatusControls\(\)/);
+  assert.match(moduleCode,/\['interested','Interesse'\]/);
+  assert.match(moduleCode,/\['registered','Ingeschreven'\]/);
+  assert.match(moduleCode,/\['completed','Voltooid'\]/);
+  assert.match(moduleCode,/\.update\(\{season_status:statusValue,updated_at:/);
+  assert.match(moduleCode,/\.eq\('user_id',currentUser\)\.eq\('event_id',eventId\)/);
+  assert.match(moduleCode,/renderStatusControls\(\)/);
+});
+test('Cloud UI updates with successfully added and removed event preferences',()=>{
+  assert.match(moduleCode,/cloudEvents\.push\(\{event_id:id,season_status:'interested'\}\)/);
+  assert.match(moduleCode,/cloudEvents=cloudEvents\.filter\(item=>item\.event_id!==id\)/);
+  assert.match(moduleCode,/if\(version===authVersion&&user\?\.id===owner\)/);
+});
