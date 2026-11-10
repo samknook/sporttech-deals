@@ -127,27 +127,60 @@ function raceArtwork(e){
  if(!e.major)return null;
  if(e.imageRights==='original'&&/^images\/[a-z0-9-]+\.svg$/.test(e.imageUrl||''))return e.imageUrl;
  if(e.imageRights==='licensed'&&e.imageCredit&&e.imageSourceUrl&&/^https:\/\/[^\s"'<>]+$/i.test(e.imageUrl||''))return e.imageUrl;
+ // Every major event has its own illustrated scene, varied by sport, location and stable event ID.
  const key=e.id+'|'+e.name,hash=[...key].reduce((n,c)=>((n*31+c.charCodeAt(0))>>>0),2166136261);
- const palettes=[['#082a35','#1a6980','#c2fb87'],['#221d41','#7859a9','#c5ffad'],['#082c28','#276d56','#e8fc96'],['#262b3a','#b15e4c','#f7e9a1'],['#102441','#4388b7','#bcf3e4'],['#312332','#835a88','#edcdef']];
- const [dark,medium,accent]=palettes[hash%palettes.length];
- const title=String(e.name||'').slice(0,65);
- const xml=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
- const place=String(e.place||'').slice(0,48);
- const motif=e.id==='ra-418'?'stadium':/Rotterdam|Dam tot Dam|Berlin|Chicago|New York|London|Tokyo|Boston/i.test(e.name)?'skyline':/IRONMAN|Challenge|Triatlon/i.test(e.name)?'triathlon':e.sport==='Fietsen'?'cycling':'running';
- const base='<path d="M0 228 Q180 175 355 216 T800 212 V340 H0Z" fill="'+medium+'" opacity=".50"/>';
- const skyline=Array.from({length:13},(_,i)=>{const x=i*66-12,h=60+((hash>>>i)%84);return '<rect x="'+x+'" y="'+(216-h)+'" width="'+(33+(i%3)*9)+'" height="'+h+'" rx="2" fill="'+accent+'" opacity=".18"/>';}).join('');
- const stadium='<ellipse cx="635" cy="205" rx="169" ry="67" fill="none" stroke="'+accent+'" stroke-width="10" opacity=".48"/><ellipse cx="635" cy="205" rx="121" ry="36" fill="none" stroke="'+accent+'" stroke-width="3" opacity=".7"/><path d="M473 194 L503 146 L774 146 L800 194" fill="none" stroke="'+accent+'" stroke-width="8" opacity=".35"/>';
- const motion='<path d="M510 100 Q610 45 780 92 M490 136 Q640 80 800 132 M535 180 Q690 150 800 185" fill="none" stroke="'+accent+'" stroke-width="9" opacity=".28"/>';
- const triangle='<path d="M605 94 L754 252 L463 252 Z" fill="none" stroke="'+accent+'" stroke-width="15" opacity=".35"/><circle cx="605" cy="180" r="38" fill="none" stroke="'+accent+'" stroke-width="5" opacity=".65"/>';
- const bike='<circle cx="575" cy="206" r="67" fill="none" stroke="'+accent+'" stroke-width="9" opacity=".5"/><circle cx="739" cy="206" r="67" fill="none" stroke="'+accent+'" stroke-width="9" opacity=".5"/><path d="M575 206 L638 129 L692 206 L575 206 M638 129 L739 206" fill="none" stroke="'+accent+'" stroke-width="7" opacity=".62"/>';
- const artwork=motif==='stadium'?stadium:motif==='skyline'?skyline:motif==='triathlon'?triangle:motif==='cycling'?bike:motion;
- const svg='<svg xmlns="http://www.w3.org/2000/svg" width="800" height="340" viewBox="0 0 800 340">'+
- '<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="'+dark+'"/><stop offset="1" stop-color="'+medium+'"/></linearGradient></defs>'+
- '<rect width="800" height="340" fill="url(#bg)"/><circle cx="625" cy="100" r="194" fill="'+accent+'" opacity=".065"/>'+base+artwork+
- '<path d="M20 282 H365" stroke="'+accent+'" stroke-width="4" opacity=".75"/>'+
- '<text x="25" y="269" font-family="Arial,sans-serif" font-size="37" font-weight="800" fill="#fff">'+xml(title.slice(0,27))+'</text>'+
- (title.length>27?'<text x="25" y="307" font-family="Arial,sans-serif" font-size="30" font-weight="750" fill="#fff">'+xml(title.slice(27,53))+'</text>':'')+
- '<text x="25" y="328" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="'+accent+'">'+xml(place)+'  ·  RACEATLAS</text></svg>';
+ const palettes=[
+  ['#123e55','#49aac3','#b0f7dc','#ffd38b'],
+  ['#17284c','#7a6fb8','#c4acff','#fdb76f'],
+  ['#103e3a','#57a781','#c9ef8f','#f5cb80'],
+  ['#452c49','#ca7695','#ffd0ae','#fff0a7'],
+  ['#15334c','#5e97cb','#9ad8eb','#ffc983'],
+  ['#24383e','#b1837b','#f5cd91','#f5fa9d']
+ ];
+ const [dark,sky,light,sun]=palettes[hash%palettes.length];
+ const tri=e.sport==='Triatlon';
+ const bike=e.sport==='Fietsen';
+ const coastal=/Nice|Algarve|Valencia|Venice|Jesolo|Alcúdia|Mallorca|Lanzarote|Salou|Gdańsk|Weymouth|Cesenatico|Mamaia|Knokke|Sydney|Cape Town|Les Sables|Cervia|Westfriesland|Egmond/i.test(e.name+' '+e.place);
+ const alpine=/Roth|Kraichgau|Klagenfurt|Switzerland|Thun|Jönköping|St. Pölten|Kaprun|Walchsee|Vichy|Bolton|Leeds|Limburg|Amstel|Veenendaal|Schoorl/i.test(e.name+' '+e.place);
+ const skyline=Array.from({length:17},(_,i)=>{
+  const x=i*53-15,h=52+((hash>>>((i*3)%23))%125),w=30+((i*7)%18);
+  return '<rect x="'+x+'" y="'+(250-h)+'" width="'+w+'" height="'+h+'" rx="2" fill="'+dark+'" opacity=".50"/>'+
+  '<path d="M'+(x+7)+' '+(250-h+18)+'v12m12-12v12m-12 16v12m12-12v12" stroke="'+light+'" opacity=".3" stroke-width="3"/>';
+ }).join('');
+ const mountains='<path d="M0 257L98 174L185 226L304 105L403 210L526 122L650 245L754 171L850 254V310H0Z" fill="'+dark+'" opacity=".50"/>'+
+  '<path d="M244 170L304 105L362 164L310 150L287 150Z M486 162L526 122L576 175L532 160Z" fill="'+light+'" opacity=".86"/>';
+ const shore='<path d="M0 248Q158 232 300 246T615 243T850 248V315H0Z" fill="'+dark+'" opacity=".48"/>'+
+  '<path d="M0 276Q180 253 348 275T850 273" fill="none" stroke="'+light+'" stroke-width="5" opacity=".65"/>'+
+  '<path d="M570 247V105M570 109L682 234L570 234Z" stroke="'+light+'" stroke-width="5" fill="'+light+'" fill-opacity=".24"/>';
+ const landscape=coastal?shore:alpine?mountains:skyline;
+ const runner=(x,y,sc,accent)=>'<g transform="translate('+x+' '+y+') scale('+sc+')" stroke-linecap="round" stroke-linejoin="round">'+
+  '<ellipse cx="0" cy="146" rx="67" ry="8" fill="'+dark+'" opacity=".2"/>'+
+  '<path d="M-8 61L-39 106L-84 137M5 64L34 100L75 129" fill="none" stroke="'+dark+'" stroke-width="17"/>'+
+  '<path d="M-8-8L-27 71L26 74L33-8Z" fill="'+accent+'"/>'+
+  '<path d="M-23 12L-57 43L-79 26M29 10L51-22L81-7" fill="none" stroke="#f5be95" stroke-width="14"/>'+
+  '<circle cx="4" cy="-35" r="24" fill="#e6b18b"/>'+
+  '<path d="M-20-44Q-15-77 16-64L26-43Z" fill="'+dark+'"/>'+
+  '<path d="M-80 140l-21 4m173-13 25 2" fill="none" stroke="#f3fffc" stroke-width="10"/></g>';
+ const cyclist=(x,y,sc)=>'<g transform="translate('+x+' '+y+') scale('+sc+')" stroke-linecap="round" stroke-linejoin="round">'+
+  '<circle cx="-85" cy="87" r="53" stroke="'+dark+'" stroke-width="8" fill="none"/><circle cx="94" cy="87" r="53" stroke="'+dark+'" stroke-width="8" fill="none"/>'+
+  '<path d="M-85 87L-18 6L35 87L-85 87M-18 6L94 87M35 87L61 25" fill="none" stroke="'+light+'" stroke-width="10"/>'+
+  '<path d="M-59-43L18-21L37 14L-16 24L-69-9Z" fill="'+sun+'"/>'+
+  '<path d="M-34 15L-65 78M20 19L61 60L89 57M20-1L52 24L78 24" fill="none" stroke="#dfb091" stroke-width="15"/>'+
+  '<path d="M-28 23L-64 73M20 22L61 67" fill="none" stroke="'+dark+'" stroke-width="17"/>'+
+  '<circle cx="-42" cy="-62" r="22" fill="#e6b18b"/><path d="M-66-65Q-56-100-20-82L-13-63Z" fill="#e4f5fc"/></g>';
+ const swimmer='<path d="M10 307Q85 280 140 309T265 306M60 289L119 264L184 286M120 269l41-43" fill="none" stroke="'+light+'" stroke-width="12" opacity=".9"/>'+
+  '<circle cx="122" cy="258" r="17" fill="'+sun+'"/><path d="M106 256Q127 225 145 251" fill="'+dark+'"/>';
+ const subjects=tri?swimmer+cyclist(525,330,.78)+runner(739,295,.80,light):
+ bike?cyclist(370,307,1.04)+cyclist(710,337,.73):
+ runner(460,300,1.06,sun)+runner(713,345,.76,light);
+ const svg='<svg xmlns="http://www.w3.org/2000/svg" width="850" height="360" viewBox="0 0 850 360">'+
+  '<defs><linearGradient id="sky" x2=".1" y2="1"><stop stop-color="'+dark+'"/><stop offset="1" stop-color="'+sky+'"/></linearGradient></defs>'+
+  '<rect width="850" height="360" fill="url(#sky)"/><circle cx="'+(600+(hash%150))+'" cy="79" r="53" fill="'+sun+'" opacity=".85"/>'+
+  '<path d="M0 277Q240 254 434 282T850 266V360H0Z" fill="'+sky+'" opacity=".52"/>'+landscape+
+  '<path d="M0 314Q160 277 365 298T850 302V360H0Z" fill="'+dark+'" opacity=".42"/>'+
+  subjects+
+  '<path d="M30 342H820" stroke="'+light+'" stroke-width="5" opacity=".55"/>'+
+  '<text x="25" y="44" font-family="Arial,sans-serif" font-weight="800" font-size="22" fill="#fff" opacity=".95">RACEATLAS  /  '+(tri?'TRIATHLON':bike?'CYCLING':'RUNNING')+'</text></svg>';
  return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg);
 }
 
