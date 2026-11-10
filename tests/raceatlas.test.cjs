@@ -331,3 +331,5 @@ test('Third batch and newly added international marathons use distinct AI cover 
  assert.equal(athens.expectedMonth,'11');
  assert.equal(new Set(events.map(e=>e.id)).size,423);
 });
+
+test('Midwinter Marathon has a dedicated winter race photograph',()=>{const event=events.find(e=>e.id==='ra-1');assert.equal(event.imageRights,'generated');assert.equal(event.imageUrl,'images/featured/ra-1.webp');const bytes=fs.readFileSync(path.join(root,event.imageUrl));assert.equal(bytes.subarray(0,4).toString(),'RIFF');assert.equal(bytes.subarray(8,12).toString(),'WEBP');});
