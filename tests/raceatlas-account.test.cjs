@@ -70,3 +70,18 @@ test('Guest favorites never become the locally persisted cloud season',()=>{
   assert.match(moduleCode,/savedApi\(\)\.guest\(\)\.filter/);
   assert.match(moduleCode,/savedApi\(\)\.useGuest\(\)/);
 });
+
+test('Late cloud responses cannot restore a logged-out or switched account',()=>{
+  assert.match(moduleCode,/const owner=user\.id,version=authVersion/);
+  assert.match(moduleCode,/if\(owner!==user\?\.id\|\|version!==authVersion\)return/);
+  assert.match(moduleCode,/if\(owner===user\?\.id&&version===authVersion\)await chooseCloud\(\)/);
+  assert.match(moduleCode,/if\(currentUser!==user\?\.id\|\|version!==authVersion\)return/);
+});
+test('Unsynced changes require an explicit logout decision',()=>{
+  assert.match(moduleCode,/if\(\(saving\|\|pending\.size\)&&!window\.confirm\(/);
+  assert.match(moduleCode,/Niet alle wijzigingen zijn gesynchroniseerd/);
+  assert.match(moduleCode,/authVersion\+\+;pending\.clear\(\);cloudEvents=\[\];user=null;mode='local';savedApi\(\)\.useGuest\(\)/);
+});
+test('Account lookup errors clear stale cloud data from shared device',()=>{
+  assert.match(moduleCode,/catch\{authVersion\+\+;pending\.clear\(\);cloudEvents=\[\];user=null;mode='local';savedApi\(\)\.useGuest\(\);showAuth\(\)/);
+});
