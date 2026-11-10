@@ -76,3 +76,12 @@ test('Organizer submission captures verifiable source and confirmation',()=>{
   assert.match(page,/bron_datum_inschrijving_prijs:/);
   assert.match(page,/gegevens_gecontroleerd:/);
 });
+
+test('Organizers may submit event photos only with explicit publication rights',()=>{
+ assert.match(page,/id="eventPhotoUrl" type="url" pattern="https:\/\/\.\*"/);
+ assert.match(page,/id="photoPermission" type="checkbox"/);
+ assert.match(page,/if\(\$\('eventPhotoUrl'\)\.value\.trim\(\)&&!\$\('photoPermission'\)\.checked\)/);
+ assert.match(page,/foto_voorbeeld_url:/);
+ assert.match(page,/fotorechten_bevestigd:/);
+ assert.match(page,/Toestemming foto:/);
+});
