@@ -245,3 +245,9 @@ header{position:relative;z-index:12;background:#071927!important;border-bottom:1
  .ra-detail-dialog,.ra-dialog{max-height:calc(100dvh - 45px - env(safe-area-inset-bottom))}
  #explore{scroll-margin-top:12px}
 }
+
+/* Featured race artwork: original per-event illustrations until licensed race photography is supplied. */
+.raCardVisual.raUniqueVisual{background-repeat:no-repeat;background-size:cover;background-position:center center}
+.raArtworkCredit{position:absolute;left:14px;top:13px;padding:5px 8px;border-radius:7px;background:#0c2335b3;color:#fff;font-size:10px;font-weight:700;letter-spacing:.025em;pointer-events:none}
+.raCardVisual.raUniqueVisual .raDateBadge,.raCardVisual.raUniqueVisual .raFeatureBadge{position:relative;z-index:2}
+@media(max-width:700px){.raCardVisual.raUniqueVisual{background-position:center}.raArtworkCredit{font-size:9px;padding:4px 6px}}
