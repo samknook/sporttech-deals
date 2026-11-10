@@ -19,6 +19,16 @@
 - Na de aanvullende migratie zijn de beveiligingsadviezen opnieuw geraadpleegd en gaven ze geen waarschuwingen.
 - De 20 accountregressiecontroles zijn direct op de repositorycode uitgevoerd; browsertests en echte twee-account-toegangstests blijven verplicht.
 
+## Update — accountverwijdering (10 november 2026)
+
+- Edge Function `raceatlas-delete-account` is **actief gedeployed** in het EU-Supabase-project met `verify_jwt: true`.
+- De functie accepteert uitsluitend POST, eist een exacte bevestigingszin, verifieert de ingelogde gebruiker tegen Supabase Auth en verwijdert uitsluitend **die** Auth-gebruiker. De bestaande on-delete-cascade-regels verwijderen daardoor zijn/haar seizoen en meldingsvoorkeuren.
+- Service-role-sleutels komen alleen uit de serveromgeving en worden niet naar de browser gestuurd.
+- Accountscherm heeft nu `Verwijder mijn account definitief` met expliciete tekstbevestiging.
+- **Nog niet end-to-end getest** met een echt testaccount. Gebruik de functie niet als volledig gevalideerd totdat een testaccount is verwijderd en gekoppelde gegevens zijn verdwenen.
+- De accountmodule blijft uitgeschakeld voor het publiek totdat Auth redirects en mail zijn gecontroleerd.
+- 22 accountgerelateerde codechecks uitgevoerd; alle 22 geslaagd. Dit is geen vervanging voor de echte gebruikers- en beveiligingstests.
+
 ## Nog vereist voor activatie
 
 1. Ga naar [Supabase Auth URL Configuration](https://supabase.com/dashboard/project/lpzndnxloykcthbsqcet/auth/url-configuration) en stel **Site URL** in op `https://samknook.github.io/sporttech-deals/raceatlas/`; voeg dezelfde exacte URL toe aan de redirect-allowlist.
