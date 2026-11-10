@@ -86,12 +86,12 @@ async function chooseCloud(){
  try{
   const cloud=await readCloud();
   cloudEvents=cloud;
-  savedApi().set(cloud.map(e=>e.event_id));
+  savedApi().useCloud(cloud.map(e=>e.event_id));
   mode='cloud';setStatus('Cloudseizoen geladen. Nieuwe wijzigingen synchroniseren automatisch.');showSignedIn();
  }catch{setStatus('Cloudseizoen ophalen mislukt. Je lokale gegevens zijn behouden.')}
 }
 async function importLocal(){
- const ids=savedApi().get().filter(id=>/^ra-\d{1,8}$/.test(id));
+ const ids=savedApi().guest().filter(id=>/^ra-\d{1,8}$/.test(id));
  try{
   if(ids.length){
    const rows=ids.map(event_id=>({user_id:user.id,event_id,season_status:'interested'}));
@@ -129,7 +129,7 @@ function renderStatusControls(){
 async function disconnect(){
  const {error}=await client.auth.signOut();
  if(error){setStatus('Uitloggen is mislukt. Probeer opnieuw.');return}
- authVersion++;pending.clear();cloudEvents=[];user=null;mode='local';showAuth();setStatus('Uitgelogd. Je bestaande lokale favorieten blijven op dit apparaat.');
+ authVersion++;pending.clear();cloudEvents=[];user=null;mode='local';savedApi().useGuest();showAuth();setStatus('Uitgelogd. Je persoonlijke seizoen is verborgen; de favorieten van dit apparaat zijn hersteld.');
 }
 function showSignedIn(){
  content.replaceChildren();
@@ -149,7 +149,7 @@ function showSignedIn(){
 async function onAuth(){
  try{
   const {data,error}=await client.auth.getUser();if(error)throw error;
-  user=data?.user||null;mode='local';authVersion++;pending.clear();cloudEvents=[];
+  user=data?.user||null;mode='local';authVersion++;pending.clear();cloudEvents=[];savedApi().useGuest();
   if(!user){showAuth();return}
   showSignedIn();
  }catch{showAuth();setStatus('Accountstatus kon niet worden gecontroleerd.')}
@@ -167,7 +167,7 @@ script.onload=async()=>{
  client=window.supabase.createClient(cfg.supabaseUrl,cfg.publishableKey,{auth:{detectSessionInUrl:true,persistSession:true,autoRefreshToken:true}});
  client.auth.onAuthStateChange((_event,session)=>{
   const id=session?.user?.id||null;
-  if(id!==user?.id){authVersion++;pending.clear();cloudEvents=[];user=session?.user||null;mode='local';if(user)showSignedIn();else showAuth()}
+  if(id!==user?.id){authVersion++;pending.clear();cloudEvents=[];savedApi().useGuest();user=session?.user||null;mode='local';if(user)showSignedIn();else showAuth()}
  });
  await onAuth();
 };
