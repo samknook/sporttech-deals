@@ -258,3 +258,15 @@ test('Every major event has an uploaded local photographic-looking image',()=>{
  assert.equal(new Set(majors.map(e=>e.imageUrl)).size,70);
 });
 
+
+test('Source credits and missing-source labels stay off overview cards',()=>{
+ const start=html.indexOf('function eventCard(e)');
+ const end=html.indexOf('function renderCards(',start);
+ const cards=html.slice(start,end);
+ assert.ok(start>=0&&end>start);
+ assert.doesNotMatch(cards,/Kalenderbron ↗|Bron ontbreekt|raArtworkCredit/);
+ assert.match(cards,/e\.registrationUrl\|\|e\.officialEventUrl\|\|null/);
+ const details=fs.readFileSync(path.join(root,'details.js'),'utf8');
+ assert.match(details,/Bron: RaceAtlas/);
+ assert.match(details,/isValidUrl\(e\.imageSourceUrl\)/);
+});
