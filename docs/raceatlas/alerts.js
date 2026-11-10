@@ -9,9 +9,10 @@
   const nextDate = s => {const d=new Date(s+'T12:00:00');d.setDate(d.getDate()+1);return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())};
   const icsEscape = s => String(s||'').replace(/([,;\\])/g,'\\$1').replace(/\n/g,'\\n');
   function downloadIcs(event, settings) {
+    const stamp=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/,'Z');
     const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//RaceAtlas//Alerts//NL'];
     function eventEntry(date, title, alarms) {
-      lines.push('BEGIN:VEVENT','UID:raceatlas-alert-'+event.id+'-'+date+'@raceatlas','DTSTAMP:20261109T120000Z',
+      lines.push('BEGIN:VEVENT','UID:raceatlas-alert-'+event.id+'-'+date+'@raceatlas','DTSTAMP:'+stamp,
         'DTSTART;VALUE=DATE:'+fmt(date),'DTEND;VALUE=DATE:'+nextDate(date),
         'SUMMARY:'+icsEscape(title),'DESCRIPTION:'+icsEscape('Controleer officiële details: '+(event.source||'RaceAtlas')));
       alarms.forEach(([trigger,description]) => lines.push('BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+icsEscape(description),'TRIGGER:'+trigger,'END:VALARM'));
