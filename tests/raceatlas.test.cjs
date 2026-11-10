@@ -41,3 +41,16 @@ test('Unconfirmed events have no invented event date',()=>{
   assert.ok(pending.length>0);
   for(const e of pending)if(e.expectedMonth)assert.match(e.expectedMonth,/^(0[1-9]|1[0-2])$/);
 });
+
+test('Runtime rendering helper is declared and not swallowed by a comment',()=>{
+  assert.match(html,/\/\/ Keep the default view scannable; preferences remain on this device only\.\s*\nconst safe=\(s\)=>/);
+  assert.match(html,/function render\(\)\{/);
+  assert.match(html,/render\(\);\s*<\/script>/);
+});
+test('Upcoming filter excludes records without an event date or expected month',()=>{
+  assert.match(html,/function isFuture\(e\)\{if\(!e\.date&&!e\.expectedMonth\)return false;/);
+});
+test('Empty saved season gives clear guidance instead of an irrelevant filter warning',()=>{
+  assert.match(html,/id==='savedCards'\?'Je hebt nog geen evenementen bewaard/);
+  assert.match(html,/id==='savedCards'\?'Bekijk evenementen'/);
+});
