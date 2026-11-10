@@ -91,7 +91,8 @@ window.RACEATLAS_EVENTS=EVENTS;
 const $=id=>document.getElementById(id), months=['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'],STORE='raceatlas-saved-v2';
 let saved=[];try{const s=JSON.parse(localStorage.getItem(STORE)||'[]');if(Array.isArray(s))saved=s.filter(x=>typeof x==='string')}catch{}
 let quick='all',limit=24,mode='explore',view='grid';
-// Keep the default view scannable; preferences remain on this device only.const safe=(s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+// Keep the default view scannable; preferences remain on this device only.
+const safe=(s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function getDate(e){if(!e.date)return {day:"—",month:e.expectedMonth?months[Number(e.expectedMonth)-1]:"n.t.b."};const d=new Date(e.date+'T12:00:00');return {day:d.getDate(),month:months[d.getMonth()]}}
 function source(e){return e.source||null}
 function eventCard(e){
