@@ -69,3 +69,10 @@ test('Organizer FAQ and duathlon choice are available',()=>{
  assert.match(page,/formulier is dus niet hetzelfde als publicatie/);
  assert.match(page,/We delen eventuele mogelijkheden en afspraken persoonlijk/);
 });
+
+test('Organizer submission captures verifiable source and confirmation',()=>{
+  assert.match(page,/id="sourceUrl" type="url" pattern="https:\/\/\.\*"/);
+  assert.match(page,/id="dataConfirmed" type="checkbox" required/);
+  assert.match(page,/bron_datum_inschrijving_prijs:/);
+  assert.match(page,/gegevens_gecontroleerd:/);
+});
