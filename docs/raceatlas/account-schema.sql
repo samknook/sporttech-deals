@@ -56,3 +56,11 @@ create policy "alerts_delete_own" on public.raceatlas_alert_preferences
 
 -- Email sending must be server-side. Never expose auth.users email addresses through public tables.
 -- Server-side notifier should validate explicit consent, handle deduplication and secure unsubscribe.
+
+-- Newly created Supabase projects can have restrictive Data API grants.
+-- RLS still restricts authenticated users to their own rows.
+grant usage on schema public to authenticated;
+grant select, insert, update, delete on public.raceatlas_saved_events to authenticated;
+grant select, insert, update, delete on public.raceatlas_alert_preferences to authenticated;
+revoke all on public.raceatlas_saved_events from anon;
+revoke all on public.raceatlas_alert_preferences from anon;
