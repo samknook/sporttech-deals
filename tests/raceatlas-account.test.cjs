@@ -149,3 +149,23 @@ test('Server enforces saved event link and notification type consent',()=>{
   assert.match(sql,/on delete cascade/);
   assert.match(sql,/raceatlas_enabled_alert_needs_type/);
 });
+
+const deleteFn=fs.readFileSync(path.resolve(__dirname,'..','supabase','functions','raceatlas-delete-account','index.ts'),'utf8');
+test('Account deletion must verify caller identity server-side',()=>{
+  assert.match(deleteFn,/req\.method !== "POST"/);
+  assert.match(deleteFn,/Authorization/);
+  assert.match(deleteFn,/\/auth\/v1\/user/);
+  assert.match(deleteFn,/if \(!who\.ok\) return response\(401/);
+  assert.match(deleteFn,/VERWIJDER MIJN ACCOUNT/);
+  assert.match(deleteFn,/\/auth\/v1\/admin\/users\//);
+  assert.match(deleteFn,/encodeURIComponent\(user\.id\)/);
+  assert.doesNotMatch(deleteFn,/query\?\.user_id|body\.user_id|body\?\.user_id/);
+});
+test('Account UI exposes explicit deletion, not an unverified browser admin action',()=>{
+  assert.match(moduleCode,/async function deleteAccount\(\)/);
+  assert.match(moduleCode,/window\.prompt\('Account definitief verwijderen/);
+  assert.match(moduleCode,/client\.functions\.invoke\('raceatlas-delete-account'/);
+  assert.match(moduleCode,/if\(error\|\|data\?\.deleted!==true\)throw/);
+  assert.match(moduleCode,/Verwijder mijn account definitief/);
+  assert.doesNotMatch(moduleCode,/auth\.admin\.deleteUser/);
+});
