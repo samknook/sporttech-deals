@@ -22,8 +22,8 @@ function detail(e,fromLink=false){
   const artwork=window.RaceAtlasArtwork(e);
   if(artwork){
    const hero=el('figure',null,'ra-detail-artwork');
-   const image=el('img');image.src=artwork;image.alt=e.imageRights==='licensed'?'Afbeelding van '+e.name:'Speciaal voor '+e.name+' gemaakte RaceAtlas-illustratie; geen officiële wedstrijdfoto';image.loading='lazy';image.decoding='async';
-   hero.append(image,el('figcaption',e.imageRights==='licensed'?(e.imageCredit||'Beeld aangeleverd door organisator'):'RaceAtlas-illustratie · geen officiële evenementfoto'));
+   const image=el('img');image.src=artwork;image.alt=e.imageRights==='licensed'&&e.imageCredit&&e.imageSourceUrl?'Afbeelding van '+e.name:'Speciaal voor '+e.name+' gemaakte RaceAtlas-illustratie; geen officiële wedstrijdfoto';image.loading='lazy';image.decoding='async';
+   hero.append(image,el('figcaption',e.imageRights==='licensed'&&e.imageCredit&&e.imageSourceUrl?e.imageCredit:'RaceAtlas-illustratie · geen officiële evenementfoto'));
    dlg.append(hero);
   }
  }
