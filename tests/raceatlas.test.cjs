@@ -166,12 +166,12 @@ test('Shared link round-trip restores valid selections and preserves deep links'
    history:{state:null,replaceState(){}},
    setPills(){},quick:'all'
  };
- vm.runInNewContext(html.slice(start,end)+';restoreSearchFromUrl();',sandbox);
+ vm.runInNewContext(html.slice(start,end)+';restoreSearchFromUrl();sharedUrl=searchUrl().toString();',sandbox);
  assert.equal(inputs.sport.value,'Triatlon');
  assert.equal(inputs.month.value,'06');
  assert.equal(inputs.future.checked,false);
  assert.equal(sandbox.quick,'nh');
- const url=vm.runInNewContext('searchUrl().toString()',sandbox);
+ const url=sandbox.sharedUrl;
  assert.match(url,/event=ra-11/);
  assert.match(url,/other=ok/);
  assert.match(url,/ra_sport=Triatlon/);
