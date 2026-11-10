@@ -18,6 +18,15 @@ function detail(e,fromLink=false){
  const heading=el('div',null,'ra-detail-heading');
  heading.append(el('div',e.sport+' · '+e.discipline,'ra-detail-kicker'),el('h2',e.name));
  const close=el('button','✕','ra-detail-close');close.type='button';close.setAttribute('aria-label','Sluiten');close.onclick=closeDialog;heading.append(close);dlg.append(heading);
+ if(e.major&&typeof window.RaceAtlasArtwork==='function'){
+  const artwork=window.RaceAtlasArtwork(e);
+  if(artwork){
+   const hero=el('figure',null,'ra-detail-artwork');
+   const image=el('img');image.src=artwork;image.alt=e.imageRights==='licensed'?'Afbeelding van '+e.name:'Speciaal voor '+e.name+' gemaakte RaceAtlas-illustratie; geen officiële wedstrijdfoto';image.loading='lazy';image.decoding='async';
+   hero.append(image,el('figcaption',e.imageRights==='licensed'?(e.imageCredit||'Beeld aangeleverd door organisator'):'RaceAtlas-illustratie · geen officiële evenementfoto'));
+   dlg.append(hero);
+  }
+ }
  const facts=el('div',null,'ra-detail-facts');
  const fmtDate=s=>{if(!s)return '';const day=String(s).slice(0,10);return /^\d{4}-\d{2}-\d{2}$/.test(day)?new Date(day+'T12:00:00').toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'}):String(s)};
  const priceText=typeof e.priceEur==='number'?'€ '+e.priceEur.toFixed(2).replace('.',','):typeof e.priceAmount==='number'?(e.priceCurrency==='USD'?'$ ':e.priceCurrency==='AUD'?'A$ ':e.priceCurrency+' ')+e.priceAmount.toLocaleString('nl-NL',{minimumFractionDigits:0,maximumFractionDigits:2}):null;
@@ -65,6 +74,7 @@ document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&$('raceatlasDetai
 window.addEventListener('popstate',()=>{const id=new URL(location.href).searchParams.get('event');if(id){const e=getEvent(id);if(e)detail(e,true)}else{const d=$('raceatlasDetails');if(d)d.remove()}});
 const style=document.createElement('style');style.textContent=
 '.ra-detail-btn{padding:10px 12px;background:#f2f7ef;border:1px solid #cbdcca;border-radius:9px;color:#1b4e36;font-weight:800;font-size:12px;cursor:pointer}.ra-detail-overlay{position:fixed;inset:0;z-index:110;background:#061318c4;display:flex;align-items:center;justify-content:center;padding:16px}.ra-detail-dialog{width:min(650px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:20px;padding:25px;color:#122b23;box-shadow:0 25px 80px #0006}.ra-detail-heading{position:relative;padding-right:35px}.ra-detail-heading h2{font-size:clamp(25px,4vw,34px);letter-spacing:-.05em;margin:5px 0 17px;line-height:1.1}.ra-detail-kicker{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#416b54;font-weight:850}.ra-detail-close{position:absolute;right:0;top:0;border:1px solid #d6e3d6;border-radius:8px;background:#fff;padding:7px 11px}.ra-detail-facts{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ra-detail-facts>div{background:#f2f6f0;padding:13px;border-radius:10px;display:flex;flex-direction:column;gap:5px}.ra-detail-facts span{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#718579;font-weight:750}.ra-detail-facts strong{font-size:14px}.ra-detail-warning{line-height:1.6;font-size:12px;color:#68776d}.ra-detail-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:17px}.ra-detail-actions button,.ra-detail-actions a{display:inline-flex;align-items:center;justify-content:center;border-radius:9px;padding:12px 15px;text-decoration:none;font:inherit;font-size:12px;font-weight:800;cursor:pointer}.ra-detail-primary{background:#b9fa83;border:1px solid #b9fa83;color:#13251b}.ra-detail-secondary{background:#fff;border:1px solid #cddccd;color:#214c36}@media(max-width:580px){.ra-detail-dialog{padding:18px}.ra-detail-facts{grid-template-columns:1fr}.ra-detail-actions>*{flex:1 1 100%}}';
-style.textContent += '.ra-detail-registration-source{font-size:12px;margin:12px 0;color:#4c6876}.ra-detail-registration-source a{font-weight:800;color:#1d7453;text-underline-offset:3px}.ra-detail-facts>div:nth-child(4),.ra-detail-facts>div:nth-child(5),.ra-detail-facts>div:nth-child(6){background:#f0f8ea}';document.head.append(style);
+style.textContent += '.ra-detail-registration-source{font-size:12px;margin:12px 0;color:#4c6876}.ra-detail-registration-source a{font-weight:800;color:#1d7453;text-underline-offset:3px}.ra-detail-facts>div:nth-child(4),.ra-detail-facts>div:nth-child(5),.ra-detail-facts>div:nth-child(6){background:#f0f8ea}';style.textContent+='.ra-detail-artwork{margin:0 0 14px;position:relative}.ra-detail-artwork img{width:100%;height:190px;object-fit:cover;display:block;border-radius:12px}.ra-detail-artwork figcaption{font-size:11px;color:#637a80;padding:6px 2px}@media(max-width:600px){.ra-detail-artwork img{height:145px}}';
+document.head.append(style);
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initFromUrl);else initFromUrl();
 })();
