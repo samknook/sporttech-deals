@@ -188,3 +188,9 @@ test('Account browser SDK uses the documented Supabase CDN and exposes useful si
  assert.match(moduleCode,/const callbackError=authErrorParams\.get\('error_description'\)/);
  assert.match(moduleCode,/callback\.searchParams\.set\('ra_account_preview','1'\)/);
 });
+
+test('Supabase SDK falls back to a second supported CDN if the primary is blocked',()=>{
+ assert.match(moduleCode,/https:\/\/unpkg\.com\/@supabase\/supabase-js@2/);
+ assert.match(moduleCode,/fallback\.onload=script\.onload/);
+ assert.match(moduleCode,/fallback\.onerror=/);
+});
