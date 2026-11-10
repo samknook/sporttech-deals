@@ -301,3 +301,11 @@ test('Second group of ten is event-specific and has source credit only in detail
  const cards=html.slice(html.indexOf('function eventCard(e)'),html.indexOf('function renderCards('));
  assert.doesNotMatch(cards,/raArtworkCredit|Foto: /);
 });
+
+test('External event photographs have a local image fallback',()=>{
+ assert.match(html,/if\(e\.imageRights==='licensed'&&\/\^ra-/);
+ assert.match(html,/check\.onerror=/);
+ const detail=fs.readFileSync(path.join(root,'details.js'),'utf8');
+ assert.match(detail,/reserve-sfeerbeeld/);
+ assert.match(detail,/image\.addEventListener\('error'/);
+});

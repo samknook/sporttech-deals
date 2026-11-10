@@ -32,6 +32,14 @@ function detail(e,fromLink=false){
     const source=el('a',' · Fotobron');source.href=e.imageSourceUrl;source.rel='noopener noreferrer';source.target='_blank';caption.append(source);
     if(isValidUrl(e.imageLicenseUrl)){const license=el('a',' · Licentie');license.href=e.imageLicenseUrl;license.rel='noopener noreferrer';license.target='_blank';caption.append(license)}
    }
+   if(!isAi&&e.imageRights==='licensed'&&/^ra-\d+$/.test(e.id)){
+    image.addEventListener('error',()=>{
+     image.onerror=null;
+     image.src='images/featured/'+e.id+'.jpg';
+     image.alt='AI-gegenereerd reserve-sfeerbeeld bij '+e.name;
+     caption.textContent='Bron: RaceAtlas · AI-gegenereerd reservebeeld, geen officiële evenementfoto';
+    },{once:true});
+   }
    hero.append(image,caption);
    dlg.append(hero);
   }

@@ -162,6 +162,14 @@ function eventCard(e){
   visual.style.backgroundImage='url("'+visualArt+'")';
   visual.setAttribute('aria-label',e.imageRights==='generated'?'AI-sfeerbeeld bij '+e.name:'Evenementfoto: '+e.name);
   visual.classList.add('raUniqueVisual');
+  if(e.imageRights==='licensed'&&/^ra-\d+$/.test(e.id)){
+   const check=new Image();
+   check.onerror=()=>{
+    visual.style.backgroundImage='url("images/featured/'+e.id+'.jpg")';
+    visual.setAttribute('aria-label','AI-sfeerbeeld bij '+e.name+' (reserveafbeelding)');
+   };
+   check.src=visualArt;
+  }
  }
 
  card.querySelector('.save').onclick=()=>{saved=saved.includes(e.id)?saved.filter(id=>id!==e.id):[...saved,e.id];if(!cloudSeasonActive){guestSaved=[...saved];try{localStorage.setItem(STORE,JSON.stringify(guestSaved))}catch{}}window.dispatchEvent(new CustomEvent('raceatlas:saved-change',{detail:{id:e.id,saved:saved.includes(e.id)}}));render()};
