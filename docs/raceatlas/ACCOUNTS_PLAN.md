@@ -1,3 +1,18 @@
+## Accountdiagnose en uitgevoerde reparatie — 10 november 2026
+
+- De Supabase Auth-logboeken bevestigen dat er een inlogmail is verzonden en daarna een e-mailverificatie/login is verwerkt. De login werd echter teruggeleid met een **referer op `http://localhost:3000`** in plaats van de RaceAtlas-website.
+- De Supabase-browserbibliotheek was geladen via een niet-gedocumenteerde bestandslocatie `@supabase/supabase-js@2/dist/umd/supabase.min.js`; dit is hersteld naar de [officiële CDN-URL](https://supabase.com/docs/reference/javascript/installing) `https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2`.
+- De accountpagina toont nu specifiekere berichten bij mailfouten, rate limiting en niet-toegestane redirects. Ook worden fouten uit de terugkeerlink getoond.
+- In Supabase bestaat inmiddels een geverifieerd account dat ten minste eenmaal heeft ingelogd (zonder gebruikerse-mailadressen hier te publiceren). **Dat is geen bewijs dat het GitHub Pages-accountscherm werkt.**
+- **Dashboardactie vereist**, want deze connector biedt geen ondersteuning voor Hosted Auth URL Configuration:
+  1. Open https://supabase.com/dashboard/project/lpzndnxloykcthbsqcet/auth/url-configuration
+  2. Site URL: `https://samknook.github.io/sporttech-deals/raceatlas/`
+  3. Voeg bij Redirect URLs **exact** toe: `https://samknook.github.io/sporttech-deals/raceatlas/?ra_account_preview=1`
+  4. Voeg ook toe: `https://samknook.github.io/sporttech-deals/raceatlas/`
+  5. Sla op en vraag **een nieuwe** inloglink aan. Oude inloglinks behouden hun oorspronkelijke redirect.
+- Indien de e-mailtemplate zelf hardcodeert naar `{{ .SiteURL }}`, pas die aan naar `{{ .RedirectTo }}` voor het gebruik van de exacte door de client opgegeven redirect (zie Supabase-docs). Gebruik bij voorkeur de standaard Supabase magic-linktemplate.
+- **Niet publiek inschakelen** totdat een nieuwe login landt op GitHub Pages en bewaring van een wedstrijd in Supabase na een reload beschikbaar blijft.
+
 ## Testtoegang accounts — 10 november 2026
 
 - Publieke login staat bewust **uit** (`enabled:false`), maar gebruikers kunnen een expliciete **QA-preview** openen via:
