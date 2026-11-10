@@ -110,3 +110,11 @@ test('Detail display explains conflicting prices and exposes verification date',
  assert.match(details,/Laatst gecontroleerd/);
  assert.match(details,/Tegenstrijdige informatie op officiële bron/);
 });
+
+test('Price data filters distinguish sourced amounts from conflicting information',()=>{
+  assert.match(html,/<option value="price">Prijs bekend<\/option>/);
+  assert.match(html,/<option value="conflict">Prijs onduidelijk<\/option>/);
+  assert.match(html,/registrationFilter==='price'&&typeof e\.priceEur==='number'/);
+  assert.match(html,/registrationFilter==='conflict'&&e\.priceStatus==='conflicting'/);
+  assert.match(html,/Prijs onduidelijk — zie details/);
+});
