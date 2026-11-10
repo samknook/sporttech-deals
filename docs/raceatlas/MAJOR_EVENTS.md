@@ -49,3 +49,22 @@ Nog te vervangen bestaande JPG's (geen live wijziging):
 | ra-261 | IRONMAN Les Sables d'Olonne | Atlantische kust, strandboulevard, triatlon |
 
 Batch 5: tien afzonderlijke illustratieve AI-beelden zijn gegenereerd en lokaal verpakt als geoptimaliseerde 960×448 WebP-bestanden. Hun sitekoppeling is voorbereid met automatische upgrade en JPG-fallback. **De afbeeldingen staan nog niet op de live site, omdat binaire GitHub-upload ontbreekt.** De gegenereerde decors zijn impressies en niet gecontroleerd als exact raceparcours. Voor batch 4 ontbreekt een geautoriseerde binaire uploadroute van lokale WebP naar de gekoppelde GitHub-repository; daarom géén verwijzingen naar nog niet bestaande assets in de publieke HTML instellen.
+
+## Batch 6 — gecontroleerde shortlist (10 november 2026)
+
+De volgende tien grote evenementen staan in de beeldwachtrij en hebben op dit moment nog hun eerdere JPG-beeld. Er zijn **nog geen tien nieuwe, voldoende evenement-specifieke beelden goedgekeurd of gepubliceerd**.
+
+| ID | Evenement | Vereist herkenbaar onderwerp |
+|---|---|---|
+| ra-266 | IRONMAN Switzerland Thun | Thunersee, Berner Alpen, fietsonderdeel |
+| ra-268 | IRONMAN 70.3 Jönköping | Zweedse Vättern-oever, triatlon |
+| ra-269 | IRONMAN 70.3 Luxembourg | Moezelwijngaarden, triatlonfiets |
+| ra-270 | IRONMAN 70.3 Swansea | Welsh kust en maritieme sfeer |
+| ra-271 | IRONMAN 70.3 Vitoria-Gasteiz | Baskisch stadscentrum, halve afstand |
+| ra-272 | IRONMAN Vitoria-Gasteiz | Baskische groene heuvels, volledige afstand |
+| ra-274 | IRONMAN Tallinn | Estse oude stad, langeafstandtriatlon |
+| ra-275 | IRONMAN 70.3 Leipzig | Duitse meren en groene parkroute |
+| ra-276 | IRONMAN 70.3 Tallinn | Baltische kust en triatlonzwemmen |
+| ra-278 | IRONMAN Leeds | Noord-Engelse heuvels en uitdagende fietsrit |
+
+De beeldworkflow is uitgebreid voor `raceatlas-assets/batch*.zip` en valideert per ZIP exact tien WebP's en unieke bestanden voordat de assets worden geïnstalleerd en Pages gepubliceerd. De installatie is succesvol hergetest. De overzichtspagina zoekt voor alle grote evenementen automatisch naar een specifieke `.webp` bij een bestaande `.jpg`, met behoud van het bestaande beeld als de upgrade nog niet bestaat.
