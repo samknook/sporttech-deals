@@ -45,7 +45,7 @@ async function readCloud(){
 }
 // Keep a per-event queue so fast saves/unsaves cannot be lost while a request is in flight.
 function writeOne(id,active){
- if(!user||mode!=='cloud'||!/^ra-\\d{1,8}$/.test(id))return;
+ if(!user||mode!=='cloud'||!/^ra-\d{1,8}$/.test(id))return;
  pending.set(id,active);
  void flushPending();
 }
