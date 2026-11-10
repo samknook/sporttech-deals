@@ -144,3 +144,38 @@ test('Search selection can be shared and safely restored from URL',()=>{
  assert.match(html,/restoreSearchFromUrl\(\);/);
  assert.match(html,/\$\('shareSearch'\)\.onclick=shareSearch/);
 });
+
+test('Shared link round-trip restores valid selections and preserves deep links',()=>{
+ const start=html.indexOf('const SHARE_FIELDS=');
+ const end=html.indexOf('function render(){',start);
+ assert.ok(start>=0&&end>start);
+ const inputs={};
+ const fields=['q','sport','country','year','month','certainty','distanceCategory','registrationFilter','sort'];
+ for(const id of fields)inputs[id]={tagName:'INPUT',value:''};
+ for(const id of ['sport','month','sort']){
+   const permitted=id==='sport'?['','Triatlon']:id==='month'?['','06']:['date','name'];
+   inputs[id]={tagName:'SELECT',value:permitted[0],options:permitted.map(value=>({value}))};
+ }
+ inputs.future={checked:true};
+ inputs.onlyVerified={checked:false};
+ const buttons=[{dataset:{quick:'all'}},{dataset:{quick:'nh'}}];
+ const sandbox={
+   URL,URLSearchParams,
+   location:{href:'https://example.test/raceatlas/?event=ra-11&ra_sport=Triatlon&ra_month=06&ra_quick=nh&ra_future=0&other=ok',search:'?event=ra-11&ra_sport=Triatlon&ra_month=06&ra_quick=nh&ra_future=0&other=ok'},
+   document:{getElementById:id=>inputs[id],querySelectorAll:()=>buttons},
+   history:{state:null,replaceState(){}},
+   setPills(){},quick:'all'
+ };
+ vm.runInNewContext(html.slice(start,end)+';restoreSearchFromUrl();',sandbox);
+ assert.equal(inputs.sport.value,'Triatlon');
+ assert.equal(inputs.month.value,'06');
+ assert.equal(inputs.future.checked,false);
+ assert.equal(sandbox.quick,'nh');
+ const url=vm.runInNewContext('searchUrl().toString()',sandbox);
+ assert.match(url,/event=ra-11/);
+ assert.match(url,/other=ok/);
+ assert.match(url,/ra_sport=Triatlon/);
+ assert.match(url,/ra_month=06/);
+ assert.match(url,/ra_future=0/);
+ assert.match(url,/ra_quick=nh/);
+});
