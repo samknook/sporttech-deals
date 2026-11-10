@@ -93,3 +93,20 @@ test('Verified registration updates are grounded in organizer sources',()=>{
   assert.equal(westfriesland.registrationStatus,'sold_out');
   assert.equal(typeof westfriesland.priceEur,'undefined','Do not present enhanced-package price as a general entry fee');
 });
+
+test('Conflicting official prices are not presented as verified amounts',()=>{
+ const kids=events.find(e=>e.id==='ra-419');
+ assert.equal(kids.priceStatus,'conflicting');
+ assert.equal(kids.priceEur,undefined);
+ assert.match(kids.priceNote,/7,50/);
+ assert.match(kids.priceNote,/6,00/);
+ const ronde=events.find(e=>e.id==='ra-355');
+ assert.match(ronde.registrationUrl,/rondevannoordholland\.nl\/inschrijven/);
+ assert.match(ronde.registrationStatusNote,/tegenstrijdige statusmeldingen/);
+});
+test('Detail display explains conflicting prices and exposes verification date',()=>{
+ const details=fs.readFileSync(path.join(root,'details.js'),'utf8');
+ assert.match(details,/e\.priceStatus==='conflicting'/);
+ assert.match(details,/Laatst gecontroleerd/);
+ assert.match(details,/Tegenstrijdige informatie op officiële bron/);
+});
