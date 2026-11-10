@@ -222,3 +222,14 @@ test('Rotterdam Marathon photography has explicit CC license and an attribution 
  assert.match(rotterdam.imageLicenseUrl,/creativecommons\.org\/licenses\/by-sa\/3\.0/);
  assert.match(html,/raArtworkCredit isLicensed/);
 });
+
+test('National championships have their own tier rather than automatic major status',()=>{
+ for(const id of ['ra-150','ra-151','ra-152','ra-153','ra-154','ra-155','ra-156','ra-157','ra-158','ra-159']){
+  const e=events.find(e=>e.id===id);
+  assert.ok(e,id);
+  assert.equal(e.major,false,id);
+  assert.equal(e.featuredTier,'championship',id);
+ }
+ const details=fs.readFileSync(path.join(root,'details.js'),'utf8');
+ assert.match(details,/not_open:'Inschrijving nog niet geopend/);
+});
