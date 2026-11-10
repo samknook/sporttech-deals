@@ -10,6 +10,15 @@
 - `docs/raceatlas/account-config.js` bevat nu uitsluitend de **publieke** project-URL en publishable key. `enabled:false` blijft staan totdat authenticatie en e-mail zijn getest.
 - De accounttabellen bevatten nog geen echte gebruikersgegevens.
 
+## Update — meldingsvoorkeuren voorbereid
+
+- `account.js` bevat nu een accountscherm met **aparte opt-in per opgeslagen evenement** voor inschrijfopeningen, datumwijzigingen en wedstrijdherinneringen.
+- Meldingsvoorkeuren worden opgeslagen in `raceatlas_alert_preferences`, nooit in lokale browseropslag; het geverifieerde e-mailadres komt uit Supabase Auth.
+- **Nog geen mails:** de UI vermeldt expliciet dat automatische e-mailverzending niet actief is.
+- De database heeft nu ook een samengestelde foreign key van meldingsvoorkeur naar bewaarde wedstrijd met `ON DELETE CASCADE`, plus een check dat een ingeschakelde melding minimaal één type bevat.
+- Na de aanvullende migratie zijn de beveiligingsadviezen opnieuw geraadpleegd en gaven ze geen waarschuwingen.
+- De 20 accountregressiecontroles zijn direct op de repositorycode uitgevoerd; browsertests en echte twee-account-toegangstests blijven verplicht.
+
 ## Nog vereist voor activatie
 
 1. Ga naar [Supabase Auth URL Configuration](https://supabase.com/dashboard/project/lpzndnxloykcthbsqcet/auth/url-configuration) en stel **Site URL** in op `https://samknook.github.io/sporttech-deals/raceatlas/`; voeg dezelfde exacte URL toe aan de redirect-allowlist.
