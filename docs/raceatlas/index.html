@@ -164,7 +164,7 @@ function eventCard(e){
   visual.classList.add('raUniqueVisual');
   // Upgrade batch-4 cards to their individual WebP as soon as the assets exist;
   // keep existing JPGs visible until binary media is actually published.
-  if(e.imageRights==='generated'&&/^(?:ra-2|ra-4|ra-6|ra-7|ra-10|ra-213|ra-216|ra-222|ra-224|ra-227|ra-232|ra-233|ra-234|ra-241|ra-242|ra-243|ra-255|ra-258|ra-259|ra-261)$/.test(e.id)&&/\.jpg$/.test(visualArt)){
+  if(e.major&&e.imageRights==='generated'&&/^ra-\d+$/.test(e.id)&&/\.jpg$/.test(visualArt)){
    const candidate='images/featured/'+e.id+'.webp';
    const upgrade=new Image();
    upgrade.onload=()=>{visual.style.backgroundImage='url("'+candidate+'")';};
