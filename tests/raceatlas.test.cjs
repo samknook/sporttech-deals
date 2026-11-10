@@ -65,3 +65,9 @@ test('Expected-month events respect their explicit expected year when present',(
   assert.match(html,/e\.expectedYear\|\|'2027'/);
   assert.match(html,/\(e\.expectedYear\|\|'2027'\)===year/);
 });
+
+test('Event results distinguish verified from unverified event dates',()=>{
+  assert.match(html,/id="verificationSummary"/);
+  assert.match(html,/all\.filter\(e=>e\.dateEvidence==='official'\)\.length/);
+  assert.match(html,/met nog te controleren datum/);
+});
