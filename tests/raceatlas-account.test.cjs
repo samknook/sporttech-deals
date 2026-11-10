@@ -80,10 +80,10 @@ test('Late cloud responses cannot restore a logged-out or switched account',()=>
 test('Unsynced changes require an explicit logout decision',()=>{
   assert.match(moduleCode,/if\(\(saving\|\|pending\.size\)&&!window\.confirm\(/);
   assert.match(moduleCode,/Niet alle wijzigingen zijn gesynchroniseerd/);
-  assert.match(moduleCode,/authVersion\+\+;pending\.clear\(\);cloudEvents=\[\];user=null;mode='local';savedApi\(\)\.useGuest\(\)/);
+  assert.match(moduleCode,/authVersion\+\+;pending\.clear\(\);cloudEvents=\[\];alertPrefs\.clear\(\);user=null;mode='local';savedApi\(\)\.useGuest\(\)/);
 });
 test('Account lookup errors clear stale cloud data from shared device',()=>{
-  assert.match(moduleCode,/catch\{authVersion\+\+;pending\.clear\(\);cloudEvents=\[\];user=null;mode='local';savedApi\(\)\.useGuest\(\);showAuth\(\)/);
+  assert.match(moduleCode,/catch\{authVersion\+\+;pending\.clear\(\);cloudEvents=\[\];alertPrefs\.clear\(\);user=null;mode='local';savedApi\(\)\.useGuest\(\);showAuth\(\)/);
 });
 
 test('Configured accounts are discoverable but unavailable without backend credentials',()=>{
@@ -120,4 +120,32 @@ test('Cloud season deletion requires confirmation and removes alert preferences 
  assert.match(section,/\.delete\(\)\.eq\('user_id',owner\)/);
  assert.match(section,/if\(owner!==user\?\.id\|\|version!==authVersion\)return/);
  assert.match(moduleCode,/Verwijder cloudseizoen/);
+});
+
+test('Cloud alert preferences require explicit event-specific email opt-in',()=>{
+  assert.match(moduleCode,/async function readAlertPrefs\(owner\)/);
+  assert.match(moduleCode,/function renderAlertControls\(\)/);
+  assert.match(moduleCode,/async function saveAlertPreference\(eventId,preference\)/);
+  assert.match(moduleCode,/consented_at:enabled\?new Date\(\)\.toISOString\(\):null/);
+  assert.match(moduleCode,/email_enabled:enabled/);
+  assert.match(moduleCode,/registration_open:enabled&&preference\.registration_open===true/);
+  assert.match(moduleCode,/date_change:enabled&&preference\.date_change===true/);
+  assert.match(moduleCode,/race_reminder:enabled&&preference\.race_reminder===true/);
+  assert.match(moduleCode,/if\(enabled&&!next\.registration_open&&!next\.date_change&&!next\.race_reminder\)/);
+  assert.match(moduleCode,/E-mails worden nog niet verstuurd/);
+});
+test('Alert preferences are scoped to user and automatically cleared from local view',()=>{
+  assert.match(moduleCode,/\.from\('raceatlas_alert_preferences'\)\.select\(/);
+  assert.match(moduleCode,/\.eq\('user_id',owner\)/);
+  assert.match(moduleCode,/onConflict:'user_id,event_id'/);
+  assert.match(moduleCode,/if\(owner!==user\?\.id\|\|version!==authVersion\)return/);
+  assert.match(moduleCode,/alertPrefs\.clear\(\)/);
+  assert.match(moduleCode,/alertPrefs\.delete\(id\)/);
+});
+const sql=fs.readFileSync(path.join(dir,'account-schema.sql'),'utf8');
+test('Server enforces saved event link and notification type consent',()=>{
+  assert.match(sql,/raceatlas_alert_requires_saved_event/);
+  assert.match(sql,/references public\.raceatlas_saved_events\(user_id,event_id\)/);
+  assert.match(sql,/on delete cascade/);
+  assert.match(sql,/raceatlas_enabled_alert_needs_type/);
 });
