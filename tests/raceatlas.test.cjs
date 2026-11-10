@@ -201,26 +201,22 @@ test('Regional runs are not all automatically promoted to major',()=>{
   assert.equal(e.featuredTier,'regional');
  }
 });
-test('Major event artwork is per-event and clearly not represented as licensed photography',()=>{
+test('Major event covers show photo-style JPEGs and sources only in details',()=>{
  assert.match(html,/function raceArtwork\(e\)/);
- assert.match(html,/const key=e\.id\+'\|'\+e\.name/);
- assert.match(html,/data:image\/svg\+xml;charset=UTF-8/);
- assert.match(html,/RaceAtlas-illustratie/);
- assert.match(html,/e\.imageRights==='licensed'/);
+ assert.match(html,/e\.imageRights==='generated'/);
+ assert.doesNotMatch(html,/raArtworkCredit/);
  const details=fs.readFileSync(path.join(root,'details.js'),'utf8');
  assert.match(details,/window\.RaceAtlasArtwork\(e\)/);
- assert.match(details,/ra-detail-artwork/);
+ assert.match(details,/Bron: RaceAtlas/);
  assert.match(details,/geen officiële evenementfoto/);
 });
 
-test('Rotterdam Marathon photography has explicit CC license and an attribution source',()=>{
- const rotterdam=events.find(e=>e.id==='ra-5');
- assert.ok(rotterdam&&rotterdam.major);
- assert.equal(rotterdam.imageRights,'licensed');
- assert.match(rotterdam.imageCredit,/Peter van der Sluijs/);
- assert.match(rotterdam.imageSourceUrl,/commons\.wikimedia\.org/);
- assert.match(rotterdam.imageLicenseUrl,/creativecommons\.org\/licenses\/by-sa\/3\.0/);
- assert.match(html,/raArtworkCredit isLicensed/);
+test('Rotterdam now uses its requested AI race image',()=>{
+ const race=events.find(e=>e.id==='ra-5');
+ assert.ok(race&&race.major);
+ assert.equal(race.imageRights,'generated');
+ assert.equal(race.imageUrl,'images/featured/ra-5.jpg');
+ assert.doesNotMatch(html,/raArtworkCredit/);
 });
 
 test('National championships have their own tier rather than automatic major status',()=>{
@@ -234,39 +230,31 @@ test('National championships have their own tier rather than automatic major sta
  assert.match(details,/not_open:'Inschrijving nog niet geopend/);
 });
 
-test('Priority majors have original event-specific hero images instead of generic placeholders',()=>{
- const expected={
-  'ra-418':'images/featured/ra-418.svg',
-  'ra-8':'images/featured/ra-8.svg',
-  'ra-11':'images/featured/ra-11.svg',
-  'ra-0':'images/featured/ra-0.svg'
- };
- for(const [id,filename] of Object.entries(expected)){
+test('Featured race images are actual JPEG files for Amsterdam, Dam tot Dam, Hoorn and Egmond',()=>{
+ const expected=['ra-418','ra-8','ra-11','ra-0','ra-5'];
+ for(const id of expected){
   const race=events.find(e=>e.id===id);
   assert.ok(race&&race.major);
-  assert.equal(race.imageRights,'original');
-  assert.equal(race.imageUrl,filename);
-  const asset=fs.readFileSync(path.join(root,filename),'utf8');
-  assert.match(asset,/<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg"/);
-  assert.match(asset,/<\/svg>\s*$/);
-  assert.doesNotMatch(asset,/http:\/\/images\.unsplash\.com|data:image\/png;base64/);
+  assert.equal(race.imageRights,'generated');
+  assert.equal(race.imageUrl,'images/featured/'+id+'.jpg');
+  const asset=fs.readFileSync(path.join(root,race.imageUrl));
+  assert.equal(asset[0],0xff);
+  assert.equal(asset[1],0xd8);
+  assert.equal(asset[2],0xff);
  }
- assert.match(html,/e\.imageRights==='original'/);
 });
 
-test('Every major event has a dedicated and documented image source',()=>{
- for(const e of events.filter(e=>e.major)){
-  assert.ok(e.imageUrl,'Missing imageUrl '+e.id);
-  assert.ok(e.imageRights==='original'||e.imageRights==='licensed','Unknown rights '+e.id);
-  if(e.imageRights==='original'){
-   assert.match(e.imageUrl,/^images\/featured\/ra-\d+\.svg$/);
-   const asset=fs.readFileSync(path.join(root,e.imageUrl),'utf8');
-   assert.match(asset,/<svg /);
-   assert.match(asset,/<title>/);
-   assert.match(asset,/<\/svg>\s*$/);
-  }else{
-   assert.ok(e.imageCredit&&e.imageSourceUrl&&e.imageLicenseUrl);
-  }
+test('Every major event has an uploaded local photographic-looking image',()=>{
+ const majors=events.filter(e=>e.major);
+ assert.equal(majors.length,70);
+ for(const e of majors){
+  assert.equal(e.imageRights,'generated',e.id);
+  assert.match(e.imageUrl,/^images\/featured\/ra-\d+\.jpg$/);
+  const jpeg=fs.readFileSync(path.join(root,e.imageUrl));
+  assert.equal(jpeg[0],0xff,e.id);
+  assert.equal(jpeg[1],0xd8,e.id);
+  assert.ok(jpeg.length>10000,e.id);
  }
- assert.equal(new Set(events.filter(e=>e.major).map(e=>e.imageUrl)).size,events.filter(e=>e.major).length);
+ assert.equal(new Set(majors.map(e=>e.imageUrl)).size,70);
 });
+
