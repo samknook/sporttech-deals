@@ -11,7 +11,9 @@ const config=fs.readFileSync(path.join(dir,'account-config.js'),'utf8');
 test('Accounts remain disabled until secure backend is commissioned',()=>{
   assert.match(config,/enabled:false/);
   assert.doesNotMatch(config,/service_role|sk_live_|re_[A-Za-z0-9]{16,}/);
-  assert.match(moduleCode,/if\(cfg\.enabled!==true\)return/);
+  assert.match(config,/previewEnabled:true/);
+  assert.match(moduleCode,/if\(cfg\.enabled!==true&&!previewActive\)return/);
+  assert.match(moduleCode,/ra_account_preview/);
   assert.match(html,/src="account-config\.js" defer/);
   assert.match(html,/src="account\.js" defer/);
 });
@@ -87,7 +89,9 @@ test('Account lookup errors clear stale cloud data from shared device',()=>{
 });
 
 test('Configured accounts are discoverable but unavailable without backend credentials',()=>{
-  assert.match(moduleCode,/if\(cfg\.enabled!==true\)return/);
+  assert.match(config,/previewEnabled:true/);
+  assert.match(moduleCode,/if\(cfg\.enabled!==true&&!previewActive\)return/);
+  assert.match(moduleCode,/ra_account_preview/);
   assert.match(moduleCode,/accountNav\.id='raAccountNav'/);
   assert.match(moduleCode,/document\.querySelector\('\.navright'\)\?\.append\(accountNav\)/);
   assert.match(moduleCode,/\.raAccountNav\{display:none\}/);
@@ -168,4 +172,11 @@ test('Account UI exposes explicit deletion, not an unverified browser admin acti
   assert.match(moduleCode,/if\(error\|\|data\?\.deleted!==true\)throw/);
   assert.match(moduleCode,/Verwijder mijn account definitief/);
   assert.doesNotMatch(moduleCode,/auth\.admin\.deleteUser/);
+});
+
+test('Magic link callback retains opt-in test access without turning on public accounts',()=>{
+ assert.match(moduleCode,/previewActive=cfg\.previewEnabled===true&&new URLSearchParams/);
+ assert.match(moduleCode,/callback\.searchParams\.set\('ra_account_preview','1'\)/);
+ assert.match(moduleCode,/emailRedirectTo:callback\.toString\(\)/);
+ assert.match(config,/enabled:false/);
 });
