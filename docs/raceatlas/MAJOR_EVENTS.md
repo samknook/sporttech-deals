@@ -7,10 +7,10 @@
 - **Batch 2: tien nieuwe, eigen AI-beelden als lokale WebP** voor Tokyo, Chicago, Kaapstad, Sydney, Amstel Gold Race, CPC Den Haag, Challenge Roth, IRONMAN Frankfurt, IRONMAN Hamburg en IRONMAN Austria. Historische Wikimedia-links zijn bij deze tien vervangen; bronvermelding bij Details luidt nu RaceAtlas AI-sfeerbeeld.
 - **Batch 3: tien nieuwe AI-beelden als lokale WebP** voor ASICS Marathon de Paris, IRONMAN 70.3 Valencia, Irish Life Dublin Marathon, IRONMAN Copenhagen, Athens Marathon – The Authentic, IRONMAN 70.3 Nice, IRONMAN 70.3 Westfriesland, IRONMAN Lanzarote, IRONMAN France Nice en IRONMAN 70.3 Venice-Jesolo. Deze foto's zijn illustratief en tonen niet noodzakelijk het officiële parcours.
 - **Drie nieuwe marathons toegevoegd aan de catalogus:** Parijs (4 april 2027 officieel), Dublin (24 oktober 2027 officieel, loting opent 12 november 2026), Athene (exacte wedstrijddatum 2027 nog niet bevestigd). De officiële bronnen staan in de eventgegevens.
-- **50 eerder bestaande major-coverbeelden** blijven voorlopig als lokale AI-JPEG, tenzij hierboven vervangen; de resterende reeks wordt in volgende batches vernieuwd.
-- **Bronvermeldingen alleen bij de details**: niet op de overzichtskaarten. Bij kapotte externe fotolinks valt de kaart/detailweergave terug op de eerdere lokale JPG.
-- De twee verschillende soorten beelden worden niet door elkaar gepresenteerd als authentiek: een AI-sfeerbeeld blijft als AI herkenbaar bij Details; een historische evenementfoto vermeldt de bron en editie.
-- Dit is een fasegewijze kwaliteitsverbetering; er is nog geen volledige browser- en publicatiecontrole op alle externe foto-URL's uitgevoerd.
+- **30 verschillende grote evenementen** hebben inmiddels een zorgvuldig gekozen evenement-specifiek AI-beeld; **43** andere grote evenementen tonen nog hun eerdere AI-sfeerbeelden. Midwinter Marathon (ra-1) heeft ook een aparte winterfoto. Westfriesland (ra-11) is in batch 3 opnieuw verbeterd.
+- **Bronvermeldingen alleen bij de details**: niet op de overzichtskaarten. De huidige 73 hoofdevenementen gebruiken lokale JPEG- of WebP-bestanden, zonder externe foto-hotlinks.
+- AI-sfeerbeelden worden bij Details expliciet als gegenereerde beelden aangeduid; ze zijn geen echte evenementopnames.
+- Dit is een fasegewijze kwaliteitsverbetering; er is nog geen volledige live-browsercontrole op alle 73 lokale afbeeldings-URL's uitgevoerd.
 
 ## Grote evenementen
 
@@ -18,7 +18,7 @@
 
 ## Beeldkwaliteit en verificatie
 
-- Lokale JPEG's en WebP-bestanden zijn geoptimaliseerd voor snel laden op mobiel. Externe Wikimedia-thumbnails gebruiken een maximum-breedte van 960 px.
-- De beeldgegevens bevatten lokale WebP/JPEG-assets en specifieke Wikimedia Commons-fotobronnen.
+- Lokale JPEG's en WebP-bestanden zijn geoptimaliseerd voor snel laden op mobiel. De nieuwe WebP-bestanden zijn 960 × 448 pixels.
+- De 73 grote evenementen verwijzen naar lokale WebP/JPEG-assets, inclusief unieke bestandspaden per evenement.
 - Tijdens de eerste volledige echte browsercontrole moet worden nagegaan of alle afbeeldingen correct laden en goed worden uitgesneden.
 - Later kan de site evenement-specifieke authentieke foto's gebruiken die organisatoren direct aanleveren, zonder de overzichtskaarten met credits te belasten.
