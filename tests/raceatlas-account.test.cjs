@@ -85,3 +85,23 @@ test('Unsynced changes require an explicit logout decision',()=>{
 test('Account lookup errors clear stale cloud data from shared device',()=>{
   assert.match(moduleCode,/catch\{authVersion\+\+;pending\.clear\(\);cloudEvents=\[\];user=null;mode='local';savedApi\(\)\.useGuest\(\);showAuth\(\)/);
 });
+
+test('Configured accounts are discoverable but unavailable without backend credentials',()=>{
+  assert.match(moduleCode,/if\(cfg\.enabled!==true\)return/);
+  assert.match(moduleCode,/accountNav\.id='raAccountNav'/);
+  assert.match(moduleCode,/document\.querySelector\('\.navright'\)\?\.append\(accountNav\)/);
+  assert.match(moduleCode,/\.raAccountNav\{display:none\}/);
+});
+test('Failed writes from a previous account cannot contaminate the new account',()=>{
+  assert.match(moduleCode,/if\(version===authVersion&&user\?\.id===owner&&mode==='cloud'\)\{\s*if\(!pending\.has\(id\)\)pending\.set\(id,active\)/);
+  assert.match(moduleCode,/window\.addEventListener\('beforeunload'/);
+  assert.match(moduleCode,/Herlaad de pagina niet voordat je opnieuw hebt gesynchroniseerd/);
+});
+test('Status updates handle rejected requests without revealing stale account data',()=>{
+  assert.match(moduleCode,/catch\{error=new Error\('Netwerkfout'\)\}/);
+  assert.match(moduleCode,/if\(currentUser!==user\?\.id\|\|version!==authVersion\)return/);
+});
+test('Email alerts are described as unavailable until opt-in and sending are implemented',()=>{
+  assert.match(moduleCode,/E-mailmeldingen zijn nog niet actief/);
+  assert.match(moduleCode,/aparte, expliciete aanmelding/);
+});
