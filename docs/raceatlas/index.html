@@ -148,7 +148,7 @@ function eventCard(e){
 function renderCards(id,arr){const el=$(id);el.replaceChildren();if(!arr.length){const div=document.createElement('div');div.className='empty';div.textContent=id==='savedCards'?'Je hebt nog geen evenementen bewaard. Bekijk de evenementen en klik op + Bewaar.':'Geen wedstrijden voor deze combinatie van filters.';const reset=document.createElement('button');reset.type='button';reset.className='miniBtn';reset.textContent=id==='savedCards'?'Bekijk evenementen':'Wis filters en bekijk alle evenementen';reset.onclick=()=>{if(id==='savedCards')switchPage('explore');else $('reset').click()};div.append(document.createElement('p'),reset);el.append(div)}else{const frag=document.createDocumentFragment();arr.forEach(e=>frag.append(eventCard(e)));el.append(frag)}}
 function isConfirmedEventDate(e){return !!(e&&e.date&&e.dateEvidence==='official')}
 function sortKey(e){return e.date || (e.expectedMonth?(e.expectedYear||'2027')+'-'+e.expectedMonth+'-15':'9999-12-31')}
-function isFuture(e){if(!e.date&&!e.expectedMonth)return false;const d=sortKey(e);const t=new Date();const today=t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');return d>=today}
+function isFuture(e){if(!e.date&&!e.expectedMonth)return false;const t=new Date();const today=t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');if(e.date)return e.date>=today;const year=Number(e.expectedYear||2027),month=Number(e.expectedMonth);if(!Number.isInteger(year)||!Number.isInteger(month)||month<1||month>12)return false;const lastDay=new Date(year,month,0).getDate();return year+'-'+String(month).padStart(2,'0')+'-'+String(lastDay).padStart(2,'0')>=today}
 function isDuathlon(e){return /duat(h)?lon|run[ -]?bike[ -]?run|\brbr\b|wintertria/i.test([e.name,e.discipline].join(' '))}
 function matchesRaceDistance(e,category){const s=(e.distance+' '+e.discipline+' '+e.name).toLowerCase();switch(category){case 'short':return /(?:^|[^\d])(?:1|2|3|4|5)(?:[,.]\d+)?\s*km\b|kidsrun|\b500\s*m\b/.test(s);case 'ten':return /(?:^|[^\d])10(?:[,.]0+)?\s*km\b/.test(s);case 'half':return /21[,.]1\s*km|halve marathon|\bhalf marathon\b/.test(s);case 'full':return /42[,.]2\s*km|\bmarathon\b|ultra/i.test(s)&&e.sport==='Hardlopen';case 'halftri':return e.sport==='Triatlon'&&!isDuathlon(e)&&/70[,.]3|middenafstand|\bhalve\b/i.test(s);case 'fulltri':return e.sport==='Triatlon'&&!isDuathlon(e)&&/lange afstand|\bfull\b|\bhele\b/i.test(s);case 'duo':return isDuathlon(e);case 'gravel':return /gravel/i.test(s);case 'mtb':return /\bmtb\b|mountainbike/i.test(s);default:return true}}
 function searchNormalized(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('nl').replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim()}
@@ -185,11 +185,13 @@ function renderSeasonPreview(items){
 
 function renderQualitySummary(){
  const el=$('raQualitySummary');if(!el)return;
- const sourced=EVENTS.filter(e=>!!(e.officialEventUrl||e.source)).length;
+ const calendars=EVENTS.filter(e=>!!e.source).length;
+ const organizerSites=EVENTS.filter(e=>!!e.officialEventUrl).length;
+ const directRegistration=EVENTS.filter(e=>!!e.registrationUrl).length;
  const official=EVENTS.filter(e=>e.dateEvidence==='official').length;
  const price=EVENTS.filter(e=>typeof e.priceEur==='number').length;
  const openings=EVENTS.filter(e=>!!(e.registrationOpenAt||e.registrationDate||e.registrationWindow)).length;
- el.textContent='Datakwaliteit · '+sourced+'/'+EVENTS.length+' met bronlink · '+official+' officieel gemarkeerde wedstrijddatums · '+price+' met prijs · '+openings+' met inschrijfdatum of -periode. Ontbrekende gegevens worden niet geschat.';
+ el.textContent='Datakwaliteit · '+organizerSites+'/'+EVENTS.length+' met officiële evenementwebsite · '+calendars+' met kalenderbron · '+official+' officieel bevestigde wedstrijddatums · '+directRegistration+' directe inschrijflinks · '+price+' met prijs · '+openings+' met inschrijfdatum of -periode. Een kalenderbron is geen officiële bevestiging.';
 }
 function setPills(){document.querySelectorAll('[data-quick]').forEach(b=>{const active=b.dataset.quick===quick;b.classList.toggle('on',active);b.setAttribute('aria-pressed',String(active))})}
 function switchPage(p){mode=p;$('explore').style.display=p==='explore'?'block':'none';$('savedPage').style.display=p==='saved'?'block':'none';$('navExplore').classList.toggle('current',p==='explore');$('navSaved').classList.toggle('current',p==='saved');$('raMobileExplore').classList.toggle('selected',p==='explore');$('raMobileSaved').classList.toggle('selected',p==='saved');render();scrollTo({top:0,behavior:'smooth'})}
