@@ -1,0 +1,30 @@
+name: RaceAtlas quality checks
+
+on:
+  push:
+    paths:
+      - 'docs/raceatlas/**'
+      - 'tests/raceatlas*.test.cjs'
+      - '.github/workflows/raceatlas-checks.yml'
+  pull_request:
+    paths:
+      - 'docs/raceatlas/**'
+      - 'tests/raceatlas*.test.cjs'
+      - '.github/workflows/raceatlas-checks.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  regression:
+    name: RaceAtlas regression suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run RaceAtlas tests
+        run: node --test tests/raceatlas*.test.cjs
