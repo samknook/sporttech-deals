@@ -340,6 +340,6 @@ script.onload=async()=>{
  });
  await onAuth();
 };
-script.onerror=()=>setStatus('Accountdienst niet beschikbaar. Controleer je verbinding of schakel scriptblokkering uit voor deze site.');
+script.onerror=()=>{const fallback=el('script');fallback.src='https://unpkg.com/@supabase/supabase-js@2';fallback.onload=script.onload;fallback.onerror=()=>setStatus('Accountdienst niet beschikbaar. Controleer je verbinding of schakel scriptblokkering uit voor deze site.');document.head.append(fallback)};
 document.head.append(script);
 })();
