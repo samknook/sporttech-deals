@@ -23,6 +23,17 @@ create table if not exists public.raceatlas_alert_preferences (
   constraint consent_required check (not email_enabled or consented_at is not null)
 );
 
+-- A notification preference can exist only for a saved event, and follows it on deletion.
+-- If applying this file as a fresh setup, constraints are added after table creation.
+alter table public.raceatlas_alert_preferences
+  add constraint raceatlas_alert_requires_saved_event
+  foreign key (user_id,event_id)
+  references public.raceatlas_saved_events(user_id,event_id)
+  on delete cascade;
+alter table public.raceatlas_alert_preferences
+  add constraint raceatlas_enabled_alert_needs_type
+  check (not email_enabled or registration_open or date_change or race_reminder);
+
 alter table public.raceatlas_saved_events enable row level security;
 alter table public.raceatlas_alert_preferences enable row level security;
 
