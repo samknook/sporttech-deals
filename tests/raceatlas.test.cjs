@@ -54,3 +54,14 @@ test('Empty saved season gives clear guidance instead of an irrelevant filter wa
   assert.match(html,/id==='savedCards'\?'Je hebt nog geen evenementen bewaard/);
   assert.match(html,/id==='savedCards'\?'Bekijk evenementen'/);
 });
+
+test('One-click officially confirmed date filter is wired and clearable',()=>{
+  assert.match(html,/id="onlyVerified" type="checkbox"/);
+  assert.match(html,/\$\('onlyVerified'\)\.checked\|\|e\.dateEvidence==='official'/);
+  assert.match(html,/\$\('onlyVerified'\)\.checked=false/);
+  assert.match(html,/Officieel bevestigde datums/);
+});
+test('Expected-month events respect their explicit expected year when present',()=>{
+  assert.match(html,/e\.expectedYear\|\|'2027'/);
+  assert.match(html,/\(e\.expectedYear\|\|'2027'\)===year/);
+});
