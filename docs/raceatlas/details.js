@@ -23,7 +23,12 @@ function detail(e,fromLink=false){
   if(artwork){
    const hero=el('figure',null,'ra-detail-artwork');
    const image=el('img');image.src=artwork;image.alt=e.imageRights==='licensed'&&e.imageCredit&&e.imageSourceUrl?'Afbeelding van '+e.name:'Speciaal voor '+e.name+' gemaakte RaceAtlas-illustratie; geen officiële wedstrijdfoto';image.loading='lazy';image.decoding='async';
-   hero.append(image,el('figcaption',e.imageRights==='licensed'&&e.imageCredit&&e.imageSourceUrl?e.imageCredit:'RaceAtlas-illustratie · geen officiële evenementfoto'));
+   const caption=el('figcaption',e.imageRights==='licensed'&&e.imageCredit&&e.imageSourceUrl?e.imageCredit:'RaceAtlas-illustratie · geen officiële evenementfoto');
+   if(e.imageRights==='licensed'&&e.imageCredit&&isValidUrl(e.imageSourceUrl)){
+    const source=el('a',' · Fotobron');source.href=e.imageSourceUrl;source.rel='noopener noreferrer';source.target='_blank';caption.append(source);
+    if(isValidUrl(e.imageLicenseUrl)){const license=el('a',' · Licentie');license.href=e.imageLicenseUrl;license.rel='noopener noreferrer';license.target='_blank';caption.append(license)}
+   }
+   hero.append(image,caption);
    dlg.append(hero);
   }
  }
