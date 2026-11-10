@@ -1,13 +1,14 @@
 (() => {
 'use strict';
-// Disabled by default. Enable only after Supabase Auth, SMTP, RLS and privacy flows are tested.
+// Production remains gated until live Auth/SMTP/RLS verification. A deliberate opt-in QA link is available.
 const cfg=window.RACEATLAS_ACCOUNT_CONFIG||{};
-if(cfg.enabled!==true)return;
+const previewActive=cfg.previewEnabled===true&&new URLSearchParams(location.search).get('ra_account_preview')==='1';
+if(cfg.enabled!==true&&!previewActive)return;
 const validUrl=u=>{try{const x=new URL(u);return x.protocol==='https:'}catch{return false}};
 if(!validUrl(cfg.supabaseUrl)||!/^sb_publishable_|^eyJ/.test(cfg.publishableKey||''))return;
 const savedApi=()=>window.RaceAtlasSaved;
 const el=(tag,txt)=>{const n=document.createElement(tag);if(txt!==undefined)n.textContent=txt;return n};
-const status=el('p',''),wrapper=el('section'),title=el('h2','Mijn RaceAtlas-account'),content=el('div');
+const status=el('p',''),wrapper=el('section'),title=el('h2',previewActive?'Mijn RaceAtlas-account · testversie':'Mijn RaceAtlas-account'),content=el('div');
 wrapper.id='raAccount';wrapper.className='raAccount';
 wrapper.append(title,content,status);
 const where=document.querySelector('#savedPage .sectionHeading');
@@ -28,7 +29,7 @@ const button=(label,action)=>{const b=el('button',label);b.type='button';b.addEv
 function appendNotice(text){content.append(el('p',text))}
 function showAuth(){
  content.replaceChildren();
- appendNotice('Bewaar je wedstrijdseizoen op verschillende apparaten. Zonder account blijven je favorieten op dit apparaat staan.');
+ appendNotice(previewActive?'Testversie: e-mailinloggen werkt pas volledig wanneer de Auth-redirect en e-mailaflevering correct zijn ingesteld. Gebruik voorlopig een eigen testadres.':'Bewaar je wedstrijdseizoen op verschillende apparaten. Zonder account blijven je favorieten op dit apparaat staan.');
  const form=el('form'),email=el('input'),submit=el('button','Stuur inloglink');
  email.type='email';email.required=true;email.autocomplete='email';email.placeholder='E-mailadres';email.setAttribute('aria-label','E-mailadres');
  submit.type='submit';
@@ -37,9 +38,11 @@ function showAuth(){
   event.preventDefault();submit.disabled=true;
   setStatus('Inloglink aanvragen…');
   try{
-   const result=await client.auth.signInWithOtp({email:email.value.trim(),options:{emailRedirectTo:location.origin+location.pathname}});
+   const callback=new URL(location.pathname,location.origin);
+   if(previewActive)callback.searchParams.set('ra_account_preview','1');
+   const result=await client.auth.signInWithOtp({email:email.value.trim(),options:{emailRedirectTo:callback.toString()}});
    if(result.error)throw result.error;
-   setStatus('Controleer je inbox voor de eenmalige inloglink.');email.value='';
+   setStatus('Als de accountdienst je e-mail kan verzenden, ontvang je een eenmalige inloglink. Controleer je inbox en spam.');email.value='';
   }catch{setStatus('Inloggen is niet gelukt. Probeer opnieuw.')}
   finally{submit.disabled=false}
  });
