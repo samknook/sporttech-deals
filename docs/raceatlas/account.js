@@ -18,6 +18,10 @@ const pending=new Map();
 let authVersion=0;
 let cloudEvents=[];
 const setStatus=text=>{status.textContent=text;status.setAttribute('role','status')};
+const accountNav=el('button','Mijn account');
+accountNav.id='raAccountNav';accountNav.type='button';accountNav.className='raAccountNav';
+accountNav.addEventListener('click',()=>{document.getElementById('navSaved')?.click();wrapper.scrollIntoView({behavior:'smooth',block:'start'})});
+document.querySelector('.navright')?.append(accountNav);
 const button=(label,action)=>{const b=el('button',label);b.type='button';b.addEventListener('click',action);return b};
 function appendNotice(text){content.append(el('p',text))}
 function showAuth(){
@@ -74,13 +78,20 @@ async function flushPending(){
     }
    }catch{
     // Keep the latest pending value. Never silently drop a failed change.
-    if(!pending.has(id))pending.set(id,active);
-    setStatus('Synchronisatie mislukt. Je favorieten staan op dit apparaat; probeer opnieuw.');
+    if(version===authVersion&&user?.id===owner&&mode==='cloud'){
+     if(!pending.has(id))pending.set(id,active);
+     setStatus('Synchronisatie mislukt. Deze wijziging staat alleen in dit tabblad. Herlaad de pagina niet voordat je opnieuw hebt gesynchroniseerd.');
+    }
     break;
    }
   }
  }finally{saving=false}
 }
+window.addEventListener('beforeunload',event=>{
+ if(mode==='cloud'&&(saving||pending.size)){
+  event.preventDefault();event.returnValue='';
+ }
+});
 async function chooseCloud(){
  if(!user)return;
  if(pending.size||saving){setStatus('Er worden nog wijzigingen gesynchroniseerd. Probeer eerst opnieuw.');return}
@@ -108,7 +119,11 @@ async function importLocal(){
 async function setSeasonStatus(eventId,statusValue){
  if(!user||mode!=='cloud'||!['interested','registered','completed'].includes(statusValue))return;
  const currentUser=user.id,version=authVersion;
- const {error}=await client.from('raceatlas_saved_events').update({season_status:statusValue,updated_at:new Date().toISOString()}).eq('user_id',currentUser).eq('event_id',eventId);
+ let error;
+ try{
+  const result=await client.from('raceatlas_saved_events').update({season_status:statusValue,updated_at:new Date().toISOString()}).eq('user_id',currentUser).eq('event_id',eventId);
+  error=result.error;
+ }catch{error=new Error('Netwerkfout')}
  if(error){if(currentUser===user?.id&&version===authVersion)setStatus('Status opslaan is mislukt. Probeer het opnieuw.');return}
  if(currentUser!==user?.id||version!==authVersion)return;
  cloudEvents=cloudEvents.map(item=>item.event_id===eventId?{...item,season_status:statusValue}:item);
@@ -142,6 +157,7 @@ function showSignedIn(){
  appendNotice('Ingelogd als '+(user.email||'RaceAtlas-gebruiker')+'.');
  if(mode==='cloud'){
   appendNotice('Je wedstrijdseizoen wordt veilig gesynchroniseerd.');
+  appendNotice('E-mailmeldingen zijn nog niet actief. Je krijgt pas e-mail na een aparte, expliciete aanmelding zodra de verzenddienst beschikbaar is.');
   content.append(button('Seizoen verversen',chooseCloud));
   renderStatusControls();
   content.append(button('Synchronisatie opnieuw proberen',()=>{void flushPending()}));
@@ -165,6 +181,7 @@ window.addEventListener('raceatlas:saved-change',e=>{
 });
 const style=el('style');
 style.textContent='.raAccount{background:#fff;border:1px solid #dce7de;border-radius:16px;padding:18px;margin:16px 0 22px}.raAccount h2{font-size:19px;margin:0 0 10px}.raAccount p{font-size:13px;line-height:1.5;color:#506558}.raAccount form{display:flex;flex-wrap:wrap;gap:8px}.raAccount input{min-height:44px;min-width:210px;flex:1;border-radius:9px;border:1px solid #a9bfb0;padding:10px}.raAccount button{border:1px solid #b7ceb9;border-radius:9px;background:#eaf9db;color:#1a3b29;font-weight:750;padding:11px;min-height:44px;margin:4px 7px 4px 0;cursor:pointer}.raAccountStatuses{margin:14px 0}.raAccountStatuses label{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #edf1ed;padding:8px 0;font-size:13px}.raAccountStatuses select{min-height:44px;max-width:180px;width:48%;border:1px solid #b7ceb9;border-radius:8px;padding:8px;background:#fff}@media(max-width:520px){.raAccountStatuses label{align-items:stretch;flex-direction:column}.raAccountStatuses select{max-width:none;width:100%}}';
+style.textContent+='.raAccountNav{margin-left:5px}.raAccount{scroll-margin-top:24px}';
 document.head.append(style);
 const script=el('script');
 script.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
