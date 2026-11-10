@@ -158,10 +158,10 @@ test('Shared link round-trip restores valid selections and preserves deep links'
  }
  inputs.future={checked:true};
  inputs.onlyVerified={checked:false};
- const buttons=[{dataset:{quick:'all'}},{dataset:{quick:'nh'}}];
+ const buttons=[{dataset:{quick:'all'}},{dataset:{quick:'major'}}];
  const sandbox={
    URL,URLSearchParams,
-   location:{href:'https://example.test/raceatlas/?event=ra-11&ra_sport=Triatlon&ra_month=06&ra_quick=nh&ra_future=0&other=ok',search:'?event=ra-11&ra_sport=Triatlon&ra_month=06&ra_quick=nh&ra_future=0&other=ok'},
+   location:{href:'https://example.test/raceatlas/?event=ra-11&ra_sport=Triatlon&ra_month=06&ra_quick=major&ra_future=0&other=ok',search:'?event=ra-11&ra_sport=Triatlon&ra_month=06&ra_quick=major&ra_future=0&other=ok'},
    document:{getElementById:id=>inputs[id],querySelectorAll:()=>buttons},
    history:{state:null,replaceState(){}},
    setPills(){},quick:'all'
@@ -170,12 +170,44 @@ test('Shared link round-trip restores valid selections and preserves deep links'
  assert.equal(inputs.sport.value,'Triatlon');
  assert.equal(inputs.month.value,'06');
  assert.equal(inputs.future.checked,false);
- assert.equal(sandbox.quick,'nh');
+ assert.equal(sandbox.quick,'major');
  const url=sandbox.sharedUrl;
  assert.match(url,/event=ra-11/);
  assert.match(url,/other=ok/);
  assert.match(url,/ra_sport=Triatlon/);
  assert.match(url,/ra_month=06/);
  assert.match(url,/ra_future=0/);
- assert.match(url,/ra_quick=nh/);
+ assert.match(url,/ra_quick=major/);
+});
+
+test('Amsterdam Marathon is a confirmed major with official 2027 information',()=>{
+ const amsterdam=events.find(e=>e.id==='ra-418');
+ assert.equal(amsterdam.name,'TCS Amsterdam Marathon');
+ assert.equal(amsterdam.major,true);
+ assert.equal(amsterdam.featuredTier,'major');
+ assert.equal(amsterdam.date,'2027-10-31');
+ assert.equal(amsterdam.dateEvidence,'official');
+ assert.equal(amsterdam.registrationDate,'2026-12-19');
+ assert.match(amsterdam.officialEventUrl,/tcsamsterdammarathon\.nl/);
+ assert.equal(amsterdam.eventWeekendStart,'2027-10-30');
+ assert.equal(amsterdam.eventStartDate,undefined,'The marathon itself is on Sunday, not Saturday');
+});
+test('Regional runs are not all automatically promoted to major',()=>{
+ for(const id of ['ra-307','ra-310','ra-312','ra-316','ra-323','ra-327','ra-332','ra-355','ra-361']){
+  const e=events.find(e=>e.id===id);
+  assert.ok(e,id);
+  assert.equal(e.major,false,id);
+  assert.equal(e.featuredTier,'regional');
+ }
+});
+test('Major event artwork is per-event and clearly not represented as licensed photography',()=>{
+ assert.match(html,/function raceArtwork\(e\)/);
+ assert.match(html,/const key=e\.id\+'\|'\+e\.name/);
+ assert.match(html,/data:image\/svg\+xml;charset=UTF-8/);
+ assert.match(html,/RaceAtlas-illustratie/);
+ assert.match(html,/e\.imageRights==='licensed'/);
+ const details=fs.readFileSync(path.join(root,'details.js'),'utf8');
+ assert.match(details,/window\.RaceAtlasArtwork\(e\)/);
+ assert.match(details,/ra-detail-artwork/);
+ assert.match(details,/geen officiële evenementfoto/);
 });
