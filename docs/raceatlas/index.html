@@ -173,7 +173,7 @@ function raceArtwork(e){
  const subjects=tri?swimmer+cyclist(525,330,.78)+runner(739,295,.80,light):
  bike?cyclist(370,307,1.04)+cyclist(710,337,.73):
  runner(460,300,1.06,sun)+runner(713,345,.76,light);
- const svg='<svg xmlns="http://www.w3.org/2000/svg" width="850" height="360" viewBox="0 0 850 360">'+
+ const svg='<svg xmlns="http://www.w3.org/2000/svg" width="850" height="360" viewBox="0 0 850 360">'+'<desc>Uniek RaceAtlas-evenement '+String(e.id).replace(/[^a-z0-9-]/gi,'')+'</desc>'+
   '<defs><linearGradient id="sky" x2=".1" y2="1"><stop stop-color="'+dark+'"/><stop offset="1" stop-color="'+sky+'"/></linearGradient></defs>'+
   '<rect width="850" height="360" fill="url(#sky)"/><circle cx="'+(600+(hash%150))+'" cy="79" r="53" fill="'+sun+'" opacity=".85"/>'+
   '<path d="M0 277Q240 254 434 282T850 266V360H0Z" fill="'+sky+'" opacity=".52"/>'+landscape+
