@@ -21,6 +21,8 @@ test('Account code and config are syntactically valid',()=>{
 });
 test('Season remains usable without an account and cloud import is explicit',()=>{
   assert.match(html,/window\.RaceAtlasSaved=\{/);
+  assert.match(html,/useCloud:ids=>/);
+  assert.match(html,/useGuest:\(\)=>/);
   assert.match(html,/raceatlas:saved-change/);
   assert.match(moduleCode,/Lokale favorieten toevoegen aan account/);
   assert.match(moduleCode,/Alleen cloudseizoen gebruiken/);
@@ -56,4 +58,15 @@ test('Cloud UI updates with successfully added and removed event preferences',()
   assert.match(moduleCode,/cloudEvents\.push\(\{event_id:id,season_status:'interested'\}\)/);
   assert.match(moduleCode,/cloudEvents=cloudEvents\.filter\(item=>item\.event_id!==id\)/);
   assert.match(moduleCode,/if\(version===authVersion&&user\?\.id===owner\)/);
+});
+
+test('Guest favorites never become the locally persisted cloud season',()=>{
+  assert.match(html,/let guestSaved=\[\.\.\.saved\],cloudSeasonActive=false/);
+  assert.match(html,/if\(!cloudSeasonActive\)\{guestSaved=\[\.\.\.saved\]/);
+  assert.match(html,/useCloud:ids=>/);
+  assert.match(html,/cloudSeasonActive=true;render\(\)/);
+  assert.match(html,/useGuest:\(\)=>\{cloudSeasonActive=false;saved=\[\.\.\.guestSaved\];render\(\)\}/);
+  assert.match(moduleCode,/savedApi\(\)\.useCloud\(cloud\.map\(e=>e\.event_id\)\)/);
+  assert.match(moduleCode,/savedApi\(\)\.guest\(\)\.filter/);
+  assert.match(moduleCode,/savedApi\(\)\.useGuest\(\)/);
 });
