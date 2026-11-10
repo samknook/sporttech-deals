@@ -67,6 +67,11 @@ async function flushPending(){
      const {error}=await client.from('raceatlas_saved_events').delete().eq('user_id',owner).eq('event_id',id);
      if(error)throw error;
     }
+    if(version===authVersion&&user?.id===owner){
+     if(active&&!cloudEvents.some(item=>item.event_id===id))cloudEvents.push({event_id:id,season_status:'interested'});
+     if(!active)cloudEvents=cloudEvents.filter(item=>item.event_id!==id);
+     showSignedIn();
+    }
    }catch{
     // Keep the latest pending value. Never silently drop a failed change.
     if(!pending.has(id))pending.set(id,active);
