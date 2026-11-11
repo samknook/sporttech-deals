@@ -150,7 +150,7 @@ test('Shared link round-trip restores valid selections and preserves deep links'
  const end=html.indexOf('function render(){',start);
  assert.ok(start>=0&&end>start);
  const inputs={};
- const fields=['q','sport','country','year','month','certainty','distanceCategory','registrationFilter','sort'];
+ const fields=['q','sport','country','year','month','certainty','timeWindow','distanceCategory','registrationFilter','sort'];
  for(const id of fields)inputs[id]={tagName:'INPUT',value:''};
  for(const id of ['sport','month','sort']){
    const permitted=id==='sport'?['','Triatlon']:id==='month'?['','06']:['date','name'];
@@ -265,7 +265,7 @@ test('All major event covers have valid local or credited Wikimedia images',()=>
    assert.ok(bytes.length>10000,e.id);
   }
  }
- assert.equal(new Set(majors.map(e=>e.imageUrl)).size,70);
+ assert.equal(new Set(majors.map(e=>e.imageUrl)).size,73);
 });
 
 test('Source credits and missing-source labels stay off overview cards',()=>{
