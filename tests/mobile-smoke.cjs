@@ -162,21 +162,16 @@ async function test(){
   await page.locator('#absent-volunteer').fill('UNKNOWN');
   await page.locator('#roster-form button[type="submit"]').click();
   assert.equal(await page.locator('#roster-content').isVisible(),false);
-  // RaceAtlas accounts must be discoverable and the email form usable on a narrow phone.
+  // RaceAtlas stays usable without account creation while SMTP is not configured.
   await page.goto(base+'/raceatlas/index.html',{waitUntil:'domcontentloaded'});
   await page.locator('#raMobileSaved').click();
-  await page.locator('#raAccount').waitFor({state:'visible',timeout:12000});
-  assert.equal(await page.locator('#raAccount input[type="email"]').isVisible(),true);
-  assert.equal(await page.locator('#raAccount input[type="email"]').getAttribute('required'),'');
-  assert.match(await page.locator('#raAccount').innerText(),/Registreren/);
-  assert.equal(await page.locator('#raAccount input[type="password"]').isVisible(),true);
-  await page.locator('#raAccount button[data-ra-auth-mode="signup"]').click();
-  assert.match(await page.locator('#raAccount').innerText(),/Maak gratis account/);
-  assert.equal(await page.locator('#raAccount input[type="password"]').isVisible(),true);
+  assert.equal(await page.locator('#raAccount').count(),0);
+  assert.equal(await page.locator('#raMobileAccount').count(),0);
+  await page.locator('#raSeasonHealth').waitFor({state:'visible'});
+  assert.match(await page.locator('#raSeasonHealth').innerText(),/Seizoenscheck/);
   await page.locator('#raMobileExplore').click();
-  assert.equal(await page.locator('#raAccountCta').isVisible(),true);
-  await page.locator('#raAccountCta').click();
-  assert.equal(await page.locator('#raAccount').isVisible(),true);
+  await page.locator('#raHeroAccount').click();
+  assert.equal(await page.locator('#raSeasonHealth').isVisible(),true);
   // No unhandled JavaScript errors throughout navigation and calculations.
   assert.deepEqual(errors,[],'uncaught browser errors');
   console.log('PASS: 390px mobile menu, localized navigation, brand homepage, 530 goal and NL/EN product pages');
