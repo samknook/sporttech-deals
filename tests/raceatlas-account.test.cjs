@@ -8,8 +8,8 @@ const dir=path.resolve(__dirname,'..','docs','raceatlas');
 const html=fs.readFileSync(path.join(dir,'index.html'),'utf8');
 const moduleCode=fs.readFileSync(path.join(dir,'account.js'),'utf8');
 const config=fs.readFileSync(path.join(dir,'account-config.js'),'utf8');
-test('Accounts remain disabled until secure backend is commissioned',()=>{
-  assert.match(config,/enabled:false/);
+test('Account UI exposes public login with browser-safe publishable credentials',()=>{
+  assert.match(config,/enabled:true/);
   assert.doesNotMatch(config,/service_role|sk_live_|re_[A-Za-z0-9]{16,}/);
   assert.match(config,/previewEnabled:true/);
   assert.match(moduleCode,/if\(cfg\.enabled!==true&&!previewActive\)return/);
@@ -88,7 +88,7 @@ test('Account lookup errors clear stale cloud data from shared device',()=>{
   assert.match(moduleCode,/catch\{authVersion\+\+;pending\.clear\(\);cloudEvents=\[\];alertPrefs\.clear\(\);user=null;mode='local';savedApi\(\)\.useGuest\(\);showAuth\(\)/);
 });
 
-test('Configured accounts are discoverable but unavailable without backend credentials',()=>{
+test('Configured accounts are discoverable with secure backend credentials',()=>{
   assert.match(config,/previewEnabled:true/);
   assert.match(moduleCode,/if\(cfg\.enabled!==true&&!previewActive\)return/);
   assert.match(moduleCode,/ra_account_preview/);
@@ -174,11 +174,11 @@ test('Account UI exposes explicit deletion, not an unverified browser admin acti
   assert.doesNotMatch(moduleCode,/auth\.admin\.deleteUser/);
 });
 
-test('Magic link callback retains opt-in test access without turning on public accounts',()=>{
+test('Magic link callback retains QA preview access while public accounts are available',()=>{
  assert.match(moduleCode,/previewActive=cfg\.previewEnabled===true&&new URLSearchParams/);
  assert.match(moduleCode,/callback\.searchParams\.set\('ra_account_preview','1'\)/);
  assert.match(moduleCode,/emailRedirectTo:callback\.toString\(\)/);
- assert.match(config,/enabled:false/);
+ assert.match(config,/enabled:true/);
 });
 
 test('Account browser SDK uses the documented Supabase CDN and exposes useful sign-in errors',()=>{
@@ -193,4 +193,18 @@ test('Supabase SDK falls back to a second supported CDN if the primary is blocke
  assert.match(moduleCode,/https:\/\/unpkg\.com\/@supabase\/supabase-js@2/);
  assert.match(moduleCode,/fallback\.onload=script\.onload/);
  assert.match(moduleCode,/fallback\.onerror=/);
+});
+
+test('Marketing permission is separate, revocable and off by default',()=>{
+ assert.match(moduleCode,/marketingPref=\{email_opt_in:false/);
+ assert.match(moduleCode,/function renderMarketingControls\(\)/);
+ assert.match(moduleCode,/async function updateMarketingConsent\(enabled\)/);
+ assert.match(moduleCode,/client\.from\('raceatlas_marketing_preferences'\)\.upsert/);
+ assert.match(moduleCode,/check\.type='checkbox'/);
+ assert.match(moduleCode,/consent_version:'2026-11'/);
+ assert.match(moduleCode,/revoked_at:enabled\?null:time/);
+ const privacy=fs.readFileSync(path.join(dir,'privacy.html'),'utf8');
+ assert.match(privacy,/Commerciële e-mails/);
+ assert.match(privacy,/standaard uit/);
+ assert.match(privacy,/Mijn seizoen/);
 });
