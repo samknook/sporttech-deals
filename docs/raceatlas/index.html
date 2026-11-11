@@ -129,7 +129,7 @@ function source(e){return e.source||null}
 // A licensed event photograph can later replace this through e.imageUrl + imageRights.
 function raceArtwork(e){
  if(!e.major)return null;
- if(e.imageRights==='generated'&&/^images\/featured\/ra-\d+\.(?:webp|jpg)$/.test(e.imageUrl||''))return e.imageUrl;
+ if(e.imageRights==='generated'&&/^images\/featured\/ra-\d+\.(?:webp|jpg)$/.test(e.imageUrl||''))return 'images/featured/'+e.id+'.webp';
  if(e.imageRights==='licensed'&&e.imageCredit&&e.imageSourceUrl&&/^https:\/\/[^\s"'<>]+$/i.test(e.imageUrl||''))return e.imageUrl;
  return null;
 }
@@ -166,13 +166,12 @@ function eventCard(e){
   visual.style.backgroundImage='url("'+visualArt+'")';
   visual.setAttribute('aria-label',e.imageRights==='generated'?'AI-sfeerbeeld bij '+e.name:'Evenementfoto: '+e.name);
   visual.classList.add('raUniqueVisual');
-  // Upgrade batch-4 cards to their individual WebP as soon as the assets exist;
-  // keep existing JPGs visible until binary media is actually published.
-  if(e.major&&e.imageRights==='generated'&&/^ra-\d+$/.test(e.id)&&/\.jpg$/.test(visualArt)){
-   const candidate='images/featured/'+e.id+'.webp';
-   const upgrade=new Image();
-   upgrade.onload=()=>{visual.style.backgroundImage='url("'+candidate+'")';};
-   upgrade.src=candidate;
+  // All 73 major events have WebP covers. Preload before setting the CSS background;
+  // retain the original JPEG as a fallback if a cached or deployed WebP is unavailable.
+  if(e.imageRights==='generated'&&/^ra-\d+$/.test(e.id)){
+   const test=new Image();
+   test.onerror=()=>{visual.style.backgroundImage='url("images/featured/'+e.id+'.jpg")';};
+   test.src=visualArt;
   }
   if(e.imageRights==='licensed'&&/^ra-\d+$/.test(e.id)){
    const check=new Image();
