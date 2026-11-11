@@ -115,3 +115,14 @@ Opmerking: de connector biedt nu project-, migratie- en SQL-beheer, maar geen di
 
 ## Kosten
 Kleinschalig starten kan vaak binnen de gratis quotumgrenzen, maar exacte kosten hangen af van gebruikersaantallen en e-mailvolume. Supabase's ingebouwde Auth-mailservice is niet geschikt voor openbare productie; eigen SMTP/provider is vereist.
+
+## Publieke accountinterface en marketingconsent — 11 november 2026
+
+- De publieke account-UI staat sinds 11 november aan (`account-config.js: enabled:true`). Dit betekent **niet** dat een nieuwe e-mail-registratie end-to-end geverifieerd is: het is nog niet bevestigd dat de redirectfout naar `localhost:3000` in Hosted Auth is verholpen.
+- Gebruikers zien een accountingang vanuit **Mijn seizoen** en kunnen na een geslaagde e-mailverificatie hun lokale favorieten importeren of een bestaand cloudseizoen gebruiken. Bestaande RLS-policies blijven per gebruiker gescheiden.
+- Apart van evenementmeldingen is `public.raceatlas_marketing_preferences` aangemaakt, met RLS, vier owner-only policies, standaard `email_opt_in=false`, expliciete toestemmingsversie en door databaseklok vastgelegde aanmeld-/afmeldmomenten. E-mailadressen blijven in Supabase Auth, niet in een publiek marketingbestand. De marketingvoorkeur wordt pas wijzigbaar nadat deze succesvol geladen is.
+- De publieke pagina `privacy.html` legt accountgegevens, optionele reclame, intrekking en verwijdering uit. Deze pagina behoeft nog definitieve bedrijfs-/privacygegevens vóór commerciële verzending.
+- `marketing-admin-report.sql` geeft een **admin-only** query om uitsluitend aantoonbaar geverifieerde, nog ingeschreven contacten op te vragen. Nooit aan de browser blootstellen, geen CSV in git committen, geen partners toegang geven tot de adressen.
+- **Marketingmails worden nog niet verzonden.** De opt-in maakt de toekomstige doelgroep mogelijk, maar er is nog geen veilige campagneverzender, afmeldlink of werkende SMTP-configuratie voor publieke schaal geverifieerd.
+- Supabase Auth vereist nog de **Site URL** `https://samknook.github.io/sporttech-deals/raceatlas/` en exacte redirect-allowlist in https://supabase.com/dashboard/project/lpzndnxloykcthbsqcet/auth/url-configuration. Controleer daarbij de magic-linktemplate en geverifieerde afzender. Deze gehoste configuratie is niet via de huidige connector wijzigbaar. Test na aanpassing met een nieuwe link, een tweede apparaat, sessieherstel en twee gescheiden testaccounts.
+- GitHub Pages, de RaceAtlas-codechecks en bestaande backendcontroles zijn groen na de publieke UI-uitrol. Dit verifieert **niet** de e-mailbezorging of echte multi-user RLS-ervaring.
