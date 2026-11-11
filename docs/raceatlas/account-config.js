@@ -1,9 +1,9 @@
-// Public RaceAtlas Supabase project configuration.
-// Credentials below are the browser-safe project URL and publishable key, NOT a service role key.
-// Keep public launch disabled until Auth redirect URLs, email delivery and end-to-end RLS tests are verified.
-// Only an explicit ?ra_account_preview=1 URL opens the test interface; this is not a security boundary.
+// RaceAtlas browser-only Supabase project configuration.
+// Only browser-safe publishable credentials are exposed here. Never use service_role.
+// Public account UI is enabled; Auth redirect allowlist and SMTP delivery still require
+// an independent live magic-link smoke test before declaring end-to-end email login verified.
 window.RACEATLAS_ACCOUNT_CONFIG={
-  enabled:false,
+  enabled:true,
   previewEnabled:true,
   supabaseUrl:'https://lpzndnxloykcthbsqcet.supabase.co',
   publishableKey:'sb_publishable_AE_Qr8VLmWb2020QCOEAKQ_Nl5mZ5Sw'
