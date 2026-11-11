@@ -1,6 +1,6 @@
 (() => {
 'use strict';
-// Production remains gated until live Auth/SMTP/RLS verification. A deliberate opt-in QA link is available.
+// Public account UI; full mail delivery and callback verification remain a separate live smoke test.
 const cfg=window.RACEATLAS_ACCOUNT_CONFIG||{};
 const previewActive=cfg.previewEnabled===true&&new URLSearchParams(location.search).get('ra_account_preview')==='1';
 if(cfg.enabled!==true&&!previewActive)return;
@@ -361,8 +361,14 @@ async function onAuth(){
   const {data,error}=await client.auth.getUser();if(error)throw error;
   user=data?.user||null;mode='local';authVersion++;pending.clear();cloudEvents=[];alertPrefs.clear();savedApi().useGuest();
   if(!user){showAuth();return}
+  const owner=user.id,version=authVersion;
   showSignedIn();
-  if(!savedApi().guest().length)await chooseCloud();
+  try{
+   const latest=await readMarketingPreference(owner);
+   if(owner!==user?.id||version!==authVersion)return;
+   marketingPref=latest;showSignedIn();
+  }catch{if(owner===user?.id&&version===authVersion)setStatus('E-mailvoorkeuren ophalen mislukt. Controleer je voorkeur voordat je deze wijzigt.')}
+  if(owner===user?.id&&version===authVersion&&!savedApi().guest().length)await chooseCloud();
  }catch{authVersion++;pending.clear();cloudEvents=[];alertPrefs.clear();user=null;mode='local';marketingPref={email_opt_in:false,consented_at:null,revoked_at:null};savedApi().useGuest();showAuth();setStatus('Accountstatus kon niet worden gecontroleerd.')}
 }
 window.addEventListener('raceatlas:saved-change',e=>{
