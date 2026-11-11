@@ -182,6 +182,15 @@ async function test(){
   await page.reload({waitUntil:'domcontentloaded'});
   await page.locator('#raMobileSaved').click();
   assert.match(await page.locator('#savedSummary').innerText(),/1 wedstrijden opgeslagen/);
+  // A custom season target remains in local storage after a hard reload.
+  await page.locator('#raSeasonTarget').fill('8');
+  await page.locator('#raSeasonTarget').dispatchEvent('change');
+  assert.match(await page.locator('#raGoalText').innerText(),/1 van 8/);
+  await page.reload({waitUntil:'domcontentloaded'});
+  await page.locator('#raMobileSaved').click();
+  assert.equal(await page.locator('#raSeasonTarget').inputValue(),'8');
+  assert.match(await page.locator('#raGoalText').innerText(),/1 van 8/);
+  assert.equal(await page.locator('#raMonthPlannerList .raMonthRace').count(),1);
   await page.locator('#raMobileExplore').click();
   await page.locator('#raHeroAccount').click();
   assert.equal(await page.locator('#raSeasonHealth').isVisible(),true);
