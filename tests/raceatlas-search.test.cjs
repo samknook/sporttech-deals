@@ -174,3 +174,31 @@ test('Personal season shows next officially confirmed race without treating esti
  assert.match(page,/id="raNextRace"/);
  assert.match(page,/id="raSeasonMilestone"/);
 });
+
+test('Registration filters only flag grounded future openings, approaching deadlines or known closure',()=>{
+ const fn=new Function(sourceFunction('localIsoDate')+';'+sourceFunction('registrationOpensLater')+';'+sourceFunction('registrationDeadlineSoon')+';return {registrationOpensLater,registrationDeadlineSoon}')();
+ assert.equal(fn.registrationOpensLater({registrationDate:'2026-12-01'},'2026-11-11'),true);
+ assert.equal(fn.registrationOpensLater({registrationDate:'2026-10-01'},'2026-11-11'),false);
+ assert.equal(fn.registrationOpensLater({},'2026-11-11'),false);
+ assert.equal(fn.registrationDeadlineSoon({registrationEndDate:'2026-11-30'},'2026-11-11'),true);
+ assert.equal(fn.registrationDeadlineSoon({registrationEndDate:'2026-12-30'},'2026-11-11'),false);
+ assert.equal(fn.registrationDeadlineSoon({registrationEndDate:'2026-11-01'},'2026-11-11'),false);
+ assert.match(page,/value="opening">Inschrijving opent later/);
+ assert.match(page,/value="deadline">Deadline binnen 30 dagen/);
+ assert.match(page,/value="soldout">Uitverkocht/);
+});
+test('Account-free season backups are versioned, deduplicated, strict and non-destructive',()=>{
+ const funcs=new Function(sourceFunction('buildSeasonBackup')+';'+sourceFunction('parseSeasonBackup')+';return {buildSeasonBackup,parseSeasonBackup}')();
+ const backup=funcs.buildSeasonBackup(['ra-1','ra-1','ra-2','<script>'],'2026-11-11T12:00:00.000Z');
+ assert.deepEqual(backup.eventIds,['ra-1','ra-2']);
+ assert.equal(backup.format,'raceatlas-season');
+ assert.equal(backup.version,1);
+ const imported=funcs.parseSeasonBackup(backup,new Set(['ra-2']));
+ assert.deepEqual(imported.ids,['ra-2']);
+ assert.equal(imported.unknown,1);
+ assert.throws(()=>funcs.parseSeasonBackup({format:'raceatlas-season',version:2,eventIds:['ra-1']},new Set(['ra-1'])));
+ assert.throws(()=>funcs.parseSeasonBackup({format:'raceatlas-season',version:1,eventIds:['../secrets']},new Set()));
+ assert.match(page,/\[\.\.\.new Set\(\[\.\.\.saved,\.\.\.ids\]\)\]/);
+ assert.match(page,/file\.size>256\*1024/);
+ assert.match(page,/id="raSeasonFile"/);
+});
