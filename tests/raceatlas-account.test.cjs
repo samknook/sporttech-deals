@@ -176,8 +176,8 @@ test('Account UI exposes explicit deletion, not an unverified browser admin acti
 
 test('Magic link callback retains QA preview access while public accounts are available',()=>{
  assert.match(moduleCode,/previewActive=cfg\.previewEnabled===true&&new URLSearchParams/);
- assert.match(moduleCode,/callback\.searchParams\.set\('ra_account_preview','1'\)/);
- assert.match(moduleCode,/emailRedirectTo:callback\.toString\(\)/);
+ assert.match(moduleCode,/url\.searchParams\.set\('ra_account_preview','1'\)/);
+ assert.match(moduleCode,/emailRedirectTo:callbackUrl\(\)/);
  assert.match(config,/enabled:true/);
 });
 
@@ -186,7 +186,7 @@ test('Account browser SDK uses the documented Supabase CDN and exposes useful si
  assert.doesNotMatch(moduleCode,/dist\/umd\/supabase\.min\.js/);
  assert.match(moduleCode,/const formatAuthError=error/);
  assert.match(moduleCode,/const callbackError=authErrorParams\.get\('error_description'\)/);
- assert.match(moduleCode,/callback\.searchParams\.set\('ra_account_preview','1'\)/);
+ assert.match(moduleCode,/url\.searchParams\.set\('ra_account_preview','1'\)/);
 });
 
 test('Supabase SDK falls back to a second supported CDN if the primary is blocked',()=>{
@@ -207,4 +207,18 @@ test('Marketing permission is separate, revocable and off by default',()=>{
  assert.match(privacy,/Commerciële e-mails/);
  assert.match(privacy,/standaard uit/);
  assert.match(privacy,/Mijn seizoen/);
+});
+
+test('Email and password sign-up, login and reset are available without creating duplicate profiles',()=>{
+ assert.match(moduleCode,/auth\.signUp\(\{email:address,password:password\.value/);
+ assert.match(moduleCode,/auth\.signInWithPassword\(\{email:address,password:password\.value\}/);
+ assert.match(moduleCode,/auth\.resetPasswordForEmail\(address,\{redirectTo:callbackUrl\(true\)\}/);
+ assert.match(moduleCode,/auth\.updateUser\(\{password:password\.value\}\)/);
+ assert.match(moduleCode,/auth\.signInWithOtp/);
+ assert.match(moduleCode,/shouldCreateUser:false/);
+ assert.match(moduleCode,/minLength=12/);
+ assert.match(moduleCode,/password\.value!==confirm\.value/);
+ assert.match(moduleCode,/function renderPasswordSettings\(\)/);
+ assert.match(moduleCode,/event==='PASSWORD_RECOVERY'/);
+ assert.match(moduleCode,/ra_password_reset/);
 });
