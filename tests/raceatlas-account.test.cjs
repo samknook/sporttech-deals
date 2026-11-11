@@ -82,10 +82,10 @@ test('Late cloud responses cannot restore a logged-out or switched account',()=>
 test('Unsynced changes require an explicit logout decision',()=>{
   assert.match(moduleCode,/if\(\(saving\|\|pending\.size\)&&!window\.confirm\(/);
   assert.match(moduleCode,/Niet alle wijzigingen zijn gesynchroniseerd/);
-  assert.match(moduleCode,/authVersion\+\+;pending\.clear\(\);cloudEvents=\[\];alertPrefs\.clear\(\);user=null;mode='local';savedApi\(\)\.useGuest\(\)/);
+  assert.match(moduleCode,/authVersion\+\+;pending\.clear\(\);cloudEvents=\[\];alertPrefs\.clear\(\);user=null;mode='local';marketingPref=\{email_opt_in:false,consented_at:null,revoked_at:null\};savedApi\(\)\.useGuest\(\)/);
 });
 test('Account lookup errors clear stale cloud data from shared device',()=>{
-  assert.match(moduleCode,/catch\{authVersion\+\+;pending\.clear\(\);cloudEvents=\[\];alertPrefs\.clear\(\);user=null;mode='local';savedApi\(\)\.useGuest\(\);showAuth\(\)/);
+  assert.match(moduleCode,/catch\{authVersion\+\+;pending\.clear\(\);cloudEvents=\[\];alertPrefs\.clear\(\);user=null;mode='local';marketingPref=\{email_opt_in:false,consented_at:null,revoked_at:null\};savedApi\(\)\.useGuest\(\);showAuth\(\)/);
 });
 
 test('Configured accounts are discoverable with secure backend credentials',()=>{
