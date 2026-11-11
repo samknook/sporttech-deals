@@ -168,7 +168,11 @@ async function test(){
   await page.locator('#raAccount').waitFor({state:'visible',timeout:12000});
   assert.equal(await page.locator('#raAccount input[type="email"]').isVisible(),true);
   assert.equal(await page.locator('#raAccount input[type="email"]').getAttribute('required'),'');
-  assert.match(await page.locator('#raAccount').innerText(),/Maak account \/ log in/);
+  assert.match(await page.locator('#raAccount').innerText(),/Registreren/);
+  assert.equal(await page.locator('#raAccount input[type="password"]').isVisible(),true);
+  await page.locator('#raAccount button[data-ra-auth-mode="signup"]').click();
+  assert.match(await page.locator('#raAccount').innerText(),/Maak gratis account/);
+  assert.equal(await page.locator('#raAccount input[type="password"]').isVisible(),true);
   await page.locator('#raMobileExplore').click();
   assert.equal(await page.locator('#raAccountCta').isVisible(),true);
   await page.locator('#raAccountCta').click();
