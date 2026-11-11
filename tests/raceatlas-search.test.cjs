@@ -136,3 +136,41 @@ test('Mobile bottom navigation is wired to event discovery, filters and saved ra
  assert.match(css,/\.raMobileNav/);
  assert.match(css,/safe-area-inset-bottom/);
 });
+
+test('Personal recommendations are based on genuinely verified dates and respect sports and spacing',()=>{
+ const fn=new Function('EVENTS',
+  sourceFunction('localIsoDate')+';'+sourceFunction('distanceHint')+';'+sourceFunction('recommendedSeasonEvents')+';return recommendedSeasonEvents')(
+  [
+   {id:'ra-1000',date:'2027-04-18',dateEvidence:'official',name:'A Run',sport:'Hardlopen',distance:'21,1 km',country:'Nederland',region:'Noord-Holland'},
+   {id:'ra-1001',date:'2027-06-20',dateEvidence:'official',name:'B Run',sport:'Hardlopen',distance:'21 km',country:'Nederland',region:'Noord-Holland'},
+   {id:'ra-1002',date:'2027-06-21',dateEvidence:'official',name:'C Run',sport:'Hardlopen',distance:'21 km',country:'Nederland',region:'Noord-Holland'},
+   {id:'ra-1003',date:'2027-05-18',dateEvidence:'historical_month',name:'Unconfirmed',sport:'Hardlopen',distance:'21 km'},
+   {id:'ra-1004',date:'2027-06-20',dateEvidence:'official',name:'Bike',sport:'Fietsen',distance:'100 km'}
+  ]);
+ const my=[{id:'my-1',date:'2027-06-20',dateEvidence:'official',name:'My race',sport:'Hardlopen',distance:'21,1 km',country:'Nederland',region:'Noord-Holland'}];
+ const picks=fn(my,new Date(2026,10,11));
+ assert.equal(picks[0].id,'ra-1000');
+ assert.equal(picks.some(e=>e.id==='ra-1003'),false);
+ assert.equal(picks.some(e=>e.id==='ra-1004'),false);
+ assert.equal(picks[0].recommendReason,'Dezelfde sport als jouw seizoen');
+});
+test('Registration monitor never claims open-now from a bare event link',()=>{
+ const insight=new Function(sourceFunction('dateLabel')+';'+sourceFunction('registrationInsight')+';return registrationInsight')();
+ assert.match(insight({registrationUrl:'https://example.org'},'2026-11-11').title,/Inschrijfpagina vermeld/);
+ assert.equal(insight({registrationStatus:'mixed',registrationStatusNote:'Half uitverkocht'},'2026-11-11').kind,'attention');
+ assert.match(insight({registrationEndDate:'2026-11-18'},'2026-11-11').title,/over 7 dagen/);
+ assert.match(insight({registrationDate:'2027-05-01'},'2026-11-11').title,/inschrijfopening/);
+ assert.equal(insight({},'2026-11-11').kind,'unknown');
+ assert.match(page,/id="raRegistrationList"/);
+ assert.match(page,/function renderRegistrationWatch/);
+});
+test('Personal season shows next officially confirmed race without treating estimates as exact dates',()=>{
+ const milestone=new Function(sourceFunction('upcomingSeasonMilestone')+';return upcomingSeasonMilestone')();
+ const items=[{id:'estimate',date:'2027-02-10',dateEvidence:'historical_month'},{id:'real',date:'2027-04-18',dateEvidence:'official'}];
+ const next=milestone(items,'2027-04-10');
+ assert.equal(next.event.id,'real');
+ assert.equal(next.days,8);
+ assert.equal(milestone([{id:'estimate',date:'2027-02-10',dateEvidence:'historical_month'}],'2027-01-01'),null);
+ assert.match(page,/id="raNextRace"/);
+ assert.match(page,/id="raSeasonMilestone"/);
+});
