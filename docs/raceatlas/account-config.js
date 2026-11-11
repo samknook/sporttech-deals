@@ -1,5 +1,5 @@
 // RaceAtlas browser-only Supabase project configuration.
-// Only browser-safe publishable credentials are exposed here. Never use service_role.
+// Only browser-safe publishable credentials are exposed here. Never use privileged server credentials.
 // Public account UI is enabled; Auth redirect allowlist and SMTP delivery still require
 // an independent live magic-link smoke test before declaring end-to-end email login verified.
 window.RACEATLAS_ACCOUNT_CONFIG={
