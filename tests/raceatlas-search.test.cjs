@@ -49,14 +49,14 @@ test('Missing source links are never silently replaced by generic calendars',()=
  const fn=sourceFunction('source');
  assert.match(fn,/e\.source\|\|null/);
  const card=page.slice(page.indexOf('function eventCard(e)'),page.indexOf('function renderCards('));
- assert.match(card,/raSourceMissing/);
+ assert.doesNotMatch(card,/raSourceMissing/); // Sources belong in details, not on overview cards.
  assert.match(card,/eventUrl\?/);
  assert.doesNotMatch(fn,/fietssport\.nl|triathlonbond\.nl|hardlopen\.nl/);
 });
 test('Data-quality summary is derived from records and source evidence',()=>{
  assert.match(page,/id="raQualitySummary"/);
  assert.match(page,/function renderQualitySummary/);
- assert.match(page,/Bron ontbreekt/);
+ assert.match(page,/Bron ontbreekt/); // Quality summary counts missing source evidence, without listing it on cards.
  assert.match(detail,/specifieke bronlink/);
 });
 test('Registration-page filter only matches an actual registration link',()=>{
