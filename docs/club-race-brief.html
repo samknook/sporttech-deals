@@ -275,7 +275,7 @@ function updatePortalAvailability(){
 el('organizer-review').addEventListener('change',updatePortalAvailability);
 el('club-form').addEventListener('input',event=>{
  // Toggling review itself must not cancel the organizer's explicit approval.
- if(event.target?.id==='update-review')return;
+ if(event.target?.id==='update-review'||event.target?.id==='source-checked-on')return;
  el('update-review').checked=false;
  refreshTemplateChanges();
  el('organizer-review').checked=false;
