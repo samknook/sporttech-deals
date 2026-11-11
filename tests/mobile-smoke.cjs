@@ -98,6 +98,8 @@ async function test(){
   assert.equal(await page.locator('#brief-status').getAttribute('data-ok'),'true');
   await page.locator('.tz-lang-switch button[lang="en"]').click();
   await page.waitForURL(/club-race-brief\.html.*lang=en/);
+  // Navigation reloads the form; re-enter the official reference before checking clean English validation.
+  await page.locator('#guide').fill('https://example.org/athlete-guide');
   await page.locator('#club-form button[type="submit"]').click();
   assert.match(await page.locator('#brief-status').innerText(),/No obvious scheduling contradictions/);
   // Participant export stays blocked until explicit organizer confirmation.
