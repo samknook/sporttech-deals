@@ -10,7 +10,7 @@ const savedApi=()=>window.RaceAtlasSaved;
 const el=(tag,txt)=>{const n=document.createElement(tag);if(txt!==undefined)n.textContent=txt;return n};
 const status=el('p',''),wrapper=el('section'),title=el('h2',previewActive?'Mijn RaceAtlas-account · testversie':'Mijn RaceAtlas-account'),content=el('div');
 wrapper.id='raAccount';wrapper.className='raAccount';
-wrapper.append(title,content,status);
+wrapper.append(title,status,content);
 const where=document.querySelector('#savedPage .sectionHeading');
 if(!where)return;
 where.insertAdjacentElement('afterend',wrapper);
@@ -24,7 +24,22 @@ let marketingPref={email_opt_in:false,consented_at:null,revoked_at:null};
 let marketingBusy=false;
 let marketingReady=false;
 const setStatus=text=>{status.textContent=text;status.setAttribute('role','status')};
-const formatAuthError=error=>{const code=String(error?.code||'').toLowerCase();if(/rate.limit|over_email_send_rate_limit|email.rate/.test(code))return 'Je vraagt te snel een inloglink aan. Probeer over ongeveer een minuut opnieuw.';if(/email|smtp|mailer|sending/.test(code))return 'De inlogmail kon niet worden verzonden. Controleer de e-mailinstellingen in Supabase.';if(/redirect|validation/.test(code))return 'Het terugkeeradres van RaceAtlas is nog niet toegestaan in Supabase Auth.';return 'De inlogaanvraag is mislukt. Controleer de Supabase Auth-instellingen en probeer opnieuw.'};
+const formatAuthError=(error,action='login')=>{
+ const code=String(error?.code||'').toLowerCase(),message=String(error?.message||'').toLowerCase();
+ if(code==='over_email_send_rate_limit'||/email rate limit exceeded/.test(message))return 'De e-maildienst van RaceAtlas heeft de verzendlimiet bereikt. Nieuwe inlog- en herstelmails worden voorlopig door Supabase geweigerd. Probeer niet steeds opnieuw; voor meer capaciteit moet de beheerder een eigen SMTP-verzender instellen.';
+ if(/over_request_rate_limit|too_many_requests/.test(code)||error?.status===429)return 'Te veel aanvragen achter elkaar. Probeer later opnieuw, zonder steeds opnieuw op de knop te drukken.';
+ if(code==='otp_disabled'||/signups not allowed for otp/.test(message))return 'Inloglinks zijn momenteel uitgeschakeld in de accountinstellingen. Gebruik je wachtwoord of neem contact op met RaceAtlas.';
+ if(code==='invalid_credentials'||/invalid login credentials/.test(message))return 'E-mailadres of wachtwoord klopt niet. Gebruik het wachtwoord dat je eerder hebt ingesteld. Heb je alleen met een e-maillink ingelogd? Stel dan eerst vanuit een bestaande ingelogde sessie een wachtwoord in.';
+ if(code==='email_not_confirmed')return 'Bevestig eerst je e-mailadres via de bevestigingsmail. Vraag niet onnodig meerdere e-mails aan.';
+ if(code==='user_already_exists'||/already registered/.test(message))return 'Voor dit e-mailadres bestaat al een account. Kies Inloggen in plaats van Registreren.';
+ if(code==='weak_password')return 'Het gekozen wachtwoord voldoet niet aan de veiligheidseisen. Gebruik minimaal 12 tekens en kies een uniek wachtwoord.';
+ if(/email|smtp|mailer|sending/.test(code))return 'De e-maildienst is niet beschikbaar. Probeer niet herhaaldelijk opnieuw; neem contact op met RaceAtlas.';
+ if(/redirect|validation/.test(code))return 'De aanmeldlink verwijst naar een niet-toegestaan terugkeeradres. RaceAtlas moet de Auth-redirectinstellingen controleren.';
+ return action==='login'?'Inloggen is mislukt. Controleer je gegevens en probeer één keer opnieuw.':'De accountaanvraag is mislukt. Probeer later opnieuw of neem contact op.';
+};
+let mailBlockUntil=0;
+const checkMailBlock=()=>{if(Date.now()<mailBlockUntil){setStatus('E-mailaanvragen zijn tijdelijk geblokkeerd na een verzendlimiet. Vermijd herhaalde pogingen; je kunt gewoon met je bestaande wachtwoord inloggen.');return true}return false};
+const registerMailError=error=>{if(String(error?.code||'').toLowerCase()==='over_email_send_rate_limit'||/email rate limit exceeded/i.test(error?.message||''))mailBlockUntil=Date.now()+10*60*1000;};
 const accountNav=el('button','Mijn account');
 accountNav.id='raAccountNav';accountNav.type='button';accountNav.className='raAccountNav';
 accountNav.addEventListener('click',()=>{document.getElementById('navSaved')?.click();wrapper.scrollIntoView({behavior:'smooth',block:'start'})});
@@ -39,7 +54,7 @@ function callbackUrl(recovery=false){
 }
 function makePasswordInput(autocomplete){
  const input=el('input');
- input.type='password';input.required=true;input.minLength=12;input.maxLength=256;input.autocomplete=autocomplete;input.placeholder='Wachtwoord (minimaal 12 tekens)';
+ input.type='password';input.required=true;input.minLength=autocomplete==='current-password'?1:12;input.maxLength=256;input.autocomplete=autocomplete;input.placeholder='Wachtwoord (minimaal 12 tekens)';
  input.setAttribute('aria-label','Wachtwoord');
  return input;
 }
@@ -51,7 +66,7 @@ function addPasswordToggle(input,form){
 }
 function showAuth(){
  content.replaceChildren();
- appendNotice('Bewaar je wedstrijden op al je apparaten. Maak gratis een account met een wachtwoord, of gebruik de bestaande veilige inloglink.');
+ appendNotice('Heb je al een RaceAtlas-account? Kies Inloggen en gebruik je bestaande wachtwoord. Registreren is alleen voor nieuwe accounts. E-maillinks en wachtwoordherstel kunnen tijdelijk beperkt zijn door de mailprovider.');
  const tabs=el('div');tabs.className='raAuthTabs';tabs.setAttribute('role','group');tabs.setAttribute('aria-label','Inlogmethode');
  const fields=el('div');
  for(const [kind,title] of [['login','Inloggen'],['signup','Registreren'],['magic','Inloglink']]){
@@ -66,12 +81,13 @@ function showAuth(){
   form.append(email);
   let password=null;
   if(kind!=='magic'){password=makePasswordInput(kind==='signup'?'new-password':'current-password');form.append(password);addPasswordToggle(password,form)}
-  if(kind==='signup'){const help=el('p','Na registratie ontvang je mogelijk een e-mail om je adres te bevestigen. Marketingmails staan standaard uit.');form.append(help)}
+  if(kind==='signup'){const help=el('p','Alleen voor een nieuw account. Heb je eerder een e-maillink gebruikt, kies Inloggen; maak geen tweede account. Nieuwe registraties kunnen een bevestigingsmail vereisen.');form.append(help)}
   submit.type='submit';form.append(submit);
   form.addEventListener('submit',async event=>{
    event.preventDefault();
    if(!client){setStatus('De accountdienst wordt nog geladen. Probeer het opnieuw zodra deze beschikbaar is.');return}
-   if(password&&password.value.length<12){setStatus('Gebruik een wachtwoord van minimaal 12 tekens.');return}
+   if(kind==='signup'&&password&&password.value.length<12){setStatus('Gebruik voor nieuwe accounts een wachtwoord van minimaal 12 tekens.');return}
+   if(kind!=='login'&&checkMailBlock())return;
    submit.disabled=true;setStatus('Accountaanvraag verwerken…');
    try{
     const address=email.value.trim();
@@ -84,7 +100,7 @@ function showAuth(){
     else if(kind==='login')setStatus('Je bent ingelogd. Je kunt nu je wedstrijdseizoen openen.');
     else setStatus('Als er een account bestaat, ontvang je een inloglink. Controleer je inbox en spam.');
     if(password)password.value='';
-   }catch(error){setStatus(formatAuthError(error))}
+   }catch(error){registerMailError(error);setStatus(formatAuthError(error,kind))}
    finally{submit.disabled=false}
   });
   fields.append(form);
@@ -93,12 +109,13 @@ function showAuth(){
     const address=email.value.trim();
     if(!email.checkValidity()){email.reportValidity();return}
     if(!client){setStatus('Accountdienst wordt nog geladen.');return}
+    if(checkMailBlock())return;
     forgot.disabled=true;
     try{
      const {error}=await client.auth.resetPasswordForEmail(address,{redirectTo:callbackUrl(true)});
      if(error)throw error;
      setStatus('Als het e-mailadres bekend is, ontvang je een link om een nieuw wachtwoord in te stellen.');
-    }catch(err){setStatus(formatAuthError(err))}finally{forgot.disabled=false}
+    }catch(err){registerMailError(err);setStatus(formatAuthError(err,'recovery'))}finally{forgot.disabled=false}
    });forgot.className='raForgot';fields.append(forgot);
   }
  }
@@ -456,7 +473,7 @@ window.addEventListener('raceatlas:saved-change',e=>{
 });
 const style=el('style');
 style.textContent='.raAccount{background:#fff;border:1px solid #dce7de;border-radius:16px;padding:18px;margin:16px 0 22px}.raAccount h2{font-size:19px;margin:0 0 10px}.raAccount p{font-size:13px;line-height:1.5;color:#506558}.raAccount form{display:flex;flex-wrap:wrap;gap:8px}.raAccount input{min-height:44px;min-width:210px;flex:1;border-radius:9px;border:1px solid #a9bfb0;padding:10px}.raAccount button{border:1px solid #b7ceb9;border-radius:9px;background:#eaf9db;color:#1a3b29;font-weight:750;padding:11px;min-height:44px;margin:4px 7px 4px 0;cursor:pointer}.raAccountStatuses{margin:14px 0}.raAccountStatuses label{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #edf1ed;padding:8px 0;font-size:13px}.raAccountStatuses select{min-height:44px;max-width:180px;width:48%;border:1px solid #b7ceb9;border-radius:8px;padding:8px;background:#fff}@media(max-width:520px){.raAccountStatuses label{align-items:stretch;flex-direction:column}.raAccountStatuses select{max-width:none;width:100%}}';
-style.textContent+='.raAuthTabs{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 15px}.raAuthTabs button{background:#f2f6f0}.raAuthTabs button.selected{background:#c6ff46;border-color:#8bbf48}.raAuthForm{display:flex;flex-direction:column;align-items:stretch;max-width:460px;gap:9px}.raAuthForm input{width:100%;min-width:0}.raAuthForm button{align-self:start}.raPasswordToggle{display:flex;align-items:center;gap:8px;font-size:12px}.raPasswordToggle input{width:18px!important;min-width:18px;min-height:18px;flex:none}.raForgot{background:transparent!important;text-decoration:underline;border:0!important;padding:8px!important}.raPasswordSettings{margin:18px 0;border-top:1px solid #e3e9e3;padding-top:14px}.raMarketing{border-top:1px solid #dde9dd;margin:16px 0;padding-top:14px}.raMarketing label{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:650}.raMarketing label input{width:18px;height:18px;min-width:18px;flex:none;accent-color:#317845}.raMarketing a{display:inline-block;margin:10px 0;font-size:12px}.raAccount form button{background:#c6ff46;color:#14251e;border:0;padding:11px 18px}.raAccountNav{margin-left:5px}.raAccount{scroll-margin-top:24px}@media(max-width:660px){.raAccountNav{display:none}}.raAccountAlerts{margin:20px 0}.raAccountAlerts h3{font-size:17px;margin:0 0 8px}.raAlertItem{border:1px solid #dde9dd;border-radius:10px;margin:10px 0;padding:12px}.raAlertOptions{display:grid;gap:8px;margin-top:10px}.raAlertOptions label{display:flex;gap:9px;align-items:center;font-size:13px}.raAlertOptions input{width:18px;height:18px;accent-color:#317845}';
+style.textContent+='.raAccount>p[role=status]{min-height:18px;margin:10px 0;font-size:13px;color:#a23b20;font-weight:700}.raAuthTabs{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 15px}.raAuthTabs button{background:#f2f6f0}.raAuthTabs button.selected{background:#c6ff46;border-color:#8bbf48}.raAuthForm{display:flex;flex-direction:column;align-items:stretch;max-width:460px;gap:9px}.raAuthForm input{width:100%;min-width:0}.raAuthForm button{align-self:start}.raPasswordToggle{display:flex;align-items:center;gap:8px;font-size:12px}.raPasswordToggle input{width:18px!important;min-width:18px;min-height:18px;flex:none}.raForgot{background:transparent!important;text-decoration:underline;border:0!important;padding:8px!important}.raPasswordSettings{margin:18px 0;border-top:1px solid #e3e9e3;padding-top:14px}.raMarketing{border-top:1px solid #dde9dd;margin:16px 0;padding-top:14px}.raMarketing label{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:650}.raMarketing label input{width:18px;height:18px;min-width:18px;flex:none;accent-color:#317845}.raMarketing a{display:inline-block;margin:10px 0;font-size:12px}.raAccount form button{background:#c6ff46;color:#14251e;border:0;padding:11px 18px}.raAccountNav{margin-left:5px}.raAccount{scroll-margin-top:24px}@media(max-width:660px){.raAccountNav{display:none}}.raAccountAlerts{margin:20px 0}.raAccountAlerts h3{font-size:17px;margin:0 0 8px}.raAlertItem{border:1px solid #dde9dd;border-radius:10px;margin:10px 0;padding:12px}.raAlertOptions{display:grid;gap:8px;margin-top:10px}.raAlertOptions label{display:flex;gap:9px;align-items:center;font-size:13px}.raAlertOptions input{width:18px;height:18px;accent-color:#317845}';
 document.head.append(style);
 // Render the email form immediately; an unavailable CDN must never leave a blank account screen.
 showAuth();
