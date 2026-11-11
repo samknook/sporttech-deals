@@ -52,7 +52,7 @@ prefillOrganizerContact();
 function correctionText(){
  if($('correctionFields').hidden)return '';
  const g=id=>$(id).value.trim();
- return '\n\nCorrectie evenement-ID: '+(g('correctionEventId')||'Niet opgegeven')+
+ return '\n\nRaceAtlas evenement-ID: '+(g('correctionEventId')||'Niet opgegeven')+
  '\nTe corrigeren veld: '+g('correctionField')+
  '\nNieuwe datum (indien relevant): '+(g('correctionDate')||'Niet opgegeven')+
  '\nInschrijfstatus: '+(g('correctionStatus')||'Niet opgegeven')+
