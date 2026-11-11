@@ -140,7 +140,7 @@ async function test(){
   assert.equal(await page.locator('#download-update').isDisabled(),true);
   await page.locator('#source-checked-on').fill('2026-11-05');
   await page.locator('#update-review').check();
-  assert.equal(await page.locator('#download-update').isEnabled(),true);
+  assert.equal(await page.locator('#download-update').isEnabled(),true,await page.locator('#update-status').innerText());
   assert.equal(await page.locator('#download-update-html').isEnabled(),true);
   await page.locator('#waveC').fill('08:05');
   assert.equal(await page.locator('#download-update').isDisabled(),true);
