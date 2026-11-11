@@ -202,3 +202,31 @@ test('Account-free season backups are versioned, deduplicated, strict and non-de
  assert.match(page,/file\.size>256\*1024/);
  assert.match(page,/id="raSeasonFile"/);
 });
+
+test('Monthly season planner separates confirmed dates, estimated months and unknown dates',()=>{
+ const grouping=new Function(sourceFunction('isConfirmedEventDate')+';'+sourceFunction('sortKey')+';'+sourceFunction('groupSeasonByMonth')+';return groupSeasonByMonth')();
+ const grouped=grouping([
+  {id:'a',name:'Confirmed',date:'2027-06-20',dateEvidence:'official'},
+  {id:'b',name:'Estimated',expectedMonth:'06',expectedYear:'2027'},
+  {id:'c',name:'Unknown'}
+ ]);
+ assert.equal(grouped.length,2);
+ assert.equal(grouped[0].key,'2027-06');
+ assert.equal(grouped[0].confirmed,1);
+ assert.equal(grouped[0].uncertain,1);
+ assert.equal(grouped[1].key,'9999-99');
+ assert.equal(grouped[1].uncertain,1);
+ assert.match(page,/id="raMonthPlannerList"/);
+ assert.match(page,/Maand verwacht; exacte datum onbekend/);
+ assert.match(page,/renderMonthPlanner\(myEvents\)/);
+});
+test('Account-free season goals are bounded, persisted locally and tied to saved events',()=>{
+ assert.match(page,/GOAL_STORE='raceatlas-season-target-v1'/);
+ assert.match(page,/function readSeasonGoal\(\)/);
+ assert.match(page,/Number\.isInteger\(n\)&&n>=1&&n<=50/);
+ assert.match(page,/localStorage\.setItem\(GOAL_STORE,String\(n\)\)/);
+ assert.match(page,/id="raSeasonTarget"/);
+ assert.match(page,/id="raGoalProgress"/);
+ assert.match(page,/renderSeasonGoals\(myEvents\)/);
+ assert.match(page,/items\.filter\(isConfirmedEventDate\)\.length/);
+});
