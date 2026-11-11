@@ -80,6 +80,7 @@ function detail(e,fromLink=false){
  link.searchParams.set('onderwerp','Evenementgegevens aanpassen');
  link.searchParams.set('event',e.name);
  link.searchParams.set('eventId',e.id);
+ if(isValidUrl(e.officialEventUrl||e.registrationInfoUrl||e.source))link.searchParams.set('bron',e.officialEventUrl||e.registrationInfoUrl||e.source);
  window.location.href=link.toString();
  };actions.append(report);
  dlg.append(actions);overlay.append(dlg);overlay.addEventListener('click',ev=>{if(ev.target===overlay)closeDialog()});document.body.append(overlay);close.focus();
