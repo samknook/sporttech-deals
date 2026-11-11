@@ -39,7 +39,9 @@ function showAuth(){
  submit.type='submit';
  form.append(email,submit);
  form.addEventListener('submit',async event=>{
-  event.preventDefault();submit.disabled=true;
+  event.preventDefault();
+  if(!client){setStatus('De accountdienst wordt nog geladen. Probeer het over enkele seconden opnieuw.');return}
+  submit.disabled=true;
   setStatus('Inloglink aanvragen…');
   try{
    const callback=new URL(location.pathname,location.origin);
@@ -381,6 +383,8 @@ const style=el('style');
 style.textContent='.raAccount{background:#fff;border:1px solid #dce7de;border-radius:16px;padding:18px;margin:16px 0 22px}.raAccount h2{font-size:19px;margin:0 0 10px}.raAccount p{font-size:13px;line-height:1.5;color:#506558}.raAccount form{display:flex;flex-wrap:wrap;gap:8px}.raAccount input{min-height:44px;min-width:210px;flex:1;border-radius:9px;border:1px solid #a9bfb0;padding:10px}.raAccount button{border:1px solid #b7ceb9;border-radius:9px;background:#eaf9db;color:#1a3b29;font-weight:750;padding:11px;min-height:44px;margin:4px 7px 4px 0;cursor:pointer}.raAccountStatuses{margin:14px 0}.raAccountStatuses label{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #edf1ed;padding:8px 0;font-size:13px}.raAccountStatuses select{min-height:44px;max-width:180px;width:48%;border:1px solid #b7ceb9;border-radius:8px;padding:8px;background:#fff}@media(max-width:520px){.raAccountStatuses label{align-items:stretch;flex-direction:column}.raAccountStatuses select{max-width:none;width:100%}}';
 style.textContent+='.raMarketing{border-top:1px solid #dde9dd;margin:16px 0;padding-top:14px}.raMarketing label{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:650}.raMarketing label input{width:18px;height:18px;min-width:18px;flex:none;accent-color:#317845}.raMarketing a{display:inline-block;margin:10px 0;font-size:12px}.raAccount form button{background:#c6ff46;color:#14251e;border:0;padding:11px 18px}.raAccountNav{margin-left:5px}.raAccount{scroll-margin-top:24px}@media(max-width:660px){.raAccountNav{display:none}}.raAccountAlerts{margin:20px 0}.raAccountAlerts h3{font-size:17px;margin:0 0 8px}.raAlertItem{border:1px solid #dde9dd;border-radius:10px;margin:10px 0;padding:12px}.raAlertOptions{display:grid;gap:8px;margin-top:10px}.raAlertOptions label{display:flex;gap:9px;align-items:center;font-size:13px}.raAlertOptions input{width:18px;height:18px;accent-color:#317845}';
 document.head.append(style);
+// Render the email form immediately; an unavailable CDN must never leave a blank account screen.
+showAuth();
 const script=el('script');
 script.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
 script.onload=async()=>{
