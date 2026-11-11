@@ -15,7 +15,7 @@ test('Account UI exposes public login with browser-safe publishable credentials'
   assert.match(moduleCode,/if\(cfg\.enabled!==true&&!previewActive\)return/);
   assert.match(moduleCode,/ra_account_preview/);
   assert.match(html,/src="account-config\.js" defer/);
-  assert.match(html,/src="account\.js" defer/);
+  assert.match(html,/src="account\.js(?:\?v=[^"]+)?" defer/);
 });
 test('Account code and config are syntactically valid',()=>{
   new vm.Script(moduleCode);
