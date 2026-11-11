@@ -64,11 +64,11 @@ test('RaceAtlas event calendar retains pricing source and placeholders',()=>{
  const details=fs.readFileSync(path.join(__dirname,'..','docs','raceatlas','details.js'),'utf8');
  assert.match(details,/Inschrijfprijs/);assert.match(details,/Opening inschrijving/);assert.match(details,/Bron inschrijfgegevens/);
  const egmond=data.find(x=>x.name==='Egmond Halve Marathon');
- assert.equal(egmond.registrationWindow,'medio augustus 2026');
+ assert.equal(egmond.registrationDate,'2026-07-27');assert.equal(egmond.preregistrationDate,'2026-07-13');
  const rotterdam=data.find(x=>x.name==='Marathon Rotterdam');
  assert.equal(rotterdam.registrationDate,'2026-11-04');
  const ronde=data.find(x=>x.name==='Ronde van Noord-Holland');
- assert.match(ronde.registrationOpenInfo,/editie 2026/);
+ assert.match(ronde.registrationOpenInfo,/geen eenduidig bevestigde inschrijfopening/);
  assert.match(page,/isDuathlon/);
  const styles=fs.readFileSync(path.join(__dirname,'..','docs','raceatlas','sport-edition.css'),'utf8');
  assert.match(styles,/pexels-photo-18457222/);
