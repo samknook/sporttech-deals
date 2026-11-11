@@ -31,29 +31,103 @@ accountNav.addEventListener('click',()=>{document.getElementById('navSaved')?.cl
 document.querySelector('.navright')?.append(accountNav);
 const button=(label,action)=>{const b=el('button',label);b.type='button';b.addEventListener('click',action);return b};
 function appendNotice(text){content.append(el('p',text))}
+function callbackUrl(recovery=false){
+ const url=new URL(location.pathname,location.origin);
+ if(previewActive)url.searchParams.set('ra_account_preview','1');
+ if(recovery)url.searchParams.set('ra_password_reset','1');
+ return url.toString();
+}
+function makePasswordInput(autocomplete){
+ const input=el('input');
+ input.type='password';input.required=true;input.minLength=12;input.maxLength=256;input.autocomplete=autocomplete;input.placeholder='Wachtwoord (minimaal 12 tekens)';
+ input.setAttribute('aria-label','Wachtwoord');
+ return input;
+}
+function addPasswordToggle(input,form){
+ const label=el('label'),toggle=el('input'),text=el('span','Toon wachtwoord');
+ label.className='raPasswordToggle';toggle.type='checkbox';
+ toggle.addEventListener('change',()=>{input.type=toggle.checked?'text':'password'});
+ label.append(toggle,text);form.append(label);
+}
 function showAuth(){
  content.replaceChildren();
- appendNotice('Maak gratis een account met je e-mailadres en ontvang een veilige inloglink. Daarna kun je jouw wedstrijdseizoen op meerdere apparaten bewaren. Zonder account blijven favorieten op dit apparaat.');
- const form=el('form'),email=el('input'),submit=el('button','Maak account / log in');
- email.type='email';email.required=true;email.autocomplete='email';email.placeholder='E-mailadres';email.setAttribute('aria-label','E-mailadres');
- submit.type='submit';
- form.append(email,submit);
+ appendNotice('Bewaar je wedstrijden op al je apparaten. Maak gratis een account met een wachtwoord, of gebruik de bestaande veilige inloglink.');
+ const tabs=el('div');tabs.className='raAuthTabs';tabs.setAttribute('role','group');tabs.setAttribute('aria-label','Inlogmethode');
+ const fields=el('div');
+ for(const [kind,title] of [['login','Inloggen'],['signup','Registreren'],['magic','Inloglink']]){
+  const b=button(title,()=>renderMethod(kind));b.dataset.raAuthMode=kind;tabs.append(b);
+ }
+ content.append(tabs,fields);
+ function renderMethod(kind){
+  fields.replaceChildren();
+  for(const b of tabs.querySelectorAll('button')){const active=b.dataset.raAuthMode===kind;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',String(active))}
+  const form=el('form'),email=el('input'),submit=el('button',kind==='signup'?'Maak gratis account':kind==='magic'?'Stuur inloglink':'Inloggen');
+  form.className='raAuthForm';email.type='email';email.required=true;email.autocomplete='email';email.placeholder='E-mailadres';email.setAttribute('aria-label','E-mailadres');
+  form.append(email);
+  let password=null;
+  if(kind!=='magic'){password=makePasswordInput(kind==='signup'?'new-password':'current-password');form.append(password);addPasswordToggle(password,form)}
+  if(kind==='signup'){const help=el('p','Na registratie ontvang je mogelijk een e-mail om je adres te bevestigen. Marketingmails staan standaard uit.');form.append(help)}
+  submit.type='submit';form.append(submit);
+  form.addEventListener('submit',async event=>{
+   event.preventDefault();
+   if(!client){setStatus('De accountdienst wordt nog geladen. Probeer het opnieuw zodra deze beschikbaar is.');return}
+   if(password&&password.value.length<12){setStatus('Gebruik een wachtwoord van minimaal 12 tekens.');return}
+   submit.disabled=true;setStatus('Accountaanvraag verwerken…');
+   try{
+    const address=email.value.trim();
+    let result;
+    if(kind==='signup')result=await client.auth.signUp({email:address,password:password.value,options:{emailRedirectTo:callbackUrl()}});
+    else if(kind==='login')result=await client.auth.signInWithPassword({email:address,password:password.value});
+    else result=await client.auth.signInWithOtp({email:address,options:{emailRedirectTo:callbackUrl(),shouldCreateUser:false}});
+    if(result.error)throw result.error;
+    if(kind==='signup')setStatus(result.data?.session?'Je account is aangemaakt en je bent ingelogd.':'Controleer je e-mail om je registratie te bevestigen. Gebruik daarna Inloggen.');
+    else if(kind==='login')setStatus('Je bent ingelogd. Je kunt nu je wedstrijdseizoen openen.');
+    else setStatus('Als er een account bestaat, ontvang je een inloglink. Controleer je inbox en spam.');
+    if(password)password.value='';
+   }catch(error){setStatus(formatAuthError(error))}
+   finally{submit.disabled=false}
+  });
+  fields.append(form);
+  if(kind==='login'){
+   const forgot=button('Wachtwoord vergeten?',async()=>{
+    const address=email.value.trim();
+    if(!email.checkValidity()){email.reportValidity();return}
+    if(!client){setStatus('Accountdienst wordt nog geladen.');return}
+    forgot.disabled=true;
+    try{
+     const {error}=await client.auth.resetPasswordForEmail(address,{redirectTo:callbackUrl(true)});
+     if(error)throw error;
+     setStatus('Als het e-mailadres bekend is, ontvang je een link om een nieuw wachtwoord in te stellen.');
+    }catch(err){setStatus(formatAuthError(err))}finally{forgot.disabled=false}
+   });forgot.className='raForgot';fields.append(forgot);
+  }
+ }
+ renderMethod('login');
+ const privacy=el('p'),link=el('a','Privacy en e-mailvoorkeuren');link.href='privacy.html';
+ privacy.append('Geen marketingmails zonder aparte toestemming. ',link);content.append(privacy);
+}
+function renderPasswordSettings(){
+ if(!user)return;
+ const section=el('section');section.className='raPasswordSettings';
+ const heading=el('h3',new URLSearchParams(location.search).get('ra_password_reset')==='1'?'Nieuw wachtwoord instellen':'Wachtwoord instellen of wijzigen');
+ const help=el('p','Ook als je eerder met een inloglink bent begonnen, kun je hier een wachtwoord instellen voor hetzelfde account.');
+ const form=el('form'),password=makePasswordInput('new-password'),confirm=makePasswordInput('new-password'),submit=el('button','Wachtwoord opslaan');
+ confirm.placeholder='Herhaal je nieuwe wachtwoord';confirm.setAttribute('aria-label','Herhaal wachtwoord');
+ form.className='raAuthForm';form.append(password,confirm);addPasswordToggle(password,form);submit.type='submit';form.append(submit);
  form.addEventListener('submit',async event=>{
   event.preventDefault();
-  if(!client){setStatus('De accountdienst wordt nog geladen. Probeer het over enkele seconden opnieuw.');return}
+  if(password.value!==confirm.value){setStatus('De wachtwoorden zijn niet gelijk.');return}
+  if(password.value.length<12){setStatus('Gebruik minimaal 12 tekens.');return}
   submit.disabled=true;
-  setStatus('Inloglink aanvragen…');
   try{
-   const callback=new URL(location.pathname,location.origin);
-   if(previewActive)callback.searchParams.set('ra_account_preview','1');
-   const result=await client.auth.signInWithOtp({email:email.value.trim(),options:{emailRedirectTo:callback.toString()}});
-   if(result.error)throw result.error;
-   setStatus('Als de accountdienst je e-mail kan verzenden, ontvang je een eenmalige inloglink. Controleer je inbox en spam.');email.value='';
-  }catch(error){setStatus(formatAuthError(error))}
-  finally{submit.disabled=false}
+   const {error}=await client.auth.updateUser({password:password.value});if(error)throw error;
+   password.value='';confirm.value='';
+   const url=new URL(location.href);url.searchParams.delete('ra_password_reset');
+   history.replaceState(history.state,'',url.pathname+url.search+url.hash);
+   setStatus('Wachtwoord veilig opgeslagen. Je kunt voortaan met e-mailadres en wachtwoord inloggen.');
+  }catch(err){setStatus(formatAuthError(err))}finally{submit.disabled=false}
  });
- content.append(form);
- const privacy=el('p');const link=el('a','Privacy en e-mailvoorkeuren');link.href='privacy.html';privacy.append('Commerciële e-mails zijn optioneel en staan standaard uit. ',link);content.append(privacy);
+ section.append(heading,help,form);content.append(section);
 }
 async function readCloud(){
  const {data,error}=await client.from('raceatlas_saved_events').select('event_id,season_status').eq('user_id',user.id);
@@ -358,6 +432,7 @@ function showSignedIn(){
   content.append(button('Alleen cloudseizoen gebruiken',chooseCloud));
  }
  renderMarketingControls();
+ renderPasswordSettings();
  content.append(button('Uitloggen',disconnect));
  content.append(button('Verwijder mijn account definitief',deleteAccount));
 }
@@ -381,7 +456,7 @@ window.addEventListener('raceatlas:saved-change',e=>{
 });
 const style=el('style');
 style.textContent='.raAccount{background:#fff;border:1px solid #dce7de;border-radius:16px;padding:18px;margin:16px 0 22px}.raAccount h2{font-size:19px;margin:0 0 10px}.raAccount p{font-size:13px;line-height:1.5;color:#506558}.raAccount form{display:flex;flex-wrap:wrap;gap:8px}.raAccount input{min-height:44px;min-width:210px;flex:1;border-radius:9px;border:1px solid #a9bfb0;padding:10px}.raAccount button{border:1px solid #b7ceb9;border-radius:9px;background:#eaf9db;color:#1a3b29;font-weight:750;padding:11px;min-height:44px;margin:4px 7px 4px 0;cursor:pointer}.raAccountStatuses{margin:14px 0}.raAccountStatuses label{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #edf1ed;padding:8px 0;font-size:13px}.raAccountStatuses select{min-height:44px;max-width:180px;width:48%;border:1px solid #b7ceb9;border-radius:8px;padding:8px;background:#fff}@media(max-width:520px){.raAccountStatuses label{align-items:stretch;flex-direction:column}.raAccountStatuses select{max-width:none;width:100%}}';
-style.textContent+='.raMarketing{border-top:1px solid #dde9dd;margin:16px 0;padding-top:14px}.raMarketing label{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:650}.raMarketing label input{width:18px;height:18px;min-width:18px;flex:none;accent-color:#317845}.raMarketing a{display:inline-block;margin:10px 0;font-size:12px}.raAccount form button{background:#c6ff46;color:#14251e;border:0;padding:11px 18px}.raAccountNav{margin-left:5px}.raAccount{scroll-margin-top:24px}@media(max-width:660px){.raAccountNav{display:none}}.raAccountAlerts{margin:20px 0}.raAccountAlerts h3{font-size:17px;margin:0 0 8px}.raAlertItem{border:1px solid #dde9dd;border-radius:10px;margin:10px 0;padding:12px}.raAlertOptions{display:grid;gap:8px;margin-top:10px}.raAlertOptions label{display:flex;gap:9px;align-items:center;font-size:13px}.raAlertOptions input{width:18px;height:18px;accent-color:#317845}';
+style.textContent+='.raAuthTabs{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 15px}.raAuthTabs button{background:#f2f6f0}.raAuthTabs button.selected{background:#c6ff46;border-color:#8bbf48}.raAuthForm{display:flex;flex-direction:column;align-items:stretch;max-width:460px;gap:9px}.raAuthForm input{width:100%;min-width:0}.raAuthForm button{align-self:start}.raPasswordToggle{display:flex;align-items:center;gap:8px;font-size:12px}.raPasswordToggle input{width:18px!important;min-width:18px;min-height:18px;flex:none}.raForgot{background:transparent!important;text-decoration:underline;border:0!important;padding:8px!important}.raPasswordSettings{margin:18px 0;border-top:1px solid #e3e9e3;padding-top:14px}.raMarketing{border-top:1px solid #dde9dd;margin:16px 0;padding-top:14px}.raMarketing label{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:650}.raMarketing label input{width:18px;height:18px;min-width:18px;flex:none;accent-color:#317845}.raMarketing a{display:inline-block;margin:10px 0;font-size:12px}.raAccount form button{background:#c6ff46;color:#14251e;border:0;padding:11px 18px}.raAccountNav{margin-left:5px}.raAccount{scroll-margin-top:24px}@media(max-width:660px){.raAccountNav{display:none}}.raAccountAlerts{margin:20px 0}.raAccountAlerts h3{font-size:17px;margin:0 0 8px}.raAlertItem{border:1px solid #dde9dd;border-radius:10px;margin:10px 0;padding:12px}.raAlertOptions{display:grid;gap:8px;margin-top:10px}.raAlertOptions label{display:flex;gap:9px;align-items:center;font-size:13px}.raAlertOptions input{width:18px;height:18px;accent-color:#317845}';
 document.head.append(style);
 // Render the email form immediately; an unavailable CDN must never leave a blank account screen.
 showAuth();
@@ -393,7 +468,8 @@ script.onload=async()=>{
  const authErrorParams=new URLSearchParams(location.hash.slice(1));
  const callbackError=authErrorParams.get('error_description')||new URLSearchParams(location.search).get('error_description');
  if(callbackError)setStatus('Inloggen via de e-maillink is niet gelukt: '+callbackError.slice(0,170));
- client.auth.onAuthStateChange((_event,session)=>{
+ client.auth.onAuthStateChange((event,session)=>{
+  if(event==='PASSWORD_RECOVERY'){setStatus('Je bent geverifieerd. Stel hieronder je nieuwe wachtwoord in.');}
   const id=session?.user?.id||null;
   if(id!==user?.id){authVersion++;pending.clear();cloudEvents=[];alertPrefs.clear();marketingPref={email_opt_in:false,consented_at:null,revoked_at:null};marketingReady=false;savedApi().useGuest();user=session?.user||null;mode='local';if(user){showSignedIn();void onAuth()}else showAuth()}
  });
