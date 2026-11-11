@@ -298,7 +298,8 @@ function renderQualitySummary(){
  const official=EVENTS.filter(e=>e.dateEvidence==='official').length;
  const price=EVENTS.filter(e=>typeof e.priceEur==='number').length;
  const openings=EVENTS.filter(e=>!!(e.registrationOpenAt||e.registrationDate||e.registrationWindow)).length;
- el.textContent='Datakwaliteit · '+organizerSites+'/'+EVENTS.length+' met officiële evenementwebsite · '+calendars+' met kalenderbron · '+official+' officieel bevestigde wedstrijddatums · '+directRegistration+' directe inschrijflinks · '+price+' met prijs · '+openings+' met inschrijfdatum of -periode. Een kalenderbron is geen officiële bevestiging.';
+ const missingSource=EVENTS.filter(e=>!e.source&&!e.officialEventUrl).length;
+ el.textContent='Datakwaliteit · '+organizerSites+'/'+EVENTS.length+' met officiële evenementwebsite · '+calendars+' met kalenderbron · '+official+' officieel bevestigde wedstrijddatums · '+directRegistration+' directe inschrijflinks · '+price+' met prijs · '+openings+' met inschrijfdatum of -periode · Bron ontbreekt: '+missingSource+'. Een kalenderbron is geen officiële bevestiging.';
 }
 function setPills(){document.querySelectorAll('[data-quick]').forEach(b=>{const active=b.dataset.quick===quick;b.classList.toggle('on',active);b.setAttribute('aria-pressed',String(active))})}
 function switchPage(p){mode=p;$('explore').style.display=p==='explore'?'block':'none';$('savedPage').style.display=p==='saved'?'block':'none';$('navExplore').classList.toggle('current',p==='explore');$('navSaved').classList.toggle('current',p==='saved');$('raMobileExplore').classList.toggle('selected',p==='explore');$('raMobileSaved').classList.toggle('selected',p==='saved');render();scrollTo({top:0,behavior:'smooth'})}
