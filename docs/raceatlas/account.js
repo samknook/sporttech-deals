@@ -20,6 +20,8 @@ let authVersion=0;
 let cloudEvents=[];
 let alertPrefs=new Map();
 let alertBusy=false;
+let marketingPref={email_opt_in:false,consented_at:null,revoked_at:null};
+let marketingBusy=false;
 const setStatus=text=>{status.textContent=text;status.setAttribute('role','status')};
 const formatAuthError=error=>{const code=String(error?.code||'').toLowerCase();if(/rate.limit|over_email_send_rate_limit|email.rate/.test(code))return 'Je vraagt te snel een inloglink aan. Probeer over ongeveer een minuut opnieuw.';if(/email|smtp|mailer|sending/.test(code))return 'De inlogmail kon niet worden verzonden. Controleer de e-mailinstellingen in Supabase.';if(/redirect|validation/.test(code))return 'Het terugkeeradres van RaceAtlas is nog niet toegestaan in Supabase Auth.';return 'De inlogaanvraag is mislukt. Controleer de Supabase Auth-instellingen en probeer opnieuw.'};
 const accountNav=el('button','Mijn account');
@@ -30,8 +32,8 @@ const button=(label,action)=>{const b=el('button',label);b.type='button';b.addEv
 function appendNotice(text){content.append(el('p',text))}
 function showAuth(){
  content.replaceChildren();
- appendNotice(previewActive?'Testversie: e-mailinloggen werkt pas volledig wanneer de Auth-redirect en e-mailaflevering correct zijn ingesteld. Gebruik voorlopig een eigen testadres.':'Bewaar je wedstrijdseizoen op verschillende apparaten. Zonder account blijven je favorieten op dit apparaat staan.');
- const form=el('form'),email=el('input'),submit=el('button','Stuur inloglink');
+ appendNotice('Maak gratis een account met je e-mailadres en ontvang een veilige inloglink. Daarna kun je jouw wedstrijdseizoen op meerdere apparaten bewaren. Zonder account blijven favorieten op dit apparaat.');
+ const form=el('form'),email=el('input'),submit=el('button','Maak account / log in');
  email.type='email';email.required=true;email.autocomplete='email';email.placeholder='E-mailadres';email.setAttribute('aria-label','E-mailadres');
  submit.type='submit';
  form.append(email,submit);
@@ -48,6 +50,7 @@ function showAuth(){
   finally{submit.disabled=false}
  });
  content.append(form);
+ const privacy=el('p');const link=el('a','Privacy en e-mailvoorkeuren');link.href='privacy.html';privacy.append('Commerciële e-mails zijn optioneel en staan standaard uit. ',link);content.append(privacy);
 }
 async function readCloud(){
  const {data,error}=await client.from('raceatlas_saved_events').select('event_id,season_status').eq('user_id',user.id);
@@ -103,6 +106,11 @@ async function readAlertPrefs(owner){
  if(error)throw error;
  return new Map((data||[]).filter(row=>/^ra-\d{1,8}$/.test(row.event_id)).map(row=>[row.event_id,row]));
 }
+async function readMarketingPreference(owner){
+ const {data,error}=await client.from('raceatlas_marketing_preferences').select('email_opt_in,consented_at,revoked_at').eq('user_id',owner).maybeSingle();
+ if(error)throw error;
+ return data||{email_opt_in:false,consented_at:null,revoked_at:null};
+}
 async function chooseCloud(){
  if(!user)return;
  if(pending.size||saving){setStatus('Er worden nog wijzigingen gesynchroniseerd. Probeer eerst opnieuw.');return}
@@ -110,8 +118,10 @@ async function chooseCloud(){
  try{
   const cloud=await readCloud();
   const prefs=await readAlertPrefs(owner);
+  const marketing=await readMarketingPreference(owner);
   if(owner!==user?.id||version!==authVersion)return;
   alertPrefs=prefs;
+  marketingPref=marketing;
   cloudEvents=cloud;
   savedApi().useCloud(cloud.map(e=>e.event_id));
   mode='cloud';setStatus('Cloudseizoen geladen. Nieuwe wijzigingen synchroniseren automatisch.');showSignedIn();
@@ -289,8 +299,42 @@ async function disconnect(){
  if((saving||pending.size)&&!window.confirm('Niet alle wijzigingen zijn gesynchroniseerd. Als je nu uitlogt, kunnen ze verloren gaan. Toch uitloggen?'))return;
  const {error}=await client.auth.signOut();
  if(error){setStatus('Uitloggen is mislukt. Probeer opnieuw.');return}
- authVersion++;pending.clear();cloudEvents=[];alertPrefs.clear();user=null;mode='local';savedApi().useGuest();showAuth();setStatus('Uitgelogd. Je persoonlijke seizoen is verborgen; de favorieten van dit apparaat zijn hersteld.');
+ authVersion++;pending.clear();cloudEvents=[];alertPrefs.clear();user=null;mode='local';marketingPref={email_opt_in:false,consented_at:null,revoked_at:null};savedApi().useGuest();showAuth();setStatus('Uitgelogd. Je persoonlijke seizoen is verborgen; de favorieten van dit apparaat zijn hersteld.');
 }
+
+async function updateMarketingConsent(enabled){
+ if(!user||marketingBusy)return;
+ const owner=user.id,version=authVersion;
+ marketingBusy=true;
+ setStatus('E-mailvoorkeur opslaan…');
+ try{
+  const time=new Date().toISOString();
+  const row={user_id:owner,email_opt_in:enabled,consent_version:'2026-11',
+    consented_at:enabled?time:marketingPref.consented_at,
+    revoked_at:enabled?null:time,updated_at:time};
+  const {error}=await client.from('raceatlas_marketing_preferences').upsert(row,{onConflict:'user_id'});
+  if(error)throw error;
+  if(owner!==user?.id||version!==authVersion)return;
+  marketingPref={email_opt_in:enabled,consented_at:row.consented_at,revoked_at:row.revoked_at};
+  showSignedIn();
+  setStatus(enabled?'Je hebt je aangemeld voor optionele RaceAtlas-updates en aanbiedingen.':'Je bent afgemeld voor commerciële RaceAtlas-mails.');
+ }catch{
+  if(owner===user?.id&&version===authVersion)setStatus('E-mailvoorkeur opslaan mislukt. Je vorige voorkeur blijft gelden.');
+ }finally{marketingBusy=false}
+}
+function renderMarketingControls(){
+ const panel=el('section'),heading=el('h3','E-mailvoorkeuren'),label=el('label'),check=el('input');
+ panel.className='raMarketing';panel.append(heading);
+ const helper=el('p','Optioneel: ontvang wedstrijdtips, nieuws en aanbiedingen van RaceAtlas en partners. Dit staat los van je account en wedstrijdmeldingen. Je kunt je op ieder moment afmelden.');
+ check.type='checkbox';check.checked=marketingPref.email_opt_in===true;
+ const span=el('span','Ja, ik wil commerciële RaceAtlas-mails ontvangen.');
+ label.append(check,span);
+ const save=button('E-mailvoorkeur opslaan',async()=>{save.disabled=true;try{await updateMarketingConsent(check.checked)}finally{save.disabled=false}});
+ const privacy=el('a','Privacy en afmelden');privacy.href='privacy.html';
+ panel.append(helper,label,save,privacy);
+ content.append(panel);
+}
+
 function showSignedIn(){
  content.replaceChildren();
  appendNotice('Ingelogd als '+(user.email||'RaceAtlas-gebruiker')+'.');
@@ -308,6 +352,7 @@ function showSignedIn(){
   content.append(button('Lokale favorieten toevoegen aan account',importLocal));
   content.append(button('Alleen cloudseizoen gebruiken',chooseCloud));
  }
+ renderMarketingControls();
  content.append(button('Uitloggen',disconnect));
  content.append(button('Verwijder mijn account definitief',deleteAccount));
 }
@@ -317,14 +362,15 @@ async function onAuth(){
   user=data?.user||null;mode='local';authVersion++;pending.clear();cloudEvents=[];alertPrefs.clear();savedApi().useGuest();
   if(!user){showAuth();return}
   showSignedIn();
- }catch{authVersion++;pending.clear();cloudEvents=[];alertPrefs.clear();user=null;mode='local';savedApi().useGuest();showAuth();setStatus('Accountstatus kon niet worden gecontroleerd.')}
+  if(!savedApi().guest().length)await chooseCloud();
+ }catch{authVersion++;pending.clear();cloudEvents=[];alertPrefs.clear();user=null;mode='local';marketingPref={email_opt_in:false,consented_at:null,revoked_at:null};savedApi().useGuest();showAuth();setStatus('Accountstatus kon niet worden gecontroleerd.')}
 }
 window.addEventListener('raceatlas:saved-change',e=>{
  if(e.detail&&typeof e.detail.id==='string')writeOne(e.detail.id,!!e.detail.saved);
 });
 const style=el('style');
 style.textContent='.raAccount{background:#fff;border:1px solid #dce7de;border-radius:16px;padding:18px;margin:16px 0 22px}.raAccount h2{font-size:19px;margin:0 0 10px}.raAccount p{font-size:13px;line-height:1.5;color:#506558}.raAccount form{display:flex;flex-wrap:wrap;gap:8px}.raAccount input{min-height:44px;min-width:210px;flex:1;border-radius:9px;border:1px solid #a9bfb0;padding:10px}.raAccount button{border:1px solid #b7ceb9;border-radius:9px;background:#eaf9db;color:#1a3b29;font-weight:750;padding:11px;min-height:44px;margin:4px 7px 4px 0;cursor:pointer}.raAccountStatuses{margin:14px 0}.raAccountStatuses label{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #edf1ed;padding:8px 0;font-size:13px}.raAccountStatuses select{min-height:44px;max-width:180px;width:48%;border:1px solid #b7ceb9;border-radius:8px;padding:8px;background:#fff}@media(max-width:520px){.raAccountStatuses label{align-items:stretch;flex-direction:column}.raAccountStatuses select{max-width:none;width:100%}}';
-style.textContent+='.raAccountNav{margin-left:5px}.raAccount{scroll-margin-top:24px}@media(max-width:660px){.raAccountNav{display:none}}.raAccountAlerts{margin:20px 0}.raAccountAlerts h3{font-size:17px;margin:0 0 8px}.raAlertItem{border:1px solid #dde9dd;border-radius:10px;margin:10px 0;padding:12px}.raAlertOptions{display:grid;gap:8px;margin-top:10px}.raAlertOptions label{display:flex;gap:9px;align-items:center;font-size:13px}.raAlertOptions input{width:18px;height:18px;accent-color:#317845}';
+style.textContent+='.raMarketing{border-top:1px solid #dde9dd;margin:16px 0;padding-top:14px}.raMarketing label{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:650}.raMarketing label input{width:18px;height:18px;min-width:18px;flex:none;accent-color:#317845}.raMarketing a{display:inline-block;margin:10px 0;font-size:12px}.raAccount form button{background:#c6ff46;color:#14251e;border:0;padding:11px 18px}.raAccountNav{margin-left:5px}.raAccount{scroll-margin-top:24px}@media(max-width:660px){.raAccountNav{display:none}}.raAccountAlerts{margin:20px 0}.raAccountAlerts h3{font-size:17px;margin:0 0 8px}.raAlertItem{border:1px solid #dde9dd;border-radius:10px;margin:10px 0;padding:12px}.raAlertOptions{display:grid;gap:8px;margin-top:10px}.raAlertOptions label{display:flex;gap:9px;align-items:center;font-size:13px}.raAlertOptions input{width:18px;height:18px;accent-color:#317845}';
 document.head.append(style);
 const script=el('script');
 script.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
