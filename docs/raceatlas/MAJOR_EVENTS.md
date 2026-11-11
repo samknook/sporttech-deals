@@ -52,7 +52,7 @@ Batch 5: tien afzonderlijke illustratieve AI-beelden zijn gegenereerd en lokaal 
 
 ## Batch 6 — gecontroleerde shortlist (10 november 2026)
 
-De volgende tien grote evenementen staan in de beeldwachtrij en hebben op dit moment nog hun eerdere JPG-beeld. Er zijn **nog geen tien nieuwe, voldoende evenement-specifieke beelden goedgekeurd of gepubliceerd**.
+De volgende tien grote evenementen hebben inmiddels een eigen lokaal WebP-sfeerbeeld, naast hun eerdere JPG als reserve: **Batch 6 gepubliceerd op 11 november 2026:** tien unieke AI-sfeerbeelden als lokale WebP; GitHub Actions-run 42993724548 heeft de assets gecontroleerd, gecommit en GitHub Pages succesvol gedeployed. Dit zijn sfeerbeelden, geen foto's van de officiële raceparcoursen.
 
 | ID | Evenement | Vereist herkenbaar onderwerp |
 |---|---|---|
