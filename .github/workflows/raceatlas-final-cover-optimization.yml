@@ -1,0 +1,68 @@
+name: Optimize final 13 RaceAtlas major event covers
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/raceatlas-final-cover-optimization.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: raceatlas-final-cover-optimization
+  cancel-in-progress: false
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: https://samknook.github.io/sporttech-deals/raceatlas/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'Pillow==11.3.0'
+      - name: Optimize existing distinct generated JPGs as lightweight WebPs
+        run: |
+          python - <<'PY'
+          from PIL import Image,ImageOps,ImageEnhance
+          from pathlib import Path
+          import hashlib
+          ids=[279,280,282,286,287,288,293,295,297,298,299,302,341]
+          base=Path('docs/raceatlas/images/featured')
+          originals=[]
+          for id in ids:
+              src=base/f'ra-{id}.jpg'
+              dest=base/f'ra-{id}.webp'
+              assert src.exists(), f'Missing source for {id}'
+              raw=src.read_bytes()
+              assert len(raw)>20000, f'Source unexpectedly small: {id}'
+              originals.append(hashlib.sha256(raw).digest())
+              with Image.open(src) as im:
+                  im=ImageOps.exif_transpose(im).convert('RGB')
+                  im=ImageOps.fit(im,(960,448),method=Image.Resampling.LANCZOS,centering=(0.5,0.5))
+                  im=ImageEnhance.Contrast(im).enhance(1.025)
+                  im.save(dest,'WEBP',quality=85,method=6)
+              with Image.open(dest) as check:
+                  assert check.size==(960,448)
+                  assert check.format=='WEBP'
+              print(f'{id}: {len(raw)} => {dest.stat().st_size} bytes')
+          assert len(set(originals))==len(ids), 'Duplicate existing covers; manual review required'
+          print('Validated 13 distinct source JPGs and 13 converted WebPs.')
+          PY
+      - name: Commit 13 optimized covers
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/raceatlas/images/featured/*.webp
+          if ! git diff --cached --quiet; then
+            git commit -m "Optimize 13 remaining RaceAtlas major covers as WebP"
+            git push
+          fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs
+      - uses: actions/deploy-pages@v4
