@@ -85,3 +85,22 @@ test('Organizers may submit event photos only with explicit publication rights',
  assert.match(page,/fotorechten_bevestigd:/);
  assert.match(page,/Toestemming foto:/);
 });
+
+test('Correction form gathers a specific field, verified source and existing event context',()=>{
+ for(const id of ['correctionFields','correctionEventId','correctionField','correctionDate','correctionStatus','correctionSource','correctionNotes']){
+  assert.match(page,new RegExp('id="'+id+'"'));
+ }
+ assert.match(page,/function updateCorrectionFields\(\)/);
+ assert.match(page,/contactSubject'\)\.value==='Evenementgegevens aanpassen'/);
+ assert.match(page,/\['correctionField','correctionSource','correctionNotes'\]/); 
+ assert.match(page,/correctionText\(\)/);
+ assert.match(page,/query\.get\('eventId'\)/);
+ assert.match(page,/query\.get\('bron'\)/);
+ assert.match(page,/kalender is nog niet gewijzigd/);
+});
+test('Event detail correction sends stable event id and published source, never user email',()=>{
+ const detail=fs.readFileSync(path.join(dir,'details.js'),'utf8');
+ assert.match(detail,/link\.searchParams\.set\('eventId',e\.id\)/);
+ assert.match(detail,/link\.searchParams\.set\('bron',e\.officialEventUrl\|\|e\.registrationInfoUrl\|\|e\.source\)/);
+ assert.doesNotMatch(detail,/searchParams\.set\('email'/);
+});
