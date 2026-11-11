@@ -194,6 +194,14 @@ async function test(){
   await page.locator('#raMobileExplore').click();
   await page.locator('#raHeroAccount').click();
   assert.equal(await page.locator('#raSeasonHealth').isVisible(),true);
+  // Organizer correction prefill must be usable on mobile without submitting a real email.
+  await page.goto(base+'/raceatlas/organisatoren.html?onderwerp=Evenementgegevens%20aanpassen&event=Egmond%20Halve%20Marathon&eventId=ra-0&bron=https%3A%2F%2Fwww.egmondhalvemarathon.nl%2F');
+  assert.equal(await page.locator('#correctionFields').isVisible(),true);
+  assert.equal(await page.locator('#correctionEventId').inputValue(),'ra-0');
+  assert.equal(await page.locator('#correctionSource').inputValue(),'https://www.egmondhalvemarathon.nl/');
+  assert.equal(await page.locator('#correctionField').getAttribute('required'),'');
+  await page.locator('#contactSubject').selectOption({label:'Algemene vraag'});
+  assert.equal(await page.locator('#correctionFields').isVisible(),false);
   // No unhandled JavaScript errors throughout navigation and calculations.
   assert.deepEqual(errors,[],'uncaught browser errors');
   console.log('PASS: 390px mobile menu, localized navigation, brand homepage, 530 goal and NL/EN product pages');
