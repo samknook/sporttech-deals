@@ -88,8 +88,8 @@ test('Account lookup errors clear stale cloud data from shared device',()=>{
   assert.match(moduleCode,/catch\{authVersion\+\+;pending\.clear\(\);cloudEvents=\[\];alertPrefs\.clear\(\);user=null;mode='local';marketingPref=\{email_opt_in:false,consented_at:null,revoked_at:null\};savedApi\(\)\.useGuest\(\);showAuth\(\)/);
 });
 
-test('Configured accounts are discoverable with secure backend credentials',()=>{
-  assert.match(config,/previewEnabled:true/);
+test('Account module remains prepared but the public interface is gated',()=>{
+  assert.match(config,/previewEnabled:false/);
   assert.match(moduleCode,/if\(cfg\.enabled!==true&&!previewActive\)return/);
   assert.match(moduleCode,/ra_account_preview/);
   assert.match(moduleCode,/accountNav\.id='raAccountNav'/);
@@ -174,11 +174,11 @@ test('Account UI exposes explicit deletion, not an unverified browser admin acti
   assert.doesNotMatch(moduleCode,/auth\.admin\.deleteUser/);
 });
 
-test('Magic link callback retains QA preview access while public accounts are available',()=>{
+test('Magic link callback code remains prepared while account access is disabled',()=>{
  assert.match(moduleCode,/previewActive=cfg\.previewEnabled===true&&new URLSearchParams/);
  assert.match(moduleCode,/url\.searchParams\.set\('ra_account_preview','1'\)/);
  assert.match(moduleCode,/emailRedirectTo:callbackUrl\(\)/);
- assert.match(config,/enabled:true/);
+ assert.match(config,/enabled:false/);
 });
 
 test('Account browser SDK uses the documented Supabase CDN and exposes useful sign-in errors',()=>{
