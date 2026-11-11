@@ -22,6 +22,7 @@ let alertPrefs=new Map();
 let alertBusy=false;
 let marketingPref={email_opt_in:false,consented_at:null,revoked_at:null};
 let marketingBusy=false;
+let marketingReady=false;
 const setStatus=text=>{status.textContent=text;status.setAttribute('role','status')};
 const formatAuthError=error=>{const code=String(error?.code||'').toLowerCase();if(/rate.limit|over_email_send_rate_limit|email.rate/.test(code))return 'Je vraagt te snel een inloglink aan. Probeer over ongeveer een minuut opnieuw.';if(/email|smtp|mailer|sending/.test(code))return 'De inlogmail kon niet worden verzonden. Controleer de e-mailinstellingen in Supabase.';if(/redirect|validation/.test(code))return 'Het terugkeeradres van RaceAtlas is nog niet toegestaan in Supabase Auth.';return 'De inlogaanvraag is mislukt. Controleer de Supabase Auth-instellingen en probeer opnieuw.'};
 const accountNav=el('button','Mijn account');
@@ -121,7 +122,7 @@ async function chooseCloud(){
   const marketing=await readMarketingPreference(owner);
   if(owner!==user?.id||version!==authVersion)return;
   alertPrefs=prefs;
-  marketingPref=marketing;
+  marketingPref=marketing;marketingReady=true;
   cloudEvents=cloud;
   savedApi().useCloud(cloud.map(e=>e.event_id));
   mode='cloud';setStatus('Cloudseizoen geladen. Nieuwe wijzigingen synchroniseren automatisch.');showSignedIn();
@@ -299,11 +300,11 @@ async function disconnect(){
  if((saving||pending.size)&&!window.confirm('Niet alle wijzigingen zijn gesynchroniseerd. Als je nu uitlogt, kunnen ze verloren gaan. Toch uitloggen?'))return;
  const {error}=await client.auth.signOut();
  if(error){setStatus('Uitloggen is mislukt. Probeer opnieuw.');return}
- authVersion++;pending.clear();cloudEvents=[];alertPrefs.clear();user=null;mode='local';marketingPref={email_opt_in:false,consented_at:null,revoked_at:null};savedApi().useGuest();showAuth();setStatus('Uitgelogd. Je persoonlijke seizoen is verborgen; de favorieten van dit apparaat zijn hersteld.');
+ authVersion++;pending.clear();cloudEvents=[];alertPrefs.clear();user=null;mode='local';marketingPref={email_opt_in:false,consented_at:null,revoked_at:null};marketingReady=false;savedApi().useGuest();showAuth();setStatus('Uitgelogd. Je persoonlijke seizoen is verborgen; de favorieten van dit apparaat zijn hersteld.');
 }
 
 async function updateMarketingConsent(enabled){
- if(!user||marketingBusy)return;
+ if(!user||marketingBusy||!marketingReady)return;
  const owner=user.id,version=authVersion;
  marketingBusy=true;
  setStatus('E-mailvoorkeur opslaan…');
@@ -315,7 +316,8 @@ async function updateMarketingConsent(enabled){
   const {error}=await client.from('raceatlas_marketing_preferences').upsert(row,{onConflict:'user_id'});
   if(error)throw error;
   if(owner!==user?.id||version!==authVersion)return;
-  marketingPref={email_opt_in:enabled,consented_at:row.consented_at,revoked_at:row.revoked_at};
+  marketingPref=await readMarketingPreference(owner);
+  if(owner!==user?.id||version!==authVersion)return;
   showSignedIn();
   setStatus(enabled?'Je hebt je aangemeld voor optionele RaceAtlas-updates en aanbiedingen.':'Je bent afgemeld voor commerciële RaceAtlas-mails.');
  }catch{
@@ -326,10 +328,11 @@ function renderMarketingControls(){
  const panel=el('section'),heading=el('h3','E-mailvoorkeuren'),label=el('label'),check=el('input');
  panel.className='raMarketing';panel.append(heading);
  const helper=el('p','Optioneel: ontvang wedstrijdtips, nieuws en aanbiedingen van RaceAtlas en partners. Dit staat los van je account en wedstrijdmeldingen. Je kunt je op ieder moment afmelden.');
- check.type='checkbox';check.checked=marketingPref.email_opt_in===true;
+ check.type='checkbox';check.checked=marketingPref.email_opt_in===true;check.disabled=!marketingReady;
  const span=el('span','Ja, ik wil commerciële RaceAtlas-mails ontvangen.');
  label.append(check,span);
  const save=button('E-mailvoorkeur opslaan',async()=>{save.disabled=true;try{await updateMarketingConsent(check.checked)}finally{save.disabled=false}});
+ save.disabled=!marketingReady;
  const privacy=el('a','Privacy en afmelden');privacy.href='privacy.html';
  panel.append(helper,label,save,privacy);
  content.append(panel);
@@ -359,14 +362,14 @@ function showSignedIn(){
 async function onAuth(){
  try{
   const {data,error}=await client.auth.getUser();if(error)throw error;
-  user=data?.user||null;mode='local';authVersion++;pending.clear();cloudEvents=[];alertPrefs.clear();savedApi().useGuest();
+  user=data?.user||null;mode='local';authVersion++;pending.clear();cloudEvents=[];alertPrefs.clear();marketingReady=false;savedApi().useGuest();
   if(!user){showAuth();return}
   const owner=user.id,version=authVersion;
   showSignedIn();
   try{
    const latest=await readMarketingPreference(owner);
    if(owner!==user?.id||version!==authVersion)return;
-   marketingPref=latest;showSignedIn();
+   marketingPref=latest;marketingReady=true;showSignedIn();
   }catch{if(owner===user?.id&&version===authVersion)setStatus('E-mailvoorkeuren ophalen mislukt. Controleer je voorkeur voordat je deze wijzigt.')}
   if(owner===user?.id&&version===authVersion&&!savedApi().guest().length)await chooseCloud();
  }catch{authVersion++;pending.clear();cloudEvents=[];alertPrefs.clear();user=null;mode='local';marketingPref={email_opt_in:false,consented_at:null,revoked_at:null};savedApi().useGuest();showAuth();setStatus('Accountstatus kon niet worden gecontroleerd.')}
