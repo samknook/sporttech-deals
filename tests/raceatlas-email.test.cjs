@@ -55,7 +55,7 @@ test('RaceAtlas event calendar retains pricing source and placeholders',()=>{
  assert.equal(data.length>=420,true);
  const palingrun=data.find(x=>x.name==='Palingrun Volendam — 10 Engelse Mijl');
  const kids=data.find(x=>x.name==='Palingrun Volendam — Kidsrun');
- assert.equal(palingrun.priceEur,29.95);assert.equal(kids.priceEur,6);
+ assert.equal(palingrun.priceEur,29.95);assert.equal(kids.priceEur,undefined);assert.equal(kids.priceStatus,'conflicting');assert.match(kids.priceNote,/7,50/);assert.match(kids.priceNote,/6,00/);
  assert.doesNotMatch(page,/id="priceFilter"/);assert.doesNotMatch(page,/id="discipline"/);assert.match(page,/id="registrationFilter"/);assert.match(page,/id="distanceCategory"/);
  assert.match(page,/dateEvidence/);
  const cards=page.slice(page.indexOf('function eventCard(e)'),page.indexOf('function renderCards('));
