@@ -184,7 +184,10 @@ test('Magic link callback retains QA preview access while public accounts are av
 test('Account browser SDK uses the documented Supabase CDN and exposes useful sign-in errors',()=>{
  assert.match(moduleCode,/https:\/\/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js@2'/);
  assert.doesNotMatch(moduleCode,/dist\/umd\/supabase\.min\.js/);
- assert.match(moduleCode,/const formatAuthError=error/);
+ assert.match(moduleCode,/const formatAuthError=\(error,action='login'\)/);
+ assert.match(moduleCode,/over_email_send_rate_limit/);
+ assert.match(moduleCode,/otp_disabled/);
+ assert.match(moduleCode,/invalid_credentials/);
  assert.match(moduleCode,/const callbackError=authErrorParams\.get\('error_description'\)/);
  assert.match(moduleCode,/url\.searchParams\.set\('ra_account_preview','1'\)/);
 });
@@ -216,9 +219,16 @@ test('Email and password sign-up, login and reset are available without creating
  assert.match(moduleCode,/auth\.updateUser\(\{password:password\.value\}\)/);
  assert.match(moduleCode,/auth\.signInWithOtp/);
  assert.match(moduleCode,/shouldCreateUser:false/);
- assert.match(moduleCode,/minLength=12/);
+ assert.match(moduleCode,/autocomplete==='current-password'\?1:12/);
  assert.match(moduleCode,/password\.value!==confirm\.value/);
  assert.match(moduleCode,/function renderPasswordSettings\(\)/);
  assert.match(moduleCode,/event==='PASSWORD_RECOVERY'/);
  assert.match(moduleCode,/ra_password_reset/);
+});
+
+test('Provider email rate limit is not disguised as a one-minute cooldown',()=>{
+ assert.doesNotMatch(moduleCode,/Probeer over ongeveer een minuut opnieuw/);
+ assert.match(moduleCode,/De e-maildienst van RaceAtlas heeft de verzendlimiet bereikt/);
+ assert.match(moduleCode,/if\(kind!=='login'&&checkMailBlock\(\)\)return/);
+ assert.match(moduleCode,/if\(checkMailBlock\(\)\)return/);
 });
