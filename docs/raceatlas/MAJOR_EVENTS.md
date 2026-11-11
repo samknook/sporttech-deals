@@ -68,3 +68,7 @@ De volgende tien grote evenementen hebben inmiddels een eigen lokaal WebP-sfeerb
 | ra-278 | IRONMAN Leeds | Noord-Engelse heuvels en uitdagende fietsrit |
 
 De beeldworkflow is uitgebreid voor `raceatlas-assets/batch*.zip` en valideert per ZIP exact tien WebP's en unieke bestanden voordat de assets worden geïnstalleerd en Pages gepubliceerd. De installatie is succesvol hergetest. De overzichtspagina zoekt voor alle grote evenementen automatisch naar een specifieke `.webp` bij een bestaande `.jpg`, met behoud van het bestaande beeld als de upgrade nog niet bestaat.
+
+## Laatste dertien covers — geoptimaliseerd en live (11 november 2026)
+
+GitHub Actions [run 43001475625](https://github.com/samknook/sporttech-deals/actions/runs/43001475625) is succesvol afgerond: 13 bestaande, afzonderlijke AI-JPG-sfeerbeelden (`ra-279,280,282,286,287,288,293,295,297,298,299,302,341`) zijn naar 960×448 WebP geconverteerd, gevalideerd, gecommit en op GitHub Pages gedeployed. **Dit is geen nieuwe AI-generatie**: de resterende beelden zijn geoptimaliseerde varianten van eerdere sfeerbeelden. De JPG's blijven beschikbaar als fallback. Hiermee hebben alle 73 grote evenementen een lokaal WebP-bestand. Verdere fotorealistische locatiegerichte vervanging blijft kwaliteitswerk, niet een ontbrekende technische asset.
