@@ -273,7 +273,9 @@ function updatePortalAvailability(){
  tx('Deelnemerspagina klaar om lokaal te downloaden. Publicatie gebeurt niet automatisch.','Participant page ready for local download. Publication is not automatic.');
 }
 el('organizer-review').addEventListener('change',updatePortalAvailability);
-el('club-form').addEventListener('input',()=>{
+el('club-form').addEventListener('input',event=>{
+ // Toggling review itself must not cancel the organizer's explicit approval.
+ if(event.target?.id==='update-review')return;
  el('update-review').checked=false;
  refreshTemplateChanges();
  el('organizer-review').checked=false;
