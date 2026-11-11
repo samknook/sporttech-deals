@@ -391,7 +391,7 @@ script.onload=async()=>{
  if(callbackError)setStatus('Inloggen via de e-maillink is niet gelukt: '+callbackError.slice(0,170));
  client.auth.onAuthStateChange((_event,session)=>{
   const id=session?.user?.id||null;
-  if(id!==user?.id){authVersion++;pending.clear();cloudEvents=[];alertPrefs.clear();savedApi().useGuest();user=session?.user||null;mode='local';if(user)showSignedIn();else showAuth()}
+  if(id!==user?.id){authVersion++;pending.clear();cloudEvents=[];alertPrefs.clear();marketingPref={email_opt_in:false,consented_at:null,revoked_at:null};marketingReady=false;savedApi().useGuest();user=session?.user||null;mode='local';if(user){showSignedIn();void onAuth()}else showAuth()}
  });
  await onAuth();
 };
