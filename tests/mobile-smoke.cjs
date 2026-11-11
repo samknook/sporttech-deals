@@ -169,6 +169,19 @@ async function test(){
   assert.equal(await page.locator('#raMobileAccount').count(),0);
   await page.locator('#raSeasonHealth').waitFor({state:'visible'});
   assert.match(await page.locator('#raSeasonHealth').innerText(),/Seizoenscheck/);
+  assert.equal(await page.locator('#raSeasonBackup').isVisible(),true);
+  assert.equal(await page.locator('#raSeasonRestore').isVisible(),true);
+  // Restore a known race without a cloud account and ensure local persistence.
+  await page.locator('#raSeasonFile').setInputFiles({
+   name:'my-races.json',mimeType:'application/json',
+   buffer:Buffer.from(JSON.stringify({format:'raceatlas-season',version:1,eventIds:['ra-0']}),'utf8')
+  });
+  await page.locator('#raSeasonBackupStatus').waitFor({state:'visible'});
+  assert.match(await page.locator('#raSeasonBackupStatus').innerText(),/1 wedstrijden toegevoegd/);
+  assert.match(await page.locator('#savedSummary').innerText(),/1 wedstrijden opgeslagen/);
+  await page.reload({waitUntil:'domcontentloaded'});
+  await page.locator('#raMobileSaved').click();
+  assert.match(await page.locator('#savedSummary').innerText(),/1 wedstrijden opgeslagen/);
   await page.locator('#raMobileExplore').click();
   await page.locator('#raHeroAccount').click();
   assert.equal(await page.locator('#raSeasonHealth').isVisible(),true);
