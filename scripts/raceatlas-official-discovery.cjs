@@ -269,10 +269,10 @@ async function discover(config,catalog,previous,opts={}){
    const previousHash=fingerprints[url];
    if(previousHash&&previousHash!==hash)contentChanges.push({url,reason:'official_page_content_changed',source:source.url});
    fingerprints[url]=hash;
-   const found=htmlEvents(html);
-   for(const item of found){const race=parseEvent(item,url,source,today);if(race){events.push(race);site.parsed++}}
+   const found=htmlEvents(html),accepted=[];
+   for(const item of found){const race=parseEvent(item,url,source,today);if(race){events.push(race);accepted.push(race);site.parsed++}}
    // Visible-text dates are never authoritative. They only enter the private Actions review artifact.
-   if(!found.length && (!previousHash || previousHash!==hash)){
+   if(!accepted.length && (!previousHash || previousHash!==hash)){
     const review=extractHtmlCandidates(html,url,today);
     if(raceLike(review.title)){
      for(const signal of review.candidates.filter(c=>c.rank>=1).slice(0,4)){
