@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gegevenskwaliteit en correcties | RaceAtlas</title>
+<meta name="description" content="Bekijk welke wedstrijden nog datumbevestiging of bijgewerkte broninformatie nodig hebben. Help RaceAtlas om de kalender betrouwbaar te houden.">
+<style>
+:root{font-family:Inter,system-ui,sans-serif;color:#172b24;background:#f5f8f4}*{box-sizing:border-box}body{margin:0}header{background:#102123;color:#fff;padding:19px 5%}header a{color:#fff;text-decoration:none;font-weight:850}.brand{font-size:21px;font-style:italic}.brand b{color:#b6f276}.wrap{max-width:1150px;margin:auto;padding:34px 20px 85px}h1{font-size:clamp(32px,5vw,53px);line-height:1.12;letter-spacing:-.05em;margin:8px 0 14px}.intro{max-width:850px;color:#4c665a;line-height:1.65}.eyebrow{font-size:12px;font-weight:900;color:#367750;letter-spacing:.13em}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:26px 0}.stat{padding:19px;background:white;border:1px solid #dce6dc;border-radius:14px}.stat strong{font-size:29px;display:block;font-variant-numeric:tabular-nums}.stat small{color:#566c60;line-height:1.5}.panel{background:#fff;border:1px solid #dce6dc;border-radius:16px;padding:20px;margin:22px 0}.tools{display:grid;grid-template-columns:1fr 220px;gap:12px}.tools input,.tools select{width:100%;border:1px solid #b9d0c1;border-radius:10px;padding:12px;font:inherit;min-height:46px}.list{display:grid;gap:10px}.item{display:flex;align-items:center;justify-content:space-between;gap:18px;border:1px solid #dce6dc;border-radius:12px;padding:17px;background:#fff}.item h2{font-size:16px;margin:4px 0}.item p,.item small{font-size:13px;color:#607369;line-height:1.5}.item p{margin:0}.item a{display:inline-flex;text-decoration:none;padding:11px 15px;background:#173e31;color:#fff;border-radius:9px;white-space:nowrap;font-size:13px;font-weight:800;min-height:44px;align-items:center}.tag{font-size:11px;font-weight:900;color:#3b754b}.foot{margin-top:25px;font-size:13px;color:#556d5e;line-height:1.6}button{font:inherit;cursor:pointer}.more{border:1px solid #b7d0bc;border-radius:9px;background:#e9f6e9;padding:12px 24px;font-weight:800;color:#214733;margin-top:15px}.more[hidden]{display:none}#status{font-size:13px;color:#52665b}
+@media(max-width:750px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.tools{grid-template-columns:1fr}.item{align-items:stretch;flex-direction:column}.item a{align-self:flex-start}}@media(max-width:380px){.stats{grid-template-columns:1fr 1fr}.stat{padding:13px}.stat strong{font-size:23px}}
+</style></head><body>
+<header><a class="brand" href="./">RACE<b>ATLAS.</b></a> &nbsp; <a href="./">← Wedstrijden</a></header>
+<main class="wrap"><div class="eyebrow">OPEN GEGEVENSKWALITEIT</div>
+<h1>Help de wedstrijdkalender actueel te houden.</h1>
+<p class="intro">RaceAtlas toont welke gegevens nog bevestiging of een nieuwe broncontrole nodig hebben. Een vermelde datum zonder officiële bevestiging is geen toezegging van de organisator. Een controledatum zegt niets over de actuele beschikbaarheid van startbewijzen.</p>
+<section class="stats" aria-label="Kwaliteitsstatus">
+<div class="stat"><strong id="total">—</strong><small>Evenementen in de database</small></div>
+<div class="stat"><strong id="official">—</strong><small>Officieel gemarkeerde datums</small></div>
+<div class="stat"><strong id="provisional">—</strong><small>Nog te bevestigen datums</small></div>
+<div class="stat"><strong id="unknown">—</strong><small>Alleen maand of datum onbekend</small></div>
+</section>
+<div class="panel"><h2>Zoek een wedstrijd voor correctie</h2><div class="tools">
+<label>Naam of plaats<input type="search" id="search" placeholder="Zoek op wedstrijd of plaats"></label>
+<label>Controlebehoefte<select id="filter"><option value="">Alle kwaliteitsstatussen</option><option value="unverified_date">Datum niet bevestigd</option><option value="historical_month">Alleen verwachte maand</option><option value="missing_date">Datum onbekend</option><option value="stale_source">Broncontrole ouder dan 30 dagen</option><option value="missing_check_date">Geen controledatum</option><option value="recently_checked">Recent gecontroleerd</option></select></label>
+</div><p id="status" role="status">Gegevens laden…</p></div>
+<div class="list" id="list"></div><button type="button" class="more" id="more" hidden>Meer wedstrijden tonen</button>
+<p class="foot">Correcties worden via het bestaande organisatorenformulier doorgestuurd voor menselijke beoordeling. Er worden geen gegevens zonder controle gepubliceerd. <a href="organisatoren.html#contact">Rechtstreeks contact opnemen</a>.</p></main>
+<script>
+(()=>{
+'use strict';
+const API='https://lpzndnxloykcthbsqcet.supabase.co/rest/v1/raceatlas_quality_overview';
+const KEY='sb_publishable_AE_Qr8VLmWb2020QCOEAKQ_Nl5mZ5Sw';
+const $=id=>document.getElementById(id);
+const labels={missing_date:'Exacte datum ontbreekt',historical_month:'Alleen verwachte maand',unverified_date:'Datum nog niet officieel bevestigd',missing_check_date:'Datum gemarkeerd als officieel · geen controledatum',stale_source:'Laatste broncontrole ouder dan 30 dagen',recently_checked:'Broncontrole geregistreerd in laatste 30 dagen'};
+let records=[],shown=30;
+function element(tag,txt,cls){const e=document.createElement(tag);if(txt!=null)e.textContent=txt;if(cls)e.className=cls;return e}
+function linkFor(r){
+ const url=new URL('organisatoren.html',location.href);
+ url.hash='contact';url.searchParams.set('onderwerp','Evenementgegevens aanpassen');
+ url.searchParams.set('event',r.event_name);url.searchParams.set('eventId',r.event_id);
+ if(r.verification_source_url?.startsWith('https://'))url.searchParams.set('bron',r.verification_source_url);
+ return url.toString();
+}
+function render(){
+ const query=$('search').value.trim().toLocaleLowerCase('nl-NL'),reason=$('filter').value;
+ const matches=records.filter(r=>(!reason||r.review_reason===reason)&&(!query||(r.event_name+' '+(r.city||'')).toLocaleLowerCase('nl-NL').includes(query)));
+ const root=$('list');root.replaceChildren();
+ for(const r of matches.slice(0,shown)){
+ const item=element('article',null,'item'),content=element('div'),status=element('span',labels[r.review_reason]||'Nog te controleren','tag');
+ const title=element('h2',r.event_name),place=element('p',(r.city||'Locatie onbekend')+' · '+(r.sport||'Sport onbekend'));
+ const checked=element('small',r.last_verified_at?'Bron vastgelegd op '+new Date(r.last_verified_at).toLocaleDateString('nl-NL'):'Geen broncontroledatum vastgelegd');
+ content.append(status,title,place,checked);
+ const a=element('a','Gegevens corrigeren ↗');a.href=linkFor(r);
+ item.append(content,a);root.append(item);
+ }
+ $('status').textContent=matches.length+' evenementen gevonden · '+Math.min(matches.length,shown)+' zichtbaar';
+ $('more').hidden=shown>=matches.length;
+}
+async function load(){
+ try{
+ const response=await fetch(API+'?select=event_id,event_name,sport,city,date_confidence,review_reason,review_priority,last_verified_at,verification_source_url&order=review_priority.asc,event_name.asc&limit=1000',{headers:{apikey:KEY,Accept:'application/json'},signal:AbortSignal.timeout(10000)});
+ if(!response.ok)throw Error('Request failed');
+ records=await response.json();if(!Array.isArray(records))throw Error('Unexpected result');
+ $('total').textContent=records.length;
+ $('official').textContent=records.filter(r=>r.date_confidence==='official').length;
+ $('provisional').textContent=records.filter(r=>r.date_confidence==='unverified').length;
+ $('unknown').textContent=records.filter(r=>['historical_month','unknown'].includes(r.date_confidence)).length;
+ render();
+ }catch{
+ $('status').textContent='Gegevens kunnen momenteel niet geladen worden. Meld correcties rechtstreeks via het organisatorenformulier.';
+ const a=element('a','Contactformulier openen');a.href='organisatoren.html#contact';$('list').append(a);
+ }
+}
+$('search').addEventListener('input',()=>{shown=30;render()});
+$('filter').addEventListener('change',()=>{shown=30;render()});
+$('more').addEventListener('click',()=>{shown+=30;render()});
+load();
+})();
+</script></body></html>
