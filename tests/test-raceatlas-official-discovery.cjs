@@ -50,6 +50,21 @@ assert.equal(conflicting.review[0].reason,'existing_race_same_year_date_conflict
 const organizerDuplicate=choose([{...race,name:'Bergen Trail 2027'}],[established],{},today);
 assert.equal(organizerDuplicate.newEvents.length,0,'An organizer event URL should not duplicate the same edition');
 assert.equal(organizerDuplicate.review[0].reason,'organizer_url_matches_existing_different_name');
+const recurringTwo={...first,name:'Twiskemolenloop',startDate:'2027-03-07',
+ url:'https://events.example.org/twiskemolenloop'};
+const recurringThree={...recurringTwo,startDate:'2027-04-04'};
+const recurringEvents=[parseEvent(recurringTwo,src.url,src,today),parseEvent(recurringThree,src.url,src,today)];
+assert.notEqual(recurringEvents[0].id,recurringEvents[1].id,'Monthly editions need unique stable event IDs');
+const recurringResult=choose(recurringEvents,[],{},today);
+assert.equal(recurringResult.newEvents.length,2,'Recurring races on one organizer URL must be separate editions');
+const knownRecurring=[
+ {...recurringEvents[0],id:'ra-352',date:'2027-03-07'},
+ {...recurringEvents[1],id:'ra-353',date:'2027-04-04'}
+];
+const recurringNew=parseEvent({...recurringTwo,startDate:'2027-05-02'},src.url,src,today);
+const recurringAdditional=choose([recurringNew],knownRecurring,{},today);
+assert.equal(recurringAdditional.newEvents.length,1,'Known recurring series should accept a new officially dated edition');
+assert.equal(recurringAdditional.changed.length,0,'Never silently rewrite another monthly edition');
 const wrongYear={...first,startDate:'2025-04-18'};
 assert.equal(parseEvent(wrongYear,src.url,src,today),null);
 const noCity={...first,location:{'@type':'Place'}};
