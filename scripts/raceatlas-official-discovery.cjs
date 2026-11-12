@@ -153,7 +153,10 @@ function choose(observed,catalog,previous,today){
  }
  for(const race of observed){
   const seriesKey=normalizedUrl(race.officialEventUrl)+'|'+normalize(race.name)+'|'+race.date.slice(0,4);
-  const isRecurring=(recurring.get(seriesKey)||0)>1;
+  const matchingSeries=catalog.filter(e=>normalize(e.name)===normalize(race.name)
+   &&String(e.date||'').slice(0,4)===race.date.slice(0,4)
+   &&normalizedUrl(e.officialEventUrl)===normalizedUrl(race.officialEventUrl));
+  const isRecurring=(recurring.get(seriesKey)||0)>1||matchingSeries.length>1;
   const already=catalog.find(e=>sameRace(e,race));
   if(already&&already.date===race.date)continue;
   const update=isRecurring?[]:catalog.filter(e=>sourceMatch(e,race));
@@ -175,6 +178,14 @@ function choose(observed,catalog,previous,today){
    continue;
   }
   if(already){review.push({name:race.name,date:race.date,reason:'existing_race_same_date_conflict',url:race.officialEventUrl});continue}
+  const sameSeriesOtherDate=catalog.filter(e=>normalize(e.name)===normalize(race.name)
+    &&String(e.date||'').slice(0,4)===race.date.slice(0,4)
+    &&normalize(e.place)===normalize(race.place));
+  if(sameSeriesOtherDate.length&&!isRecurring){
+   review.push({name:race.name,date:race.date,reason:'existing_race_same_year_date_conflict',url:race.officialEventUrl,
+    matchingIds:sameSeriesOtherDate.map(e=>e.id)});
+   continue;
+  }
   const other=[...auto.values()].find(e=>sameRace(e,race));
   if(other){
    if(other.date===race.date){continue}
