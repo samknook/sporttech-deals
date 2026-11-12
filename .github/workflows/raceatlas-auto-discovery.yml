@@ -1,0 +1,52 @@
+name: RaceAtlas official organizer auto-discovery
+on:
+  schedule:
+    - cron: '15 5 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: raceatlas-auto-discovery
+  cancel-in-progress: false
+jobs:
+  organizer-discovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate strict official-source discovery
+        run: node tests/test-raceatlas-official-discovery.cjs
+      - name: Review official organizer pages and generate safe changes
+        run: node scripts/raceatlas-official-discovery.cjs
+      - name: Publish only changed verified structured events
+        run: |
+          git add docs/raceatlas/auto-events.json
+          if git diff --cached --quiet; then
+            echo "No verified event changes to publish."
+          else
+            git config user.name "RaceAtlas automation"
+            git config user.email "actions@users.noreply.github.com"
+            git commit -m "Auto-update confirmed organizer event metadata"
+            git push origin HEAD:main
+          fi
+      - name: Preserve discovery evidence and ambiguous candidates
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raceatlas-official-discovery
+          path: |
+            out/raceatlas-discovery-report.json
+            out/raceatlas-discovery-report.md
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Explain daily results in workflow summary
+        if: always()
+        run: |
+          if [ -f out/raceatlas-discovery-report.md ]; then
+            cat out/raceatlas-discovery-report.md >> "$GITHUB_STEP_SUMMARY"
+          fi
