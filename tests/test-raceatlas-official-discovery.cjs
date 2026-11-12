@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict');
-const {safeUrl,htmlEvents,links,eventDate,parseEvent,choose,discover}=require('../scripts/raceatlas-official-discovery.cjs');
+const {safeUrl,htmlEvents,links,eventDate,parseEvent,choose,discover,fingerprint,monitorExisting}=require('../scripts/raceatlas-official-discovery.cjs');
 const src={url:'https://events.example.org/calendar/',sport:'Hardlopen',country:'Nederland',discover:true};
 const today='2026-11-12';
 const first={
@@ -14,6 +14,8 @@ assert.equal(safeUrl('https://events.example.org/hello','events.example.org'),'h
 assert.equal(safeUrl('http://events.example.org/hello','events.example.org'),null);
 assert.equal(safeUrl('https://other.example.org/hello','events.example.org'),null);
 assert.equal(safeUrl('https://127.0.0.1/hello','127.0.0.1'),null);
+assert.equal(fingerprint('<html><script>var x=1</script><body>Race 2027</body></html>'),fingerprint('<html><script>var x=2</script><body>Race 2027</body></html>'));
+assert.notEqual(fingerprint('<body>Registration open</body>'),fingerprint('<body>Registration closed</body>'));
 assert.equal(htmlEvents(html).length,1);
 assert.equal(links(html,'https://events.example.org/calendar/','events.example.org').length,1);
 assert.equal(eventDate('2027-04-18',today),'2027-04-18');
@@ -48,9 +50,11 @@ async function run(){
   requested.push(url);
   return new Response(url.endsWith('/calendar/')?html:html,{headers:{'content-type':'text/html'}});
  };
- const result=await discover({sources:[src]},[],{}, {today,fetchImpl});
+ const result=await discover({sources:[src]},[],{}, {today,fetchImpl,sourceState:{version:1,sources:{'https://events.example.org/calendar/':'old-hash'}}});
  assert.equal(result.data.events.length,1);
  assert.equal(result.pagesChecked,2);
+ assert.equal(result.contentChanges.length,1,'Changed existing official page should generate review signal');
+ assert.equal(Object.keys(result.sourceState.sources).length,2);
  assert.ok(requested.every(u=>u.startsWith('https://events.example.org/')));
  console.log('RaceAtlas official discovery and safe date-update tests passed');
 }
