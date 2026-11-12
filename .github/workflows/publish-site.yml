@@ -7,6 +7,9 @@ on:
       - '.github/workflows/publish-site.yml'
       - 'tests/test-mkb-ai-businesscase.js'
       - 'tests/test-mkb-ai-customer-offer.js'
+      - 'scripts/raceatlas-html-candidates.cjs'
+      - 'scripts/raceatlas-official-discovery.cjs'
+      - 'tests/test-raceatlas-*.cjs'
   workflow_dispatch:
 permissions:
   contents: read
