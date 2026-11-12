@@ -36,7 +36,7 @@
         $('split-'+key).textContent=core.formatDuration(time);
         $('bar-'+key).style.width=(time/p.total*100).toFixed(2)+'%';
       }
-      $('planner-link').href='race-planner.html?distance='+encodeURIComponent(selected);
+      $('planner-link').href='race-dashboard.html';
       window.RaceInsights.render(values());
     }catch(e){
       $('validation-error').textContent=e.message;
