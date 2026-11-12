@@ -7,6 +7,7 @@ on:
       - '.github/workflows/publish-site.yml'
       - 'tests/test-mkb-ai-businesscase.js'
       - 'tests/test-mkb-ai-customer-offer.js'
+      - 'scripts/build-trizentro-event-pages.cjs'
       - 'scripts/raceatlas-html-candidates.cjs'
       - 'scripts/raceatlas-official-discovery.cjs'
       - 'tests/test-raceatlas-*.cjs'
@@ -62,6 +63,10 @@ jobs:
           persist-credentials: false
       - name: Build public noindex staging preview (isolated from live analytics)
         run: node scripts/build-raceatlas-preview.cjs
+      - name: Build search-engine indexable TriZentro race pages
+        run: |
+          node scripts/build-trizentro-event-pages.cjs
+          node tests/test-trizentro-event-pages.cjs
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload website files only
