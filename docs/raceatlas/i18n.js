@@ -307,6 +307,11 @@ const attrs=new WeakMap();
 let observer=null,queued=false;
 function translation(text){
  if(translations.has(text))return translations.get(text);
+ // Most templates contain whitespace around labels, particularly navigation.
+ const prefix=(text.match(/^\s*/)||[''])[0];
+ const suffix=(text.match(/\s*$/)||[''])[0];
+ const core=text.slice(prefix.length,text.length-suffix.length);
+ if(translations.has(core))return prefix+translations.get(core)+suffix;
  let result=text;
  for(const [pattern,replacement] of partials)result=result.replace(pattern,replacement);
  for(const [nl,en] of monthNames)result=result.replace(new RegExp('\\b'+nl+'\\b','gi'),en);
