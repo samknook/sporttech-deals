@@ -49,10 +49,10 @@ function walkJsonLd(node,result=[]){
  return result;
 }
 function fingerprint(html){
- const visible=String(html).replace(/<script\\b[^>]*>[\\s\\S]*?<\\/script>/gi,' ')
-  .replace(/<style\\b[^>]*>[\\s\\S]*?<\\/style>/gi,' ')
+ const visible=String(html).replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,' ')
+  .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi,' ')
   .replace(/<[^>]*>/g,' ').replace(/&(?:nbsp|amp|quot|lt|gt);/gi,' ')
-  .replace(/\\s+/g,' ').trim().slice(0,150000);
+  .replace(/\s+/g,' ').trim().slice(0,150000);
  return crypto.createHash('sha256').update(visible).digest('hex');
 }
 function htmlEvents(html){
