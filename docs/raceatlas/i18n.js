@@ -786,7 +786,7 @@ function updateButtons(){
 function setLanguage(next,updateUrl=true){
  if(next!=='en'&&next!=='nl')next='nl';
  lang=next;
- try{localStorage.setItem(KEY,next)}catch{}
+ try{localStorage.setItem(KEY,next);localStorage.setItem('trizentro.language',next)}catch{}
  document.documentElement.lang=next;
  const path=location.pathname||'';
  const page=path.includes('organisatoren.html')?'organizer':path.includes('gegevenskwaliteit.html')?'quality':path.includes('privacy.html')?'privacy':path.includes('over.html')?'about':'home';
