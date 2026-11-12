@@ -29,6 +29,8 @@ check(index.indexOf('id="cards"')<index.indexOf('id="more"')&&index.indexOf('id=
 check(read('intelligence.js').includes('resultsMore.after(panel)'),'Registration radar must appear below results');
 check(!index.includes('id="raQualitySummary"')&&!index.includes('<strong>Transparantie:</strong>'),'Hide internal audit blocks from public homepage');
 check(read('account-config.js').includes('enabled:false'),'Account feature must remain disabled until ready');
+check(index.includes('auto-events.js?v='),'Auto-discovery feed loader is required');
+check(fs.existsSync(path.join(root,'auto-events.json')),'Auto-event feed must exist');
 for(const [filename,html] of pages){
  const assetMatches=[...html.matchAll(/<(?:script|link)\b[^>]*?\b(?:src|href)="([^"]+)"/g)].map(m=>m[1]);
  for(const asset of assetMatches){
@@ -44,7 +46,7 @@ check(organizers.includes('formsubmit.co/ajax/'),'Organizer contact delivery end
 const i18n=read('i18n.js');
 check(i18n.includes("nav.insertBefore(group,organizer)"),'NL/EN switch must precede organizer destination');
 check(i18n.includes('raceatlas-language-v1'),'Language selection must persist');
-const scripts=['i18n.js','intelligence.js','details.js','alerts.js','organizer-sync.js'];
+const scripts=['i18n.js','intelligence.js','details.js','alerts.js','organizer-sync.js','auto-events.js'];
 for(const file of scripts){try{new Function(read(file))}catch(err){errors.push(file+' syntax error: '+err.message)}}
 const body=index.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 check(Boolean(body),'Homepage inline JS missing');
