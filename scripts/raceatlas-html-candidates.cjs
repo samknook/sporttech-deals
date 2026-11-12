@@ -44,6 +44,11 @@ function dateStrings(text){
  for(const m of text.matchAll(iso))add(dateISO(+m[1],+m[2],+m[3]),m.index,m[0],'iso');
  const full=/\b([0-2]?\d|3[01])\s+(januari|februari|maart|april|mei|juni|juli|augustus|september|oktober|november|december|january|february|march|april|may|june|july|august|september|october|november|december)\s+(20\d{2})\b/gi;
  for(const m of text.matchAll(full))add(dateISO(+m[3],MONTHS[m[2].toLowerCase()],+m[1]),m.index,m[0],'written');
+ const short=/\b([0-2]?\d|3[01])\s+(jan|feb|mrt|mar|apr|mei|may|jun|jul|aug|sep|sept|okt|oct|nov|dec)\.?\s+(20\d{2})\b/gi;
+ for(const m of text.matchAll(short))add(dateISO(+m[3],MONTHS[m[2].toLowerCase()],+m[1]),m.index,m[0],'abbreviated');
+ const european=/\b([0-2]?\d|3[01])[-.]([01]?\d)[-.](20\d{2})\b/g;
+ for(const m of text.matchAll(european))add(dateISO(+m[3],+m[2],+m[1]),m.index,m[0],'numeric_european');
+ // Slash-formatted dates are ambiguous across countries and never inferred.
  const english=/\b(january|february|march|april|may|june|july|august|september|october|november|december)\s+([0-2]?\d|3[01])(?:st|nd|rd|th)?,?\s+(20\d{2})\b/gi;
  for(const m of text.matchAll(english))add(dateISO(+m[3],MONTHS[m[1].toLowerCase()],+m[2]),m.index,m[0],'written');
  return matches;
