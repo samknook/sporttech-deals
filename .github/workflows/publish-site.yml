@@ -54,6 +54,14 @@ jobs:
         run: |
           node tests/test-raceatlas-commercial.cjs
           node tests/test-raceatlas-tracking.cjs
+      - name: Check out independent RaceAtlas staging branch
+        uses: actions/checkout@v4
+        with:
+          ref: raceatlas-staging
+          path: .raceatlas-staging
+          persist-credentials: false
+      - name: Build public noindex staging preview (isolated from live analytics)
+        run: node scripts/build-raceatlas-preview.cjs
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload website files only
