@@ -23,6 +23,7 @@ function safeUrl(input) {
 }
 function classify(result) {
  if(result.error)return 'error';
+ if(result.status>=300&&result.status<400)return 'redirect_needs_review';
  if(result.status===403||result.status===429)return 'blocked_or_rate_limited';
  if(result.status>=400)return 'http_error';
  if(result.contentType&&!(/html|text|pdf/i).test(result.contentType))return 'unexpected_content_type';
