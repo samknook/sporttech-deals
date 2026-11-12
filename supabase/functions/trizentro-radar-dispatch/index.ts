@@ -11,11 +11,11 @@ const live=Deno.env.get('RADAR_EMAIL_LIVE')==='true'&&!!key&&!!resend&&!!sender&
 const api=(table:string,init:RequestInit={})=>fetch(project+'/rest/v1/'+table,{...init,headers:{'apikey':key,'Authorization':'Bearer '+key,'Content-Type':'application/json',...(init.headers||{})},signal:AbortSignal.timeout(8000)});
 function text(v:unknown){return String(v??'')}
 async function hash(v:string){const h=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));return Array.from(new Uint8Array(h),n=>n.toString(16).padStart(2,'0')).join('')}
-function token(){return Array.from(crypto.getRandomValues(new Uint8Array(32)),v=>v.toString(16).padStart(2,'0')).join('')}
 function reply(status:number,data:Record<string,unknown>){return new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store'}})}
 async function jsonRows(query:string){const r=await api(query);if(!r.ok)throw Error('db_read_'+r.status);return await r.json()}
 async function write(table:string,body:unknown){const r=await api(table,{method:'POST',headers:{Prefer:'resolution=merge-duplicates'},body:JSON.stringify(body)});if(!r.ok)throw Error('db_write_'+r.status)}
 const manage=t=>'https://trizentro.com/raceatlas/alerts-beheren.html?action=unsubscribe&token='+encodeURIComponent(t);
+async function signedUnsubscribe(id:string){const k=await crypto.subtle.importKey('raw',new TextEncoder().encode(secret),{name:'HMAC',hash:'SHA-256'},false,['sign']);const sig=await crypto.subtle.sign('HMAC',k,new TextEncoder().encode('unsubscribe|'+id));return id+'.'+Array.from(new Uint8Array(sig),v=>v.toString(16).padStart(2,'0')).join('')}
 async function send(to:string,subject:string,content:string){
  const r=await fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:'Bearer '+resend,'Content-Type':'application/json'},body:JSON.stringify({from:sender,to:[to],subject,text:content}),signal:AbortSignal.timeout(10000)});
  return r.ok;
@@ -53,10 +53,8 @@ Deno.serve(async req=>{
    for(const target of targets){
     const priorSent=await jsonRows('trizentro_radar_deliveries?alert_id=eq.'+target.id+'&signature=eq.'+signature+'&select=sent_at');
     if(priorSent.length)continue;
-    const unsubscribe=token();
-    const newHash=await hash(unsubscribe);
-    const updated=await api('trizentro_email_alerts?id=eq.'+target.id,{method:'PATCH',body:JSON.stringify({unsubscribe_token_hash:newHash})});
-    if(!updated.ok){failures++;allSent=false;continue}
+    // Stable authenticated opt-out: previously emailed unsubscribe links never expire on the next delivery.
+    const unsubscribe=await signedUnsubscribe(target.id);
     const body='Nieuws over jouw opgeslagen wedstrijd bij TriZentro:\n\n'+text(race.event_name)+'\n'+notes.join('\n')+'\n\nControleer de laatste informatie en officiële links bij de organisator via TriZentro.\n\nAfmelden voor deze wedstrijd: '+manage(unsubscribe)+'\n';
     if(await send(target.email,'TriZentro Inschrijfradar: '+text(race.event_name),body)){
      await write('trizentro_radar_deliveries?on_conflict=alert_id,signature',{alert_id:target.id,signature});
