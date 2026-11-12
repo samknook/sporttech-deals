@@ -27,7 +27,7 @@ function detail(e,fromLink=false){
    image.src=artwork;
    image.alt=isAi?'AI-gegenereerd sfeerbeeld bij '+e.name+' (geen echte opname)':'Evenementfoto bij '+e.name;
    image.loading='lazy';image.decoding='async';
-   const caption=el('figcaption',isAi?'Bron: RaceAtlas · AI-gegenereerd sfeerbeeld, geen officiële evenementfoto':(e.imageCredit||'Evenementfoto'));
+   const caption=el('figcaption',isAi?'Bron: TriZentro · AI-gegenereerd sfeerbeeld, geen officiële evenementfoto':(e.imageCredit||'Evenementfoto'));
    if(!isAi&&e.imageRights==='licensed'&&isValidUrl(e.imageSourceUrl)){
     const source=el('a',' · Fotobron');source.href=e.imageSourceUrl;source.rel='noopener noreferrer';source.target='_blank';caption.append(source);
     if(isValidUrl(e.imageLicenseUrl)){const license=el('a',' · Licentie');license.href=e.imageLicenseUrl;license.rel='noopener noreferrer';license.target='_blank';caption.append(license)}
@@ -37,7 +37,7 @@ function detail(e,fromLink=false){
      image.onerror=null;
      image.src='images/featured/'+e.id+'.jpg';
      image.alt='AI-gegenereerd reserve-sfeerbeeld bij '+e.name;
-     caption.textContent='Bron: RaceAtlas · AI-gegenereerd reservebeeld, geen officiële evenementfoto';
+     caption.textContent='Bron: TriZentro · AI-gegenereerd reservebeeld, geen officiële evenementfoto';
     },{once:true});
    }
    hero.append(image,caption);
@@ -56,6 +56,19 @@ function detail(e,fromLink=false){
   highlight.append(item);
  }
  dlg.append(highlight);
+ const quickActions=el('div',null,'tz-detail-quick-actions');
+ const primaryRegistration=isValidUrl(e.registrationUrl)?e.registrationUrl:isValidUrl(e.officialEventUrl)?e.officialEventUrl:null;
+ if(primaryRegistration){
+  const a=el('a',isValidUrl(e.registrationUrl)?'Bekijk inschrijving ↗':'Officiële website ↗','tz-quick-registration');
+  a.href=primaryRegistration;a.target='_blank';a.rel='noopener noreferrer';
+  a.dataset.raEvent=e.id;a.dataset.raOutbound=isValidUrl(e.registrationUrl)?'registration':'organizer';quickActions.append(a);
+ }
+ const quickSave=el('button',null,'tz-quick-save');quickSave.type='button';
+ const renderQuickSave=()=>{const isSaved=!!window.TriZentroSeason?.isSaved(e.id);quickSave.textContent=isSaved?'✓ Bewaard':'+ Bewaar';quickSave.setAttribute('aria-pressed',String(isSaved))};
+ renderQuickSave();quickSave.onclick=()=>{if(window.TriZentroSeason?.toggle){window.TriZentroSeason.toggle(e.id);renderQuickSave();overlay.dispatchEvent(new Event('tz:refresh-saved'))}};
+ quickActions.append(quickSave);
+ overlay.addEventListener('tz:refresh-saved',renderQuickSave);
+ dlg.append(quickActions);
  const facts=el('div',null,'ra-detail-facts');
  const fmtDate=s=>{if(!s)return '';const day=String(s).slice(0,10);return /^\d{4}-\d{2}-\d{2}$/.test(day)?new Date(day+'T12:00:00').toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'}):String(s)};
  const priceText=typeof e.priceEur==='number'?'€ '+e.priceEur.toFixed(2).replace('.',','):typeof e.priceAmount==='number'?(e.priceCurrency==='USD'?'$ ':e.priceCurrency==='AUD'?'A$ ':e.priceCurrency+' ')+e.priceAmount.toLocaleString('nl-NL',{minimumFractionDigits:0,maximumFractionDigits:2}):null;
@@ -99,8 +112,9 @@ function detail(e,fromLink=false){
  season.type='button';
  const updateSeason=()=>{const active=!!window.TriZentroSeason?.isSaved(e.id);season.textContent=active?'✓ Bewaard in mijn seizoen':'+ Bewaar in mijn seizoen';season.setAttribute('aria-pressed',String(active))};
  updateSeason();
- season.onclick=()=>{if(window.TriZentroSeason?.toggle){window.TriZentroSeason.toggle(e.id);updateSeason()}};
+ season.onclick=()=>{if(window.TriZentroSeason?.toggle){window.TriZentroSeason.toggle(e.id);updateSeason();overlay.dispatchEvent(new Event('tz:refresh-saved'))}};
  actions.append(season);
+ overlay.addEventListener('tz:refresh-saved',updateSeason);
  if(registrationUrl&&officialUrl&&registrationUrl!==officialUrl){
   const official=el('a','Officiële website ↗','ra-detail-secondary tz-detail-official');
   official.href=officialUrl;official.rel='noopener noreferrer';official.target='_blank';
@@ -152,6 +166,14 @@ mobileStyle.textContent=`
  .ra-detail-actions>.tz-detail-save{grid-column:1/-1;background:#eef7ea}
  .ra-detail-actions>.tz-detail-official{grid-column:1/-1}
 }
+`;
+mobileStyle.textContent+=`
+.ra-detail-dialog .tz-detail-quick-actions{display:flex;gap:9px;margin:4px 0 14px}
+.ra-detail-dialog .tz-detail-quick-actions>*{flex:1 1 0;min-width:0;display:flex;align-items:center;justify-content:center;border-radius:10px;min-height:46px;text-decoration:none;text-align:center;padding:10px;font:850 13px/1.3 Inter,system-ui,sans-serif;cursor:pointer}
+.ra-detail-dialog .tz-quick-registration{background:#c7ff37;color:#13251b;border:1px solid #c7ff37}
+.ra-detail-dialog .tz-quick-save{background:#eff6e9;color:#234f38;border:1px solid #badab3}
+.ra-detail-dialog .tz-quick-save[aria-pressed="true"]{background:#ddf4d0;border-color:#7bbf6d}
+@media(max-width:700px){.ra-detail-dialog .tz-detail-quick-actions{position:sticky;top:-18px;z-index:8;margin:0 -16px 12px;padding:9px 16px;background:#fff;border-bottom:1px solid #e7ecea;box-shadow:0 6px 14px #122b2310}.ra-detail-dialog .tz-detail-quick-actions>*{min-height:45px}}
 `;
 document.head.append(mobileStyle);
 const style=document.createElement('style');style.textContent=
