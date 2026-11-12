@@ -63,6 +63,7 @@ jobs:
           path: |
             out/raceatlas-discovery-report.json
             out/raceatlas-discovery-report.md
+            out/raceatlas-plain-html-review.csv
           if-no-files-found: warn
           retention-days: 30
       - name: Explain daily results in workflow summary
