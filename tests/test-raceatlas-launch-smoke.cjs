@@ -17,6 +17,22 @@ if(start>=0){
  check(e>p,'Event dataset must terminate');
  if(e>p){try{events=JSON.parse(index.slice(p,e))}catch(error){errors.push('Invalid events JSON: '+error.message)}}
 }
+
+// TriZentro cross-platform navigation regression checks.
+const siteRoot=path.join(process.cwd(),'docs');
+const coreTools=['performance.html','race-dashboard.html','triathlon-calculator.html','race-fuel-planner.html'];
+const legacyPaths=['race-planner.html','race-day-timeline.html','70-3-raceplan.html','triatlon-afstanden.html'];
+for(const filename of coreTools){
+ const html=fs.readFileSync(path.join(siteRoot,filename),'utf8');
+ check(html.includes('tz-site-header')&&html.includes('tz-site-links'),'Shared TriZentro header missing: '+filename);
+ check(html.includes('performance-theme.css'),'Shared Performance styling missing: '+filename);
+ check(!html.includes('src="navigation.js"'),'Legacy navigation injection must not appear: '+filename);
+ for(const legacy of legacyPaths)check(!html.includes('href="'+legacy),'Hidden tool linked from '+filename+': '+legacy);
+ check(html.indexOf('>Voor organisatoren</a>')>html.indexOf('>Performance</a>'),'Organizer destination must remain last: '+filename);
+}
+const calculatorApp=fs.readFileSync(path.join(siteRoot,'triathlon-calculator-app.js'),'utf8');
+check(calculatorApp.includes("'planner-link').href='race-dashboard.html'"),'Finish calculator must route to Race Dashboard, not old Race Planner');
+
 check(events.length>=400,'Expect at least 400 real event entries');
 const ids=new Set(events.map(e=>e.id));
 check(ids.size===events.length,'Duplicate event IDs');
