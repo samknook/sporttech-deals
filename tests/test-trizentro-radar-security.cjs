@@ -26,7 +26,7 @@ must(schedule.includes('secrets.TRIZENTRO_RADAR_CRON_SECRET'),'Scheduler must be
 must(alerts.includes("data.enabled===true"),'Web UI must only show signup if delivery is active');
 must(alerts.includes('emailForm.hidden=true'),'Signup form must be hidden by default');
 must(manage.includes('noindex,nofollow')&&manage.includes('no-referrer'),'Token landing page privacy protections required');
-must(manage.includes('action=')===false,'No token should be hard-coded in landing page');
+must(manage.includes("history.replaceState(null,'',location.pathname)"),'One-time tokens must be removed from the browser address bar');
 must(release.includes('alerts.js?v='),'Event homepage must load alert dialog module');
 new Function(alerts);
 const inline=[...manage.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)];
