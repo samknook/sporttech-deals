@@ -8,6 +8,9 @@ assert.equal(dateISO(2028,2,29),'2028-02-29');
 assert.ok(dateStrings('Op zondag 18 april 2027').some(x=>x.date==='2027-04-18'));
 assert.ok(dateStrings('April 18, 2027').some(x=>x.date==='2027-04-18'));
 assert.ok(dateStrings('2027-04-18T09:00').some(x=>x.date==='2027-04-18'));
+assert.ok(dateStrings('Zondag 7 mrt 2027').some(x=>x.date==='2027-03-07'));
+assert.ok(dateStrings('Aanvang 07.03.2027').some(x=>x.date==='2027-03-07'));
+assert.ok(!dateStrings('07/03/2027').length,'Ambiguous slash dates should not be inferred');
 const html='<!doctype html><html lang="nl"><head><title>De Bosloop 2027 | AV Het Woud</title>'+
 '<style>.hidden{display:none}</style><script>const fakeDate="2028-12-31";</script></head><body>'+
 '<h1>De Bosloop</h1><div>De volgende editie van De Bosloop is op zondag 18 april 2027 in Bergen.</div>'+
