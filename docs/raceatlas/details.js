@@ -9,7 +9,7 @@ const category=e=>e.dateEvidence==='official'?'Bevestigd via organisator':e.date
 const el=(tag,text,className)=>{const x=document.createElement(tag);if(text!=null)x.textContent=text;if(className)x.className=className;return x};
 function copyFallback(text){const t=document.createElement('textarea');t.value=text;t.style.position='fixed';t.style.opacity='0';document.body.append(t);t.select();let ok=false;try{ok=document.execCommand('copy')}catch{}t.remove();return ok}
 async function copy(text){try{if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(text);return true}}catch{}return copyFallback(text)}
-const eventLink=e=>{const url=new URL(location.href);url.searchParams.set('event',e.id);url.hash='';return url.toString()};
+const eventLink=e=>{if(e&&/^ra-\d{1,8}$/.test(e.id)){const slug=String(e.name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,75)||'wedstrijd';return new URL('wedstrijden/'+slug+'-'+e.id+'.html',location.href).toString()}const url=new URL(location.href);url.searchParams.set('event',e.id);url.hash='';return url.toString()};
 function closeDialog(){const d=$('raceatlasDetails');if(!d)return;const previous=d.dataset.returnfocus;d.remove();const url=new URL(location.href);if(url.searchParams.has('event')){url.searchParams.delete('event');history.replaceState(null,'',url.pathname+url.search+url.hash)}if(previous){const b=document.querySelector('[data-ra-detail="'+previous+'"]');if(b)b.focus()}}
 function detail(e,fromLink=false){
  if(!e)return;const old=$('raceatlasDetails');if(old)old.remove();
@@ -122,6 +122,7 @@ function detail(e,fromLink=false){
   actions.append(official);
  }
  const notify=el('button','🔔 Meldingen instellen','ra-detail-secondary');notify.onclick=()=>{closeDialog();if(window.RaceAtlasAlerts?.openForEvent)window.RaceAtlasAlerts.openForEvent(e.id);};actions.append(notify);
+ const permalink=el('a','Open wedstrijdpagina ↗','ra-detail-secondary tz-detail-official');permalink.href=eventLink(e);permalink.setAttribute('aria-label','Open afzonderlijke pagina voor '+e.name);actions.append(permalink);
  const share=el('button','Deel evenement','ra-detail-secondary');share.onclick=async()=>{const u=eventLink(e);if(navigator.share){try{await navigator.share({title:e.name,url:u});return}catch{}}share.textContent=await copy(u)?'Link gekopieerd ✓':'Kopiëren niet gelukt';};actions.append(share);
  const report=el('button','Gegevens corrigeren','ra-detail-secondary');report.onclick=()=>{
  const link=new URL('organisatoren.html',location.href);
