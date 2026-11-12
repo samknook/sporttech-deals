@@ -111,7 +111,7 @@ function parseEvent(item,page,source,today){
  if(!own)return null;
  const locationName=typeof loc?.name==='string'?clean(loc.name):'';
  const addressCountry=typeof address==='object'?clean(address.addressCountry?.name||address.addressCountry):'';
- const key=normalizedUrl(own)+'|'+normalize(name)+'|'+date.slice(0,4);
+ const key=normalizedUrl(own)+'|'+normalize(name)+'|'+date;
  const n=crypto.createHash('sha256').update(key).digest().readUInt32BE(0)%10000000;
  return {
   id:'ra-'+String(80000000+n),name,date,place,sport:source.sport,
@@ -126,7 +126,7 @@ function parseEvent(item,page,source,today){
 function sameRace(a,b){
  const n1=normalize(a.name),n2=normalize(b.name);
  if(n1!==n2)return false;
- if(String(a.date||'').slice(0,4)!==String(b.date||'').slice(0,4))return false;
+ if(String(a.date||'')!==String(b.date||''))return false;
  const city1=normalize(a.place),city2=normalize(b.place);
  return !city1||!city2||city1===city2||city1.includes(city2)||city2.includes(city1);
 }
@@ -145,10 +145,18 @@ function choose(observed,catalog,previous,today){
  const oldUpdates=(previous.updates||[]).filter(e=>e&&/^ra-\d+$/.test(e.id||''));
  const updates=new Map(oldUpdates.map(e=>[e.id,e]));
  const review=[],newEvents=[],changed=[];
+ // One organizer page may legitimately advertise multiple races in the same year.
+ const recurring=new Map();
+ for(const item of observed){
+  const key=normalizedUrl(item.officialEventUrl)+'|'+normalize(item.name)+'|'+item.date.slice(0,4);
+  recurring.set(key,(recurring.get(key)||0)+1);
+ }
  for(const race of observed){
+  const seriesKey=normalizedUrl(race.officialEventUrl)+'|'+normalize(race.name)+'|'+race.date.slice(0,4);
+  const isRecurring=(recurring.get(seriesKey)||0)>1;
   const already=catalog.find(e=>sameRace(e,race));
   if(already&&already.date===race.date)continue;
-  const update=catalog.filter(e=>sourceMatch(e,race));
+  const update=isRecurring?[]:catalog.filter(e=>sourceMatch(e,race));
   if(update.length===1){
    const old=update[0];
    if(old.date!==race.date){
@@ -161,12 +169,12 @@ function choose(observed,catalog,previous,today){
   const urlMatches=catalog.filter(e=>String(e.date||'').slice(0,4)===race.date.slice(0,4)
    &&normalizedUrl(e.officialEventUrl)===normalizedUrl(race.officialEventUrl)
    &&new URL(race.officialEventUrl).pathname.replace(/\/$/,'').length>=4);
-  if(urlMatches.length){
+  if(urlMatches.length&&!isRecurring){
    review.push({name:race.name,date:race.date,reason:'organizer_url_matches_existing_different_name',url:race.officialEventUrl,
     matchingIds:urlMatches.map(e=>e.id)});
    continue;
   }
-  if(already){review.push({name:race.name,date:race.date,reason:'existing_race_same_year_date_conflict',url:race.officialEventUrl});continue}
+  if(already){review.push({name:race.name,date:race.date,reason:'existing_race_same_date_conflict',url:race.officialEventUrl});continue}
   const other=[...auto.values()].find(e=>sameRace(e,race));
   if(other){
    if(other.date===race.date){continue}
@@ -178,6 +186,22 @@ function choose(observed,catalog,previous,today){
   }
   if(seenIds.has(race.id)||auto.has(race.id)&&!sameRace(auto.get(race.id),race)){
    review.push({name:race.name,date:race.date,reason:'generated_id_collision',url:race.officialEventUrl});continue;
+  }
+  // A single date change on an existing event-specific URL can retain a stable ID.
+  const existingOnUrl=[...auto.values()].filter(e=>normalize(e.name)===normalize(race.name)
+    &&String(e.date||'').slice(0,4)===race.date.slice(0,4)
+    &&normalizedUrl(e.officialEventUrl)===normalizedUrl(race.officialEventUrl));
+  if(!isRecurring&&existingOnUrl.length===1){
+   const old=existingOnUrl[0];
+   if(old.date!==race.date){
+    auto.set(old.id,{...old,...race,id:old.id,verifiedOn:today});
+    changed.push({id:old.id,name:race.name,date:race.date,officialEventUrl:race.officialEventUrl});
+   }
+   continue;
+  }
+  if(existingOnUrl.length>1&&!isRecurring){
+   review.push({name:race.name,date:race.date,reason:'multiple_organizer_editions_ambiguous',url:race.officialEventUrl});
+   continue;
   }
   const oldAuto=auto.get(race.id);
   auto.set(race.id,{...oldAuto,...race,verifiedOn:today});
