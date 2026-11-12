@@ -5,7 +5,7 @@ const fs=require('node:fs');
 const BASE='https://lpzndnxloykcthbsqcet.supabase.co/rest/v1/raceatlas_organizer_research_queue';
 const KEY='sb_publishable_AE_Qr8VLmWb2020QCOEAKQ_Nl5mZ5Sw';
 function clean(value){return String(value??'').replace(/[\r\n\t]+/g,' ').trim()}
-function csvCell(value){return '"'+clean(value).replace(/"/g,'""')+'"'}
+function csvCell(value){const raw=clean(value);const safe=/^[=+@-]/.test(raw)?"'"+raw:raw;return '"'+safe.replace(/"/g,'""')+'"'}
 function researchQuery(event){
  return [event.event_name,event.city,event.country_code,'organisator officiële website inschrijven'].filter(Boolean).join(' ');
 }
