@@ -117,4 +117,4 @@ $('eventForm').addEventListener('submit',async e=>{
  }finally{button.disabled=false;button.textContent='Evenement aanmelden ↗';}
 });
 $('copy').onclick=async()=>{if(!$('eventForm').reportValidity())return;const t=details();try{await navigator.clipboard.writeText(t);$('status').textContent='Gegevens gekopieerd.'}catch{$('preview').style.display='block';$('preview').textContent=t;$('status').textContent='Selecteer en kopieer bovenstaande gegevens.'}};
-</script><p class="muted" style="text-align:center;margin:35px auto 12px"><a href="privacy.html">Privacy &amp; gegevensgebruik</a></p><script src="i18n.js?v=20261112-nav3" defer></script></body></html>
+</script><p class="muted" style="text-align:center;margin:35px auto 12px"><a href="privacy.html">Privacy &amp; gegevensgebruik</a></p><script src="tracking.js?v=20261112-traffic1" defer></script><script src="i18n.js?v=20261112-nav3" defer></script></body></html>
