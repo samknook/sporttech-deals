@@ -1,0 +1,225 @@
+#!/usr/bin/env node
+/* RaceAtlas official-source discovery + safe structured-date refresh.
+ * Trust boundary: only explicitly allowlisted organizers; only JSON-LD Event
+ * with a real future YYYY-MM-DD and named Place; never guess ticket availability.
+ * Public auto-events are generated as static JSON. No Supabase secret or write.
+ */
+'use strict';
+const fs=require('node:fs');
+const path=require('node:path');
+const crypto=require('node:crypto');
+const net=require('node:net');
+const SITE='docs/raceatlas';
+const INPUT='scripts/raceatlas-official-source-seeds.json';
+const OUTPUT=SITE+'/auto-events.json';
+const MAX_PAGES=36;
+const LINKS_PER_SOURCE=3;
+const TIMEOUT_MS=9500;
+const MAX_BYTES=350000;
+const MIN_NAME=5;
+const acceptLink=/(event|wedstrijd|race|run|loop|marathon|triathlon|duathlon|mtb|gravel|toer|cross|kalender|agenda|202[6-9])/i;
+const clean=s=>String(s||'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
+const normalize=s=>clean(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+function safeUrl(value,host){
+ try{
+  const u=new URL(value);
+  if(u.protocol!=='https:'||u.username||u.password||u.port&&u.port!=='443')return null;
+  if(net.isIP(u.hostname)||!u.hostname.includes('.')||/\.(?:local|internal|test|localhost)$/i.test(u.hostname))return null;
+  if(host&&u.hostname.toLowerCase()!==host.toLowerCase())return null;
+  if(/\.(?:pdf|jpg|png|gif|css|js|xml|zip|webp|svg)$/i.test(u.pathname))return null;
+  u.hash='';u.search='';
+  return u.toString();
+ }catch{return null}
+}
+const normalizedUrl=u=>{try{return new URL(u).toString().replace(/\/$/,'').toLowerCase()}catch{return ''}};
+function readCatalog(html){
+ const a=html.indexOf('const EVENTS=');
+ if(a<0)throw Error('Cannot find catalog');
+ const start=a+'const EVENTS='.length,end=html.indexOf(';\n',start);
+ if(end<0)throw Error('Cannot find catalog end');
+ return JSON.parse(html.slice(start,end));
+}
+function walkJsonLd(node,result=[]){
+ if(Array.isArray(node)){for(const v of node)walkJsonLd(v,result);return result}
+ if(!node||typeof node!=='object')return result;
+ if(node['@graph'])walkJsonLd(node['@graph'],result);
+ const kinds=[node['@type']].flat().filter(Boolean).map(String);
+ if(kinds.some(k=>/^(?:Event|SportsEvent|Festival|Marathon)$/i.test(k)))result.push(node);
+ return result;
+}
+function htmlEvents(html){
+ const items=[];
+ const scripts=html.matchAll(/<script\b[^>]*type\s*=\s*["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi);
+ for(const match of scripts){
+  try{walkJsonLd(JSON.parse(match[1].replace(/^\s*<!--|-->\s*$/g,'')),items)}catch{}
+ }
+ return items;
+}
+function links(html,base,host){
+ const result=[];
+ for(const m of html.matchAll(/<a\b[^>]*href\s*=\s*["']([^"'<>]+)["'][^>]*>/gi)){
+  const v=m[1].replace(/&amp;/gi,'&');
+  let u;
+  try{u=safeUrl(new URL(v,base).toString(),host)}catch{continue}
+  if(u&&acceptLink.test(new URL(u).pathname)&&!result.includes(u))result.push(u);
+ }
+ return result;
+}
+function eventDate(raw,today){
+ const day=String(raw||'').match(/^(20\d{2}-\d{2}-\d{2})(?:$|T)/)?.[1];
+ if(!day||!Number.isFinite(Date.parse(day+'T12:00:00Z')))return null;
+ if(new Date(day+'T12:00:00Z').toISOString().slice(0,10)!==day)return null;
+ const ms=Date.parse(day+'T12:00:00Z'),now=Date.parse(today+'T12:00:00Z');
+ if(ms<now-86400000||ms>now+730*86400000)return null;
+ return day;
+}
+function parseEvent(item,page,source,today){
+ const name=clean(item.name);
+ if(name.length<MIN_NAME||name.length>145)return null;
+ const date=eventDate(item.startDate,today);
+ if(!date)return null;
+ const loc=[item.location].flat().find(v=>v&&typeof v==='object'&&v['@type']!=='VirtualLocation');
+ const address=loc?.address;
+ const place=clean((typeof address==='object'?address.addressLocality:null)||loc?.name||(typeof address==='string'?address:null));
+ if(place.length<2||place.length>95)return null;
+ const origin=new URL(page);
+ const own=safeUrl(item.url||page,origin.hostname);
+ if(!own)return null;
+ const locationName=typeof loc?.name==='string'?clean(loc.name):'';
+ const addressCountry=typeof address==='object'?clean(address.addressCountry?.name||address.addressCountry):'';
+ const key=normalizedUrl(own)+'|'+normalize(name)+'|'+date.slice(0,4);
+ const n=crypto.createHash('sha256').update(key).digest().readUInt32BE(0)%10000000;
+ return {
+  id:'ra-'+String(80000000+n),name,date,place,sport:source.sport,
+  discipline:source.sport==='Fietsen'?'Toertocht':source.sport==='Triatlon'?'Triatlon':'Weg',
+  distance:'Afstanden bij organisator',
+  country:source.country||addressCountry||'Nederland',
+  officialEventUrl:own,source:page,verifiedOn:today,dateEvidence:'official',
+  registrationStatus:'check',status:'source',major:false,sourceType:'organizer',
+  sourceMethod:'official_jsonld_event',locationName
+ };
+}
+function sameRace(a,b){
+ const n1=normalize(a.name),n2=normalize(b.name);
+ if(n1!==n2)return false;
+ if(String(a.date||'').slice(0,4)!==String(b.date||'').slice(0,4))return false;
+ const city1=normalize(a.place),city2=normalize(b.place);
+ return !city1||!city2||city1===city2||city1.includes(city2)||city2.includes(city1);
+}
+function sourceMatch(a,b){
+ const url=normalizedUrl(a.officialEventUrl);
+ if(!url||url.endsWith('://'))return false;
+ const pathPart=new URL(url).pathname.replace(/\/$/,'');
+ if(pathPart.length<4)return false; // root page never identifies one event
+ return url===normalizedUrl(b.officialEventUrl)&&normalize(a.name)===normalize(b.name)
+   &&String(a.date||'').slice(0,4)===b.date.slice(0,4);
+}
+function choose(observed,catalog,previous,today){
+ const seenIds=new Set(catalog.map(e=>e.id));
+ const oldEvents=(previous.events||[]).filter(e=>e&&/^ra-8\d{7}$/.test(e.id||'')&&e.date>=today.slice(0,4)+'-01-01');
+ const auto=new Map(oldEvents.map(e=>[e.id,e]));
+ const oldUpdates=(previous.updates||[]).filter(e=>e&&/^ra-\d+$/.test(e.id||''));
+ const updates=new Map(oldUpdates.map(e=>[e.id,e]));
+ const review=[],newEvents=[],changed=[];
+ for(const race of observed){
+  const already=catalog.find(e=>sameRace(e,race));
+  if(already)continue;
+  const update=catalog.filter(e=>sourceMatch(e,race));
+  if(update.length===1){
+   const old=update[0];
+   if(old.date!==race.date){
+    const item={id:old.id,name:old.name,date:race.date,officialEventUrl:race.officialEventUrl,source:race.source,verifiedOn:today};
+    updates.set(old.id,item);changed.push(item);
+   }
+   continue;
+  }
+  if(update.length>1){review.push({name:race.name,date:race.date,reason:'ambiguous_catalog_match',url:race.officialEventUrl});continue}
+  const other=[...auto.values()].find(e=>sameRace(e,race));
+  if(other){if(other.date===race.date)auto.set(other.id,{...other,verifiedOn:today});continue}
+  if(seenIds.has(race.id)||auto.has(race.id)&&!sameRace(auto.get(race.id),race)){
+   review.push({name:race.name,date:race.date,reason:'generated_id_collision',url:race.officialEventUrl});continue;
+  }
+  const oldAuto=auto.get(race.id);
+  auto.set(race.id,{...oldAuto,...race,verifiedOn:today});
+  if(!oldAuto)newEvents.push(race);
+ }
+ const events=[...auto.values()].filter(e=>e.date>=today).sort((a,b)=>a.date.localeCompare(b.date)||a.name.localeCompare(b.name)).slice(0,500);
+ const keptUpdates=[...updates.values()].filter(e=>e.date>=today).slice(0,300);
+ return {data:{version:1,generatedAt:today,events,updates:keptUpdates},review,newEvents,changed};
+}
+async function boundedFetch(url,fetchImpl){
+ const controller=new AbortController();
+ const timer=setTimeout(()=>controller.abort(),TIMEOUT_MS);
+ try{
+  const response=await fetchImpl(url,{redirect:'manual',headers:{Accept:'text/html', 'User-Agent':'RaceAtlasOfficialDiscovery/1.0 (+https://samknook.github.io/sporttech-deals/raceatlas/)'},signal:controller.signal});
+  if(!response.ok||response.status>=300)return null;
+  const type=response.headers.get('content-type')||'';
+  if(!type.includes('html'))return null;
+  const len=Number(response.headers.get('content-length')||0);
+  if(len>MAX_BYTES)return null;
+  const reader=response.body?.getReader();
+  if(!reader)return (await response.text()).slice(0,MAX_BYTES);
+  let length=0;const chunks=[];
+  try{
+   while(true){
+    const {done,value}=await reader.read();
+    if(done)break;
+    const size=Math.min(value.length,MAX_BYTES-length);
+    if(size>0)chunks.push(value.subarray(0,size));
+    length+=size;
+    if(length>=MAX_BYTES)break;
+   }
+  }finally{await reader.cancel().catch(()=>{})}
+  return Buffer.concat(chunks).toString('utf8');
+ }catch{return null}finally{clearTimeout(timer)}
+}
+async function discover(config,catalog,previous,opts={}){
+ const fetchImpl=opts.fetchImpl||fetch;
+ const today=opts.today||new Date().toISOString().slice(0,10);
+ const sources=config.sources.filter(s=>safeUrl(s.url)&&['Hardlopen','Fietsen','Triatlon'].includes(s.sport)).slice(0,20);
+ let pageCount=0;
+ const seenPages=new Set(),events=[],sourceResults=[];
+ for(const source of sources){
+  const host=new URL(source.url).hostname;
+  const queue=[source.url],site={url:source.url,checked:0,parsed:0,failed:0};
+  while(queue.length&&site.checked<LINKS_PER_SOURCE+1&&pageCount<MAX_PAGES){
+   const next=queue.shift(),url=safeUrl(next,host);
+   if(!url||seenPages.has(url))continue;
+   seenPages.add(url);pageCount++;site.checked++;
+   const html=await boundedFetch(url,fetchImpl);
+   if(!html){site.failed++;continue}
+   const found=htmlEvents(html);
+   for(const item of found){const race=parseEvent(item,url,source,today);if(race){events.push(race);site.parsed++}}
+   if(source.discover!==false && site.checked===1)queue.push(...links(html,url,host).slice(0,LINKS_PER_SOURCE*3));
+  }
+  sourceResults.push(site);
+ }
+ const unique=[...new Map(events.map(e=>[e.id,e])).values()];
+ const result=choose(unique,catalog,previous,today);
+ return {...result,sourceResults,pagesChecked:pageCount,structuredEvents:unique.length};
+}
+async function main(){
+ const config=JSON.parse(fs.readFileSync(INPUT,'utf8'));
+ const catalog=readCatalog(fs.readFileSync(SITE+'/index.html','utf8'));
+ let previous={version:1,events:[],updates:[]};
+ try{previous=JSON.parse(fs.readFileSync(OUTPUT,'utf8'))}catch{}
+ const result=await discover(config,catalog,previous);
+ // No overwrite if no organizer pages were fetched successfully.
+ const success=result.sourceResults.some(s=>s.checked>s.failed);
+ fs.mkdirSync('out',{recursive:true});
+ const report={generatedAt:new Date().toISOString(),pagesChecked:result.pagesChecked,
+   structuredEvents:result.structuredEvents,newEvents:result.newEvents,changed:result.changed,
+   needsReview:result.review,sourceResults:result.sourceResults,autoPublished:success};
+ fs.writeFileSync('out/raceatlas-discovery-report.json',JSON.stringify(report,null,2)+'\n');
+ fs.writeFileSync('out/raceatlas-discovery-report.md',
+   '# RaceAtlas official-source discovery\n\nOfficial organizers only. Published changes require structured event date and place. No prices or registration availability inferred.\n\n'+
+   '- Pages checked: '+result.pagesChecked+'\n- Structured events: '+result.structuredEvents+'\n- Newly qualified events: '+result.newEvents.length+
+   '\n- Existing date revisions: '+result.changed.length+'\n- Ambiguities needing review: '+result.review.length+
+   '\n- Published: '+success+'\n\n'+result.newEvents.map(e=>'- NEW '+e.name+' ('+e.date+') — '+e.officialEventUrl).join('\n')+
+   '\n'+result.changed.map(e=>'- UPDATED '+e.id+' — '+e.date).join('\n')+'\n');
+ if(!success){console.log('No first-party source responded; public JSON preserved');return}
+ fs.writeFileSync(OUTPUT,JSON.stringify(result.data,null,2)+'\n');
+ console.log(JSON.stringify({pagesChecked:result.pagesChecked,structuredEvents:result.structuredEvents,newEvents:result.newEvents.length,updated:result.changed.length,review:result.review.length}));
+}
+if(require.main===module)main().catch(e=>{console.error(e.message);process.exitCode=1});
+module.exports={safeUrl,htmlEvents,links,eventDate,parseEvent,choose,discover,readCatalog};
