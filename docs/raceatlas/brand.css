@@ -58,3 +58,7 @@ footer .raBrandAboutLink{color:#a8c6c0!important}
 .raCampaignCard p{font-size:13px;color:#617269;margin:0 0 15px}
 .raCampaignCard a{color:#174b32;font-size:13px;font-weight:800;text-underline-offset:3px}
 @media(max-width:630px){.raCampaignSlot{padding:14px}.raCampaignHeading{display:block}.raCampaignHeading p{margin-top:8px}.raCampaignGrid{grid-template-columns:1fr}}
+
+/* TriZentro official icon-only mark. Brand remains accessible via image alt. */
+header .brand img.tz-logo-image,header .tz-site-brand img.tz-logo-image{display:block!important;width:52px!important;height:52px!important;min-width:52px!important;object-fit:contain;border-radius:13px;background:#fff;padding:2px;box-shadow:0 4px 18px #0003;clip-path:none!important}
+@media(max-width:570px){header .brand img.tz-logo-image,header .tz-site-brand img.tz-logo-image{width:45px!important;height:45px!important;min-width:45px!important;border-radius:11px}}
