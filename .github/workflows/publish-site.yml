@@ -46,6 +46,8 @@ jobs:
         run: node tests/test-raceatlas-i18n.cjs
       - name: RaceAtlas launch smoke check
         run: node tests/test-raceatlas-launch-smoke.cjs
+      - name: Validate email radar opt-in and safe launch gating
+        run: node tests/test-raceatlas-email-radar.cjs
       - name: Validate automatic race discovery and update feed
         run: |
           node tests/test-raceatlas-official-discovery.cjs
