@@ -467,6 +467,7 @@ const translatedPatterns=[
     "Show $1 more events ↓"
   ]
 ].map(([pattern,to])=>[new RegExp(pattern,"i"),to]);
+const sentenceReplacements=[["(\\d+) te plannen","$1 left to plan"],["Over (\\d+) dagen","In $1 days"],["Over 1 dag","In 1 day"],["Vandaag","Today"],["Morgen","Tomorrow"],["(\\d+) met officieel bevestigde datum","$1 with officially confirmed dates"],["(\\d+) nog te controleren","$1 to verify"],["(\\d+) wedstrijden opgeslagen","$1 races saved"],["(\\d+) evenementen opgeslagen","$1 saved events"],["(\\d+) bevestigde wedstrijd(en)?","$1 confirmed races"],["(\\d+) te controleren","$1 to verify"],["(\\d+) op wachtlijst","$1 on waitlist"],["(\\d+) ingeschreven","$1 registered"],["(\\d+) gepland(e)? wedstrijden","$1 planned races"],["Datum vermeld, niet bevestigd","Date listed, unconfirmed"],["Nog niet automatisch gecontroleerd","Not automatically verified"],["nog niet bevestigd","not yet confirmed"],["nog te controleren datum","date to verify"],["volgens bron","according to source"],["bij organisator","with organizer"],[" · (\\\\d+) met prijs"," · $1 with prices"],[" · (\\\\d+) met officiële evenementwebsite"," · $1 with an official event website"],[" en (\\\\d+) andere"," and $1 others"]].map(([p,v])=>[new RegExp(p,"gi"),v]);
 const placeholders={
 'Bijv. Egmond, gravel, marathon…':'E.g. Egmond, gravel, marathon…',
 'Zoek op wedstrijd of plaats':'Search by event or location',
@@ -515,6 +516,7 @@ function translation(text){
  let result=text;
  for(const [pattern,replacement] of translatedPatterns)result=result.replace(pattern,replacement);
  for(const [pattern,replacement] of partials)result=result.replace(pattern,replacement);
+ for(const [pattern,replacement] of sentenceReplacements)result=result.replace(pattern,replacement);
  for(const [nl,en] of monthNames)result=result.replace(new RegExp('\\b'+nl+'\\b','gi'),en);
  return result;
 }
