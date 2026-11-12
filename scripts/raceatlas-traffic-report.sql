@@ -27,3 +27,30 @@ select day,
 from public.raceatlas_outbound_click_daily
 where event_id='ra-0'
 group by day order by day desc limit 90;
+
+-- 5. Estimated daily unique visitors (site overall), per-day, NOT cross-day people.
+select day,unique_count as estimated_daily_unique_visitors
+from public.raceatlas_daily_unique_report
+where event_id='ra-site' and kind='site_view'
+order by day desc limit 30;
+
+-- 6. Unique viewers estimated per event and view type, today / last 30 days.
+-- Rolling 30-day totals sum daily uniques: one returning person on two days counts twice.
+select e.event_id,e.event_name,
+ coalesce(sum(u.unique_count) filter(where u.kind='card_view'),0)::integer as sum_daily_unique_card_viewers_30d,
+ coalesce(sum(u.unique_count) filter(where u.kind='detail_view'),0)::integer as sum_daily_unique_detail_viewers_30d
+from public.raceatlas_event_intelligence e
+left join public.raceatlas_daily_unique_report u
+ on e.event_id=u.event_id and u.day >= (now() at time zone 'UTC')::date - 29
+group by e.event_id,e.event_name
+order by sum_daily_unique_detail_viewers_30d desc,e.event_name;
+
+-- 7. Daily site total, estimated uniques and views to compare repeated visits.
+select m.day,
+ max(m.clicks) filter(where m.event_id='ra-site' and m.kind='site_view') as pageviews,
+ max(u.unique_count) filter(where u.event_id='ra-site' and u.kind='site_view') as estimated_unique_visitors
+from public.raceatlas_outbound_click_daily m
+left join public.raceatlas_daily_unique_report u
+ on u.day=m.day and u.event_id='ra-site' and u.kind='site_view'
+where m.event_id='ra-site' and m.kind='site_view'
+group by m.day order by m.day desc limit 30;
