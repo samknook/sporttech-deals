@@ -790,7 +790,7 @@ function setLanguage(next,updateUrl=true){
  document.documentElement.lang=next;
  const path=location.pathname||'';
  const page=path.includes('organisatoren.html')?'organizer':path.includes('gegevenskwaliteit.html')?'quality':path.includes('privacy.html')?'privacy':path.includes('over.html')?'about':'home';
- const titles={home:{nl:'RaceAtlas — Vind jouw volgende wedstrijd',en:'RaceAtlas — Discover. Plan. Race.'},organizer:{nl:'Voor organisatoren — RaceAtlas',en:'For Organizers — RaceAtlas'},quality:{nl:'Gegevenskwaliteit & correcties — RaceAtlas',en:'Data Quality & Corrections — RaceAtlas'},privacy:{nl:'Privacy — RaceAtlas',en:'Privacy — RaceAtlas'},about:{nl:'Over RaceAtlas',en:'About RaceAtlas'}};
+ const titles={home:{nl:'TriZentro — Vind jouw volgende wedstrijd',en:'TriZentro — Discover. Plan. Race.'},organizer:{nl:'Voor organisatoren — TriZentro',en:'For Organizers — TriZentro'},quality:{nl:'Gegevenskwaliteit & correcties — RaceAtlas',en:'Data Quality & Corrections — RaceAtlas'},privacy:{nl:'Privacy — RaceAtlas',en:'Privacy — RaceAtlas'},about:{nl:'Over RaceAtlas',en:'About RaceAtlas'}};
  document.title=titles[page][next];
  if(updateUrl){
   const u=new URL(location.href);
