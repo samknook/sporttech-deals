@@ -177,6 +177,57 @@ Object.assign(strings,{
   "Dezelfde sport als jouw seizoen": "Same sport as your season",
   "Vergelijkbare afstand": "Similar distance"
 });
+Object.assign(strings,{
+  "Sluiten": "Close",
+  "Locatie": "Location",
+  "Afstanden": "Distances",
+  "Laatst gecontroleerd": "Last checked",
+  "Einde inschrijfperiode": "Registration deadline",
+  "Programma/datumtoelichting": "Schedule / date note",
+  "Prijsstatus": "Price status",
+  "Extra informatie": "Additional information",
+  "Verdere openingsinformatie": "More opening details",
+  "Pre-registratie vanaf": "Pre-registration opens",
+  "Opening inschrijving": "Registration opens",
+  "Nog niet gepubliceerd": "Not yet published",
+  "Openingsdatum nog niet gepubliceerd": "Opening date not yet published",
+  "Inschrijving nog niet geopend (volgens organisator)": "Registration not yet open (according to organizer)",
+  "Bij laatst gecontroleerde bron: reguliere startbewijzen uitverkocht": "Standard entries sold out at last source check",
+  "Reguliere inschrijfperiode gesloten (alternatieven mogelijk)": "Standard registration closed (alternatives may exist)",
+  "Verschilt per onderdeel; zie aanvullende informatie": "Varies by event category; see details",
+  "Inschrijving opent later volgens bron": "Registration opens later according to source",
+  "Alleen op locatie inschrijven": "On-site registration only",
+  "Late-bird-inschrijving vermeld": "Late registration listed",
+  "Inschrijfpagina beschikbaar; controleer actuele status": "Registration page available; verify current status",
+  "Verwachte openingsperiode bekend": "Expected registration period known",
+  "Openingsdatum of actuele status niet bevestigd": "Opening date or current status unconfirmed",
+  "Actuele beschikbaarheid controleren bij organisator": "Check live availability with the organizer",
+  "Tegenstrijdige informatie op officiële bron — niet bevestigd": "Conflicting information on the official source — unconfirmed",
+  "Tegenstrijdige prijzen op organisatorwebsite — controleer bij organisator": "Conflicting fees on organizer website — verify with organizer",
+  "Prijs en inschrijfdatum zijn alleen ingevuld wanneer er broninformatie beschikbaar is. Controleer wijzigingen, verschillende tarieven en beschikbaarheid altijd bij de organisator. Een maand zonder specifieke dag is geen bevestigde openingsdatum.": "Fees and registration dates are shown only when source information is available. Always confirm changes, different fees and availability with the organizer. A month without an exact day is not a confirmed opening date.",
+  "Voor dit evenement ontbreekt nog een specifieke bronlink. De vermelde wedstrijddatum en gegevens moeten nog gecontroleerd worden bij de organisator. Je kunt via Gegevens corrigeren een officiële bron doorgeven.": "This event is missing a dedicated source link. The listed race date and details still need organizer verification. You can submit an official source through Correct details.",
+  "Bron inschrijfgegevens: ": "Registration source: ",
+  "Bron prijs: ": "Fee source: ",
+  "Bekijk inschrijfbron ↗": "Check registration source ↗",
+  "Deel evenement": "Share event",
+  "🔔 Meldingen instellen": "🔔 Configure alerts",
+  "Bron: RaceAtlas · AI-gegenereerd sfeerbeeld, geen officiële evenementfoto": "Source: RaceAtlas · AI-generated illustration, not an official event photo",
+  "Bron: RaceAtlas · AI-gegenereerd reservebeeld, geen officiële evenementfoto": "Source: RaceAtlas · AI-generated fallback artwork, not an official event photo",
+  "Evenementfoto": "Event photo",
+  " · Fotobron": " · Photo source",
+  " · Licentie": " · License",
+  "Kopiëren niet gelukt": "Copy failed",
+  "Bewaar je voorkeuren en voeg bekende wedstrijd- en inschrijfdatums toe aan je eigen agenda.": "Save your preferences and add known race and registration dates to your own calendar.",
+  "Officiële wedstrijddatum bekend": "Official race date known",
+  "Herinnering: 1 week, 1 dag en op de dag zelf": "Remind me: 1 week, 1 day and race day",
+  "De wedstrijddatum is nog niet officieel bevestigd. Daarom maken we hiervoor geen kalenderherinnering. Een bevestigde openingsdatum voor inschrijving kan wel apart worden toegevoegd.": "The race date is not yet officially confirmed, so no calendar reminder can be created. A confirmed registration opening date can still be added separately.",
+  "Automatische e-mails zijn nog niet actief: daarvoor moeten een beveiligde verzenddienst, bevestiging van e-mailadressen en afmeldfunctie worden aangesloten. We verzamelen nu geen e-mailadressen. Voorkeuren blijven op dit apparaat.": "Automatic emails are not active yet. They require a secure sending service, verified email addresses and unsubscribe support. We do not collect email addresses yet. Preferences stay on your device.",
+  "Bewaar voorkeuren": "Save preferences",
+  "Broncontrole geregistreerd": "Source review recorded",
+  "Officiële bron opnieuw bekijken": "Recheck official source",
+  "Event details": "Event details",
+  "Prijs en inschrijfdatum": "Fee and registration date"
+});
 const placeholders={
 'Bijv. Egmond, gravel, marathon…':'E.g. Egmond, gravel, marathon…',
 'Zoek op wedstrijd of plaats':'Search by event or location',
@@ -308,6 +359,10 @@ function setLanguage(next,updateUrl=true){
  lang=next;
  try{localStorage.setItem(KEY,next)}catch{}
  document.documentElement.lang=next;
+ const path=location.pathname||'';
+ const page=path.includes('organisatoren.html')?'organizer':path.includes('gegevenskwaliteit.html')?'quality':'home';
+ const titles={home:{nl:'RaceAtlas — Vind jouw volgende wedstrijd',en:'RaceAtlas — Discover. Plan. Race.'},organizer:{nl:'Voor organisatoren — RaceAtlas',en:'For Organizers — RaceAtlas'},quality:{nl:'Gegevenskwaliteit & correcties — RaceAtlas',en:'Data Quality & Corrections — RaceAtlas'}};
+ document.title=titles[page][next];
  if(updateUrl){
   const u=new URL(location.href);
   if(next==='en')u.searchParams.set('lang','en');else u.searchParams.delete('lang');
