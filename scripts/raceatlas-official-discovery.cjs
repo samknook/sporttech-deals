@@ -92,9 +92,14 @@ function eventDate(raw,today){
  if(ms<now-86400000||ms>now+730*86400000)return null;
  return day;
 }
+function raceLike(name){
+ const n=normalize(name);
+ if(/\b(cursus|training|clubrit|jaarvergadering|vergadering|workshop|reanimatie|nieuws|uitslagen|webinar|infoavond|informatiebijeenkomst|proefrijden|clinic|open dag|vrijwilligersavond|ledenavond|presentatie|feestavond)\b/i.test(n))return false;
+ return /(?:marathon|halve|run|loop|trail|cross|triathlon|triatlon|duathlon|duatlon|gravel|mtb|mountainbike|toer(?:tocht)?|tocht|sportive|ironman|zwemloop|swimrun|strade bianche|ronde van|race|wedstrijd|ultra|cyclo|fondo|velo|gran fondo|sprint|tijdrit|5k|10k|kilometer|\bkm\b)/i.test(n);
+}
 function parseEvent(item,page,source,today){
  const name=clean(item.name);
- if(name.length<MIN_NAME||name.length>145)return null;
+ if(name.length<MIN_NAME||name.length>145||!raceLike(name))return null;
  const date=eventDate(item.startDate,today);
  if(!date)return null;
  const loc=[item.location].flat().find(v=>v&&typeof v==='object'&&v['@type']!=='VirtualLocation');
@@ -153,6 +158,14 @@ function choose(observed,catalog,previous,today){
    continue;
   }
   if(update.length>1){review.push({name:race.name,date:race.date,reason:'ambiguous_catalog_match',url:race.officialEventUrl});continue}
+  const urlMatches=catalog.filter(e=>String(e.date||'').slice(0,4)===race.date.slice(0,4)
+   &&normalizedUrl(e.officialEventUrl)===normalizedUrl(race.officialEventUrl)
+   &&new URL(race.officialEventUrl).pathname.replace(/\/$/,'').length>=4);
+  if(urlMatches.length){
+   review.push({name:race.name,date:race.date,reason:'organizer_url_matches_existing_different_name',url:race.officialEventUrl,
+    matchingIds:urlMatches.map(e=>e.id)});
+   continue;
+  }
   if(already){review.push({name:race.name,date:race.date,reason:'existing_race_same_year_date_conflict',url:race.officialEventUrl});continue}
   const other=[...auto.values()].find(e=>sameRace(e,race));
   if(other){
@@ -291,4 +304,4 @@ async function main(){
  console.log(JSON.stringify({pagesChecked:result.pagesChecked,structuredEvents:result.structuredEvents,newEvents:result.newEvents.length,updated:result.changed.length,review:result.review.length,pageChanges:result.contentChanges.length,feedChanged:Boolean(materiallyChanged)}));
 }
 if(require.main===module)main().catch(e=>{console.error(e.message);process.exitCode=1});
-module.exports={safeUrl,htmlEvents,links,linkScore,eventDate,parseEvent,choose,discover,readCatalog,monitorExisting,verifiedOrganizerSources,fingerprint};
+module.exports={safeUrl,htmlEvents,links,linkScore,eventDate,parseEvent,raceLike,choose,discover,readCatalog,monitorExisting,verifiedOrganizerSources,fingerprint};
