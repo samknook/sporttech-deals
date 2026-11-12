@@ -14,6 +14,20 @@ const CORS = {
   "Vary":"Origin",
   "Cache-Control":"no-store"
 };
+// Deduplication is per UTC day only. Do not log or store the raw IP/User-Agent.
+const encoder=new TextEncoder();
+async function dailyDigest(req:Request):Promise<string|null>{
+ const ip=req.headers.get("cf-connecting-ip");
+ const ua=req.headers.get("user-agent");
+ if(!ip||!ua||ip.length>90||ua.length>512)return null;
+ const day=new Date().toISOString().slice(0,10);
+ const hmacKey=await crypto.subtle.importKey(
+  "raw",encoder.encode(SERVICE_KEY),{name:"HMAC",hash:"SHA-256"},false,["sign"]
+ );
+ const input=day+"|raceatlas|"+ip+"|"+ua;
+ const signature=await crypto.subtle.sign("HMAC",hmacKey,encoder.encode(input));
+ return [...new Uint8Array(signature)].map(x=>x.toString(16).padStart(2,"0")).join("");
+}
 function respond(status:number,payload:Record<string,unknown>):Response {
  return new Response(JSON.stringify(payload),{status,headers:{...CORS,"Content-Type":"application/json"}});
 }
@@ -43,6 +57,23 @@ Deno.serve(async (request:Request):Promise<Response>=>{
    signal:AbortSignal.timeout(4000)
   });
   if(!result.ok)return respond(503,{ok:false});
+  // Unique daily estimates apply to views only; outbound clicks remain simple counts.
+  if(kind==="site_view"||kind==="card_view"||kind==="detail_view"){
+   try{
+    const digest=await dailyDigest(request);
+    if(digest){
+     const unique=await fetch(PROJECT_URL+"/rest/v1/rpc/raceatlas_record_daily_unique",{
+      method:"POST",
+      headers:{"Content-Type":"application/json",apikey:SERVICE_KEY,Authorization:"Bearer "+SERVICE_KEY},
+      body:JSON.stringify({p_event_id:eventId,p_kind:kind,p_digest:digest}),
+      signal:AbortSignal.timeout(4000)
+     });
+     if(unique.ok)return respond(202,{ok:true,uniqueRecorded:true});
+    }
+   }catch{}
+   // Recording an ordinary view must not fail when unique estimation cannot run.
+   return respond(202,{ok:true,uniqueRecorded:false});
+  }
   return respond(202,{ok:true});
  }catch{return respond(503,{ok:false})}
 });
