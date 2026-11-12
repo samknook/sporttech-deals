@@ -1,0 +1,31 @@
+name: RaceAtlas daily source-quality review
+on:
+  schedule:
+    - cron: '25 6 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: raceatlas-source-quality
+  cancel-in-progress: false
+jobs:
+  review-urgent-events:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run offline unit tests
+        run: node tests/test-raceatlas-source-health.cjs
+      - name: Test urgent event source links (no publishing or DB writes)
+        run: node scripts/raceatlas-source-health.cjs
+      - name: Upload audit result for manual review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raceatlas-source-review
+          path: out/raceatlas-source-health.*
+          if-no-files-found: warn
+          retention-days: 30
