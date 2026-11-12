@@ -772,7 +772,9 @@ function openAccount(){switchPage('saved')}
 $('raHeroAccount').onclick=openAccount;
 
 
-$('navExplore').onclick=()=>switchPage('explore');$('navSaved').onclick=()=>switchPage('saved');$('back').onclick=()=>switchPage('explore');
+$('navExplore').onclick=()=>switchPage('explore');$('navSaved').onclick=()=>switchPage('saved');
+if(location.hash==='#mijn-seizoen'){switchPage('saved')}else{try{if(sessionStorage.getItem('trizentro:open-season')==='1'){sessionStorage.removeItem('trizentro:open-season');switchPage('saved')}}catch(e){}}
+$('back').onclick=()=>switchPage('explore');
 $('raSeasonTarget').addEventListener('change',e=>{const n=Number(e.target.value);if(Number.isInteger(n)&&n>=1&&n<=50){seasonGoal=n;try{localStorage.setItem(GOAL_STORE,String(n))}catch{};render()}else{e.target.value=String(seasonGoal)}});
 $('raRegistrationIcs').onclick=downloadRegistrationCalendar;
 $('raSeasonBackup').onclick=saveSeasonBackup;
