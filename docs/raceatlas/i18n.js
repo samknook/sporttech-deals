@@ -595,9 +595,9 @@ Object.assign(strings,{
   "Toon meer": "Show more"
 });
 const radarPatterns=[
-  [/^Bekijk alle (\\d+) inschrijfmomenten ↓$/,'View all $1 registration dates ↓'],
-  [/^(\\d+) inschrijfmomenten om te volgen$/,'$1 registration dates to track'],
-  [/^(\\d+) inschrijfmomenten voor mijn seizoen$/,'$1 registration dates for my season']
+  [/^Bekijk alle (\d+) inschrijfmomenten ↓$/,'View all $1 registration dates ↓'],
+  [/^(\d+) inschrijfmomenten om te volgen$/,'$1 registration dates to track'],
+  [/^(\d+) inschrijfmomenten voor mijn seizoen$/,'$1 registration dates for my season']
 ];
 const extendedPatterns=[["^Openingsdatum volgens bron · (.+)$","Registration opening according to source · $1"],["^Deadline volgens bron · (.+)$","Deadline according to source · $1"],["^Datum vermeld — check bij organisator$","Date listed — check with the organizer"],["^(.+) · nog niet automatisch gecontroleerd$","$1 · not automatically reviewed"],["^([A-Za-zÀ-ÿ]+) · bron laatst gecontroleerd op (.+)$","$1 · source last checked on $2"],["^(\\\\d+) (ingeschreven|op wachtlijst|nog te regelen)$","$1 $2"]].map(([p,to])=>[new RegExp(p,"iu"),to]);
 const shortMonths=[["jan","Jan"],["feb","Feb"],["mrt","Mar"],["apr","Apr"],["mei","May"],["jun","Jun"],["jul","Jul"],["aug","Aug"],["sep","Sep"],["okt","Oct"],["nov","Nov"],["dec","Dec"]];
