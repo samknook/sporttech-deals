@@ -150,3 +150,7 @@ body.tz-performance .tz-site-brand{display:inline-flex;align-items:center;line-h
 
 /* Transparent emblem in header: never place on a white tile. */
 body.tz-performance .tz-site-brand img.tz-logo-image{background:transparent!important;border-radius:0!important;padding:0!important;box-shadow:none!important;object-fit:contain!important}
+
+/* Final left-hand emblem sizing, same as Events. */
+body.tz-performance .tz-site-brand img.tz-logo-image{width:76px!important;min-width:76px!important;height:52px!important;object-fit:contain!important}
+@media(max-width:660px){body.tz-performance .tz-site-brand img.tz-logo-image{width:62px!important;min-width:62px!important;height:43px!important}}
