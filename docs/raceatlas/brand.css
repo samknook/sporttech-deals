@@ -65,3 +65,7 @@ header .brand img.tz-logo-image,header .tz-site-brand img.tz-logo-image{display:
 
 /* Transparent emblem in header: never place on a white tile. */
 header .brand img.tz-logo-image,header .tz-site-brand img.tz-logo-image{background:transparent!important;border-radius:0!important;padding:0!important;box-shadow:none!important;object-fit:contain!important}
+
+/* Final left-hand emblem sizing; preserve the wide Z silhouette without distortion. */
+header .brand img.tz-logo-image,header .tz-site-brand img.tz-logo-image{width:76px!important;min-width:76px!important;height:52px!important;object-fit:contain!important}
+@media(max-width:570px){header .brand img.tz-logo-image,header .tz-site-brand img.tz-logo-image{width:62px!important;min-width:62px!important;height:43px!important}}
