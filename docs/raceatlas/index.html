@@ -296,6 +296,19 @@ function raceArtwork(e){
  return null;
 }
 
+function toggleSavedEvent(id){
+ if(!EVENTS.some(event=>event.id===id))return false;
+ saved=saved.includes(id)?saved.filter(value=>value!==id):[...saved,id];
+ if(!cloudSeasonActive){guestSaved=[...saved];try{localStorage.setItem(STORE,JSON.stringify(guestSaved))}catch{}}
+ window.dispatchEvent(new CustomEvent('raceatlas:saved-change',{detail:{id,saved:saved.includes(id)}}));
+ render();
+ return saved.includes(id);
+}
+window.TriZentroSeason={
+ isSaved:id=>saved.includes(id),
+ toggle:toggleSavedEvent,
+ count:()=>saved.length
+};
 function eventCard(e){
  const d=getDate(e),sportClass=e.sport==='Fietsen'?'bike':e.sport==='Triatlon'?'tri':'';
  const duo=/duat(h)?lon|run[ -]?bike[ -]?run|\brbr\b|wintertria/i.test([e.name,e.discipline].join(' '));
@@ -345,7 +358,7 @@ function eventCard(e){
   }
  }
 
- card.querySelector('.save').onclick=()=>{saved=saved.includes(e.id)?saved.filter(id=>id!==e.id):[...saved,e.id];if(!cloudSeasonActive){guestSaved=[...saved];try{localStorage.setItem(STORE,JSON.stringify(guestSaved))}catch{}}window.dispatchEvent(new CustomEvent('raceatlas:saved-change',{detail:{id:e.id,saved:saved.includes(e.id)}}));render()};
+ card.querySelector('.save').onclick=()=>toggleSavedEvent(e.id);
  return card
 }
 function renderCards(id,arr){const el=$(id);el.replaceChildren();if(!arr.length){const div=document.createElement('div');div.className='empty';div.textContent=id==='savedCards'?'Je hebt nog geen evenementen bewaard. Bekijk de evenementen en klik op + Bewaar.':'Geen wedstrijden voor deze combinatie van filters.';const reset=document.createElement('button');reset.type='button';reset.className='miniBtn';reset.textContent=id==='savedCards'?'Bekijk evenementen':'Wis filters en bekijk alle evenementen';reset.onclick=()=>{if(id==='savedCards')switchPage('explore');else $('reset').click()};div.append(document.createElement('p'),reset);el.append(div)}else{const frag=document.createDocumentFragment();arr.forEach(e=>frag.append(eventCard(e)));el.append(frag);window.RaceAtlasTracking?.observeCards(el)}}
