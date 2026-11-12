@@ -30,6 +30,7 @@ jobs:
       - name: Validate strict official-source discovery
         run: |
           node tests/test-raceatlas-official-discovery.cjs
+          node tests/test-raceatlas-html-candidates.cjs
           node tests/test-raceatlas-auto-events.cjs
       - name: Review official organizer pages and generate safe changes
         run: node scripts/raceatlas-official-discovery.cjs
