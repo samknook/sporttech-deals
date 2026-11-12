@@ -66,7 +66,8 @@
     const list=el('div','raIntelList');
     const more=el('button','raIntelMore','Bekijk alle inschrijfmomenten ↓');
     more.type='button';more.hidden=true;
-    panel.append(head,intro,controls,status,list,more);
+    const emailNotice=el('p','raIntelNote tz-radar-email-notice','📧 E-mailmeldingen worden voorbereid. Kalenderherinneringen en lokale meldingsvoorkeuren werken al. Open bij een wedstrijd de knop Meldingen om je voorkeuren te beheren.');
+    panel.append(head,intro,emailNotice,controls,status,list,more);
     resultsMore.after(panel);
     const jump=document.querySelector('.raRadarJump');
     if(jump)jump.hidden=false;
