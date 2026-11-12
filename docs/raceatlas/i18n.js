@@ -638,6 +638,11 @@ Object.assign(strings,{
   ' inschrijfmomenten voor mijn seizoen':' registration dates for my season',
   'Inschrijfradar':'Registration radar'
 });
+Object.assign(strings,{
+  'Afstanden bij organisator':'Distances on organizer website',
+  'Bekijk organisator voor afstanden':'Check organizer for distances',
+  'Nieuw toegevoegd':'Newly added'
+});
 const placeholders={
 'Bijv. Egmond, gravel, marathon…':'E.g. Egmond, gravel, marathon…',
 'Zoek op wedstrijd of plaats':'Search by event or location',
