@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><meta name="theme-color" content="#071925">
+<title>Beheer je Inschrijfradar | TriZentro</title>
+<style>:root{font-family:Inter,system-ui,sans-serif;color:#142d35;background:#f5f8fa}*{box-sizing:border-box}body{margin:0}header{background:#071925;color:white;padding:19px 24px}header a{color:white;font-size:22px;font-weight:950;text-decoration:none;letter-spacing:-.06em}header span{color:#c7ff37}main{max-width:600px;padding:42px 20px;margin:30px auto}section{background:white;border:1px solid #dfebe7;border-radius:18px;padding:27px;box-shadow:0 10px 35px #051f150c}h1{font-size:clamp(28px,5vw,40px);line-height:1.15;letter-spacing:-.05em}p{line-height:1.6;color:#496579}button{background:#c7ff37;border:0;border-radius:10px;padding:15px 23px;font-weight:900;color:#142b22;cursor:pointer;min-height:48px}button:disabled{opacity:.5}a{color:#126549}#message{font-weight:750}footer{font-size:12px;color:#6c8288;margin-top:25px}</style></head>
+<body><header><a href="./">TRI<span>ZENTRO</span>.</a></header><main><section><h1 id="title">Beheer je Inschrijfradar</h1><p id="intro">Bevestig je aanmelding voor wedstrijdmeldingen of meld je af.</p><button id="action" type="button" hidden>Bevestigen</button><p id="message" role="status" aria-live="polite"></p><p><a href="./">← Terug naar alle evenementen</a></p></section><footer>TriZentro · Find. Prepare. Perform. · Je e-mailadres wordt alleen voor zelfgekozen wedstrijdmeldingen gebruikt.</footer></main>
+<script>
+(() => {'use strict';
+ const params=new URLSearchParams(location.search),type=params.get('action'),token=params.get('token');
+ // Remove the one-time token from browser URL immediately; it is never sent to third parties.
+ history.replaceState(null,'',location.pathname);
+ const action=document.getElementById('action'),heading=document.getElementById('title'),intro=document.getElementById('intro'),message=document.getElementById('message');
+ if(!['confirm','unsubscribe'].includes(type)||!token||!/^[0-9a-f]{64}$/.test(token)){message.textContent='Deze link is ongeldig. Open de link uit je bevestigingsmail opnieuw.';return;}
+ const isConfirm=type==='confirm';
+ heading.textContent=isConfirm?'Bevestig je e-mailadres':'Meld je af voor wedstrijdmeldingen';
+ intro.textContent=isConfirm?'Klik op Bevestigen om wedstrijdmeldingen voor je gekozen evenement te activeren.':'Klik op Afmelden om je e-mailmeldingen voor dit evenement te stoppen.';
+ action.textContent=isConfirm?'Bevestig mijn aanmelding':'Meld mij af';action.hidden=false;
+ action.onclick=async()=>{
+  action.disabled=true;message.textContent='Je verzoek wordt verwerkt…';
+  try{
+   const res=await fetch('https://lpzndnxloykcthbsqcet.supabase.co/functions/v1/trizentro-email-radar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:type,token})});
+   const data=await res.json();
+   if(res.ok&&data.ok){message.textContent=isConfirm?'Je e-mailadres is bevestigd. Je ontvangt alleen de wedstrijdmeldingen waarvoor je je hebt aangemeld.':'Je bent afgemeld. Voor deze wedstrijd ontvang je geen e-mails meer.';action.hidden=true}
+   else message.textContent=data.error==='expired_token'?'Deze bevestigingslink is verlopen. Meld je opnieuw aan via TriZentro.':'Deze link is verlopen of al gebruikt. Open zo nodig een nieuwe link uit je e-mail.';
+  }catch{message.textContent='Verbinding mislukt. Probeer het opnieuw.'}
+  action.disabled=false;
+ };
+})();
+</script></body></html>
