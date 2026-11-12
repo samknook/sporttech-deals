@@ -6,7 +6,7 @@ const project=Deno.env.get('SUPABASE_URL')||'https://lpzndnxloykcthbsqcet.supaba
 const key=Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')||'';
 const resend=Deno.env.get('RESEND_API_KEY')||'';
 const sender=Deno.env.get('RESEND_FROM')||'';
-const enabled=Deno.env.get('RADAR_EMAIL_LIVE')==='true'&&!!resend&&!!sender&&!!key;
+const enabled=Deno.env.get('RADAR_EMAIL_LIVE')==='true'&&!!resend&&!!sender&&!!key&&!!Deno.env.get('RADAR_CRON_SECRET');
 const origins=new Set(['https://trizentro.com','https://www.trizentro.com','https://samknook.github.io']);
 function cors(origin:string|null){return {'Content-Type':'application/json','Cache-Control':'no-store','Vary':'Origin',...(origin&&origins.has(origin)?{'Access-Control-Allow-Origin':origin}:{}),'Access-Control-Allow-Methods':'GET,POST,OPTIONS','Access-Control-Allow-Headers':'content-type'}}
 function answer(origin:string|null,status:number,body:Record<string,unknown>){return new Response(JSON.stringify(body),{status,headers:cors(origin)})}
