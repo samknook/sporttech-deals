@@ -40,6 +40,8 @@ jobs:
           node tests/test-mkb-ai-lead-brief.js
       - name: Check RaceAtlas language switching and form compatibility
         run: node tests/test-raceatlas-i18n.cjs
+      - name: RaceAtlas launch smoke check
+        run: node tests/test-raceatlas-launch-smoke.cjs
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload website files only
