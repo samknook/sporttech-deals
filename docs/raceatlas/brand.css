@@ -43,3 +43,18 @@ header:has(>.brand) .raLanguageSwitch,header:has(>.logo) .raLanguageSwitch{margi
 .raBrandAboutLink{display:inline-flex;align-items:center;min-height:36px;color:#d5e6e2!important;text-decoration:underline;text-underline-offset:4px;font-weight:750;font-size:13px}
 .raBrandAboutLink:hover{color:var(--ra-brand-lime)!important}
 footer .raBrandAboutLink{color:#a8c6c0!important}
+
+/* Organizer-paid promotions: separate from organic event rankings. */
+.raCampaignSlot[hidden]{display:none!important}
+.raCampaignSlot{margin:30px 0 26px;padding:20px;border-radius:17px;background:#f1f6ef;border:1px solid #d9e6d8}
+.raCampaignHeading{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-bottom:15px}
+.raCampaignHeading small{font-size:10px;font-weight:850;letter-spacing:.12em;text-transform:uppercase;color:#3c6854}
+.raCampaignHeading h2{font-size:22px;letter-spacing:-.045em;margin:5px 0 0;color:#112d25}
+.raCampaignHeading p{font-size:12px;line-height:1.5;color:#557063;margin:0;max-width:290px}
+.raCampaignGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.raCampaignCard{min-width:0;background:#fff;border:1px solid #c9dacb;border-radius:12px;padding:18px}
+.raCampaignLabel{display:inline-block;font-size:10px;font-weight:800;color:#21452e;background:#e5f2df;padding:5px 8px;border-radius:5px}
+.raCampaignCard h3{font-size:19px;letter-spacing:-.025em;margin:11px 0 7px}
+.raCampaignCard p{font-size:13px;color:#617269;margin:0 0 15px}
+.raCampaignCard a{color:#174b32;font-size:13px;font-weight:800;text-underline-offset:3px}
+@media(max-width:630px){.raCampaignSlot{padding:14px}.raCampaignHeading{display:block}.raCampaignHeading p{margin-top:8px}.raCampaignGrid{grid-template-columns:1fr}}
