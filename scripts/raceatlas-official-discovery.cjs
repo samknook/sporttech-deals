@@ -136,7 +136,14 @@ function choose(observed,catalog,previous,today){
   if(update.length>1){review.push({name:race.name,date:race.date,reason:'ambiguous_catalog_match',url:race.officialEventUrl});continue}
   if(already){review.push({name:race.name,date:race.date,reason:'existing_race_same_year_date_conflict',url:race.officialEventUrl});continue}
   const other=[...auto.values()].find(e=>sameRace(e,race));
-  if(other){if(other.date===race.date)auto.set(other.id,{...other,verifiedOn:today});continue}
+  if(other){
+   if(other.date===race.date){auto.set(other.id,{...other,verifiedOn:today});continue}
+   if(normalizedUrl(other.officialEventUrl)===normalizedUrl(race.officialEventUrl)){
+    auto.set(other.id,{...other,...race,id:other.id,verifiedOn:today});
+    changed.push({id:other.id,name:race.name,date:race.date,officialEventUrl:race.officialEventUrl});
+   }else review.push({name:race.name,date:race.date,reason:'auto_event_date_conflict',url:race.officialEventUrl});
+   continue;
+  }
   if(seenIds.has(race.id)||auto.has(race.id)&&!sameRace(auto.get(race.id),race)){
    review.push({name:race.name,date:race.date,reason:'generated_id_collision',url:race.officialEventUrl});continue;
   }
