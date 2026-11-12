@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict');
 const {extract,heading,dateStrings,dateISO}=require('../scripts/raceatlas-html-candidates.cjs');
-const {discover}=require('../scripts/raceatlas-official-discovery.cjs');
+const {discover,candidatePriority,candidateReviewRows}=require('../scripts/raceatlas-official-discovery.cjs');
 const today='2026-11-12';
 assert.equal(dateISO(2027,2,29),null);
 assert.equal(dateISO(2028,2,29),'2028-02-29');
@@ -36,6 +36,12 @@ async function main(){
  assert.equal(report.plainCandidates.length,1,'Expected one plausible race date for manual review');
  assert.equal(report.plainCandidates[0].dateCandidate,'2027-04-18');
  assert.equal(report.plainCandidates[0].autoPublished,false);
+ assert.equal(candidatePriority({...report.plainCandidates[0],matchingIds:['ra-123']},today),1);
+ const csv=candidateReviewRows(report.plainCandidates,today);
+ assert.ok(csv.includes('ordinary_html_date_needs_organizer_confirmation'));
+ assert.ok(csv.includes('2027-04-18'));
+ assert.ok(csv.includes('https://club.example.org/'));
+ assert.ok(!csv.includes('2027-01-12'),'Registration deadlines must never be treated as race candidates');
  assert.deepEqual(fetched,['https://club.example.org/']);
  const unchanged=await discover(config,[],{}, {today,fetchImpl:fake,sourceState:report.sourceState});
  assert.equal(unchanged.plainCandidates.length,0,'Do not requeue unchanged ordinary pages daily');
