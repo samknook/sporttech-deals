@@ -30,6 +30,21 @@ for(const filename of coreTools){
  for(const legacy of legacyPaths)check(!html.includes('href="'+legacy),'Hidden tool linked from '+filename+': '+legacy);
  check(html.indexOf('>Voor organisatoren</a>')>html.indexOf('>Performance</a>'),'Organizer destination must remain last: '+filename);
 }
+const performanceHome=fs.readFileSync(path.join(siteRoot,'performance.html'),'utf8');
+const multisportCalculator=fs.readFileSync(path.join(siteRoot,'pace-calculator.html'),'utf8');
+for(const sport of ['running','cycling','triathlon']){
+ check(performanceHome.includes('id="sport-'+sport+'"'),'Missing Performance selector: '+sport);
+ check(performanceHome.includes('id="tools-'+sport+'"'),'Missing Performance panel: '+sport);
+}
+check(performanceHome.includes('pace-calculator.html#running'),'Running calculator destination missing');
+check(performanceHome.includes('pace-calculator.html#cycling'),'Cycling calculator destination missing');
+check(multisportCalculator.includes('id="run-time"')&&multisportCalculator.includes('id="bike-time"'),'Multisport results missing');
+check(multisportCalculator.includes('aria-selected="true"'),'Multisport tab accessibility missing');
+for(const [name,html] of [['Performance',performanceHome],['Pace calculator',multisportCalculator]]){
+ for(const script of [...html.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)]){
+  try{new Function(script[1])}catch(e){errors.push(name+' inline JS syntax error: '+e.message)}
+ }
+}
 const calculatorApp=fs.readFileSync(path.join(siteRoot,'triathlon-calculator-app.js'),'utf8');
 check(calculatorApp.includes("'planner-link').href='race-dashboard.html'"),'Finish calculator must route to Race Dashboard, not old Race Planner');
 
