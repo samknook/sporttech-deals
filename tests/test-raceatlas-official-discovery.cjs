@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict');
-const {safeUrl,htmlEvents,links,linkScore,eventDate,parseEvent,choose,discover,fingerprint,monitorExisting}=require('../scripts/raceatlas-official-discovery.cjs');
+const {safeUrl,htmlEvents,links,linkScore,eventDate,parseEvent,raceLike,choose,discover,fingerprint,monitorExisting}=require('../scripts/raceatlas-official-discovery.cjs');
 const src={url:'https://events.example.org/calendar/',sport:'Hardlopen',country:'Nederland',discover:true};
 const today='2026-11-12';
 const first={
@@ -24,6 +24,12 @@ assert.deepEqual(links('<a href="/nieuws/uitslagen-marathon">Results</a>','https
 assert.equal(eventDate('2027-04-18',today),'2027-04-18');
 assert.equal(eventDate('2027-02-30',today),null);
 assert.equal(eventDate('2026-03-01',today),null);
+assert.equal(raceLike('Clubrit vrijdagavond'),false);
+assert.equal(raceLike('Cursus reanimatie'),false);
+assert.equal(raceLike('De Gooische Strade Bianche XV'),true);
+assert.equal(raceLike('Twiskemolenloop'),true);
+assert.equal(raceLike('Devil’s Cross Duathlon'),true);
+assert.equal(parseEvent({...first,name:'Cursus EHBfO'},src.url,src,today),null);
 const race=parseEvent(first,src.url,src,today);
 assert.equal(race.date,'2027-04-18');
 assert.equal(race.place,'Bergen');
@@ -41,6 +47,9 @@ assert.equal(existingUpdate.newEvents.length,0);
 const conflicting=choose([race],[{...established,officialEventUrl:'https://other.example.org/events/trail'}],{},today);
 assert.equal(conflicting.changed.length,0);
 assert.equal(conflicting.review[0].reason,'existing_race_same_year_date_conflict');
+const organizerDuplicate=choose([{...race,name:'Bergen Trail 2027'}],[established],{},today);
+assert.equal(organizerDuplicate.newEvents.length,0,'An organizer event URL should not duplicate the same edition');
+assert.equal(organizerDuplicate.review[0].reason,'organizer_url_matches_existing_different_name');
 const wrongYear={...first,startDate:'2025-04-18'};
 assert.equal(parseEvent(wrongYear,src.url,src,today),null);
 const noCity={...first,location:{'@type':'Place'}};
