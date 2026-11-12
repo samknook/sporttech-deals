@@ -20,7 +20,7 @@ if(start>=0){
 
 // TriZentro cross-platform navigation regression checks.
 const siteRoot=path.join(process.cwd(),'docs');
-const coreTools=['performance.html','race-dashboard.html','triathlon-calculator.html','race-fuel-planner.html'];
+const coreTools=['performance.html','pace-calculator.html','race-dashboard.html','triathlon-calculator.html','race-fuel-planner.html'];
 const legacyPaths=['race-planner.html','race-day-timeline.html','70-3-raceplan.html','triatlon-afstanden.html'];
 for(const filename of coreTools){
  const html=fs.readFileSync(path.join(siteRoot,filename),'utf8');
@@ -29,6 +29,20 @@ for(const filename of coreTools){
  check(!html.includes('src="navigation.js"'),'Legacy navigation injection must not appear: '+filename);
  for(const legacy of legacyPaths)check(!html.includes('href="'+legacy),'Hidden tool linked from '+filename+': '+legacy);
  check(html.indexOf('>Voor organisatoren</a>')>html.indexOf('>Performance</a>'),'Organizer destination must remain last: '+filename);
+}
+const performanceCss=fs.readFileSync(path.join(siteRoot,'performance-theme.css'),'utf8');
+const performanceNavigation=fs.readFileSync(path.join(siteRoot,'performance-navigation.js'),'utf8');
+const performanceTranslations=fs.readFileSync(path.join(siteRoot,'performance-translations.js'),'utf8');
+check(performanceCss.includes('.raLanguageSwitch button.active'),'Events-compatible NL/EN button styling missing');
+check(performanceCss.includes('.tz-page-hero:before'),'Events-compatible photo hero missing');
+check(performanceCss.includes('.tz-site-links>a.tz-organizers'),'Organizer nav CTA styling missing');
+check(performanceNavigation.includes("eventsKey='raceatlas-language-v1'"),'Events and Performance language keys not synchronized');
+check(performanceTranslations.includes("TriZentroAddTranslations('pace-calculator.html'"),'Multisport translations missing');
+for(const filename of coreTools){
+ const html=fs.readFileSync(path.join(siteRoot,filename),'utf8');
+ check(html.includes('src="performance-navigation.js"'),'Language control not loaded: '+filename);
+ check(html.includes('src="performance-translations.js"'),'English translations not loaded: '+filename);
+ check(html.includes('class="raLogoMark"'),'Shared TriZentro sport logo missing: '+filename);
 }
 const performanceHome=fs.readFileSync(path.join(siteRoot,'performance.html'),'utf8');
 const multisportCalculator=fs.readFileSync(path.join(siteRoot,'pace-calculator.html'),'utf8');
