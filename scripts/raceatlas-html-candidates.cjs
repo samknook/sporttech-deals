@@ -62,7 +62,12 @@ function extract(html,url,now='2026-11-12'){
  const grouped=new Map();
  for(const match of matches){
   if(match.date<now||match.date>limit)continue;
-  const context=visible.slice(Math.max(0,match.index-95),Math.min(visible.length,match.index+115));
+  const left=visible.slice(Math.max(0,match.index-140),match.index);
+  const right=visible.slice(match.index,Math.min(visible.length,match.index+155));
+  const sentenceBreak=Math.max(left.lastIndexOf('. '),left.lastIndexOf('! '),left.lastIndexOf('? '));
+  const afterBreak=[right.indexOf('. '),right.indexOf('! '),right.indexOf('? ')].filter(n=>n>=0);
+  const stop=afterBreak.length?Math.min(...afterBreak)+1:right.length;
+  const context=(left.slice(sentenceBreak>=0?sentenceBreak+2:0)+right.slice(0,stop)).slice(0,230);
   const nearby=context.toLowerCase();
   // Reject references explicitly tied to historic editions and non-race milestones.
   const discouraging=/(?:inschrijf|aanmeld|registration|register|deadline|startbewijzen|tickets|early.bird|inschrijvingen|loting|ballot|sluit|opens|geopend|opent|entry fee|uitslagen|results|archief)/i.test(nearby);
