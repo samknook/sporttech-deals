@@ -5,7 +5,7 @@
 <section id="contact" class="orgContactSection"><div class="tag">Contact</div><h2>Stel ons een vraag.</h2><p>Wil je meer weten over RaceAtlas, een samenwerking bespreken of gegevens laten corrigeren? Laat hieronder weten waarover je contact zoekt. Je kunt ook rechtstreeks mailen naar <a href="mailto:trizentro.team@gmail.com">trizentro.team@gmail.com</a>.</p>
 <div class="panel"><form id="contactForm" action="https://formsubmit.co/ajax/trizentro.team@gmail.com" method="POST">
 <div class="field"><label for="contactName">Naam / organisatie *</label><input id="contactName" required maxlength="120" autocomplete="organization" placeholder="Naam organisatie"></div>
-<div class="field"><label for="contactEmail">Zakelijk e-mailadres *</label><input id="contactEmail" type="email" required maxlength="180" autocomplete="email" placeholder="naam@organisatie.nl"></div><div class="field"><label for="contactSubject">Onderwerp *</label><select id="contactSubject" required><option value="">Kies een onderwerp</option><option>Algemene vraag</option><option>Evenementgegevens aanpassen</option><option>Samenwerken</option><option>Anders</option></select></div>
+<div class="field"><label for="contactEmail">Zakelijk e-mailadres *</label><input id="contactEmail" type="email" required maxlength="180" autocomplete="email" placeholder="naam@organisatie.nl"></div><div class="field"><label for="contactSubject">Onderwerp *</label><select id="contactSubject" required><option value="">Kies een onderwerp</option><option>Algemene vraag</option><option>Evenementgegevens aanpassen</option><option>Samenwerken</option><option>Extra zichtbaarheid / promotie</option><option>Anders</option></select></div>
 <div class="field wide"><label for="contactEvent">Naam evenement / website (optioneel)</label><input id="contactEvent" maxlength="250" placeholder="Bijv. Stadsloop, https://..."></div>
 <fieldset id="correctionFields" class="wide orgCorrection" hidden><legend>Gegevens van je wijziging</legend>
 <p class="muted">Vul alleen de onderdelen in die wijzigen. Lege velden worden niet geïnterpreteerd als een nieuwe datum of prijs. We publiceren wijzigingen pas na controle.</p>
@@ -117,4 +117,4 @@ $('eventForm').addEventListener('submit',async e=>{
  }finally{button.disabled=false;button.textContent='Evenement aanmelden ↗';}
 });
 $('copy').onclick=async()=>{if(!$('eventForm').reportValidity())return;const t=details();try{await navigator.clipboard.writeText(t);$('status').textContent='Gegevens gekopieerd.'}catch{$('preview').style.display='block';$('preview').textContent=t;$('status').textContent='Selecteer en kopieer bovenstaande gegevens.'}};
-</script><script src="i18n.js?v=20261112-nav3" defer></script></body></html>
+</script><p class="muted" style="text-align:center;margin:35px auto 12px"><a href="privacy.html">Privacy &amp; gegevensgebruik</a></p><script src="i18n.js?v=20261112-nav3" defer></script></body></html>
