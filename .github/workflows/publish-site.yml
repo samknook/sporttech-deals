@@ -11,6 +11,7 @@ on:
       - 'scripts/raceatlas-html-candidates.cjs'
       - 'scripts/raceatlas-official-discovery.cjs'
       - 'tests/test-raceatlas-*.cjs'
+      - 'tests/test-trizentro-radar-security.cjs'
   workflow_dispatch:
 permissions:
   contents: read
@@ -57,6 +58,8 @@ jobs:
         run: |
           node tests/test-raceatlas-commercial.cjs
           node tests/test-raceatlas-tracking.cjs
+      - name: Verify TriZentro Inschrijfradar email consent and opt-out safety
+        run: node tests/test-trizentro-radar-security.cjs
       - name: Check out independent RaceAtlas staging branch
         uses: actions/checkout@v4
         with:
