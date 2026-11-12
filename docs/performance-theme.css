@@ -48,3 +48,17 @@ body.tz-performance a:focus-visible,body.tz-performance button:focus-visible{out
 @media(max-width:660px){body.tz-performance .tz-site-nav{padding:13px 15px;align-items:flex-start;flex-direction:column}body.tz-performance .tz-site-links{justify-content:flex-start;gap:6px}body.tz-performance .tz-site-links a{padding:9px 11px;font-size:12px}body.tz-performance .tz-page-hero{padding:38px 17px 67px;min-height:0}body.tz-performance .tz-page-hero h1{font-size:44px}body.tz-performance .tz-page-hero p{font-size:14px}body.tz-performance .tz-page-main{padding:0 17px;margin-top:-24px}body.tz-performance .tz-tool-grid{grid-template-columns:1fr}body.tz-performance :is(.panel,.tri-panel){padding:18px}}
 @media(max-width:420px){body.tz-performance .tz-page-hero h1{font-size:36px}body.tz-performance .tz-site-links a{font-size:11px;padding:8px 10px}}
 @media print{body.tz-performance .tz-site-header,body.tz-performance .tz-page-hero{display:none!important}}
+
+/* Neutralize legacy blue sport-tool tokens so the forms belong to TriZentro Events. */
+:root{--navy:#102123;--blue:#76b89b;--aqua:#6da982;--orange:#d1a66b;--tri-navy:#102123;--tri-sea:#408e74;--tri-mint:#3c9b70;--tri-run:#b9894f;--tri-bg:#f7f8f4;--tri-line:#e1e7df;--tri-ink:#132326}
+body.tz-performance .tri-custom-grid{background:#edf6ea;border-color:#b4d3ac}
+body.tz-performance .tri-eyebrow{color:#287b53}
+body.tz-performance .tri-field{color:#173c31}
+body.tz-performance .tri-field small{color:#667a70}
+body.tz-performance .tri-split-visual .swim{background:#edf6ea}
+body.tz-performance .tri-split-visual .bike{background:#e7f3ed}
+body.tz-performance .tri-split-visual .run{background:#f5f4e9}
+body.tz-performance .tri-insight>span,body.tz-performance .tri-insight>p{color:#4f6c5e}
+body.tz-performance .tri-insight.baseline,body.tz-performance .tri-insight.faster{background:#edf6ea}
+body.tz-performance :is(.dashboard,.fuel,.tri-main) :is(.panel,.tri-panel){border-radius:18px}
+body.tz-performance .tz-site-brand .tz-logo-mark{display:none}
