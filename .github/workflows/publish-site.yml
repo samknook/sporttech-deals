@@ -45,6 +45,7 @@ jobs:
       - name: Validate automatic race discovery and update feed
         run: |
           node tests/test-raceatlas-official-discovery.cjs
+          node tests/test-raceatlas-html-candidates.cjs
           node tests/test-raceatlas-auto-events.cjs
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
