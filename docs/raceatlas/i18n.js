@@ -615,6 +615,16 @@ Object.assign(strings,{
   "Niet bevestigd": "Not confirmed",
   "vermoedelijke datum": "provisional date"
 });
+Object.assign(strings,{
+  "Bevestigd via organisator": "Confirmed by organizer",
+  " (exacte dag onbekend)": " (exact day unknown)",
+  "Controleer officiële details: ": "Check official details: ",
+  "Wedstrijd: ": "Race: ",
+  " · beschikbaarheid onbekend": " · availability unknown",
+  "Inschrijfradar met broninformatie": "Registration radar with source details",
+  " met relevante inschrijfinformatie": " with relevant registration details",
+  "Bron laatst vastgelegd: ": "Source last recorded: "
+});
 const placeholders={
 'Bijv. Egmond, gravel, marathon…':'E.g. Egmond, gravel, marathon…',
 'Zoek op wedstrijd of plaats':'Search by event or location',
