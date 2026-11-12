@@ -27,6 +27,7 @@
     e.sourceCheckedOn=record.verifiedOn;
     e.officialEventUrl=record.officialEventUrl;
     e.source=record.source;
+    e.autoEventVerifiedOn=record.verifiedOn;
     updated++;
    }
   }
@@ -44,7 +45,7 @@
     officialEventUrl:row.officialEventUrl,source:row.source,
     dateEvidence:'official',sourceCheckedOn:row.verifiedOn,
     registrationStatus:'check',status:'source',sourceType:'organizer',
-    autoDiscovered:true
+    autoDiscovered:true,autoEventVerifiedOn:row.verifiedOn
    };
    list.push(event);byId.set(event.id,event);added++;
   }
