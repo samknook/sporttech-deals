@@ -267,6 +267,206 @@ Object.assign(strings,{
   "Over RaceAtlas": "About RaceAtlas",
   "Ontdek wedstrijden": "Explore races"
 });
+Object.assign(strings,{
+  "Nog te regelen": "To do",
+  "Ingeschreven ✓": "Registered ✓",
+  "Wachtlijst": "Waitlist",
+  "Mijn inschrijving": "My registration",
+  "Bekijk details": "View details",
+  "Geen datum bekend": "No known date",
+  "Geen aankomende wedstrijden": "No upcoming races",
+  "Datum nog niet bevestigd": "Date not confirmed",
+  "Datum vermeld, niet bevestigd": "Listed date, not confirmed",
+  "Maand verwacht; exacte datum onbekend": "Expected month; exact date unknown",
+  " · bevestigd": " · confirmed",
+  "Bevestigd": "Confirmed",
+  "Jouw eerstvolgende bevestigde wedstrijd": "Your next confirmed race",
+  "Vandaag": "Today",
+  "Morgen": "Tomorrow",
+  "Nog geen aankomende wedstrijd met officieel bevestigde datum in je seizoen.": "No upcoming race with an officially confirmed date in your season.",
+  "Je maandplanning verschijnt zodra je wedstrijden bewaart.": "Your month-by-month plan will appear when you save races.",
+  "Controleer de officiële organisator voordat je reis of inschrijving vastlegt.": "Check the official organizer before booking travel or registering.",
+  "Twee wedstrijden op dezelfde dag": "Two races on the same day",
+  "Controleer of dit past bij je herstel en trainingsbelasting.": "Check whether this fits your recovery and training load.",
+  "Bewaar één of meer wedstrijden om een seizoenscheck te krijgen.": "Save one or more races to get a season health check.",
+  "✓ Geen datumconflicten gevonden tussen jouw bevestigde toekomstige wedstrijden.": "✓ No date conflicts found between your confirmed upcoming races.",
+  "Je hebt nog geen wedstrijden bewaard. Klik op + Bewaar bij een evenement om jouw seizoen samen te stellen.": "You haven't saved any races yet. Select + Save to build your season.",
+  "Geselecteerd op jouw sporten, afstanden, regio en spreiding van wedstrijden. Alleen officieel bevestigde datums.": "Selected based on your sports, distances, region and race spacing. Only officially confirmed dates.",
+  "Ter inspiratie: grote evenementen met officieel bevestigde datums. Sla races op om betere suggesties te krijgen.": "For inspiration: major events with officially confirmed dates. Save races to improve your recommendations.",
+  "Momenteel geen aanvullende wedstrijden met bevestigde datum gevonden in deze sporten.": "No additional races with confirmed dates were found for these sports.",
+  "✓ Datum officieel bevestigd": "✓ Date officially confirmed",
+  "Controleer herstel tussen wedstrijden": "Check your recovery between races",
+  "Groot evenement met bevestigde datum": "Major event with a confirmed date",
+  "Geen toekomstige inschrijfopeningen of deadlines met een specifieke datum gevonden. Controleer de organisator voor nieuwe informatie.": "No upcoming registration openings or deadlines with exact dates were found. Check with the organizer for updates.",
+  "Geen opgeslagen wedstrijden met officieel bevestigde datum. Controleer de organisatorsite en probeer later opnieuw.": "No saved races with officially confirmed dates. Check the organizer website and try again later.",
+  "Kon het JSON-bestand niet lezen. Je seizoen is ongewijzigd.": "Could not read the JSON file. Your season was not changed.",
+  "Importeren is niet gelukt. Je seizoen is ongewijzigd.": "Import failed. Your season was not changed.",
+  "Beschikbaarheid kan per afstand verschillen": "Availability may vary by distance",
+  "Controleer eventuele heropening bij organisator": "Check the organizer for any reopening",
+  "Beschikbaarheid verschilt per afstand": "Availability varies by distance",
+  "Controleer de gekozen afstand bij de organisator.": "Check your chosen race distance with the organizer.",
+  "Inschrijving nog niet geopend volgens bron": "Registration not yet open according to source",
+  "Dit bevestigt niet dat er nog plaatsen zijn": "This does not confirm that places remain available",
+  "Exacte datum onbekend": "Exact date unknown",
+  "Bekijk de officiële evenementpagina voor actuele inschrijving": "Check the official event page for current registration",
+  "Je seizoen is ongewijzigd.": "Your season is unchanged.",
+  "Nog geen officiële wedstrijddata": "No official race dates yet",
+  "Geen wedstrijddata beschikbaar": "No race dates available",
+  "Link gekopieerd ✓": "Link copied ✓",
+  "Kopieer deze link:": "Copy this link:",
+  "Verwijder uit mijn seizoen": "Remove from my season",
+  "Bewaar in mijn seizoen": "Save to my season",
+  "Bewaren in mijn seizoen": "Save to my season",
+  "Mijn inschrijfstatus": "My registration status",
+  "Mijn inschrijfstatus voor ": "My registration status for ",
+  "Inschrijfinfo": "Registration information",
+  "Inschrijfinformatie": "Registration information",
+  "Details bekijken": "View details",
+  "Controleer bij de organisator": "Verify with organizer",
+  "nog te controleren": "to verify",
+  "Officiële wedstrijddatum op moment van export. Controleer actuele informatie: ": "Official race date at export. Check current information: ",
+  "Gepubliceerde datum, niet live bijgewerkt. Controleer bij de organisator: ": "Published date, not live-updated. Check with organizer: ",
+  "RaceAtlas — AI-gegenereerd sfeerbeeld, geen officiële wedstrijdfoto": "RaceAtlas — AI-generated illustration, not an official race photo",
+  "RaceAtlas · AI-gegenereerd evenement-sfeerbeeld; geen echte opname": "RaceAtlas · AI-generated event illustration; not a real photograph",
+  "Wedstrijddatum bevestigd": "Race date confirmed",
+  "Datum nog onbekend": "Date still unknown",
+  "Mijn opgeslagen wedstrijden": "My saved races",
+  "Mijn racekalender": "My race calendar",
+  " · nog niet automatisch gecontroleerd": " · not automatically verified",
+  "Vanuit mijn seizoen": "From my season",
+  "Algemene vraag": "General inquiry",
+  "Evenementgegevens aanpassen": "Update event details",
+  "Naam organisatie": "Organization name",
+  "Selecteer en kopieer bovenstaande gegevens.": "Select and copy the details above.",
+  "Gegevens gekopieerd.": "Details copied.",
+  "Evenement aanmelden ↗": "Submit event ↗",
+  "Bericht versturen ↗": "Send message ↗",
+  "Contactformulier openen": "Open contact form",
+  "Gegevens kunnen momenteel niet geladen worden. Meld correcties rechtstreeks via het organisatorenformulier.": "Data is temporarily unavailable. Please send corrections through the organizer form.",
+  "Laatste broncontrole niet geregistreerd": "No source review date recorded",
+  "Laatste broncontrole": "Last source review",
+  "Brongegevens laden…": "Loading source data…",
+  "INSCHRIJFRADAR": "REGISTRATION RADAR",
+  "Wedstrijdkalender": "Race calendar",
+  "Opening was op ": "Registration opened on ",
+  "Mijn seizoen": "My season",
+  "Meer wedstrijden tonen": "Show more races",
+  "Je vraagt te snel aan": "Too many requests. Please try again later."
+});
+const translatedPatterns=[
+  [
+    "^(\\d+) van (\\d+) geplande wedstrijden · (.+)\\. (\\d+) met officieel bevestigde datum\\.$",
+    "$1 of $2 planned races · $3. $4 with officially confirmed dates."
+  ],
+  [
+    "^Doel bereikt!$",
+    "Goal achieved!"
+  ],
+  [
+    "^(\\d+) te plannen$",
+    "$1 to plan"
+  ],
+  [
+    "^(\\d+) bevestigd · (\\d+) te controleren$",
+    "$1 confirmed · $2 to verify"
+  ],
+  [
+    "^(\\d+) met officieel bevestigde datum · (\\d+) met nog te controleren datum\\. Controleer details altijd bij de organisator\\.$",
+    "$1 with officially confirmed dates · $2 dates to verify. Always check details with the organizer."
+  ],
+  [
+    "^(\\d+) wedstrijden opgeslagen · (\\d+) met officieel bevestigde datum · (\\d+) nog te controleren$",
+    "$1 races saved · $2 dates confirmed · $3 to verify"
+  ],
+  [
+    "^(\\d+) opgeslagen · (\\d+) aankomende wedstrijden met bevestigde datum\\. Deze check is een hulpmiddel, geen trainingsadvies\\.$",
+    "$1 saved · $2 upcoming races with confirmed dates. This check is a planning aid, not training advice."
+  ],
+  [
+    "^(\\d+) datum(s)? nog niet bevestigd$",
+    "$1 dates not yet confirmed"
+  ],
+  [
+    "^(\\d+) datum nog niet bevestigd$",
+    "$1 date not yet confirmed"
+  ],
+  [
+    "^Wedstrijden slechts (\\d+) dag(en)? uit elkaar$",
+    "Races only $1 days apart"
+  ],
+  [
+    "^Over (\\d+) dagen$",
+    "In $1 days"
+  ],
+  [
+    "^Jouw eerstvolgende bevestigde wedstrijd · (.+)$",
+    "Your next confirmed race · $1"
+  ],
+  [
+    "^En (\\d+) andere opgeslagen evenementen\\.$",
+    "And $1 other saved events."
+  ],
+  [
+    "^(\\d+) ingeschreven · (\\d+) op wachtlijst · (\\d+) nog te regelen\\. Deze statussen houd je zelf bij; RaceAtlas controleert geen inschrijvingen\\.$",
+    "$1 registered · $2 on the waitlist · $3 to arrange. You manage these statuses; RaceAtlas does not check registrations."
+  ],
+  [
+    "^(\\d+) wedstrijden opgeslagen · (\\d+) met relevante inschrijfinformatie$",
+    "$1 saved races · $2 with relevant registration information"
+  ],
+  [
+    "^(\\d+) wedstrijden in database · (\\d+) officieel gedateerd · (\\d+) relevante inschrijfdatums$",
+    "$1 races in database · $2 officially dated · $3 relevant registration dates"
+  ],
+  [
+    "^(\\d+) wedstrijden in de catalogus · (\\d+) met officieel gemarkeerde datum · (\\d+) met voorlopige datum · (\\d+) relevante inschrijfdatums$",
+    "$1 races in the catalog · $2 with officially marked dates · $3 provisional dates · $4 relevant registration dates"
+  ],
+  [
+    "^(.+) · (\\d+) met officiële evenementwebsite · (\\d+) met prijs · (.+)$",
+    "$1 · $2 with an official event website · $3 with prices · $4"
+  ],
+  [
+    "^(.+) bewaren in mijn seizoen$",
+    "Save $1 to my season"
+  ],
+  [
+    "^(\\d+) bekende inschrijfdatums geëxporteerd\\. Dit is een momentopname en wordt niet automatisch bijgewerkt\\.$",
+    "$1 registration dates exported. This is a snapshot and will not update automatically."
+  ],
+  [
+    "^(\\d+) wedstrijden opgeslagen$",
+    "$1 races saved"
+  ],
+  [
+    "^Bron laatst vastgelegd: (.+)$",
+    "Source last recorded: $1"
+  ],
+  [
+    "^Bron vastgelegd op (.+)$",
+    "Source recorded on $1"
+  ],
+  [
+    "^([🏃🚴🏊]\\s*)Hardlopen: (\\d+)$",
+    "$1Running: $2"
+  ],
+  [
+    "^([🏃🚴🏊]\\s*)Fietsen: (\\d+)$",
+    "$1Cycling: $2"
+  ],
+  [
+    "^([🏃🚴🏊]\\s*)Triatlon: (\\d+)$",
+    "$1Triathlon: $2"
+  ],
+  [
+    "^(\\d+) evenementen gevonden · (\\d+) zichtbaar$",
+    "$1 events found · $2 shown"
+  ],
+  [
+    "^Toon (\\d+) meer evenementen ↓$",
+    "Show $1 more events ↓"
+  ]
+].map(([pattern,to])=>[new RegExp(pattern,"i"),to]);
 const placeholders={
 'Bijv. Egmond, gravel, marathon…':'E.g. Egmond, gravel, marathon…',
 'Zoek op wedstrijd of plaats':'Search by event or location',
@@ -314,6 +514,7 @@ function translation(text){
  if(translations.has(core))return prefix+translations.get(core)+suffix;
  let result=text;
  for(const [pattern,replacement] of partials)result=result.replace(pattern,replacement);
+ for(const [pattern,replacement] of translatedPatterns)result=result.replace(pattern,replacement);
  for(const [nl,en] of monthNames)result=result.replace(new RegExp('\\b'+nl+'\\b','gi'),en);
  return result;
 }
