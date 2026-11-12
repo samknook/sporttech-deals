@@ -142,3 +142,8 @@ body.tz-performance .tz-calc-result{background:#f0f7ed;border-color:#e1e8ed}
 @media(max-width:850px){body.tz-performance .tz-site-nav{flex-wrap:wrap}body.tz-performance .tz-site-links{gap:6px}}
 @media(max-width:660px){body.tz-performance .tz-site-nav{padding:12px 15px}body.tz-performance .tz-site-brand{font-size:21px}body.tz-performance .tz-site-links{width:100%;justify-content:flex-start;gap:5px}body.tz-performance .tz-site-links>a:not(.tz-organizers){padding:9px 8px;font-size:12px}body.tz-performance .tz-site-links>a.tz-organizers{padding:10px 9px!important;font-size:12px}body.tz-performance .raLanguageSwitch{margin-left:0}body.tz-performance .tz-page-hero{padding:37px 17px 64px;min-height:0}body.tz-performance .tz-page-hero:before{inset:0 0 0 32%;opacity:.45}body.tz-performance .tz-page-hero:after{right:23%;opacity:.55}body.tz-performance .tz-page-hero h1{font-size:clamp(36px,9vw,50px)}body.tz-performance .tz-page-main{padding:0 16px;margin-top:-26px}body.tz-performance .tz-sport-toolbar{padding:14px!important}}
 @media print{body.tz-performance .raLanguageSwitch{display:none!important}}
+
+/* TriZentro official icon-only mark, shared by Events and Performance. */
+body.tz-performance .tz-site-brand img.tz-logo-image{display:block!important;width:52px!important;height:52px!important;min-width:52px!important;object-fit:contain;background:white;border-radius:13px;padding:2px;box-shadow:0 4px 18px #0003}
+body.tz-performance .tz-site-brand{display:inline-flex;align-items:center;line-height:1;text-decoration:none}
+@media(max-width:660px){body.tz-performance .tz-site-brand img.tz-logo-image{width:45px!important;height:45px!important;min-width:45px!important;border-radius:11px}}
