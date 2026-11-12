@@ -45,6 +45,12 @@ for(const filename of coreTools){
  check(html.includes('src="performance-translations.js"'),'English translations not loaded: '+filename);
  check(html.includes('class="tz-logo-image"') && html.includes('trizentro-mark.svg'),'Approved TriZentro icon-only logo missing: '+filename);
 }
+const mobileEventJs=fs.readFileSync(path.join(siteRoot,'raceatlas/mobile-events.js'),'utf8');
+check(mobileEventJs.includes("select.dispatchEvent(new Event('change'"),'Mobile sport chips must trigger the existing event filter');
+check(mobileEventJs.includes("aria-pressed"),'Mobile sport chips need accessible selected state');
+try{new Function(mobileEventJs)}catch(error){errors.push('Mobile Events JS syntax: '+error.message)}
+const eventsMobileHtml=fs.readFileSync(path.join(siteRoot,'raceatlas/index.html'),'utf8');
+check(eventsMobileHtml.includes('mobile-events.js?v=20261112-mobile6'),'Mobile Events feature script not installed');
 const sharedCss=fs.readFileSync(path.join(siteRoot,'shared-ui.css'),'utf8');
 const sharedJs=fs.readFileSync(path.join(siteRoot,'shared-ui.js'),'utf8');
 check(sharedCss.includes('.tz-mobile-destinations'),'Shared mobile navigation styling missing');
