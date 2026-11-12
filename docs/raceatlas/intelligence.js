@@ -50,8 +50,8 @@
     return null;
   }
   function install(){
-    const summary=document.getElementById('verificationSummary');
-    if(!summary||document.getElementById('raIntelPanel'))return null;
+    const resultsMore=document.getElementById('more');
+    if(!resultsMore||document.getElementById('raIntelPanel'))return null;
     const panel=el('section','raIntelPanel');panel.id='raIntelPanel';
     panel.setAttribute('aria-label','Inschrijfradar met broninformatie');
     const head=el('div','raIntelHead');
@@ -64,9 +64,13 @@
     controls.append(label);
     const status=el('p','raIntelStatus','Brongegevens laden…');status.setAttribute('role','status');
     const list=el('div','raIntelList');
-    panel.append(head,intro,controls,status,list);
-    summary.after(panel);
-    return {panel,check,status,list};
+    const more=el('button','raIntelMore','Bekijk alle inschrijfmomenten ↓');
+    more.type='button';more.hidden=true;
+    panel.append(head,intro,controls,status,list,more);
+    resultsMore.after(panel);
+    const jump=document.querySelector('.raRadarJump');
+    if(jump)jump.hidden=false;
+    return {panel,check,status,list,more,expanded:false};
   }
   function render(ui,records){
     ui.list.replaceChildren();
@@ -79,7 +83,11 @@
       if(savedA!==savedB)return savedA-savedB;
       if(a.kind.priority!==b.kind.priority)return a.kind.priority-b.kind.priority;
       return String(a.r.registration_opens_at||a.r.start_date).localeCompare(String(b.r.registration_opens_at||b.r.start_date));
-    }).slice(0,9);
+    }).slice(0,12);
+    const visible=ui.expanded?ordered:ordered.slice(0,3);
+    ui.more.hidden=ordered.length<=3;
+    ui.more.textContent=ui.expanded?'Toon minder ↑':'Bekijk alle '+ordered.length+' inschrijfmomenten ↓';
+    if(ui.more.hidden)ui.expanded=false;
     ui.status.textContent=ui.check.checked
       ?selected.length+' inschrijfmomenten voor mijn seizoen'
       :classified.length+' inschrijfmomenten om te volgen';
@@ -89,7 +97,7 @@
         :'Momenteel geen inschrijfdatums in beeld. Controleer altijd de organisator voor de actuele stand.'));
       return;
     }
-    for(const {r,kind} of ordered){
+    for(const {r,kind} of visible){
       const item=el('article','raIntelItem');
       const body=el('div','');
       const badge=saved.has(r.event_id)?'★ Mijn seizoen':'Wedstrijdkalender';
@@ -128,7 +136,8 @@
       const records=await response.json();
       if(!Array.isArray(records))throw Error('Invalid response');
       const refresh=()=>render(ui,records);
-      ui.check.addEventListener('change',()=>{setSeasonOnly(ui.check.checked);refresh()});
+      ui.check.addEventListener('change',()=>{setSeasonOnly(ui.check.checked);ui.expanded=false;refresh()});
+      ui.more.addEventListener('click',()=>{ui.expanded=!ui.expanded;refresh()});
       window.addEventListener('storage',event=>{
         if(event.key===SEASON_KEY||event.key===LOCAL_PREF_KEY){
           if(event.key===LOCAL_PREF_KEY)ui.check.checked=seasonOnly();
