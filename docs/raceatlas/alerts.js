@@ -49,7 +49,37 @@
       const verification=document.createElement('p');verification.className='ra-notice';verification.textContent='De wedstrijddatum is nog niet officieel bevestigd. Daarom maken we hiervoor geen kalenderherinnering. Een bevestigde openingsdatum voor inschrijving kan wel apart worden toegevoegd.';dialog.append(verification);
     }
     const notice=document.createElement('p');notice.className='ra-notice';
-    notice.textContent='Automatische e-mails zijn nog niet actief: daarvoor moeten een beveiligde verzenddienst, bevestiging van e-mailadressen en afmeldfunctie worden aangesloten. We verzamelen nu geen e-mailadressen. Voorkeuren blijven op dit apparaat.';
+    notice.textContent='Agenda-herinneringen kun je direct downloaden. E-mailmeldingen worden pas ingeschakeld nadat de verzenddienst is geactiveerd en je je e-mailadres hebt bevestigd. Lokale voorkeuren blijven op dit apparaat.';
+    // Email alerts are gated server-side until a verified sending domain and dispatch process exist.
+    const emailBox=document.createElement('section');emailBox.className='tz-radar-email';
+    const emailTitle=document.createElement('strong');emailTitle.textContent='📧 E-mail Inschrijfradar';
+    const emailText=document.createElement('p');emailText.textContent='Binnenkort: ontvang een melding wanneer de organisator een inschrijfmoment bevestigt. Eerst moet onze e-maildienst geactiveerd worden.';
+    const emailForm=document.createElement('form');emailForm.className='tz-radar-email-form';
+    const input=document.createElement('input');input.type='email';input.autocomplete='email';input.placeholder='Jouw e-mailadres';input.required=true;input.maxLength=254;input.setAttribute('aria-label','E-mailadres voor wedstrijdmeldingen');
+    const submit=document.createElement('button');submit.type='submit';submit.textContent='Aanmelden';submit.disabled=true;
+    const message=document.createElement('p');message.className='tz-radar-email-status';message.setAttribute('role','status');
+    emailForm.append(input,submit);
+    emailForm.hidden=true;
+    emailBox.append(emailTitle,emailText,emailForm,message);
+    dialog.append(emailBox);
+    const endpoint='https://lpzndnxloykcthbsqcet.supabase.co/functions/v1/trizentro-email-radar';
+    fetch(endpoint,{method:'GET',mode:'cors',cache:'no-store'}).then(r=>r.ok?r.json():null).then(data=>{
+      if(!emailBox.isConnected)return;
+      if(data&&data.enabled===true){emailForm.hidden=false;submit.disabled=false;emailText.textContent='Ontvang uitsluitend updates voor deze wedstrijd. Je bevestigt je e-mailadres eerst via een e-mail; afmelden kan altijd.'}
+    }).catch(()=>{});
+    emailForm.addEventListener('submit',async ev=>{
+      ev.preventDefault();
+      if(submit.disabled)return;
+      submit.disabled=true;message.textContent='Aanmelding verwerken…';
+      try{
+        const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'subscribe',eventId:event.id,email:input.value})});
+        const data=await response.json();
+        if(response.ok&&data.ok){message.textContent='Controleer je inbox voor de bevestigingslink. Je ontvangt pas updates na bevestiging.';input.value=''}
+        else if(data.error==='rate_limit')message.textContent='Te veel aanmeldpogingen. Probeer later opnieuw.';
+        else message.textContent='Aanmelden lukt momenteel niet. Probeer later opnieuw; er zijn nog geen meldingen geactiveerd.';
+      }catch{message.textContent='Geen verbinding met de e-maildienst. Probeer later opnieuw.'}
+      submit.disabled=false;
+    });
     const actions=document.createElement('div');actions.className='ra-actions';
     const close=document.createElement('button');close.type='button';close.textContent='Sluiten';
     const calendar=document.createElement('button');calendar.type='button';calendar.textContent='Download agenda-alarmen';
@@ -70,6 +100,7 @@
   });
   const css=document.createElement('style');css.textContent=
     '.ra-alert-btn{border-radius:9px;border:1px solid #a9d8b7;background:#eef9ef;padding:9px 11px;color:#195a3f;font-size:12px;font-weight:800;cursor:pointer}.ra-alert-btn.ra-set{background:#cfffbd}.cardActions{flex-wrap:wrap}.ra-overlay{position:fixed;inset:0;background:#061719bd;z-index:100;display:flex;justify-content:center;align-items:center;padding:16px}.ra-dialog{width:min(530px,100%);max-height:90vh;overflow:auto;background:white;color:#163328;border-radius:18px;padding:25px;box-shadow:0 30px 80px #0006}.ra-dialog h2{font-size:24px;margin:0 0 10px}.ra-dialog p{line-height:1.55;color:#52685d;font-size:13px}.ra-fields{display:grid;gap:9px;margin:20px 0}.ra-fields label{display:flex;align-items:center;gap:12px;background:#f3f7f2;padding:13px;border-radius:10px;font-size:13px;font-weight:650}.ra-fields input{width:19px;height:19px;accent-color:#197b45}.ra-notice{padding:12px;background:#edf5e9;border-radius:10px}.ra-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.ra-actions button{border-radius:9px;padding:10px 12px;border:1px solid #c8dac9;background:white;color:#204331;font-weight:700;cursor:pointer}.ra-actions button.ra-primary{background:#c6ff46;border-color:#c6ff46;color:#14251a}';
+  css.textContent += '.tz-radar-email{background:#f1f7ed;border:1px solid #cfe3c6;border-radius:12px;padding:15px;margin:15px 0}.tz-radar-email>strong{font-size:16px;color:#214d35}.tz-radar-email>p{margin:7px 0 11px}.tz-radar-email-form{display:flex;gap:8px;flex-wrap:wrap}.tz-radar-email-form[hidden]{display:none!important}.tz-radar-email-form input{flex:1 1 190px;min-width:0;border:1px solid #bfd7bd;border-radius:9px;padding:12px;font-size:14px}.tz-radar-email-form button{background:#c7ff37;border:0;border-radius:9px;font-weight:850;padding:12px 16px;color:#092a1e}.tz-radar-email-form button:disabled{opacity:.5}.tz-radar-email-status{font-weight:750;font-size:12px}.tz-radar-email .tz-radar-email-status:empty{display:none}';
   document.head.append(css);
   window.RaceAtlasAlerts={syncButtons,openForEvent(id){const event=(window.RACEATLAS_EVENTS||[]).find(x=>x.id===id);if(event)openDialog(event)}};
 })();
