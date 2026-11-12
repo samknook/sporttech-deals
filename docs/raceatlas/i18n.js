@@ -600,6 +600,21 @@ const shortMonthRegex=/\b(jan|feb|mrt|apr|mei|jun|jul|aug|sep|okt|nov|dec)\b/gi;
 const dateMonthTranslation=match=>shortMonths.find(([nl])=>nl===match.toLowerCase())?.[1]||match;
 const monthDateContext=/\b\d{1,2}\s+(?:jan|feb|mrt|apr|mei|jun|jul|aug|sep|okt|nov|dec)\b/i;
 const datedMonthLabels=/^(?:jan|feb|mrt|apr|mei|jun|jul|aug|sep|okt|nov|dec)(?:\.?)$/i;
+Object.assign(strings,{
+  "Organisator meldt dat de reguliere inschrijving gesloten is. Controleer de officiële website voor overdracht van startbewijzen.": "The organizer reports that standard registration is closed. Check the official website for entry transfers.",
+  "Datum bevestigd door WTC Zijtaart. Controleer inschrijfmogelijkheden bij de club.": "WTC Zijtaart confirmed the date. Check registration options with the club.",
+  "Wedstrijddatum en parcours gecontroleerd bij de organisator. Actuele beschikbare startbewijzen onbekend.": "Race date and course checked with the organizer. Current entry availability is unknown.",
+  "Inschrijving sluit volgens AC Waterland op de laatste vrijdag voor de wedstrijd om 20:00 of eerder wanneer 650 startbewijzen verkocht zijn.": "According to AC Waterland, registration closes at 20:00 on the final Friday before race day, or sooner if 650 entries sell out.",
+  "Voorinschrijving volgens het officiële formulier tot en met 5 december 2026; controleer actuele capaciteit bij de organisator.": "According to the official form, advance registration runs through 5 December 2026. Check current capacity with the organizer.",
+  "De officiële site vermeldt inschrijfopties voor 100 en 200 km. Controleer beschikbaarheid op de inschrijfpagina.": "The official website lists registration options for 100 km and 200 km. Check current availability on the registration page.",
+  "De organisatorsite noemt €20 per individuele deelnemer en €30 per duo. De actuele inschrijfstatus is niet afzonderlijk bevestigd.": "The organizer website lists €20 per individual and €30 per pair. Current registration availability has not been independently confirmed.",
+  "Organisator meldt volzet; inschrijfplatform biedt een wachtlijst. Controleer actuele mogelijkheden bij de organisator.": "The organizer reports a sell-out; the registration platform offers a waitlist. Check current options with the organizer.",
+  "Status volgens laatst vastgelegde organisatorbron; controleer actuele beschikbaarheid op de officiële website.": "Status according to the last recorded organizer source; check live availability on the official website.",
+  "Bekijk organisator ↗": "View organizer ↗",
+  "Bron niet bereikbaar": "Source unavailable",
+  "Niet bevestigd": "Not confirmed",
+  "vermoedelijke datum": "provisional date"
+});
 const placeholders={
 'Bijv. Egmond, gravel, marathon…':'E.g. Egmond, gravel, marathon…',
 'Zoek op wedstrijd of plaats':'Search by event or location',
