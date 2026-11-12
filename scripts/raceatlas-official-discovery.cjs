@@ -9,6 +9,7 @@ const fs=require('node:fs');
 const path=require('node:path');
 const crypto=require('node:crypto');
 const net=require('node:net');
+const {extract:extractHtmlCandidates}=require('./raceatlas-html-candidates.cjs');
 const SITE='docs/raceatlas';
 const INPUT='scripts/raceatlas-official-source-seeds.json';
 const OUTPUT=SITE+'/auto-events.json';
@@ -253,7 +254,7 @@ async function discover(config,catalog,previous,opts={}){
  const today=opts.today||new Date().toISOString().slice(0,10);
  const sources=config.sources.filter(s=>safeUrl(s.url)&&['Hardlopen','Fietsen','Triatlon'].includes(s.sport)).slice(0,65);
  let pageCount=0;
- const seenPages=new Set(),events=[],sourceResults=[],contentChanges=[];
+ const seenPages=new Set(),events=[],sourceResults=[],contentChanges=[],plainCandidates=[];
  const fingerprints={...(opts.sourceState?.sources||{})};
  for(const source of sources){
   const host=new URL(source.url).hostname;
@@ -270,13 +271,27 @@ async function discover(config,catalog,previous,opts={}){
    fingerprints[url]=hash;
    const found=htmlEvents(html);
    for(const item of found){const race=parseEvent(item,url,source,today);if(race){events.push(race);site.parsed++}}
+   // Visible-text dates are never authoritative. They only enter the private Actions review artifact.
+   if(!found.length && (!previousHash || previousHash!==hash)){
+    const review=extractHtmlCandidates(html,url,today);
+    if(raceLike(review.title)){
+     for(const signal of review.candidates.filter(c=>c.rank>=1).slice(0,4)){
+      plainCandidates.push({url,eventTitle:review.title,sport:source.sport,country:source.country,
+        dateCandidate:signal.date,context:signal.context,
+        matchingIds:catalog.filter(e=>normalize(e.name)===normalize(review.title)
+          &&String(e.date||'').slice(0,4)===signal.date.slice(0,4)).map(e=>e.id),
+        rank:signal.rank,reason:'ordinary_html_date_needs_organizer_confirmation',
+        autoPublished:false});
+     }
+    }
+   }
    if(source.discover!==false && site.checked===1)queue.push(...links(html,url,host).slice(0,LINKS_PER_SOURCE*3));
   }
   sourceResults.push(site);
  }
  const unique=[...new Map(events.map(e=>[e.id,e])).values()];
  const result=choose(unique,catalog,previous,today);
- return {...result,sourceResults,pagesChecked:pageCount,structuredEvents:unique.length,contentChanges,sourceState:{version:1,sources:fingerprints}};
+ return {...result,sourceResults,pagesChecked:pageCount,structuredEvents:unique.length,contentChanges,plainCandidates:plainCandidates.slice(0,200),sourceState:{version:1,sources:fingerprints}};
 }
 function monitorExisting(catalog,today){
  const skip=/^(?:www\.)?(?:fietssport\.nl|hardloopkalendernederland\.nl|triathlonplan\.nl|worldsmarathons\.com)$/i;
@@ -323,20 +338,20 @@ async function main(){
  fs.mkdirSync('out',{recursive:true});
  const report={generatedAt:new Date().toISOString(),pagesChecked:result.pagesChecked,
    structuredEvents:result.structuredEvents,newEvents:result.newEvents,changed:result.changed,
-   needsReview:result.review,contentChanges:result.contentChanges,sourceResults:result.sourceResults,autoPublished:success};
+   needsReview:result.review,plainHtmlCandidates:result.plainCandidates,contentChanges:result.contentChanges,sourceResults:result.sourceResults,autoPublished:success};
  fs.writeFileSync('out/raceatlas-discovery-report.json',JSON.stringify(report,null,2)+'\n');
  fs.writeFileSync('out/raceatlas-discovery-report.md',
    '# RaceAtlas official-source discovery\n\nOfficial organizers only. Published changes require structured event date and place. No prices or registration availability inferred.\n\n'+
    '- Pages checked: '+result.pagesChecked+'\n- Structured events: '+result.structuredEvents+'\n- Newly qualified events: '+result.newEvents.length+
-   '\n- Existing date revisions: '+result.changed.length+'\n- First-party source page changes: '+result.contentChanges.length+'\n- Ambiguities needing review: '+result.review.length+
+   '\n- Existing date revisions: '+result.changed.length+'\n- First-party source page changes: '+result.contentChanges.length+'\n- Plain HTML date candidates (manual only): '+result.plainCandidates.length+'\n- Ambiguities needing review: '+result.review.length+
    '\n- Published: '+success+'\n\n'+result.newEvents.map(e=>'- NEW '+e.name+' ('+e.date+') — '+e.officialEventUrl).join('\n')+
-   '\n'+result.changed.map(e=>'- UPDATED '+e.id+' — '+e.date).join('\n')+'\n'+result.contentChanges.map(c=>'- PAGE CHANGED '+c.url).join('\n')+'\n');
+   '\n'+result.changed.map(e=>'- UPDATED '+e.id+' — '+e.date).join('\n')+'\n'+result.contentChanges.map(c=>'- PAGE CHANGED '+c.url).join('\n')+'\n'+result.plainCandidates.map(c=>'- NEEDS REVIEW '+c.eventTitle+' — '+c.dateCandidate+' — '+c.url).join('\n')+'\n');
  if(!success){console.log('No first-party source responded; public JSON preserved');return}
  if(JSON.stringify(state.sources||{})!==JSON.stringify(result.sourceState.sources))fs.writeFileSync(STATE,JSON.stringify(result.sourceState,null,2)+'\n');
  const pruned=(previous.events||[]).length!==result.data.events.length||(previous.updates||[]).length!==result.data.updates.length;
  const materiallyChanged=result.newEvents.length||result.changed.length||pruned;
  if(materiallyChanged)fs.writeFileSync(OUTPUT,JSON.stringify(result.data,null,2)+'\n');
- console.log(JSON.stringify({pagesChecked:result.pagesChecked,structuredEvents:result.structuredEvents,newEvents:result.newEvents.length,updated:result.changed.length,review:result.review.length,pageChanges:result.contentChanges.length,feedChanged:Boolean(materiallyChanged)}));
+ console.log(JSON.stringify({pagesChecked:result.pagesChecked,structuredEvents:result.structuredEvents,newEvents:result.newEvents.length,updated:result.changed.length,review:result.review.length,plainCandidates:result.plainCandidates.length,pageChanges:result.contentChanges.length,feedChanged:Boolean(materiallyChanged)}));
 }
 if(require.main===module)main().catch(e=>{console.error(e.message);process.exitCode=1});
 module.exports={safeUrl,htmlEvents,links,linkScore,eventDate,parseEvent,raceLike,choose,discover,readCatalog,monitorExisting,verifiedOrganizerSources,fingerprint};
