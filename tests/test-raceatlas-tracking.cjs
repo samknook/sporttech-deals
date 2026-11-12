@@ -59,6 +59,10 @@ assert.equal(context.window.RaceAtlasTracking.track('ra-site','card_view'),false
 assert.equal(context.window.RaceAtlasTracking.track('ra-1','site_view'),false);
 assert.equal(context.window.RaceAtlasTracking.track('ra-site','site_view'),true);
 assert.ok(!source.includes('localStorage'),'No persistent visitor identifiers or cookies');
+context.location.hostname='trizentro.com';
+assert.equal(context.window.RaceAtlasTracking.enabled(),true,'Custom apex domain must track');
+context.location.hostname='www.trizentro.com';
+assert.equal(context.window.RaceAtlasTracking.enabled(),true,'WWW domain must track');
 context.location.hostname='localhost';
 assert.equal(context.window.RaceAtlasTracking.enabled(),false,'Local testing must not inflate production traffic');
 assert.equal(context.window.RaceAtlasTracking.track('ra-2','detail_view'),false);
