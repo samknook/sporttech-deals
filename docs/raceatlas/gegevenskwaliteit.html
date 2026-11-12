@@ -17,6 +17,7 @@
 <div class="stat"><strong id="provisional">—</strong><small>Nog te bevestigen datums</small></div>
 <div class="stat"><strong id="unknown">—</strong><small>Alleen maand of datum onbekend</small></div>
 </section>
+<div class="panel"><h2>Directe organisatielinks</h2><p class="intro" style="font-size:13px">We onderscheiden links die nog gevonden moeten worden, mogelijke organisatorsites en links met vastgelegde verificatie. Een kandidaat is niet automatisch gecontroleerd.</p><p id="organizerStatus" role="status">Organisatielinks laden…</p></div>
 <div class="panel"><h2>Controleer eerst de wedstrijden die binnenkort plaatsvinden</h2><p class="intro" style="font-size:13px">De prioriteit is automatisch berekend met voorlopige wedstrijddatums. Datums en inschrijfmogelijkheden worden niet automatisch bevestigd. Open de bron en geef een correctie door als de organisator nieuwe informatie heeft gepubliceerd.</p><h2>Zoek een wedstrijd voor correctie</h2><div class="tools">
 <label>Naam of plaats<input type="search" id="search" placeholder="Zoek op wedstrijd of plaats"></label>
 <label>Controlebehoefte<select id="filter"><option value="">Alle kwaliteitsstatussen</option><option value="unverified_date">Datum niet bevestigd</option><option value="historical_month">Alleen verwachte maand</option><option value="missing_date">Datum onbekend</option><option value="stale_source">Broncontrole ouder dan 30 dagen</option><option value="missing_check_date">Geen controledatum</option><option value="recently_checked">Recent gecontroleerd</option></select></label>
@@ -50,8 +51,9 @@ function render(){
  const priorityLabel={urgent:'Prioriteit: komende 30 dagen (voorlopig)',soon:'Prioriteit: 31–90 dagen (voorlopig)',missing:'Exacte datum achterhalen',later:'Later controleren',recheck:'Officiële bron opnieuw bekijken',reviewed:'Broncontrole geregistreerd'}[r.review_bucket];
  const hint=element('p',priorityLabel||'Controle nodig');
  if(r.display_date)hint.textContent+=' · '+new Date(r.display_date+'T12:00:00Z').toLocaleDateString('nl-NL',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});
+ const linkQuality=element('small',r.organizer_link_status==='verified'?'✓ Organisatielink gecontroleerd':r.organizer_link_status==='candidate'?'Mogelijke organisatielink — nog controleren':'Organisatielink ontbreekt');
  const checked=element('small',r.last_verified_at?'Bron vastgelegd op '+new Date(r.last_verified_at).toLocaleDateString('nl-NL'):'Geen broncontroledatum vastgelegd');
- content.append(status,title,place,hint,checked);
+ content.append(status,title,place,hint,linkQuality,checked);
  const a=element('a','Correctie melden ↗');a.href=linkFor(r);
  const controls=element('div',null,'itemLinks');
  if(r.verification_source_url?.startsWith('https://')){const source=element('a','Bron bekijken ↗');source.href=r.verification_source_url;source.target='_blank';source.rel='noopener noreferrer';source.className='sourceLink';controls.append(source)}
@@ -62,13 +64,17 @@ function render(){
 }
 async function load(){
  try{
- const response=await fetch(API+'?select=event_id,event_name,sport,city,date_confidence,review_reason,review_priority,review_bucket,display_date,last_verified_at,verification_source_url&order=review_priority.asc,event_name.asc&limit=1000',{headers:{apikey:KEY,Accept:'application/json'},signal:AbortSignal.timeout(10000)});
+ const response=await fetch(API+'?select=event_id,event_name,sport,city,date_confidence,review_reason,review_priority,review_bucket,display_date,organizer_link_status,last_verified_at,verification_source_url&order=review_priority.asc,event_name.asc&limit=1000',{headers:{apikey:KEY,Accept:'application/json'},signal:AbortSignal.timeout(10000)});
  if(!response.ok)throw Error('Request failed');
  records=await response.json();if(!Array.isArray(records))throw Error('Unexpected result');
  $('total').textContent=records.length;
  $('official').textContent=records.filter(r=>r.date_confidence==='official').length;
  $('provisional').textContent=records.filter(r=>r.date_confidence==='unverified').length;
  $('unknown').textContent=records.filter(r=>['historical_month','unknown'].includes(r.date_confidence)).length;
+ const verified=records.filter(r=>r.organizer_link_status==='verified').length;
+ const candidates=records.filter(r=>r.organizer_link_status==='candidate').length;
+ const missing=records.filter(r=>r.organizer_link_status==='missing').length;
+ $('organizerStatus').textContent=verified+' gecontroleerd · '+candidates+' kandidaten · '+missing+' nog zonder organisatielink';
  render();
  }catch{
  $('status').textContent='Gegevens kunnen momenteel niet geladen worden. Meld correcties rechtstreeks via het organisatorenformulier.';
