@@ -6,7 +6,7 @@
 const ALLOWED_ORIGIN = "https://samknook.github.io";
 const PROJECT_URL = Deno.env.get("SUPABASE_URL") || "https://lpzndnxloykcthbsqcet.supabase.co";
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
-const allowedKinds = new Set(["organizer","registration","source"]);
+const allowedKinds = new Set(["organizer","registration","source","promotion"]);
 const CORS = {
   "Access-Control-Allow-Origin":ALLOWED_ORIGIN,
   "Access-Control-Allow-Methods":"POST, OPTIONS",
