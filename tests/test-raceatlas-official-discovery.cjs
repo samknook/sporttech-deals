@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict');
-const {safeUrl,htmlEvents,links,eventDate,parseEvent,choose,discover,fingerprint,monitorExisting}=require('../scripts/raceatlas-official-discovery.cjs');
+const {safeUrl,htmlEvents,links,linkScore,eventDate,parseEvent,choose,discover,fingerprint,monitorExisting}=require('../scripts/raceatlas-official-discovery.cjs');
 const src={url:'https://events.example.org/calendar/',sport:'Hardlopen',country:'Nederland',discover:true};
 const today='2026-11-12';
 const first={
@@ -18,6 +18,9 @@ assert.equal(fingerprint('<html><script>var x=1</script><body>Race 2027</body></
 assert.notEqual(fingerprint('<body>Registration open</body>'),fingerprint('<body>Registration closed</body>'));
 assert.equal(htmlEvents(html).length,1);
 assert.equal(links(html,'https://events.example.org/calendar/','events.example.org').length,1);
+assert.ok(linkScore('https://events.example.org/events/race-2027')>linkScore('https://events.example.org/loopgroepen/start-to-run/'));
+assert.equal(linkScore('https://events.example.org/nieuws/uitslagen-marathon'),-100);
+assert.deepEqual(links('<a href="/nieuws/uitslagen-marathon">Results</a>','https://events.example.org/calendar/','events.example.org'),[]);
 assert.equal(eventDate('2027-04-18',today),'2027-04-18');
 assert.equal(eventDate('2027-02-30',today),null);
 assert.equal(eventDate('2026-03-01',today),null);
