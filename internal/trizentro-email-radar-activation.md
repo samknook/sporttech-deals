@@ -11,9 +11,9 @@ Status op 12 november 2026: infrastructuur gedeployed, **e-mailaanmeldingen uitg
    - `RESEND_FROM`: bijvoorbeeld `TriZentro <meldingen@trizentro.com>` **alleen nadat het domein en afzender zijn geverifieerd**.
    - `RADAR_CRON_SECRET`: sterke willekeurige geheime waarde, niet in GitHub-code of publiek JavaScript.
 4. Voeg in **GitHub → Settings → Secrets and variables → Actions** de repository secret `TRIZENTRO_RADAR_CRON_SECRET` toe met **exact dezelfde** waarde.
-5. Test eerst handmatig de GitHub workflow **TriZentro daily verified registration alerts**. De eerste geslaagde run vult slechts de beginsituatie en verstuurt geen wijzigingsmails.
-6. Controleer vervolgens met een eigen testmailbox een aanmelding, bevestiging, een officieel geverifieerde wijziging, levering, afmelding en het uitblijven van dubbele berichten.
-7. Activeer **pas na deze tests** `RADAR_EMAIL_LIVE=true` in Supabase Secrets. Laat de waarde oningesteld of `false` zolang de tests niet zijn afgerond.
+5. Configureer voor een **gecontroleerde test** tijdelijk `RADAR_EMAIL_LIVE=true` in Supabase Secrets, nadat domein, sleutel en afzender geverifieerd zijn. Hierdoor is het aanmeldformulier ook publiek beschikbaar: voer de test daarom uit vlak vóór de officiële activering.
+6. Test handmatig de GitHub workflow **TriZentro daily verified registration alerts**. De eerste geslaagde run vult slechts de beginsituatie en verstuurt geen wijzigingsmails.
+7. Controleer met een eigen testmailbox aanmelding, bevestiging, een officieel geverifieerde wijziging, levering, afmelding en het uitblijven van dubbele berichten. Zet bij fouten meteen `RADAR_EMAIL_LIVE=false`. Als alle tests slagen, laat je de instelling aan staan.
 
 ## Gedrag
 
