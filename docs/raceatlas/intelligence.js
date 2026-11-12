@@ -66,8 +66,8 @@
         const detail=el('button','raIntelButton','Bekijk wedstrijd');
         detail.type='button';
         detail.addEventListener('click',()=>{
-          const match=Array.from(document.querySelectorAll('.card')).find(c=>c.querySelector('[data-id="'+race.event_id+'"]'));
-          if(match){const target=match.querySelector('[data-id="'+race.event_id+'"]');target.click();}
+          const target=document.querySelector('[data-ra-detail="'+race.event_id+'"]');
+          if(target){target.click();}
           else {
             const u=new URL(location.href);
             u.searchParams.set('event',race.event_id);
