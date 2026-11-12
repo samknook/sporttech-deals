@@ -75,7 +75,7 @@ function extract(html,url,now='2026-11-12'){
   const context=(left.slice(sentenceBreak>=0?sentenceBreak+2:0)+right.slice(0,stop)).slice(0,230);
   const nearby=context.toLowerCase();
   // Reject references explicitly tied to historic editions and non-race milestones.
-  const discouraging=/(?:inschrijf|aanmeld|registration|register|deadline|startbewijzen|tickets|early.bird|inschrijvingen|loting|ballot|sluit|opens|geopend|opent|entry fee|uitslagen|results|archief)/i.test(nearby);
+  const discouraging=/(?:inschrij(?:f|v)|aanmeld|registration|register|deadline|startbewijzen|tickets|early.bird|loting|ballot|sluit|opens|geopend|opent|entry fee|uitslagen|results|archief)/i.test(nearby);
   const raceContext=/(?:wedstrijd|evenement|race|start|marathon|trail|toertocht|cross|loopt|run|triathlon|triatlon|duathlon|duatlon|verreden|plaats|edition|editie)/i.test(nearby);
   const signal={date:match.date,match:match.snippet,context:context.slice(0,210),kind:match.kind,rank:discouraging?0:raceContext?2:1};
   const old=grouped.get(signal.date);
