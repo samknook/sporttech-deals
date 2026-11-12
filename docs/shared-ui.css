@@ -243,3 +243,29 @@ body .tz-footer a,body .foot a{color:#c9dbd2!important}
   .tz-mobile-sport{min-height:58px;font-size:9px;padding:6px 2px}
   .tz-mobile-sport span:first-child{font-size:19px}
 }
+
+/* Season overview: visible shortcuts to saved races and the useful tools. */
+.tz-season-shortcuts{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 17px}
+.tz-season-shortcuts a{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 14px;border:1px solid #d8e6dc;border-radius:11px;background:white;color:#174d39;font-size:12px;font-weight:850;text-decoration:none}
+.tz-season-shortcuts a:hover{background:#ecf6e5;border-color:#a9d49b}
+.tz-saved-events-heading{margin:24px 0 12px;font-size:22px;letter-spacing:-.04em}
+#savedCards,#raMonthPlannerList,#raRegistrationList,#raSeasonBackup{scroll-margin-top:16px}
+@media(max-width:700px){
+ .tz-season-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:12px 0 16px}
+ .tz-season-shortcuts a{font-size:12px;min-height:48px;padding:9px 7px;text-align:center}
+ #savedPage .sectionHeading{display:block!important;margin-top:12px!important}
+ #savedPage .sectionHeading h2{font-size:clamp(26px,7vw,34px)!important;margin:0 0 6px!important}
+ #savedPage .sectionHeading>div:first-child p{font-size:13px!important;margin-bottom:12px!important}
+ #savedPage .savedSummary{font-size:12px!important;line-height:1.5!important;padding:12px 14px!important;margin:12px 0!important}
+ #savedPage .savedActions{display:flex!important;flex-wrap:nowrap!important;max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:3px 0 10px!important;gap:7px!important}
+ #savedPage .savedActions::-webkit-scrollbar{display:none}
+ #savedPage .savedActions>.miniBtn{flex:0 0 auto!important;width:auto!important;min-width:145px!important;min-height:43px!important;font-size:11px!important;padding:8px 12px!important}
+ #savedPage :is(.raSeasonGoals,.raMonthPlanner,.raRegistrationWatch,.raSeasonHealth){padding:14px!important;margin:15px 0!important}
+ #savedPage .raMonthPlannerList{grid-template-columns:minmax(0,1fr)!important}
+ #savedPage .raGoalsHeader{flex-wrap:wrap!important}
+ #savedPage .raSeasonMilestone{margin:10px 0 14px!important}
+ #savedPage .raNextRaceFrame{padding:12px!important}
+ #savedPage .raNextRaceFrame button{margin:0!important}
+ #savedPage .cards{grid-template-columns:minmax(0,1fr)!important}
+ .tz-saved-events-heading{font-size:22px!important;margin:23px 0 11px!important}
+}
