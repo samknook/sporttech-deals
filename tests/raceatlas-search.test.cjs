@@ -188,14 +188,16 @@ test('Registration filters only flag grounded future openings, approaching deadl
  assert.match(page,/value="soldout">Uitverkocht/);
 });
 test('Account-free season backups are versioned, deduplicated, strict and non-destructive',()=>{
- const funcs=new Function(sourceFunction('buildSeasonBackup')+';'+sourceFunction('parseSeasonBackup')+';return {buildSeasonBackup,parseSeasonBackup}')();
+ const funcs=new Function('const myRegistrations={"ra-1":"registered","ra-9":"waitlist"};'+sourceFunction('cleanRegistrationStates')+';'+sourceFunction('buildSeasonBackup')+';'+sourceFunction('parseSeasonBackup')+';return {buildSeasonBackup,parseSeasonBackup}')();
  const backup=funcs.buildSeasonBackup(['ra-1','ra-1','ra-2','<script>'],'2026-11-11T12:00:00.000Z');
  assert.deepEqual(backup.eventIds,['ra-1','ra-2']);
  assert.equal(backup.format,'raceatlas-season');
  assert.equal(backup.version,1);
+ assert.deepEqual(backup.registrationStates,{'ra-1':'registered'});
  const imported=funcs.parseSeasonBackup(backup,new Set(['ra-2']));
  assert.deepEqual(imported.ids,['ra-2']);
  assert.equal(imported.unknown,1);
+ assert.equal(imported.registrationStates['ra-1'],'registered');
  assert.throws(()=>funcs.parseSeasonBackup({format:'raceatlas-season',version:2,eventIds:['ra-1']},new Set(['ra-1'])));
  assert.throws(()=>funcs.parseSeasonBackup({format:'raceatlas-season',version:1,eventIds:['../secrets']},new Set()));
  assert.match(page,/\[\.\.\.new Set\(\[\.\.\.saved,\.\.\.ids\]\)\]/);
@@ -229,4 +231,34 @@ test('Account-free season goals are bounded, persisted locally and tied to saved
  assert.match(page,/id="raGoalProgress"/);
  assert.match(page,/renderSeasonGoals\(myEvents\)/);
  assert.match(page,/items\.filter\(isConfirmedEventDate\)\.length/);
+});
+
+test('Registration tracker validates saved event states and excludes unrelated IDs from backups',()=>{
+ const clean=new Function(sourceFunction('cleanRegistrationStates')+';return cleanRegistrationStates')();
+ assert.deepEqual(clean({'ra-1':'registered','ra-2':'waitlist','ra-3':'planned','ra-4':'hacked','../../bad':'registered'}),{'ra-1':'registered','ra-2':'waitlist','ra-3':'planned'});
+ assert.deepEqual(clean(null),{});
+ assert.match(page,/id="raMyRegistrationSummary"/);
+ assert.match(page,/choice\.addEventListener\('change',\(\)=>setMyRegistrationState/);
+ assert.match(page,/REGISTRATION_STORE='raceatlas-registration-tracker-v1'/);
+ assert.match(page,/localStorage\.setItem\(REGISTRATION_STORE,JSON\.stringify\(myRegistrations\)\)/);
+});
+test('Registration date exports include only future sourced exact calendar days, no invented status',()=>{
+ const code=sourceFunction('localIsoDate')+';'+sourceFunction('registrationCalendarItems')+';'+sourceFunction('icsEscape')+';'+sourceFunction('registrationIcsText');
+ const run=new Function(code+';return {registrationCalendarItems,registrationIcsText}')();
+ const events=[
+  {id:'ra-1',name:'Race 1',officialEventUrl:'https://example.com/1',registrationDate:'2027-02-01',registrationEndDate:'2027-03-01'},
+  {id:'ra-2',name:'Race 2',registrationDate:'2027-02-01'},
+  {id:'ra-3',name:'Race 3',officialEventUrl:'https://example.com/3',registrationDate:'2026-01-01'},
+  {id:'ra-4',name:'Race 4',registrationInfoUrl:'https://example.com/4',registrationEndDate:'2027-02-20'}
+ ];
+ const items=run.registrationCalendarItems(events,'2026-11-12');
+ assert.equal(items.length,3);
+ assert.deepEqual(items.map(x=>x.date),['2027-02-01','2027-02-20','2027-03-01']);
+ const text=run.registrationIcsText(items,'2026-11-12T10:00:00.000Z');
+ assert.match(text,/BEGIN:VCALENDAR/);
+ assert.match(text,/UID:ra-1-opening@raceatlas/);
+ assert.match(text,/DTSTART;VALUE=DATE:20270201/);
+ assert.match(text,/DTEND;VALUE=DATE:20270202/);
+ assert.match(text,/niet live bijgewerkt/);
+ assert.match(page,/id="raRegistrationIcs"/);
 });
