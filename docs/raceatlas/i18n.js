@@ -594,6 +594,11 @@ Object.assign(strings,{
   "Toon minder": "Show less",
   "Toon meer": "Show more"
 });
+const radarPatterns=[
+  [/^Bekijk alle (\\d+) inschrijfmomenten ↓$/,'View all $1 registration dates ↓'],
+  [/^(\\d+) inschrijfmomenten om te volgen$/,'$1 registration dates to track'],
+  [/^(\\d+) inschrijfmomenten voor mijn seizoen$/,'$1 registration dates for my season']
+];
 const extendedPatterns=[["^Openingsdatum volgens bron · (.+)$","Registration opening according to source · $1"],["^Deadline volgens bron · (.+)$","Deadline according to source · $1"],["^Datum vermeld — check bij organisator$","Date listed — check with the organizer"],["^(.+) · nog niet automatisch gecontroleerd$","$1 · not automatically reviewed"],["^([A-Za-zÀ-ÿ]+) · bron laatst gecontroleerd op (.+)$","$1 · source last checked on $2"],["^(\\\\d+) (ingeschreven|op wachtlijst|nog te regelen)$","$1 $2"]].map(([p,to])=>[new RegExp(p,"iu"),to]);
 const shortMonths=[["jan","Jan"],["feb","Feb"],["mrt","Mar"],["apr","Apr"],["mei","May"],["jun","Jun"],["jul","Jul"],["aug","Aug"],["sep","Sep"],["okt","Oct"],["nov","Nov"],["dec","Dec"]];
 const shortMonthRegex=/\b(jan|feb|mrt|apr|mei|jun|jul|aug|sep|okt|nov|dec)\b/gi;
@@ -624,6 +629,14 @@ Object.assign(strings,{
   "Inschrijfradar met broninformatie": "Registration radar with source details",
   " met relevante inschrijfinformatie": " with relevant registration details",
   "Bron laatst vastgelegd: ": "Source last recorded: "
+});
+Object.assign(strings,{
+  'Bekijk alle inschrijfmomenten ↓':'View all registration dates ↓',
+  'Toon minder ↑':'Show fewer ↑',
+  'Inschrijfmomenten':'Registration dates',
+  ' inschrijfmomenten om te volgen':' registration dates to track',
+  ' inschrijfmomenten voor mijn seizoen':' registration dates for my season',
+  'Inschrijfradar':'Registration radar'
 });
 const placeholders={
 'Bijv. Egmond, gravel, marathon…':'E.g. Egmond, gravel, marathon…',
@@ -672,6 +685,7 @@ function translation(text){
  if(translations.has(core))return prefix+translations.get(core)+suffix;
  let result=text;
  for(const [pattern,replacement] of translatedPatterns)result=result.replace(pattern,replacement);
+ for(const [pattern,replacement] of radarPatterns)result=result.replace(pattern,replacement);
  for(const [pattern,replacement] of extendedPatterns)result=result.replace(pattern,replacement);
  for(const [pattern,replacement] of partials)result=result.replace(pattern,replacement);
  for(const [pattern,replacement] of sentenceReplacements)result=result.replace(pattern,replacement);
