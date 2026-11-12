@@ -41,7 +41,7 @@ check(performanceHome.includes('pace-calculator.html#cycling'),'Cycling calculat
 check(multisportCalculator.includes('id="run-time"')&&multisportCalculator.includes('id="bike-time"'),'Multisport results missing');
 check(multisportCalculator.includes('aria-selected="true"'),'Multisport tab accessibility missing');
 for(const [name,html] of [['Performance',performanceHome],['Pace calculator',multisportCalculator]]){
- for(const script of [...html.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)]){
+ for(const script of [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)]){
   try{new Function(script[1])}catch(e){errors.push(name+' inline JS syntax error: '+e.message)}
  }
 }
