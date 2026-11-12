@@ -12,7 +12,7 @@ const net=require('node:net');
 const SITE='docs/raceatlas';
 const INPUT='scripts/raceatlas-official-source-seeds.json';
 const OUTPUT=SITE+'/auto-events.json';
-const MAX_PAGES=36;
+const MAX_PAGES=65;
 const LINKS_PER_SOURCE=3;
 const TIMEOUT_MS=9500;
 const MAX_BYTES=350000;
@@ -184,7 +184,7 @@ async function boundedFetch(url,fetchImpl){
 async function discover(config,catalog,previous,opts={}){
  const fetchImpl=opts.fetchImpl||fetch;
  const today=opts.today||new Date().toISOString().slice(0,10);
- const sources=config.sources.filter(s=>safeUrl(s.url)&&['Hardlopen','Fietsen','Triatlon'].includes(s.sport)).slice(0,20);
+ const sources=config.sources.filter(s=>safeUrl(s.url)&&['Hardlopen','Fietsen','Triatlon'].includes(s.sport)).slice(0,35);
  let pageCount=0;
  const seenPages=new Set(),events=[],sourceResults=[];
  for(const source of sources){
@@ -206,9 +206,23 @@ async function discover(config,catalog,previous,opts={}){
  const result=choose(unique,catalog,previous,today);
  return {...result,sourceResults,pagesChecked:pageCount,structuredEvents:unique.length};
 }
+function monitorExisting(catalog,today){
+ const skip=/^(?:www\.)?(?:fietssport\.nl|hardloopkalendernederland\.nl|triathlonplan\.nl|worldsmarathons\.com)$/i;
+ const rows=catalog.filter(e=>e.dateEvidence==='official'&&e.date>=today&&safeUrl(e.officialEventUrl)
+   &&!skip.test(new URL(e.officialEventUrl).hostname));
+ const uniq=[...new Map(rows.map(e=>[normalizedUrl(e.officialEventUrl),e])).values()];
+ // Check imminent races every day; rotate the rest so established sources are revisited regularly.
+ const soon=uniq.filter(e=>e.date<=new Date(Date.parse(today+'T12:00:00Z')+45*86400000).toISOString().slice(0,10)).slice(0,6);
+ const rest=uniq.filter(e=>!soon.includes(e)).sort((a,b)=>normalizedUrl(a.officialEventUrl).localeCompare(normalizedUrl(b.officialEventUrl)));
+ const day=Math.floor(Date.parse(today+'T12:00:00Z')/86400000);
+ const rotated=rest.length?Array.from({length:Math.min(12,rest.length)},(_,i)=>rest[(day*12+i)%rest.length]):[];
+ return [...new Set([...soon,...rotated])].map(e=>({url:e.officialEventUrl,sport:e.sport,country:e.country,discover:false}));
+}
 async function main(){
  const config=JSON.parse(fs.readFileSync(INPUT,'utf8'));
  const catalog=readCatalog(fs.readFileSync(SITE+'/index.html','utf8'));
+ const today=new Date().toISOString().slice(0,10);
+ config.sources.push(...monitorExisting(catalog,today));
  let previous={version:1,events:[],updates:[]};
  try{previous=JSON.parse(fs.readFileSync(OUTPUT,'utf8'))}catch{}
  const result=await discover(config,catalog,previous);
@@ -230,4 +244,4 @@ async function main(){
  console.log(JSON.stringify({pagesChecked:result.pagesChecked,structuredEvents:result.structuredEvents,newEvents:result.newEvents.length,updated:result.changed.length,review:result.review.length}));
 }
 if(require.main===module)main().catch(e=>{console.error(e.message);process.exitCode=1});
-module.exports={safeUrl,htmlEvents,links,eventDate,parseEvent,choose,discover,readCatalog};
+module.exports={safeUrl,htmlEvents,links,eventDate,parseEvent,choose,discover,readCatalog,monitorExisting};
