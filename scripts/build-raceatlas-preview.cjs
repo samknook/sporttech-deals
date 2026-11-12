@@ -11,6 +11,8 @@ if(!fs.existsSync(path.join(src,'index.html')))throw Error('Staging source does 
 if(dst===src||src.startsWith(dst+path.sep))throw Error('Invalid staging paths');
 fs.rmSync(dst,{recursive:true,force:true});
 fs.cpSync(src,dst,{recursive:true,force:true});
+const analyticsStub=path.join(dst,'tracking.js');
+fs.writeFileSync(analyticsStub,'/* Preview traffic is never counted as live traffic. */\\n(()=>{window.RaceAtlasTracking={track:()=>false,enabled:()=>false,siteView:()=>{},detailView:()=>{},observeCards:()=>{}}})();\\n');
 let edited=0;
 function traverse(dir){
  for(const d of fs.readdirSync(dir,{withFileTypes:true})){
