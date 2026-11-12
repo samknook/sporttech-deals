@@ -62,3 +62,15 @@ body.tz-performance .tri-insight>span,body.tz-performance .tri-insight>p{color:#
 body.tz-performance .tri-insight.baseline,body.tz-performance .tri-insight.faster{background:#edf6ea}
 body.tz-performance :is(.dashboard,.fuel,.tri-main) :is(.panel,.tri-panel){border-radius:18px}
 body.tz-performance .tz-site-brand .tz-logo-mark{display:none}
+
+/* Shared inner-page footer, exactly the same on all three core calculators. */
+body.tz-performance .tz-footer{background:#102123!important;color:#c9dbd2;padding:28px 0}
+body.tz-performance .tz-footer .wrap{max-width:1180px;width:calc(100% - 48px);margin:auto;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+body.tz-performance .tz-footer a{color:#c9dbd2;text-decoration:none;font-size:13px;font-weight:700}
+body.tz-performance .tz-footer a:hover{text-decoration:underline;color:#b9fa83}
+/* Organizer-specific legacy reset: no second padding area around the shared header. */
+body.tz-performance .tz-site-header{padding:0!important}
+body.tz-performance .tz-site-header .tz-site-nav{min-height:80px}
+body.tz-performance .tz-page-main .orgActions{margin-top:0}
+body.tz-performance .tz-page-main input:focus-visible,body.tz-performance .tz-page-main textarea:focus-visible,body.tz-performance .tz-page-main select:focus-visible{outline:3px solid #b9fa8360;border-color:#5ba66e}
+@media(max-width:660px){body.tz-performance .tz-footer .wrap{width:calc(100% - 34px)}}
