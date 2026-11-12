@@ -1,0 +1,43 @@
+/* TriZentro unified Performance design system — Events-compatible visual identity */
+:root{--tz-dark:#102123;--tz-dark2:#1b3030;--tz-acid:#b9fa83;--tz-paper:#f7f8f4;--tz-ink:#132326;--tz-muted:#64776f;--tz-line:#e1e7df;--tz-soft:#edf5e9}
+body.tz-performance{background:var(--tz-paper)!important;color:var(--tz-ink)!important;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.tz-performance .top,.tz-performance header{background:var(--tz-dark)!important;color:#fff}
+.tz-performance .top .wrap{width:min(1180px,calc(100% - 48px));max-width:1180px}
+.tz-performance .top .nav{min-height:78px;height:auto;padding:16px 0;display:flex;justify-content:space-between;align-items:center;gap:18px}
+.tz-performance .top .brand{display:inline-flex;align-items:center;gap:9px;font-size:22px;letter-spacing:-.055em;text-decoration:none;color:#fff;white-space:nowrap}
+.tz-performance .top .brand span{color:var(--tz-acid)}
+.tz-performance .top .brand-icon{height:29px;width:29px}
+.tz-performance .top nav[aria-label="Navigatie"]{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.tz-performance .top nav[aria-label="Navigatie"] a{font-size:13px;font-weight:750;text-decoration:none;color:#fff;line-height:1.3;display:inline-flex;align-items:center;border-radius:40px;border:1px solid #486062;background:#243839;padding:10px 14px}
+.tz-performance .top nav[aria-label="Navigatie"] a:hover,.tz-performance .top nav[aria-label="Navigatie"] a:focus-visible{background:var(--tz-acid);border-color:var(--tz-acid);color:#11231c}
+.tz-performance .top nav[aria-label="Navigatie"] a[href="performance.html"]{background:var(--tz-acid);border-color:var(--tz-acid);color:#11231c}
+.tz-performance h1,.tz-performance h2,.tz-performance h3{letter-spacing:-.05em}
+.tz-performance :is(.tri-hero,.tz-tool-hero){background:var(--tz-dark)!important;color:#fff!important}
+.tz-performance .tri-hero:after{display:none}
+.tz-performance .tri-hero h1,.tz-performance .tz-tool-hero h1{color:#fff}
+.tz-performance .tri-hero h1 em{color:var(--tz-acid)}
+.tz-performance :is(.tri-hero,.tz-tool-hero) .eyebrow{color:var(--tz-acid)}
+.tz-performance .tri-hero p,.tz-performance .tz-tool-hero p{color:#bacdcb}
+.tz-performance :is(.tri-panel,.panel){background:#fff;border:1px solid var(--tz-line);border-radius:18px;box-shadow:0 10px 36px #1021230c}
+.tz-performance :is(.tri-eyebrow,.eyebrow){color:#2b7751}
+.tz-performance .tri-hero .eyebrow,.tz-performance .tz-tool-hero .eyebrow{color:var(--tz-acid)}
+.tz-performance :is(.tri-field input,.tri-field textarea,.field input,.field select){border-color:#cedcd2;background:#f9fbf7;color:var(--tz-ink);border-radius:10px}
+.tz-performance :is(.tri-field input,.tri-field textarea,.field input,.field select):focus-visible{outline:3px solid #b9fa8380;outline-offset:1px;border-color:#4d9e69}
+.tz-performance .distance-selector button{background:#f4f8f2;border:1px solid #d6e3d4;color:#173a30}
+.tz-performance .distance-selector button[aria-pressed="true"]{background:var(--tz-dark);border-color:var(--tz-dark);box-shadow:inset 0 -4px 0 var(--tz-acid);color:#fff}
+.tz-performance :is(.actions button,.actions a){background:#173c31;color:#fff;border-radius:10px}
+.tz-performance :is(.actions button,.actions a):hover{background:#285d49}
+.tz-performance .actions .secondary{background:#e8f5df;color:#235b38;border:1px solid #c3e4b7}
+.tz-performance :is(.metric,.stat){background:#eff6ed;border-color:#94c88a}
+.tz-performance .tri-main,.tz-performance .dashboard,.tz-performance .fuel{padding-top:32px}
+.tz-performance .tz-tool-hero{padding:46px 0 50px}
+.tz-performance .tz-tool-hero .wrap{max-width:1120px}
+.tz-performance .tz-tool-hero h1{font-size:clamp(36px,5vw,58px);line-height:1.06;margin:12px 0 15px}
+.tz-performance .tz-tool-hero p{font-size:17px;line-height:1.65;max-width:750px}
+.tz-performance .tz-tool-hero .eyebrow{font-size:12px;font-weight:850;letter-spacing:.13em;text-transform:uppercase}
+.tz-performance .tz-breadcrumb{padding-top:15px;font-size:13px;color:#5e7669}
+.tz-performance .tz-breadcrumb a{color:#236343}
+.tz-performance .footer-note{color:var(--tz-muted)}
+.tz-performance a:focus-visible,.tz-performance button:focus-visible{outline:3px solid #88cc66;outline-offset:3px}
+@media(max-width:760px){.tz-performance .top .nav{align-items:flex-start;flex-direction:column;gap:12px}.tz-performance .top nav[aria-label="Navigatie"]{width:100%;gap:6px}.tz-performance .top nav[aria-label="Navigatie"] a{font-size:12px;padding:9px 11px}.tz-performance .tri-hero>.wrap{padding-top:40px;padding-bottom:44px}.tz-performance :is(.panel,.tri-panel){padding:18px}.tz-performance .tz-tool-hero{padding:35px 0 42px}}
+@media print{.tz-performance .top,.tz-performance .tz-tool-hero{display:none!important}}
