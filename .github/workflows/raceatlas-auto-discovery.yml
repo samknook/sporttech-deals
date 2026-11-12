@@ -33,42 +33,24 @@ jobs:
           node tests/test-raceatlas-auto-events.cjs
       - name: Review official organizer pages and generate safe changes
         run: node scripts/raceatlas-official-discovery.cjs
-      - name: Publish only changed verified structured events
+      - name: Publish changed organizer data and verified event metadata
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git add docs/raceatlas/auto-events.json scripts/raceatlas-official-source-state.json
           if git diff --cached --quiet; then
-            echo "No organizer data or source fingerprints changed."
+            echo "No organizer data or fingerprints changed."
           else
             PUBLISH_SITE=false
-            if git diff --cached --name-only | grep -q '^docs/raceatlas/auto-events.json
-      - name: Preserve discovery evidence and ambiguous candidates
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: raceatlas-official-discovery
-          path: |
-            out/raceatlas-discovery-report.json
-            out/raceatlas-discovery-report.md
-          if-no-files-found: warn
-          retention-days: 30
-      - name: Explain daily results in workflow summary
-        if: always()
-        run: |
-          if [ -f out/raceatlas-discovery-report.md ]; then
-            cat out/raceatlas-discovery-report.md >> "$GITHUB_STEP_SUMMARY"
-          fi
-; then
+            if git diff --cached --name-only | grep -q '^docs/raceatlas/auto-events.json$'; then
               PUBLISH_SITE=true
             fi
             git config user.name "RaceAtlas automation"
             git config user.email "actions@users.noreply.github.com"
-            git commit -m "Review official race source changes and publish verified metadata"
+            git commit -m "Update verified race metadata and official source checks"
             git push origin HEAD:main
             if [ "$PUBLISH_SITE" = true ]; then
-              # GITHUB_TOKEN pushes do not trigger push-based workflows.
-              # workflow_dispatch explicitly runs Pages release checks and deploy.
+              # GITHUB_TOKEN pushes do not automatically trigger push workflows.
               gh workflow run publish-site.yml --ref main
             fi
           fi
