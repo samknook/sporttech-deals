@@ -6,7 +6,7 @@
   'use strict';
   // Sends only event ID + link type. No identity, cookies, email, or IP in stored rows.
   const ENDPOINT = 'https://lpzndnxloykcthbsqcet.supabase.co/functions/v1/raceatlas-track-outbound';
-  const kinds = new Set(['registration','organizer','source']);
+  const kinds = new Set(['registration','organizer','source','promotion']);
   function enabled(){return /^https:\/\//.test(ENDPOINT)}
   function track(eventId,kind){
     if(!enabled()||!/^ra-\d{1,8}$/.test(eventId)||!kinds.has(kind))return false;
