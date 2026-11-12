@@ -48,6 +48,8 @@ for(const filename of coreTools){
 const sharedCss=fs.readFileSync(path.join(siteRoot,'shared-ui.css'),'utf8');
 const sharedJs=fs.readFileSync(path.join(siteRoot,'shared-ui.js'),'utf8');
 check(sharedCss.includes('.tz-mobile-destinations'),'Shared mobile navigation styling missing');
+check(sharedCss.includes('.tz-menu-toggle'),'Mobile menu control styles missing');
+check(sharedJs.includes("className='tz-menu-toggle'"),'Mobile menu behavior missing');
 try{new Function(sharedJs)}catch(error){errors.push('Shared mobile JS syntax: '+error.message)}
 const publicPages=[
  ['raceatlas/index.html',true],
@@ -64,7 +66,8 @@ for(const [filename,isEvents] of publicPages){
  check(html.includes('tz-logo-image'),'Header logo missing: '+filename);
  check(html.includes('trizentro-mark.svg'),'Official emblem missing: '+filename);
  check(isEvents || html.includes('shared-ui.js?v='),'Mobile navigation missing: '+filename);
- check(!isEvents || !html.includes('shared-ui.js?v='),'Events must retain its native mobile navigation');
+ check(html.includes('shared-ui.js?v='),'Shared mobile menu script missing: '+filename);
+ check(!isEvents || html.includes('class="raMobileNav"'),'Events must retain their native filter and season navigation');
 }
 const performanceHome=fs.readFileSync(path.join(siteRoot,'performance.html'),'utf8');
 const multisportCalculator=fs.readFileSync(path.join(siteRoot,'pace-calculator.html'),'utf8');
