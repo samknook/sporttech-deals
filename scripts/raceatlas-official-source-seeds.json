@@ -1,15 +1,155 @@
 {
-  "description": "Approved first-party organizer pages. Scans are limited, rate-limited and restricted to the listed hostname. Do not add aggregator calendars.",
+  "description": "First-party event organizers or direct public authority event notices only. Curated URLs; no competitor calendars. discover:false prevents scanning unrelated links.",
   "sources": [
-    {"url":"https://www.acwaterland.nl/twiskemolenloop/","sport":"Hardlopen","country":"Nederland","discover":true},
-    {"url":"https://www.savatletiek.nl/event/sav-cross-2/","sport":"Hardlopen","country":"Nederland","discover":true},
-    {"url":"https://stgeorgecross.nl/","sport":"Hardlopen","country":"Nederland","discover":true},
-    {"url":"https://www.tcsamsterdammarathon.nl/","sport":"Hardlopen","country":"Nederland","discover":true},
-    {"url":"https://www.veluwserunbikerun.nl/oldebroek/","sport":"Triatlon","country":"Nederland","discover":true},
-    {"url":"https://www.lechampion.nl/","sport":"Hardlopen","country":"Nederland","discover":true},
-    {"url":"https://www.twcdewekkers.nl/agenda/","sport":"Fietsen","country":"Nederland","discover":true},
-    {"url":"https://www.drenthe200.nl/","sport":"Fietsen","country":"Nederland","discover":true},
-    {"url":"https://rtcprinsenbeek.nl/veldtoertocht/","sport":"Fietsen","country":"Nederland","discover":true},
-    {"url":"https://www.tempo-soest.nl/evenementen","sport":"Fietsen","country":"Nederland","discover":true}
+    {
+      "url": "https://www.acwaterland.nl/twiskemolenloop/",
+      "sport": "Hardlopen",
+      "country": "Nederland",
+      "discover": true
+    },
+    {
+      "url": "https://www.savatletiek.nl/event/sav-cross-2/",
+      "sport": "Hardlopen",
+      "country": "Nederland",
+      "discover": true
+    },
+    {
+      "url": "https://stgeorgecross.nl/",
+      "sport": "Hardlopen",
+      "country": "Nederland",
+      "discover": true
+    },
+    {
+      "url": "https://www.tcsamsterdammarathon.nl/",
+      "sport": "Hardlopen",
+      "country": "Nederland",
+      "discover": true
+    },
+    {
+      "url": "https://www.veluwserunbikerun.nl/oldebroek/",
+      "sport": "Triatlon",
+      "country": "Nederland",
+      "discover": true
+    },
+    {
+      "url": "https://www.lechampion.nl/",
+      "sport": "Hardlopen",
+      "country": "Nederland",
+      "discover": true
+    },
+    {
+      "url": "https://www.twcdewekkers.nl/agenda/",
+      "sport": "Fietsen",
+      "country": "Nederland",
+      "discover": true
+    },
+    {
+      "url": "https://www.drenthe200.nl/",
+      "sport": "Fietsen",
+      "country": "Nederland",
+      "discover": true
+    },
+    {
+      "url": "https://rtcprinsenbeek.nl/veldtoertocht/",
+      "sport": "Fietsen",
+      "country": "Nederland",
+      "discover": true
+    },
+    {
+      "url": "https://www.tempo-soest.nl/evenementen",
+      "sport": "Fietsen",
+      "country": "Nederland",
+      "discover": true
+    },
+    {
+      "url": "https://www.avedam.nl/agenda/meeuwen.php",
+      "sport": "Hardlopen",
+      "country": "Nederland",
+      "discover": false
+    },
+    {
+      "url": "https://devilstrail.nl/evenementen/devils-crossduathlon-netl-kraggenburg/",
+      "sport": "Triatlon",
+      "country": "Nederland",
+      "discover": false
+    },
+    {
+      "url": "https://devilstrail.nl/evenementen/devils-trail-netl-kraggenburg/",
+      "sport": "Hardlopen",
+      "country": "Nederland",
+      "discover": false
+    },
+    {
+      "url": "https://www.savatletiek.nl/wedstrijden/kalender/",
+      "sport": "Hardlopen",
+      "country": "Nederland",
+      "discover": false
+    },
+    {
+      "url": "https://www.acwaterland.nl/twiskemolenloop/inschrijven/",
+      "sport": "Hardlopen",
+      "country": "Nederland",
+      "discover": false
+    },
+    {
+      "url": "https://veluwerenners.nl/toertocht2",
+      "sport": "Fietsen",
+      "country": "Nederland",
+      "discover": false
+    },
+    {
+      "url": "https://www.tempo-soest.nl/",
+      "sport": "Fietsen",
+      "country": "Nederland",
+      "discover": false
+    },
+    {
+      "url": "https://www.adelaar.org/wielrennen/toerfietsen/rittenkalender/",
+      "sport": "Fietsen",
+      "country": "Nederland",
+      "discover": false
+    },
+    {
+      "url": "https://www.wstexel.nl/",
+      "sport": "Fietsen",
+      "country": "Nederland",
+      "discover": false
+    },
+    {
+      "url": "https://wtczijtaart.nl/",
+      "sport": "Fietsen",
+      "country": "Nederland",
+      "discover": false
+    },
+    {
+      "url": "https://www.avedam.nl/",
+      "sport": "Hardlopen",
+      "country": "Nederland",
+      "discover": false
+    },
+    {
+      "url": "https://www.westeinderloop.nl/",
+      "sport": "Hardlopen",
+      "country": "Nederland",
+      "discover": false
+    },
+    {
+      "url": "https://www.dutchmastersofmtb.nl/",
+      "sport": "Fietsen",
+      "country": "Nederland",
+      "discover": false
+    },
+    {
+      "url": "https://www.veluwserunbikerun.nl/reglement/",
+      "sport": "Triatlon",
+      "country": "Nederland",
+      "discover": false
+    },
+    {
+      "url": "https://www.ijmuiden.nl/evenement/av-suomi-sinterklaasloop-2026/",
+      "sport": "Hardlopen",
+      "country": "Nederland",
+      "discover": false
+    }
   ]
 }
