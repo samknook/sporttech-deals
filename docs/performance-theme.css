@@ -1,74 +1,50 @@
-/* TriZentro unified Performance design system — Events-compatible visual identity */
-:root{--tz-dark:#102123;--tz-dark2:#1b3030;--tz-acid:#b9fa83;--tz-paper:#f7f8f4;--tz-ink:#132326;--tz-muted:#64776f;--tz-line:#e1e7df;--tz-soft:#edf5e9}
-body.tz-performance{background:var(--tz-paper)!important;color:var(--tz-ink)!important;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
-.tz-performance .top,.tz-performance header{background:var(--tz-dark)!important;color:#fff}
-.tz-performance .top .wrap{width:min(1180px,calc(100% - 48px));max-width:1180px}
-.tz-performance .top .nav{min-height:78px;height:auto;padding:16px 0;display:flex;justify-content:space-between;align-items:center;gap:18px}
-.tz-performance .top .brand{display:inline-flex;align-items:center;gap:9px;font-size:22px;letter-spacing:-.055em;text-decoration:none;color:#fff;white-space:nowrap}
-.tz-performance .top .brand span{color:var(--tz-acid)}
-.tz-performance .top .brand-icon{height:29px;width:29px}
-.tz-performance .top nav[aria-label="Navigatie"]{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
-.tz-performance .top nav[aria-label="Navigatie"] a{font-size:13px;font-weight:750;text-decoration:none;color:#fff;line-height:1.3;display:inline-flex;align-items:center;border-radius:40px;border:1px solid #486062;background:#243839;padding:10px 14px}
-.tz-performance .top nav[aria-label="Navigatie"] a:hover,.tz-performance .top nav[aria-label="Navigatie"] a:focus-visible{background:var(--tz-acid);border-color:var(--tz-acid);color:#11231c}
-.tz-performance .top nav[aria-label="Navigatie"] a[href="performance.html"]{background:var(--tz-acid);border-color:var(--tz-acid);color:#11231c}
-.tz-performance h1,.tz-performance h2,.tz-performance h3{letter-spacing:-.05em}
-.tz-performance :is(.tri-hero,.tz-tool-hero){background:var(--tz-dark)!important;color:#fff!important}
-.tz-performance .tri-hero:after{display:none}
-.tz-performance .tri-hero h1,.tz-performance .tz-tool-hero h1{color:#fff}
-.tz-performance .tri-hero h1 em{color:var(--tz-acid)}
-.tz-performance :is(.tri-hero,.tz-tool-hero) .eyebrow{color:var(--tz-acid)}
-.tz-performance .tri-hero p,.tz-performance .tz-tool-hero p{color:#bacdcb}
-.tz-performance :is(.tri-panel,.panel){background:#fff;border:1px solid var(--tz-line);border-radius:18px;box-shadow:0 10px 36px #1021230c}
-.tz-performance :is(.tri-eyebrow,.eyebrow){color:#2b7751}
-.tz-performance .tri-hero .eyebrow,.tz-performance .tz-tool-hero .eyebrow{color:var(--tz-acid)}
-.tz-performance :is(.tri-field input,.tri-field textarea,.field input,.field select){border-color:#cedcd2;background:#f9fbf7;color:var(--tz-ink);border-radius:10px}
-.tz-performance :is(.tri-field input,.tri-field textarea,.field input,.field select):focus-visible{outline:3px solid #b9fa8380;outline-offset:1px;border-color:#4d9e69}
-.tz-performance .distance-selector button{background:#f4f8f2;border:1px solid #d6e3d4;color:#173a30}
-.tz-performance .distance-selector button[aria-pressed="true"]{background:var(--tz-dark);border-color:var(--tz-dark);box-shadow:inset 0 -4px 0 var(--tz-acid);color:#fff}
-.tz-performance :is(.actions button,.actions a){background:#173c31;color:#fff;border-radius:10px}
-.tz-performance :is(.actions button,.actions a):hover{background:#285d49}
-.tz-performance .actions .secondary{background:#e8f5df;color:#235b38;border:1px solid #c3e4b7}
-.tz-performance :is(.metric,.stat){background:#eff6ed;border-color:#94c88a}
-.tz-performance .tri-main,.tz-performance .dashboard,.tz-performance .fuel{padding-top:32px}
-.tz-performance .tz-tool-hero{padding:46px 0 50px}
-.tz-performance .tz-tool-hero .wrap{max-width:1120px}
-.tz-performance .tz-tool-hero h1{font-size:clamp(36px,5vw,58px);line-height:1.06;margin:12px 0 15px}
-.tz-performance .tz-tool-hero p{font-size:17px;line-height:1.65;max-width:750px}
-.tz-performance .tz-tool-hero .eyebrow{font-size:12px;font-weight:850;letter-spacing:.13em;text-transform:uppercase}
-.tz-performance .tz-breadcrumb{padding-top:15px;font-size:13px;color:#5e7669}
-.tz-performance .tz-breadcrumb a{color:#236343}
-.tz-performance .footer-note{color:var(--tz-muted)}
-.tz-performance a:focus-visible,.tz-performance button:focus-visible{outline:3px solid #88cc66;outline-offset:3px}
-@media(max-width:760px){.tz-performance .top .nav{align-items:flex-start;flex-direction:column;gap:12px}.tz-performance .top nav[aria-label="Navigatie"]{width:100%;gap:6px}.tz-performance .top nav[aria-label="Navigatie"] a{font-size:12px;padding:9px 11px}.tz-performance .tri-hero>.wrap{padding-top:40px;padding-bottom:44px}.tz-performance :is(.panel,.tri-panel){padding:18px}.tz-performance .tz-tool-hero{padding:35px 0 42px}}
-@media print{.tz-performance .top,.tz-performance .tz-tool-hero{display:none!important}}
-
-/* TriZentro global header and Performance cards: matched to Events */
-.tz-performance .tz-site-header{background:#102123!important;color:white}
-.tz-performance .tz-site-header .tz-site-nav{width:100%;max-width:1180px;min-height:78px;padding:18px 24px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.tz-performance .tz-site-header .tz-site-brand{display:inline-flex;align-items:center;gap:9px;font-size:22px;font-weight:950;letter-spacing:-.9px;color:#fff;text-decoration:none;white-space:nowrap}
-.tz-performance .tz-site-header .tz-site-brand b{color:#a9f275}
-.tz-performance .tz-logo-mark{display:inline-block;width:30px;height:30px;border:3px solid #b9fa83;border-right-color:transparent;transform:rotate(-35deg);border-radius:50%}
-.tz-performance .tz-site-header .tz-site-links{display:flex;justify-content:flex-end;align-items:center;gap:8px;flex-wrap:wrap}
-.tz-performance .tz-site-header .tz-site-links a{background:#243839;color:white;border:1px solid #486062;padding:10px 16px;border-radius:100px;font-size:13px;font-weight:750;text-decoration:none;line-height:1.3}
-.tz-performance .tz-site-header .tz-site-links a:hover,.tz-performance .tz-site-header .tz-site-links a[aria-current="page"]{background:#b9fa83;color:#11231c;border-color:#b9fa83}
-.tz-performance .tz-site-header .tz-site-links .tz-organizers{margin-left:4px}
-.tz-performance .tz-page-hero{background:#102123;color:#fff;padding:55px 24px 85px}
-.tz-performance .tz-page-hero .tz-hero-inner{max-width:1132px;margin:auto}
-.tz-performance .tz-page-hero .tz-kicker{color:#b9fa83;font-size:12px;text-transform:uppercase;letter-spacing:.15em;font-weight:800}
-.tz-performance .tz-page-hero h1{font-size:clamp(38px,5.2vw,70px);letter-spacing:-.06em;line-height:1.04;margin:16px 0;max-width:850px;color:#fff}
-.tz-performance .tz-page-hero h1 em{font-style:normal;color:#b9fa83}
-.tz-performance .tz-page-hero p{color:#bacdcb;font-size:17px;line-height:1.6;max-width:650px}
-.tz-performance .tz-page-main{max-width:1180px;margin:-35px auto 65px;padding:0 24px;position:relative}
-.tz-performance .tz-tool-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.tz-performance .tz-tool-card{min-height:242px;background:white;border:1px solid #e1e7df;border-radius:15px;padding:22px;box-shadow:0 10px 36px #1021230a;display:flex;flex-direction:column}
-.tz-performance .tz-tool-card .tz-card-label{color:#55756a;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
-.tz-performance .tz-tool-card h2{font-size:24px;letter-spacing:-.04em;margin:14px 0 8px;line-height:1.15}
-.tz-performance .tz-tool-card p{color:#71817a;font-size:14px;line-height:1.5;margin:0 0 22px}
-.tz-performance .tz-tool-card a{display:inline-flex;align-items:center;justify-content:center;align-self:flex-start;background:#173c31;border-radius:9px;color:#fff;font-size:13px;font-weight:800;padding:11px 15px;text-decoration:none;margin-top:auto}
-.tz-performance .tz-tool-card a:hover{background:#285d49}
-.tz-performance .tz-smallprint{font-size:12px;color:#687971;margin:22px 0}
-.tz-performance .tz-tool-hero{background:#102123!important}
-.tz-performance .tz-tool-hero .wrap{width:min(1132px,calc(100% - 48px))}
-@media(max-width:840px){.tz-performance .tz-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:650px){.tz-performance .tz-site-header .tz-site-nav{flex-direction:column;align-items:flex-start;padding:16px 20px}.tz-performance .tz-site-header .tz-site-links{justify-content:flex-start;gap:6px}.tz-performance .tz-site-header .tz-site-links a{font-size:12px;padding:9px 11px}.tz-performance .tz-tool-grid{grid-template-columns:1fr}.tz-performance .tz-page-hero{padding:39px 20px 70px}.tz-performance .tz-page-main{padding:0 20px}}
-@media print{.tz-performance .tz-site-header{display:none!important}}
+/* TriZentro: Events is the source of truth for the site chrome and visual system. */
+:root{--tz-dark:#102123;--tz-accent:#b9fa83;--tz-bg:#f7f8f4;--tz-text:#132326;--tz-muted:#71817a;--tz-stroke:#e1e7df}
+*{box-sizing:border-box}
+body.tz-performance{margin:0;background:var(--tz-bg)!important;color:var(--tz-text)!important;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;font-synthesis:none}
+body.tz-performance .tz-site-header{background:#102123!important;color:white}
+body.tz-performance .tz-site-nav{max-width:1180px;width:100%;padding:20px 24px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:80px}
+body.tz-performance .tz-site-brand{font-size:22px;font-weight:950;letter-spacing:-.9px;text-decoration:none;color:#fff;white-space:nowrap;display:inline-flex;align-items:center;gap:0}
+body.tz-performance .tz-site-brand b{color:#a9f275}
+body.tz-performance .tz-site-links{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px}
+body.tz-performance .tz-site-links a{font:750 13px/1.3 Inter,ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;text-decoration:none;padding:10px 16px;border:1px solid #486062;border-radius:100px;background:#243839;color:#fff}
+body.tz-performance .tz-site-links a:hover,body.tz-performance .tz-site-links a[aria-current="page"]{background:#b9fa83;color:#11231c;border-color:#b9fa83}
+body.tz-performance .tz-site-links .tz-organizers{background:transparent;border-radius:10px;border-color:#536d65;color:#edf7ed;font-size:12px}
+body.tz-performance .tz-site-links .tz-organizers:hover{background:#243839;color:#b9fa83}
+body.tz-performance .tz-page-hero{background:#102123!important;color:#fff!important;position:relative;overflow:hidden;padding:49px 24px 65px;min-height:300px}
+body.tz-performance .tz-hero-inner,body.tz-performance .tz-page-hero>.wrap{width:100%;max-width:1132px;margin:auto;padding:0!important;position:relative;z-index:1}
+body.tz-performance .tz-page-hero:after{display:none!important}
+body.tz-performance .tz-page-hero .tz-kicker,body.tz-performance .tz-page-hero .eyebrow{color:#b9fa83!important;letter-spacing:.15em;text-transform:uppercase;font-size:12px;font-weight:800}
+body.tz-performance .tz-page-hero h1{font-size:clamp(38px,5.2vw,70px);letter-spacing:-.06em;line-height:1.04;margin:16px 0;color:#fff!important;max-width:850px}
+body.tz-performance .tz-page-hero h1 em{font-style:normal;color:#b9fa83!important}
+body.tz-performance .tz-page-hero p{font-size:17px;line-height:1.6;color:#bacdcb!important;max-width:700px;margin:0}
+body.tz-performance .tz-page-main{max-width:1180px;margin:-31px auto 70px;padding:0 24px;position:relative}
+body.tz-performance .tz-tool-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+body.tz-performance .tz-tool-card{background:#fff;border:1px solid #e2e9e1;border-radius:15px;padding:22px;min-height:235px;display:flex;flex-direction:column;transition:transform .12s,box-shadow .12s;box-shadow:0 10px 32px #0c282210}
+body.tz-performance .tz-tool-card:hover{transform:translateY(-2px);box-shadow:0 10px 30px #0d332414}
+body.tz-performance .tz-tool-card .tz-card-label{color:#546a5e;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+body.tz-performance .tz-tool-card h2{font-size:21px;line-height:1.18;letter-spacing:-.035em;margin:14px 0 10px;color:#132326}
+body.tz-performance .tz-tool-card p{font-size:13px;line-height:1.55;color:#71817a;margin:0 0 20px}
+body.tz-performance .tz-tool-card a{display:inline-flex;align-self:flex-start;align-items:center;font-size:12px;font-weight:800;text-decoration:none;color:#173c31;margin-top:auto}
+body.tz-performance .tz-tool-card a:hover{text-decoration:underline}
+body.tz-performance .tz-smallprint{margin:20px 0;color:#687971;font-size:12px}
+body.tz-performance .dashboard,body.tz-performance .fuel{padding-top:30px}
+body.tz-performance .tri-main{padding-top:30px}
+body.tz-performance .dashboard h1,body.tz-performance .fuel h1{letter-spacing:-.05em}
+body.tz-performance :is(.panel,.tri-panel){background:#fff;border:1px solid #e1e7df;border-radius:18px;box-shadow:0 10px 36px #1021230c}
+body.tz-performance :is(.field input,.field select,.tri-field input,.tri-field textarea){background:#f6f8f5;border-color:#dce5dd;color:#142723;border-radius:9px}
+body.tz-performance :is(.field input,.field select,.tri-field input,.tri-field textarea):focus-visible{border-color:#5ba66e;outline:3px solid #b9fa8360;outline-offset:1px}
+body.tz-performance :is(.actions button,.actions a,.tri-btn){background:#173c31;color:#fff;border-radius:9px}
+body.tz-performance .actions .secondary{background:#e8f5df;color:#235b38}
+body.tz-performance .distance-selector button{background:#f6f8f5;color:#142723;border-color:#dce5dd}
+body.tz-performance .distance-selector button[aria-pressed="true"]{background:#173c31;color:#fff;border-color:#173c31;box-shadow:inset 0 -4px 0 #b9fa83}
+body.tz-performance :is(.metric,.stat){background:#edf6ea}
+body.tz-performance .tri-insight{border-color:#dce5dd;background:#f6f8f5}
+body.tz-performance .tri-insight strong{color:#173c31}
+body.tz-performance .tz-breadcrumb{color:#587165;font-size:13px;margin:0 0 16px}
+body.tz-performance .tz-breadcrumb a{color:#235b38}
+body.tz-performance a:focus-visible,body.tz-performance button:focus-visible{outline:3px solid #90d176;outline-offset:3px}
+@media(max-width:900px){body.tz-performance .tz-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:660px){body.tz-performance .tz-site-nav{padding:13px 15px;align-items:flex-start;flex-direction:column}body.tz-performance .tz-site-links{justify-content:flex-start;gap:6px}body.tz-performance .tz-site-links a{padding:9px 11px;font-size:12px}body.tz-performance .tz-page-hero{padding:38px 17px 67px;min-height:0}body.tz-performance .tz-page-hero h1{font-size:44px}body.tz-performance .tz-page-hero p{font-size:14px}body.tz-performance .tz-page-main{padding:0 17px;margin-top:-24px}body.tz-performance .tz-tool-grid{grid-template-columns:1fr}body.tz-performance :is(.panel,.tri-panel){padding:18px}}
+@media(max-width:420px){body.tz-performance .tz-page-hero h1{font-size:36px}body.tz-performance .tz-site-links a{font-size:11px;padding:8px 10px}}
+@media print{body.tz-performance .tz-site-header,body.tz-performance .tz-page-hero{display:none!important}}
