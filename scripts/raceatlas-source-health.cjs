@@ -65,6 +65,8 @@ async function run(opts={}){
  if(!Array.isArray(items))throw Error('Expected array of quality records');
  const selected=items.filter(x=>x.review_bucket==='urgent').sort((a,b)=>String(a.event_id).localeCompare(String(b.event_id))).slice(0,MAX_URLS);
  const cache=new Map(), results=[];
+ const sourceUsage=new Map();
+ for(const event of selected){const u=safeUrl(event.official_event_url||event.verification_source_url);if(u)sourceUsage.set(u,(sourceUsage.get(u)||0)+1)}
  for(const event of selected){
   const raw=event.official_event_url||event.verification_source_url;
   const url=safeUrl(raw);
@@ -72,13 +74,13 @@ async function run(opts={}){
   if(!url)outcome={error:'missing_or_unsafe_url'};
   else if(cache.has(url))outcome=cache.get(url);
   else {outcome=await fetchLimited(url,fetchImpl);cache.set(url,outcome)}
-  results.push({event_id:event.event_id,event_name:event.event_name,source_url:url,status:classify(outcome),...outcome});
+  results.push({event_id:event.event_id,event_name:event.event_name,source_url:url,source_specificity:!url?'missing':sourceUsage.get(url)>1?'shared_catalog_page':'individual_source_page',status:classify(outcome),...outcome});
  }
  return {generated_at:new Date().toISOString(),scope:'urgent_unverified_events',events_scanned:results.length,unique_sources_checked:cache.size,disclaimer:'A successful HTTP response does not verify event dates, registration status, prices or ticket availability.',results};
 }
 function summary(report){
  const counts={};for(const row of report.results)counts[row.status]=(counts[row.status]||0)+1;
- return ['## RaceAtlas source health review','',`Events scanned: ${report.events_scanned}`,`Unique HTTPS sources checked: ${report.unique_sources_checked}`,'',...Object.entries(counts).map(([k,v])=>'- '+k+': '+v),'','Reachability alone never confirms a race date or registration availability.',''];
+ return ['## RaceAtlas source health review','',`Events scanned: ${report.events_scanned}`,`Unique HTTPS sources checked: ${report.unique_sources_checked}`,'',...Object.entries(counts).map(([k,v])=>'- '+k+': '+v),'','Reachability alone never confirms a race date or registration availability.','','### Events requiring manual attention',...report.results.filter(r=>r.status!=='reachable_unverified'||r.source_specificity==='shared_catalog_page').map(r=>'- '+r.event_id+' — '+r.event_name+': '+r.status+' ('+r.source_specificity+')'),''];
 }
 if(require.main===module){
  run().then(report=>{
