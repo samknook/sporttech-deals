@@ -27,5 +27,6 @@ assert.ok(signup.includes("rateHash=await hash"),'Abuse protections required');
 assert.ok(dispatch.includes("priorSent.length"),'Idempotent dispatch required');
 assert.ok(dispatch.includes("race.date_confidence==='official'"),'Official race date evidence required');
 assert.ok(dispatch.includes("last_verified_at")&&dispatch.includes("verified_at"),'Verified-source change gate required');
+assert.ok(dispatch.includes('trustedEvidence.has(race.evidence_kind)'),'Only official organizer evidence may trigger email');
 assert.ok(workflow.includes("secrets.TRIZENTRO_RADAR_CRON_SECRET"),'Scheduled trigger secret required');
 console.log('TriZentro email radar: strict activation gate, double opt-in, unsubscribe and change dispatch checks passed');
