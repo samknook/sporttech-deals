@@ -74,3 +74,24 @@ body.tz-performance .tz-site-header .tz-site-nav{min-height:80px}
 body.tz-performance .tz-page-main .orgActions{margin-top:0}
 body.tz-performance .tz-page-main input:focus-visible,body.tz-performance .tz-page-main textarea:focus-visible,body.tz-performance .tz-page-main select:focus-visible{outline:3px solid #b9fa8360;border-color:#5ba66e}
 @media(max-width:660px){body.tz-performance .tz-footer .wrap{width:calc(100% - 34px)}}
+
+/* Performance sport selection and event-style filter toolbar */
+body.tz-performance .tz-sport-toolbar{position:relative;background:#fff;border:1px solid #e1e7df;border-radius:18px;box-shadow:0 10px 48px #0c28221d;padding:22px;margin-bottom:26px}
+body.tz-performance .tz-sport-label{display:block;color:#677670;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:11px}
+body.tz-performance .tz-sport-switch{display:flex;gap:8px;flex-wrap:wrap}
+body.tz-performance .tz-sport-switch button,body.tz-performance .tz-sport-switch a{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#375249;border:1px solid #d8e2d9;border-radius:40px;padding:11px 16px;font-size:13px;font-weight:800;text-decoration:none;cursor:pointer}
+body.tz-performance .tz-sport-switch button[aria-selected="true"],body.tz-performance .tz-sport-switch a[aria-current="true"]{background:#13392d;color:white;border-color:#13392d}
+body.tz-performance .tz-sport-switch button:hover,body.tz-performance .tz-sport-switch a:hover{border-color:#4c8465}
+body.tz-performance .tz-sport-panel[hidden]{display:none!important}
+body.tz-performance .tz-panel-heading{font-size:25px;margin:0 0 8px;letter-spacing:-.04em}
+body.tz-performance .tz-panel-desc{color:#71817a;font-size:14px;margin:0 0 22px}
+body.tz-performance .tz-calc-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:18px 0}
+body.tz-performance .tz-calc-fields label{display:flex;flex-direction:column;gap:7px;color:#365549;font-size:12px;font-weight:800}
+body.tz-performance .tz-calc-fields :is(input,select){width:100%;min-height:46px;background:#f6f8f5;border:1px solid #dce5dd;border-radius:9px;padding:10px 12px;font:inherit;font-size:16px;color:#132326}
+body.tz-performance .tz-calc-results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:17px}
+body.tz-performance .tz-calc-result{border:1px solid #e1e7df;background:#eff6ed;padding:18px;border-radius:12px}
+body.tz-performance .tz-calc-result span{display:block;font-size:12px;color:#587165}
+body.tz-performance .tz-calc-result strong{display:block;font-size:clamp(21px,3vw,29px);line-height:1.25;margin-top:8px;overflow-wrap:anywhere}
+body.tz-performance .tz-calc-error{color:#ab3a2b;min-height:1.5em;font-size:13px;font-weight:700}
+body.tz-performance .tz-calc-help{color:#63766d;font-size:12px;line-height:1.6}
+@media(max-width:700px){body.tz-performance .tz-sport-toolbar{padding:15px}body.tz-performance .tz-sport-switch>*{flex:1;justify-content:center}body.tz-performance .tz-calc-fields{grid-template-columns:1fr}body.tz-performance .tz-calc-results{grid-template-columns:1fr}}
