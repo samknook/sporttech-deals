@@ -1,5 +1,12 @@
 name: RaceAtlas official organizer auto-discovery
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/raceatlas-official-discovery.cjs'
+      - 'scripts/raceatlas-official-source-seeds.json'
+      - 'tests/test-raceatlas-official-discovery.cjs'
+      - '.github/workflows/raceatlas-auto-discovery.yml'
   schedule:
     - cron: '15 5 * * *'
   workflow_dispatch:
@@ -12,7 +19,7 @@ concurrency:
 jobs:
   organizer-discovery:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
@@ -21,7 +28,9 @@ jobs:
         with:
           node-version: '22'
       - name: Validate strict official-source discovery
-        run: node tests/test-raceatlas-official-discovery.cjs
+        run: |
+          node tests/test-raceatlas-official-discovery.cjs
+          node tests/test-raceatlas-auto-events.cjs
       - name: Review official organizer pages and generate safe changes
         run: node scripts/raceatlas-official-discovery.cjs
       - name: Publish only changed verified structured events
