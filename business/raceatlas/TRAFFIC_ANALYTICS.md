@@ -16,6 +16,20 @@
 
 De metingen kunnen bots, herhaalde bezoeken en herhaalde klikken bevatten. **Er wordt geen unieke bezoeker geteld en geen conversie naar betaalde inschrijving bewezen.** Geen user-ID, cookie, IP of individueel klikrecord wordt in de RaceAtlas-aggregatietabel opgeslagen. Supabase/hosting kunnen eigen technische logs bewaren.
 
+## Geschatte unieke bezoekers per dag (toegevoegd)
+
+Naast de bestaande ruwe interactietellers levert RaceAtlas nu een **dagelijkse schatting van unieke bezoekers**, voor `site_view`, `card_view` en `detail_view`:
+
+- De Supabase Edge Function leidt dagelijks een andere pseudonieme HMAC-code af uit netwerkadres en browserinformatie. Er worden geen trackingcookies of blijvende browser-ID's geplaatst.
+- Alleen de korte hash wordt maximaal ongeveer twee kalenderdagen bewaard, om herhaalde acties op dezelfde dag per evenement te ontdubbelen. Het ruwe IP-adres en de volledige User-Agent komen niet in onze analytische tabellen terecht; hostingproviders kunnen wel eigen technische logs bewaren.
+- `pg_cron` verwijdert de korte hashes iedere nacht om 03:17 UTC, naast opruimen tijdens dataverwerking.
+- De `raceatlas_daily_unique_totals`-tabel houdt uitsluitend **dagtotalen van geschatte unieke bezoekers** bij. Alleen beheerders kunnen deze lezen.
+- Als iemand twee keer op dezelfde dag komt, telt dit meestal als één dagelijkse bezoeker. Gedeeld IP + browser kan personen samenvoegen; verschillende apparaten kunnen één persoon meerdere keren tellen.
+- **Let op:** `sum(unique_count)` over 7/30 dagen telt dagelijkse unieke bezoeken bij elkaar; dit is **niet** het aantal verschillende mensen over die hele periode.
+- De `site_view`-teller kan nog nul tonen voor een dag waarop de backend pas ná eerdere paginabezoeken werd geactiveerd. De nieuwe teller werkt niet met terugwerkende kracht.
+
+De SQL-query's staan in `scripts/raceatlas-traffic-report.sql`. Juridische toetsing van deze serverzijdige, kortstondige pseudonieme gegevensverwerking blijft nodig voor een brede commerciële lancering.
+
 ## Inzien (alleen beheerder)
 
 1. Ga naar de [Supabase SQL Editor](https://supabase.com/dashboard/project/lpzndnxloykcthbsqcet/sql).
