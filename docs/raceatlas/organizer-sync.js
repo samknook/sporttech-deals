@@ -20,12 +20,13 @@
       const e=byId.get(r.event_id);
       if(!e)continue;
       let changed=false;
+      const newerAutoDate=Boolean(e.autoEventVerifiedOn) && String(r.last_verified_at||'').slice(0,10)<=e.autoEventVerifiedOn;
       // A link identified as a candidate is not equivalent to verified event facts.
-      if(HTTPS(r.official_event_url) && ['candidate','verified'].includes(r.organizer_link_status)){
+      if(!newerAutoDate && HTTPS(r.official_event_url) && ['candidate','verified'].includes(r.organizer_link_status)){
         if(e.officialEventUrl!==r.official_event_url){e.officialEventUrl=r.official_event_url;changed=true}
         e.organizerLinkStatus=r.organizer_link_status;
       }
-      if(r.date_confidence==='official' && DATE(r.start_date) && r.start_date!=='null'){
+      if(!newerAutoDate && r.date_confidence==='official' && DATE(r.start_date) && r.start_date!=='null'){
         if(e.date!==r.start_date || e.dateEvidence!=='official'){
           e.date=r.start_date;
           e.dateEvidence='official';
@@ -53,9 +54,9 @@
         }
         if(r.last_verified_at){
           const checked=fmtDate(r.last_verified_at);
-          if(DATE(checked)){e.sourceCheckedOn=checked;changed=true}
+          if(DATE(checked)&&!newerAutoDate){e.sourceCheckedOn=checked;changed=true}
         }
-        if(HTTPS(r.verification_source_url) && ['organizer','unclassified'].includes(r.source_category) && r.organizer_link_status==='verified'){
+        if(!newerAutoDate && HTTPS(r.verification_source_url) && ['organizer','unclassified'].includes(r.source_category) && r.organizer_link_status==='verified'){
           e.source=r.verification_source_url;
           changed=true;
         }
