@@ -40,7 +40,7 @@ function dateISO(year,month,day){
 function dateStrings(text){
  const matches=[];
  const add=(date,index,raw,kind)=>{if(date)matches.push({date,index,snippet:raw,kind})};
- const iso=/\b(20\d{2})[-/.](0?[1-9]|1[0-2])[-/.]([0-2]?\d|3[01])\b/g;
+ const iso=/\b(20\d{2})[-/.](0?[1-9]|1[0-2])[-/.]([0-2]?\d|3[01])(?=$|T\d{2}:\d{2}|[^A-Za-z0-9])/g;
  for(const m of text.matchAll(iso))add(dateISO(+m[1],+m[2],+m[3]),m.index,m[0],'iso');
  const full=/\b([0-2]?\d|3[01])\s+(januari|februari|maart|april|mei|juni|juli|augustus|september|oktober|november|december|january|february|march|april|may|june|july|august|september|october|november|december)\s+(20\d{2})\b/gi;
  for(const m of text.matchAll(full))add(dateISO(+m[3],MONTHS[m[2].toLowerCase()],+m[1]),m.index,m[0],'written');
