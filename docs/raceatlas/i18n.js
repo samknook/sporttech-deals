@@ -643,6 +643,7 @@ Object.assign(strings,{
   'Bekijk organisator voor afstanden':'Check organizer for distances',
   'Nieuw toegevoegd':'Newly added'
 });
+Object.assign(strings,{'Extra zichtbaarheid / promotie':'Extra visibility / promotion','Privacy & gegevensgebruik':'Privacy & data use'});
 const placeholders={
 'Bijv. Egmond, gravel, marathon…':'E.g. Egmond, gravel, marathon…',
 'Zoek op wedstrijd of plaats':'Search by event or location',
@@ -788,8 +789,8 @@ function setLanguage(next,updateUrl=true){
  try{localStorage.setItem(KEY,next)}catch{}
  document.documentElement.lang=next;
  const path=location.pathname||'';
- const page=path.includes('organisatoren.html')?'organizer':path.includes('gegevenskwaliteit.html')?'quality':'home';
- const titles={home:{nl:'RaceAtlas — Vind jouw volgende wedstrijd',en:'RaceAtlas — Discover. Plan. Race.'},organizer:{nl:'Voor organisatoren — RaceAtlas',en:'For Organizers — RaceAtlas'},quality:{nl:'Gegevenskwaliteit & correcties — RaceAtlas',en:'Data Quality & Corrections — RaceAtlas'}};
+ const page=path.includes('organisatoren.html')?'organizer':path.includes('gegevenskwaliteit.html')?'quality':path.includes('privacy.html')?'privacy':path.includes('over.html')?'about':'home';
+ const titles={home:{nl:'RaceAtlas — Vind jouw volgende wedstrijd',en:'RaceAtlas — Discover. Plan. Race.'},organizer:{nl:'Voor organisatoren — RaceAtlas',en:'For Organizers — RaceAtlas'},quality:{nl:'Gegevenskwaliteit & correcties — RaceAtlas',en:'Data Quality & Corrections — RaceAtlas'},privacy:{nl:'Privacy — RaceAtlas',en:'Privacy — RaceAtlas'},about:{nl:'Over RaceAtlas',en:'About RaceAtlas'}};
  document.title=titles[page][next];
  if(updateUrl){
   const u=new URL(location.href);
