@@ -21,6 +21,7 @@ if(start>=0){
 // TriZentro cross-platform navigation regression checks.
 const siteRoot=path.join(process.cwd(),'docs');
 const coreTools=['performance.html','pace-calculator.html','race-dashboard.html','triathlon-calculator.html','race-fuel-planner.html'];
+check(fs.existsSync(path.join(siteRoot,'trizentro-mark.svg')),'Missing icon-only Z brandmark asset');
 const legacyPaths=['race-planner.html','race-day-timeline.html','70-3-raceplan.html','triatlon-afstanden.html'];
 for(const filename of coreTools){
  const html=fs.readFileSync(path.join(siteRoot,filename),'utf8');
@@ -42,7 +43,7 @@ for(const filename of coreTools){
  const html=fs.readFileSync(path.join(siteRoot,filename),'utf8');
  check(html.includes('src="performance-navigation.js"'),'Language control not loaded: '+filename);
  check(html.includes('src="performance-translations.js"'),'English translations not loaded: '+filename);
- check(html.includes('class="raLogoMark"'),'Shared TriZentro sport logo missing: '+filename);
+ check(html.includes('class="tz-logo-image"') && html.includes('trizentro-mark.svg'),'Approved TriZentro icon-only logo missing: '+filename);
 }
 const performanceHome=fs.readFileSync(path.join(siteRoot,'performance.html'),'utf8');
 const multisportCalculator=fs.readFileSync(path.join(siteRoot,'pace-calculator.html'),'utf8');
