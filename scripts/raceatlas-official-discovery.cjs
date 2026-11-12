@@ -123,7 +123,7 @@ function choose(observed,catalog,previous,today){
  const review=[],newEvents=[],changed=[];
  for(const race of observed){
   const already=catalog.find(e=>sameRace(e,race));
-  if(already)continue;
+  if(already&&already.date===race.date)continue;
   const update=catalog.filter(e=>sourceMatch(e,race));
   if(update.length===1){
    const old=update[0];
@@ -134,6 +134,7 @@ function choose(observed,catalog,previous,today){
    continue;
   }
   if(update.length>1){review.push({name:race.name,date:race.date,reason:'ambiguous_catalog_match',url:race.officialEventUrl});continue}
+  if(already){review.push({name:race.name,date:race.date,reason:'existing_race_same_year_date_conflict',url:race.officialEventUrl});continue}
   const other=[...auto.values()].find(e=>sameRace(e,race));
   if(other){if(other.date===race.date)auto.set(other.id,{...other,verifiedOn:today});continue}
   if(seenIds.has(race.id)||auto.has(race.id)&&!sameRace(auto.get(race.id),race)){
