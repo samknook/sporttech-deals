@@ -12,7 +12,7 @@ const net=require('node:net');
 const SITE='docs/raceatlas';
 const INPUT='scripts/raceatlas-official-source-seeds.json';
 const OUTPUT=SITE+'/auto-events.json';
-const MAX_PAGES=65;
+const MAX_PAGES=85;
 const LINKS_PER_SOURCE=3;
 const TIMEOUT_MS=9500;
 const MAX_BYTES=350000;
@@ -184,7 +184,7 @@ async function boundedFetch(url,fetchImpl){
 async function discover(config,catalog,previous,opts={}){
  const fetchImpl=opts.fetchImpl||fetch;
  const today=opts.today||new Date().toISOString().slice(0,10);
- const sources=config.sources.filter(s=>safeUrl(s.url)&&['Hardlopen','Fietsen','Triatlon'].includes(s.sport)).slice(0,35);
+ const sources=config.sources.filter(s=>safeUrl(s.url)&&['Hardlopen','Fietsen','Triatlon'].includes(s.sport)).slice(0,65);
  let pageCount=0;
  const seenPages=new Set(),events=[],sourceResults=[];
  for(const source of sources){
@@ -218,10 +218,28 @@ function monitorExisting(catalog,today){
  const rotated=rest.length?Array.from({length:Math.min(12,rest.length)},(_,i)=>rest[(day*12+i)%rest.length]):[];
  return [...new Set([...soon,...rotated])].map(e=>({url:e.officialEventUrl,sport:e.sport,country:e.country,discover:false}));
 }
+async function verifiedOrganizerSources(fetchImpl=fetch){
+ const base='https://lpzndnxloykcthbsqcet.supabase.co/rest/v1/raceatlas_organizer_research_queue';
+ const apiKey='sb_publishable_AE_Qr8VLmWb2020QCOEAKQ_Nl5mZ5Sw';
+ try{
+  const r=await fetchImpl(base+'?select=event_id,event_name,sport,country_code,official_event_url,organizer_link_status&organizer_link_status=eq.verified&limit=500',{
+   headers:{apikey:apiKey,Accept:'application/json'},signal:AbortSignal.timeout(9000)
+  });
+  if(!r.ok)return [];
+  const rows=await r.json();
+  if(!Array.isArray(rows))return [];
+  return rows.filter(e=>e.organizer_link_status==='verified'&&safeUrl(e.official_event_url)
+    &&['Hardlopen','Fietsen','Triatlon'].includes(e.sport))
+   .map(e=>({url:e.official_event_url,sport:e.sport,
+    country:e.country_code==='BE'?'België':e.country_code==='DE'?'Duitsland':'Nederland',
+    discover:false}));
+ }catch{return []}
+}
 async function main(){
  const config=JSON.parse(fs.readFileSync(INPUT,'utf8'));
  const catalog=readCatalog(fs.readFileSync(SITE+'/index.html','utf8'));
  const today=new Date().toISOString().slice(0,10);
+ config.sources.push(...await verifiedOrganizerSources());
  config.sources.push(...monitorExisting(catalog,today));
  let previous={version:1,events:[],updates:[]};
  try{previous=JSON.parse(fs.readFileSync(OUTPUT,'utf8'))}catch{}
@@ -246,4 +264,4 @@ async function main(){
  console.log(JSON.stringify({pagesChecked:result.pagesChecked,structuredEvents:result.structuredEvents,newEvents:result.newEvents.length,updated:result.changed.length,review:result.review.length,feedChanged:Boolean(materiallyChanged)}));
 }
 if(require.main===module)main().catch(e=>{console.error(e.message);process.exitCode=1});
-module.exports={safeUrl,htmlEvents,links,eventDate,parseEvent,choose,discover,readCatalog,monitorExisting};
+module.exports={safeUrl,htmlEvents,links,eventDate,parseEvent,choose,discover,readCatalog,monitorExisting,verifiedOrganizerSources};
