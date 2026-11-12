@@ -56,7 +56,7 @@
     panel.setAttribute('aria-label','Inschrijfradar met broninformatie');
     const head=el('div','raIntelHead');
     head.append(el('div','', 'INSCHRIJFRADAR'),el('h2','', 'Mis geen belangrijke inschrijfdatum'));
-    const intro=el('p','raIntelNote','Gebaseerd op eerder gepubliceerde informatie van organisatoren. Een verstreken openingsdatum betekent niet dat er nog startbewijzen beschikbaar zijn.');
+    const intro=el('p','raIntelNote','Controleer beschikbaarheid altijd bij de organisator.');
     const controls=el('div','raIntelControls');
     const label=el('label','raIntelToggle');
     const check=document.createElement('input');check.type='checkbox';check.checked=seasonOnly();
@@ -81,8 +81,8 @@
       return String(a.r.registration_opens_at||a.r.start_date).localeCompare(String(b.r.registration_opens_at||b.r.start_date));
     }).slice(0,9);
     ui.status.textContent=ui.check.checked
-      ?saved.size+' wedstrijden opgeslagen · '+selected.length+' met relevante inschrijfinformatie'
-      :records.length+' wedstrijden in database · '+records.filter(r=>r.date_confidence==='official').length+' officieel gedateerd · '+classified.length+' relevante inschrijfdatums';
+      ?selected.length+' inschrijfmomenten voor mijn seizoen'
+      :classified.length+' inschrijfmomenten om te volgen';
     if(!ordered.length){
       ui.list.append(el('p','raIntelEmpty',ui.check.checked
         ?'Geen bekende aankomende inschrijfdatums bij jouw opgeslagen races. Bewaar een wedstrijd om deze hier te volgen.'
@@ -94,14 +94,6 @@
       const body=el('div','');
       const badge=saved.has(r.event_id)?'★ Mijn seizoen':'Wedstrijdkalender';
       body.append(el('span','raIntelEyebrow',badge+' · '+kind.label),el('strong','',r.event_name),el('small','', 'Wedstrijd '+eventFmt(r.start_date)));
-      if(r.last_verified_at){
-        const checked=el('small','raIntelChecked','Bron laatst vastgelegd: '+fmt(r.last_verified_at));
-        const age=(now-parseDate(r.last_verified_at))/86400000;
-        if(age>30)checked.textContent+=' · ouder dan 30 dagen';
-        body.append(checked);
-      }else{
-        body.append(el('small','raIntelChecked','Laatste broncontrole niet geregistreerd'));
-      }
       const actions=el('div','raIntelActions');
       const detail=el('button','raIntelButton','Wedstrijddetails');
       detail.type='button';
