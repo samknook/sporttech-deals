@@ -6,7 +6,7 @@
 const MONTHS={
  januari:1,februari:2,maart:3,april:4,mei:5,juni:6,juli:7,augustus:8,september:9,oktober:10,november:11,december:12,
  january:1,february:2,march:3,may:5,june:6,july:7,august:8,october:10,dec:12,sept:9,sep:9,oct:10,nov:11,april:4,
- jan:1,feb:2,mar:3,apr:4,jun:6,jul:7,aug:8,sept:9,oct:10,nov:11,december:12
+ jan:1,feb:2,mrt:3,mar:3,apr:4,jun:6,jul:7,aug:8,sept:9,oct:10,nov:11,december:12
 };
 const ENTITY={nbsp:' ',amp:'&',quot:'"',apos:"'",lsquo:"'",rsquo:"'",ldquo:'"',rdquo:'"',ndash:'-',mdash:'-',hellip:'…'};
 function decode(str){
