@@ -21,6 +21,21 @@ Dutch winter time: UTC +1. Summer time: UTC +2. GitHub scheduled workflow start 
 9. Commit changes using the GitHub Actions bot. On a verified public feed change, explicitly dispatch `publish-site.yml`, whose tests must pass before GitHub Pages deployment.
 10. Browser code `docs/raceatlas/auto-events.js` adds qualified races or applies dates when loading the site, with a static offline fallback.
 
+## Plain organizer HTML: new review workflow
+
+Many official event pages do not contain schema.org Event data. The daily scanner now also reads **visible text**, event titles, `<time datetime>` attributes, Dutch/English written dates (including `7 mrt 2027`), ISO dates and unambiguous European date formats (`07.03.2027`).
+
+These are strictly **review candidates**, not independently verified event data. Registration opening dates, entry deadlines, old editions and other dates can resemble race dates, so a plain-text match is never published automatically.
+
+- Candidates from a new or changed organizer page are recorded under `plainHtmlCandidates` in `raceatlas-discovery-report.json`.
+- A prioritized spreadsheet-friendly file `raceatlas-plain-html-review.csv` is attached to each GitHub Actions discovery run.
+- Priority 1: a strongly race-related date with exactly one matching existing event.
+- Priority 2: a strongly race-related event date within 90 days.
+- Priority 3/4: later or weaker event date clues.
+- Before approving, inspect the organizer page, distinguish race date from registration date, confirm city, distance and edition, and check for duplicates.
+- No candidates are copied into the public `auto-events.json` feed from this text extractor.
+- Pages with unchanged visible content are not repeatedly added to the candidate report.
+
 ## What is NEVER automatically claimed
 - Current ticket availability, prices, registration dates or registration status inferred from ordinary site text.
 - Precise dates derived from past editions or general calendar listings.
