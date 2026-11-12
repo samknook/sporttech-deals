@@ -752,7 +752,7 @@ function preserveLinks(){
  }
 }
 function buttons(){
- let nav=document.querySelector('.navright')||document.querySelector('header');
+ let nav=document.querySelector('.navright')||document.querySelector('.navlinks')||document.querySelector('header');
  if(!nav||document.getElementById('raLanguageSwitch'))return;
  const group=document.createElement('div');
  group.id='raLanguageSwitch';group.className='raLanguageSwitch';
@@ -765,7 +765,10 @@ function buttons(){
   btn.addEventListener('click',()=>setLanguage(code));
   group.append(btn);
  }
- nav.append(group);
+ // The visitor's primary actions stay first; the organizer destination stays last.
+ const organizer=typeof nav.querySelector==='function'?nav.querySelector('a[href="organisatoren.html"]'):null;
+ if(organizer&&typeof nav.insertBefore==='function')nav.insertBefore(group,organizer);
+ else nav.append(group);
 }
 function updateButtons(){
  for(const btn of document.querySelectorAll('#raLanguageSwitch button')){
