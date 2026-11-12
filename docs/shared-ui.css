@@ -193,3 +193,53 @@ body .tz-footer a,body .foot a{color:#c9dbd2!important}
 @media(min-width:701px){
  body>header .tz-menu-toggle,body>header .tz-mobile-menu{display:none!important}
 }
+
+/* TriZentro mobile v6 — event discovery controls, consistent tap targets, safe scrolling. */
+.tz-mobile-sports{display:none}
+@media(max-width:700px){
+  /* Make the main events journey start quickly on small devices. */
+  body:has(.raMobileNav) .hero{min-height:0!important}
+  body:has(.raMobileNav) .heroin{min-height:0!important;padding:35px 16px 53px!important;gap:0!important}
+  body:has(.raMobileNav) .hero h1{max-width:96%!important;font-size:clamp(35px,9vw,48px)!important;line-height:1.07!important}
+  body:has(.raMobileNav) .hero p{font-size:14px!important;line-height:1.5!important}
+  body:has(.raMobileNav) .raBrandProof{font-size:11px!important;gap:6px 11px!important}
+  body:has(.raMobileNav) .raSportLine{margin-top:13px!important;gap:5px!important}
+  body:has(.raMobileNav) .raSportLine span{padding:3px 8px!important}
+  body:has(.raMobileNav) #explore .toolbar{padding:13px!important;margin-bottom:17px!important}
+  .tz-mobile-sports{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin:0 0 13px}
+  .tz-mobile-sport{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;min-width:0;min-height:62px;
+    border:1px solid #dce5e8;border-radius:12px;background:#f8faf9;color:#284053;padding:7px 4px;
+    font:800 10px/1.2 Inter,system-ui,sans-serif;text-align:center;cursor:pointer}
+  .tz-mobile-sport span:first-child{font-size:20px;line-height:1.1}
+  .tz-mobile-sport.selected,.tz-mobile-sport[aria-pressed="true"]{background:#0b2430!important;color:#c7ff37!important;border-color:#0b2430!important;box-shadow:inset 0 -3px #c7ff37}
+  .tz-mobile-sport:focus-visible{outline:3px solid #73db4e;outline-offset:2px}
+  body:has(.raMobileNav) #explore .primaryFilters{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  body:has(.raMobileNav) #explore .primaryFilters>.searchField{grid-column:1/-1}
+  body:has(.raMobileNav) #explore .primaryFilters>.field:last-child{grid-column:1/-1}
+  body:has(.raMobileNav) #explore .primaryFilters>.field{min-width:0!important}
+  body:has(.raMobileNav) #explore .field label{font-size:12px!important}
+  body:has(.raMobileNav) #explore input[type="search"]{min-height:48px!important;font-size:16px!important}
+  body:has(.raMobileNav) #explore select{width:100%;min-height:45px!important;font-size:16px!important}
+  body:has(.raMobileNav) #explore .advancedFilters{margin-top:10px!important}
+  body:has(.raMobileNav) #explore .quick{display:flex;flex-wrap:nowrap!important;max-width:100%;overflow-x:auto;gap:7px!important;
+   padding:9px 1px 12px;overscroll-behavior-inline:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  body:has(.raMobileNav) #explore .quick::-webkit-scrollbar{display:none}
+  body:has(.raMobileNav) #explore .quick .pill{flex:0 0 auto!important;white-space:nowrap!important;min-height:39px!important}
+  body:has(.raMobileNav) #explore .headerlist{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:10px}
+  body:has(.raMobileNav) #explore .headerlist h2{font-size:23px!important}
+  body:has(.raMobileNav) #explore .raHeaderActions{display:flex;gap:7px;flex-wrap:wrap}
+  body:has(.raMobileNav) #explore .raHeaderActions .miniBtn{min-height:38px;padding:8px 10px!important;font-size:11px!important}
+  body:has(.raMobileNav) #explore .resultTools{gap:10px!important}
+  body:has(.raMobileNav) #explore .onlyFuture{font-size:12px!important;line-height:1.4!important}
+  body:has(.raMobileNav) #explore .cards{grid-template-columns:minmax(0,1fr)!important;gap:13px!important}
+  body:has(.raMobileNav) #explore .card{min-height:0!important}
+  body:has(.raMobileNav) #explore .raCardVisual{height:154px!important;min-height:154px!important}
+  body:has(.raMobileNav) .raMobileNav{padding-bottom:calc(7px + env(safe-area-inset-bottom))!important}
+  /* Allow content to remain visible above iPhone's on-screen keyboard. */
+  body:has(input:focus,textarea:focus,select:focus) .tz-mobile-destinations{visibility:hidden;pointer-events:none}
+}
+@media(max-width:360px){
+  .tz-mobile-sports{gap:4px}
+  .tz-mobile-sport{min-height:58px;font-size:9px;padding:6px 2px}
+  .tz-mobile-sport span:first-child{font-size:19px}
+}
