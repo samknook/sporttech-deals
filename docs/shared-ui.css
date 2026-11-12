@@ -94,3 +94,102 @@ body .tz-footer a,body .foot a{color:#c9dbd2!important}
  body .hero h1,body .tz-page-hero h1{font-size:clamp(35px,9vw,51px)!important}
 }
 @media print{.tz-mobile-destinations{display:none!important}body{padding-bottom:0!important}}
+
+/* TriZentro mobile-first refinement: one-row header, accessible menu and controls. */
+.tz-menu-toggle,.tz-mobile-menu{display:none}
+@media(max-width:700px){
+ html{scroll-padding-top:72px}
+ body{max-width:100%;overflow-x:clip}
+ body>header,body>.tz-site-header{position:relative!important;z-index:80!important}
+ body>header>nav.nav,body>header>nav.tz-site-nav{
+   height:66px!important;min-height:66px!important;max-height:66px!important;
+   padding:7px 14px!important;margin:0 auto!important;
+   display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+   align-items:center!important;justify-content:space-between!important;gap:6px!important;
+   position:relative!important
+ }
+ body>header .brand,body>header .tz-site-brand{height:52px!important;min-width:80px!important;margin-right:auto!important}
+ body>header .brand img.tz-logo-image,body>header .tz-site-brand img.tz-logo-image{
+   width:84px!important;min-width:84px!important;max-width:84px!important;height:52px!important;
+ }
+ body>header .navright,body>header .tz-site-links{
+   display:flex!important;position:static!important;flex:0 0 auto!important;
+   width:auto!important;min-width:0!important;margin:0!important;gap:0!important;
+   align-items:center!important;justify-content:flex-end!important
+ }
+ body>header :is(.navright,.tz-site-links)>:is(button,a):not(#raLanguageSwitch *){
+   display:none!important
+ }
+ body>header :is(.navright,.tz-site-links)>.raLanguageSwitch,
+ body>header :is(.navright,.tz-site-links)>#raLanguageSwitch{
+   display:inline-flex!important;margin:0 3px 0 0!important;align-self:center!important;
+   min-height:39px!important;height:39px!important;flex:0 0 auto!important
+ }
+ body>header #raLanguageSwitch button{
+   display:inline-flex!important;min-height:31px!important;min-width:33px!important;
+   padding:7px 8px!important;font-size:10px!important
+ }
+ body>header .tz-menu-toggle{
+   display:flex!important;align-items:center;justify-content:center;gap:5px;
+   position:relative;flex:0 0 auto;min-width:61px;height:42px;
+   margin:0!important;padding:7px 10px!important;border:1px solid #486062!important;
+   border-radius:10px!important;background:#18313c!important;
+   color:#f5f9fa!important;font:800 11px/1 Inter,system-ui,sans-serif!important;
+   box-shadow:none!important;cursor:pointer
+ }
+ body>header .tz-menu-glyph{font-size:20px;line-height:1;font-weight:500}
+ body>header .tz-mobile-menu[hidden]{display:none!important}
+ body>header .tz-mobile-menu{
+   display:flex!important;position:absolute;top:calc(100% + 5px);right:12px;left:12px;
+   z-index:180;flex-direction:column;gap:3px;padding:11px;
+   border:1px solid #244553;border-radius:16px;background:#081d29;
+   box-shadow:0 20px 55px #00101e80;color:#fff;
+ }
+ body>header .tz-mobile-menu-heading{padding:6px 9px 9px;color:#a9c0c9;font-size:11px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}
+ body>header .tz-mobile-menu>a{
+   color:#eaf4f8!important;text-decoration:none!important;display:flex;align-items:center;
+   padding:14px 13px;border-radius:10px;min-height:46px;
+   font:750 14px/1.3 Inter,system-ui,sans-serif
+ }
+ body>header .tz-mobile-menu>a[aria-current="page"]{background:#c7ff371b;color:#c7ff37!important}
+ body>header .tz-mobile-menu>a:last-child{
+   background:#c7ff37!important;color:#10201b!important;font-weight:900!important
+ }
+ body .tz-page-hero{min-height:0!important;padding:35px 17px 53px!important}
+ body .tz-page-hero:after{opacity:.38!important;right:15%!important}
+ body .tz-page-hero:before{opacity:.28!important}
+ body .tz-page-hero h1{font-size:clamp(32px,8.7vw,45px)!important;max-width:95%!important}
+ body .tz-page-hero p{font-size:14px!important;line-height:1.55!important}
+ body .tz-page-main{margin-top:-20px!important;padding:0 15px 35px!important}
+ body .tz-sport-toolbar{padding:15px!important;margin:0 0 22px!important}
+ body .tz-sport-switch{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px!important}
+ body .tz-sport-switch>*{min-width:0!important;min-height:43px!important;width:100%!important;padding:8px 5px!important;font-size:11px!important;white-space:normal;text-align:center}
+ body .tz-tool-grid{grid-template-columns:minmax(0,1fr)!important;gap:13px!important}
+ body .tz-tool-card{min-height:0!important;padding:19px!important}
+ body :is(.tri-main,.dashboard,.fuel){width:100%!important;max-width:100%!important;padding-left:15px!important;padding-right:15px!important;overflow-wrap:anywhere}
+ body :is(.panel,.tri-panel){max-width:100%!important;padding:16px!important}
+ body :is(.fields,.tri-fields,.tz-calc-fields){grid-template-columns:minmax(0,1fr)!important}
+ body :is(input,select,textarea){max-width:100%}
+ body input,body select,body textarea{font-size:16px!important}
+ body .tz-mobile-destinations{
+   min-height:64px!important;padding:5px 9px calc(5px + env(safe-area-inset-bottom))!important;
+   grid-template-columns:repeat(3,minmax(0,1fr))!important
+ }
+ body .tz-mobile-destinations .tz-tab-icon{font-size:20px!important;line-height:1!important}
+ body .tz-mobile-destinations .tz-tab-label{font-size:10px!important;font-weight:850!important;line-height:1.2!important}
+ /* Keep the specialized native Events navigation on the event search page. */
+ body .raMobileNav{z-index:70!important}
+ body #explore .toolbar{padding:15px!important;margin-top:-22px!important}
+ body #explore :is(.primaryFilters,.topfilters){grid-template-columns:minmax(0,1fr)!important;gap:10px!important}
+ body .container{padding-left:15px!important;padding-right:15px!important}
+ body :is(.ra-detail-dialog,.ra-dialog){max-width:calc(100vw - 18px)!important;max-height:calc(100dvh - 30px - env(safe-area-inset-bottom))!important}
+}
+@media(max-width:360px){
+ body>header .brand img.tz-logo-image,body>header .tz-site-brand img.tz-logo-image{width:66px!important;min-width:66px!important;max-width:66px!important}
+ body>header #raLanguageSwitch button{min-width:30px!important;padding:7px 6px!important}
+ body>header .tz-menu-toggle{min-width:52px!important;padding:7px!important}
+ body .tz-sport-switch>*{font-size:10px!important}
+}
+@media(min-width:701px){
+ body>header .tz-menu-toggle,body>header .tz-mobile-menu{display:none!important}
+}
