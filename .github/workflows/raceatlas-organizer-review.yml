@@ -1,0 +1,31 @@
+name: RaceAtlas organizer-source research queue
+on:
+  schedule:
+    - cron: '5 7 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: raceatlas-organizer-research
+  cancel-in-progress: false
+jobs:
+  compile-review-queue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate review queue generator
+        run: node tests/test-raceatlas-organizer-review.cjs
+      - name: Generate whole-catalog organizer review queue
+        run: node scripts/raceatlas-organizer-review.cjs
+      - name: Keep review data for manual verification
+        uses: actions/upload-artifact@v4
+        with:
+          name: raceatlas-organizer-review
+          path: |
+            out/raceatlas-organizer-review.csv
+            out/raceatlas-organizer-review.md
+          retention-days: 14
