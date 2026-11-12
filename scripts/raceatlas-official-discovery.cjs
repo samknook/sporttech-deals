@@ -129,7 +129,7 @@ function choose(observed,catalog,previous,today){
    const old=update[0];
    if(old.date!==race.date){
     const item={id:old.id,name:old.name,date:race.date,officialEventUrl:race.officialEventUrl,source:race.source,verifiedOn:today};
-    updates.set(old.id,item);changed.push(item);
+    if(updates.get(old.id)?.date!==race.date){updates.set(old.id,item);changed.push(item)}
    }
    continue;
   }
@@ -137,7 +137,7 @@ function choose(observed,catalog,previous,today){
   if(already){review.push({name:race.name,date:race.date,reason:'existing_race_same_year_date_conflict',url:race.officialEventUrl});continue}
   const other=[...auto.values()].find(e=>sameRace(e,race));
   if(other){
-   if(other.date===race.date){auto.set(other.id,{...other,verifiedOn:today});continue}
+   if(other.date===race.date){continue}
    if(normalizedUrl(other.officialEventUrl)===normalizedUrl(race.officialEventUrl)){
     auto.set(other.id,{...other,...race,id:other.id,verifiedOn:today});
     changed.push({id:other.id,name:race.name,date:race.date,officialEventUrl:race.officialEventUrl});
@@ -240,8 +240,10 @@ async function main(){
    '\n- Published: '+success+'\n\n'+result.newEvents.map(e=>'- NEW '+e.name+' ('+e.date+') — '+e.officialEventUrl).join('\n')+
    '\n'+result.changed.map(e=>'- UPDATED '+e.id+' — '+e.date).join('\n')+'\n');
  if(!success){console.log('No first-party source responded; public JSON preserved');return}
- fs.writeFileSync(OUTPUT,JSON.stringify(result.data,null,2)+'\n');
- console.log(JSON.stringify({pagesChecked:result.pagesChecked,structuredEvents:result.structuredEvents,newEvents:result.newEvents.length,updated:result.changed.length,review:result.review.length}));
+ const pruned=(previous.events||[]).length!==result.data.events.length||(previous.updates||[]).length!==result.data.updates.length;
+ const materiallyChanged=result.newEvents.length||result.changed.length||pruned;
+ if(materiallyChanged)fs.writeFileSync(OUTPUT,JSON.stringify(result.data,null,2)+'\n');
+ console.log(JSON.stringify({pagesChecked:result.pagesChecked,structuredEvents:result.structuredEvents,newEvents:result.newEvents.length,updated:result.changed.length,review:result.review.length,feedChanged:Boolean(materiallyChanged)}));
 }
 if(require.main===module)main().catch(e=>{console.error(e.message);process.exitCode=1});
 module.exports={safeUrl,htmlEvents,links,eventDate,parseEvent,choose,discover,readCatalog,monitorExisting};
