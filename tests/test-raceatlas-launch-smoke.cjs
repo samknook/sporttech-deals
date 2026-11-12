@@ -45,6 +45,27 @@ for(const filename of coreTools){
  check(html.includes('src="performance-translations.js"'),'English translations not loaded: '+filename);
  check(html.includes('class="tz-logo-image"') && html.includes('trizentro-mark.svg'),'Approved TriZentro icon-only logo missing: '+filename);
 }
+const sharedCss=fs.readFileSync(path.join(siteRoot,'shared-ui.css'),'utf8');
+const sharedJs=fs.readFileSync(path.join(siteRoot,'shared-ui.js'),'utf8');
+check(sharedCss.includes('.tz-mobile-destinations'),'Shared mobile navigation styling missing');
+try{new Function(sharedJs)}catch(error){errors.push('Shared mobile JS syntax: '+error.message)}
+const publicPages=[
+ ['raceatlas/index.html',true],
+ ['raceatlas/organisatoren.html',false],
+ ['raceatlas/over.html',false],
+ ['raceatlas/privacy.html',false],
+ ['raceatlas/gegevenskwaliteit.html',false],
+ ...coreTools.map(name=>[name,false])
+];
+for(const [filename,isEvents] of publicPages){
+ const html=fs.readFileSync(path.join(siteRoot,filename),'utf8');
+ check(html.includes('shared-ui.css?v='),'Unified shell styling missing: '+filename);
+ check(html.indexOf('shared-ui.css?v=')<html.indexOf('</head>'),'Unified shell must be in head: '+filename);
+ check(html.includes('tz-logo-image'),'Header logo missing: '+filename);
+ check(html.includes('trizentro-mark.svg'),'Official emblem missing: '+filename);
+ check(isEvents || html.includes('shared-ui.js?v='),'Mobile navigation missing: '+filename);
+ check(!isEvents || !html.includes('shared-ui.js?v='),'Events must retain its native mobile navigation');
+}
 const performanceHome=fs.readFileSync(path.join(siteRoot,'performance.html'),'utf8');
 const multisportCalculator=fs.readFileSync(path.join(siteRoot,'pace-calculator.html'),'utf8');
 for(const sport of ['running','cycling','triathlon']){
