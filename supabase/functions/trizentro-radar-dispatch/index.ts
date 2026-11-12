@@ -28,14 +28,15 @@ Deno.serve(async req=>{
  let seeded=0,changes=0,emails=0,failures=0;
  try{
   // Current facts from the curated, published race intelligence table.
-  const races=await jsonRows('raceatlas_event_intelligence?publish_status=eq.published&select=event_id,event_name,registration_status,registration_opens_at,start_date,date_confidence,last_verified_at&limit=1000');
+  const races=await jsonRows('raceatlas_event_intelligence?publish_status=eq.published&select=event_id,event_name,registration_status,registration_opens_at,start_date,date_confidence,last_verified_at,evidence_kind&limit=1000');
   const previous=await jsonRows('trizentro_radar_snapshots?select=*&limit=1000');
   const byId=new Map(previous.map((x:any)=>[x.event_id,x]));
   for(const race of races){
    const state={event_id:race.event_id,registration_status:race.registration_status||'unknown',registration_opens_at:race.registration_opens_at||null,race_date:race.date_confidence==='official'?race.start_date:null,verified_at:race.last_verified_at||null,updated_at:new Date().toISOString()};
    const prior=byId.get(race.event_id);
    if(!prior){await write('trizentro_radar_snapshots?on_conflict=event_id',state);seeded++;continue}
-   const eligible=!!race.last_verified_at&&(!prior.verified_at||Date.parse(race.last_verified_at)>Date.parse(prior.verified_at));
+   const trustedEvidence=new Set(['organizer_event_page','organizer_calendar','official_public_notice','official_partner_event_page']);
+   const eligible=trustedEvidence.has(race.evidence_kind)&&!!race.last_verified_at&&(!prior.verified_at||Date.parse(race.last_verified_at)>Date.parse(prior.verified_at));
    const notes:string[]=[];
    // Never infer an opening merely from a link; only notify after a fresh source verification.
    if(eligible&&race.registration_status==='open'&&prior.registration_status!=='open')notes.push('Inschrijving als geopend bevestigd');
