@@ -191,6 +191,14 @@ async function test(){
   assert.equal(await page.locator('#raSeasonTarget').inputValue(),'8');
   assert.match(await page.locator('#raGoalText').innerText(),/1 van 8/);
   assert.equal(await page.locator('#raMonthPlannerList .raMonthRace').count(),1);
+  // Personal registration choices survive reload and remain independent of Supabase accounts.
+  await page.locator('[data-ra-registration="ra-0"]').selectOption('registered');
+  assert.match(await page.locator('#raMyRegistrationSummary').innerText(),/1 ingeschreven/);
+  await page.reload({waitUntil:'domcontentloaded'});
+  await page.locator('#raMobileSaved').click();
+  assert.equal(await page.locator('[data-ra-registration="ra-0"]').inputValue(),'registered');
+  assert.match(await page.locator('#raMyRegistrationSummary').innerText(),/1 ingeschreven/);
+  assert.equal(await page.locator('#raRegistrationIcs').isVisible(),true);
   await page.locator('#raMobileExplore').click();
   await page.locator('#raHeroAccount').click();
   assert.equal(await page.locator('#raSeasonHealth').isVisible(),true);
