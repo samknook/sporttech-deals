@@ -513,8 +513,8 @@ function translation(text){
  const core=text.slice(prefix.length,text.length-suffix.length);
  if(translations.has(core))return prefix+translations.get(core)+suffix;
  let result=text;
- for(const [pattern,replacement] of partials)result=result.replace(pattern,replacement);
  for(const [pattern,replacement] of translatedPatterns)result=result.replace(pattern,replacement);
+ for(const [pattern,replacement] of partials)result=result.replace(pattern,replacement);
  for(const [nl,en] of monthNames)result=result.replace(new RegExp('\\b'+nl+'\\b','gi'),en);
  return result;
 }
