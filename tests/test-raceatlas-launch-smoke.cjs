@@ -45,6 +45,16 @@ for(const filename of coreTools){
  check(html.includes('src="performance-translations.js"'),'English translations not loaded: '+filename);
  check(html.includes('class="tz-logo-image"') && html.includes('trizentro-mark.svg'),'Approved TriZentro icon-only logo missing: '+filename);
 }
+const detailJs=fs.readFileSync(path.join(siteRoot,'raceatlas/details.js'),'utf8');
+const eventsPage=fs.readFileSync(path.join(siteRoot,'raceatlas/index.html'),'utf8');
+check(detailJs.includes('tz-detail-highlight'),'Mobile event summary missing');
+check(detailJs.includes('tz-detail-quick-actions'),'Mobile registration and save actions missing');
+check(detailJs.includes('window.TriZentroSeason?.toggle(e.id)'),'Detail save must reuse season storage');
+check(detailJs.includes('Bekijk inschrijving ↗'),'Registration CTA missing');
+check(eventsPage.includes('window.TriZentroSeason={'),'Shared season save controller missing');
+check(eventsPage.includes('class="tz-season-shortcuts"'),'Season shortcut navigation missing');
+check(eventsPage.includes('details.js?v=20261112-detail7'),'Detail version not refreshed');
+try{new Function(detailJs)}catch(error){errors.push('Event detail JS syntax: '+error.message)}
 const mobileEventJs=fs.readFileSync(path.join(siteRoot,'raceatlas/mobile-events.js'),'utf8');
 check(mobileEventJs.includes("select.dispatchEvent(new Event('change'"),'Mobile sport chips must trigger the existing event filter');
 check(mobileEventJs.includes("aria-pressed"),'Mobile sport chips need accessible selected state');
