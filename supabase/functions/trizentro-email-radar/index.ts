@@ -28,15 +28,15 @@ Deno.serve(async request=>{
  if(request.method==='OPTIONS')return new Response(null,{status:204,headers:cors(origin)});
  if(request.method==='GET')return answer(origin,200,{enabled});
  if(request.method!=='POST')return answer(origin,405,{ok:false});
- if(!enabled)return answer(origin,503,{ok:false,error:'email_not_configured'});
  if(Number(request.headers.get('content-length')||0)>1024)return answer(origin,413,{ok:false});
  let body:Record<string,unknown>;try{const raw=await request.text();if(raw.length>1024)throw Error('too large');body=JSON.parse(raw)}catch{return answer(origin,400,{ok:false})}
  const action=String(body.action||'');
  if(action==='subscribe'){
+  if(!enabled)return answer(origin,503,{ok:false,error:'email_not_configured'});
   const email=cleanEmail(body.email),eventId=cleanEvent(body.eventId);
   if(!email||email.length>254||!/^([^@\s]+)@([^@\s]+\.[^@\s]+)$/.test(email)||!eventId)return answer(origin,400,{ok:false,error:'invalid_input'});
   // Basic persistent daily rate limit without storing IP, UA or any permanent visitor identifier.
-  const ip=request.headers.get('cf-connecting-ip')||request.headers.get('x-forwarded-for')||'';
+  const ip=request.headers.get('cf-connecting-ip')||'';
   if(!ip||ip.length>90)return answer(origin,429,{ok:false,error:'rate_limit'});
   const today=new Date().toISOString().slice(0,10);
   const rateHash=await hash(today+'|'+key+'|radar|'+ip);
@@ -71,14 +71,23 @@ Deno.serve(async request=>{
  }
  if(action==='confirm'||action==='unsubscribe'){
   const raw=typeof body.token==='string'?body.token:'';
-  if(!/^[0-9a-f]{64}$/.test(raw))return answer(origin,400,{ok:false,error:'invalid_token'});
+  const signed=action==='unsubscribe'&&/^[0-9a-f-]{36}\.[0-9a-f]{64}$/.test(raw);
+  if(!/^[0-9a-f]{64}$/.test(raw)&&!signed)return answer(origin,400,{ok:false,error:'invalid_token'});
   const digest=await hash(raw);
   const col=action==='confirm'?'confirm_token_hash':'unsubscribe_token_hash';
-  const query='trizentro_email_alerts?'+col+'=eq.'+digest+'&select=id,state,requested_at';
+  const query=signed?'trizentro_email_alerts?id=eq.'+raw.slice(0,36)+'&select=id,state,requested_at':'trizentro_email_alerts?'+col+'=eq.'+digest+'&select=id,state,requested_at';
   const found=await db(query);
   if(!found.ok)return answer(origin,503,{ok:false});
   const rows=await found.json();
   if(rows.length!==1)return answer(origin,400,{ok:false,error:'invalid_token'});
+  if(signed){
+   const secret=Deno.env.get('RADAR_CRON_SECRET')||'';
+   if(!secret)return answer(origin,400,{ok:false,error:'invalid_token'});
+   const key=await crypto.subtle.importKey('raw',encoder.encode(secret),{name:'HMAC',hash:'SHA-256'},false,['sign']);
+   const sig=await crypto.subtle.sign('HMAC',key,encoder.encode('unsubscribe|'+rows[0].id));
+   const expected=Array.from(new Uint8Array(sig),v=>v.toString(16).padStart(2,'0')).join('');
+   if(expected!==raw.slice(37))return answer(origin,400,{ok:false,error:'invalid_token'});
+  }
   if(action==='confirm'&&(Date.now()-Date.parse(rows[0].requested_at)>48*3600*1000))return answer(origin,400,{ok:false,error:'expired_token'});
   const changes=action==='confirm'?{state:'confirmed',confirmed_at:new Date().toISOString(),confirm_token_hash:null}:{state:'unsubscribed',unsubscribed_at:new Date().toISOString(),confirm_token_hash:null,unsubscribe_token_hash:null};
   const update=await db('trizentro_email_alerts?id=eq.'+rows[0].id,{method:'PATCH',body:JSON.stringify(changes)});
