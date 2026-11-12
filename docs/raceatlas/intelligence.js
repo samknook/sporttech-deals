@@ -71,7 +71,7 @@
   function render(ui,records){
     ui.list.replaceChildren();
     const now=new Date(), saved=savedIds();
-    const classified=records.map(r=>({r,kind:classify(r,now)})).filter(x=>x.kind);
+    const classified=records.filter(r=>r.date_confidence==='official').map(r=>({r,kind:classify(r,now)})).filter(x=>x.kind);
     const selected=classified.filter(x=>!ui.check.checked||saved.has(x.r.event_id));
     const ordered=selected.sort((a,b)=>{
       const savedA=saved.has(a.r.event_id)?0:1;
@@ -82,7 +82,7 @@
     }).slice(0,9);
     ui.status.textContent=ui.check.checked
       ?saved.size+' wedstrijden opgeslagen · '+selected.length+' met relevante inschrijfinformatie'
-      :records.length+' wedstrijden met broninformatie · '+classified.length+' met relevante inschrijfdatums';
+      :records.length+' wedstrijden in database · '+records.filter(r=>r.date_confidence==='official').length+' officieel gedateerd · '+classified.length+' relevante inschrijfdatums';
     if(!ordered.length){
       ui.list.append(el('p','raIntelEmpty',ui.check.checked
         ?'Geen bekende aankomende inschrijfdatums bij jouw opgeslagen races. Bewaar een wedstrijd om deze hier te volgen.'
@@ -128,7 +128,7 @@
   async function load(){
     const ui=install();if(!ui)return;
     try {
-      const response=await fetch(API+'?select=event_id,event_name,start_date,registration_opens_at,registration_closes_at,official_event_url,verification_source_url,last_verified_at&publish_status=eq.published&order=start_date.asc&limit=500',{
+      const response=await fetch(API+'?select=event_id,event_name,start_date,registration_opens_at,registration_closes_at,official_event_url,verification_source_url,last_verified_at,date_confidence&publish_status=eq.published&order=start_date.asc&limit=500',{
         headers:{apikey:KEY,Accept:'application/json'},
         signal:AbortSignal.timeout(9000)
       });
