@@ -562,6 +562,45 @@ Object.assign(strings,{
   "Geen controledatum": "No review date",
   "Broninformatie": "Source information"
 });
+Object.assign(strings,{
+  "Openingsdatum": "Opening date",
+  "Openingsdatum volgens bron": "Registration opening according to source",
+  "Deadline volgens bron": "Deadline according to source",
+  "Brongegevens konden niet worden geladen.": "Could not load source data.",
+  "INSCHRIJFRADAR": "REGISTRATION RADAR",
+  "Verwachte opening": "Expected opening",
+  "Gemarkeerde datum": "Listed date",
+  "Groot evenement": "Major event",
+  "Kalendergegevens": "Calendar data",
+  "Inschrijving geopend volgens bron": "Registration open according to source",
+  "Inschrijvingsdeadline": "Registration deadline",
+  "Gecontroleerde gegevens": "Reviewed information",
+  "Organisatorsite": "Organizer website",
+  "Registratie": "Registration",
+  "Prijs onbekend": "Price unknown",
+  "Kosten onbekend": "Cost unknown",
+  "Tot en met": "Through",
+  "Inschrijving": "Registration",
+  "Startdatum": "Opening date",
+  "Vol": "Full",
+  "Deelnemers": "Participants",
+  "Officieel": "Official",
+  "Aankomende wedstrijden": "Upcoming races",
+  "bekend": "known",
+  "Geen startbewijzen meer beschikbaar": "No entries available",
+  "Niet gevonden": "Not found",
+  "Inschrijven": "Register",
+  "Bevestigd op organisatorsite": "Confirmed on organizer website",
+  "Toon minder": "Show less",
+  "Toon meer": "Show more"
+});
+const extendedPatterns=[["^Openingsdatum volgens bron · (.+)$","Registration opening according to source · $1"],["^Deadline volgens bron · (.+)$","Deadline according to source · $1"],["^Datum vermeld — check bij organisator$","Date listed — check with the organizer"],["^(.+) · nog niet automatisch gecontroleerd$","$1 · not automatically reviewed"],["^([A-Za-zÀ-ÿ]+) · bron laatst gecontroleerd op (.+)$","$1 · source last checked on $2"],["^([\\u{1F3C3}\\u{1F6B4}\\u{1F3CA}]+\\\\s*)Wielrennen: (\\\\d+)$","$1Cycling: $2"],["^(\\\\d+) (ingeschreven|op wachtlijst|nog te regelen)$","$1 $2"]].map(([p,to])=>[new RegExp(p,"iu"),to]);
+const shortMonths=[["jan","Jan"],["feb","Feb"],["mrt","Mar"],["apr","Apr"],["mei","May"],["jun","Jun"],["jul","Jul"],["aug","Aug"],["sep","Sep"],["okt","Oct"],["nov","Nov"],["dec","Dec"]];
+const shortMonthRegex=/\b(jan|feb|mrt|apr|mei|jun|jul|aug|sep|okt|nov|dec)\b/gi;
+const dateMonthTranslation=match=>shortMonths.find(([nl])=>nl===match.toLowerCase())?.[1]||match;
+const monthDateContext=/\b\d{1,2}\s+(?:jan|feb|mrt|apr|mei|jun|jul|aug|sep|okt|nov|dec)\b/i;
+const datedMonthLabels=/^(?:jan|feb|mrt|apr|mei|jun|jul|aug|sep|okt|nov|dec)(?:\.?)$/i;
+const placeholderForFuture=0;
 const placeholders={
 'Bijv. Egmond, gravel, marathon…':'E.g. Egmond, gravel, marathon…',
 'Zoek op wedstrijd of plaats':'Search by event or location',
@@ -609,9 +648,11 @@ function translation(text){
  if(translations.has(core))return prefix+translations.get(core)+suffix;
  let result=text;
  for(const [pattern,replacement] of translatedPatterns)result=result.replace(pattern,replacement);
+ for(const [pattern,replacement] of extendedPatterns)result=result.replace(pattern,replacement);
  for(const [pattern,replacement] of partials)result=result.replace(pattern,replacement);
  for(const [pattern,replacement] of sentenceReplacements)result=result.replace(pattern,replacement);
  for(const [nl,en] of monthNames)result=result.replace(new RegExp('\\b'+nl+'\\b','gi'),en);
+ if(monthDateContext.test(text)||datedMonthLabels.test(text))result=result.replace(shortMonthRegex,dateMonthTranslation);
  return result;
 }
 function skip(node){
