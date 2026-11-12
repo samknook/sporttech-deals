@@ -10,7 +10,7 @@
  // Remove the one-time token from browser URL immediately; it is never sent to third parties.
  history.replaceState(null,'',location.pathname);
  const action=document.getElementById('action'),heading=document.getElementById('title'),intro=document.getElementById('intro'),message=document.getElementById('message');
- if(!['confirm','unsubscribe'].includes(type)||!token||!/^[0-9a-f]{64}$/.test(token)){message.textContent='Deze link is ongeldig. Open de link uit je bevestigingsmail opnieuw.';return;}
+ if(!['confirm','unsubscribe'].includes(type)||!token||!(/^[0-9a-f]{64}$/.test(token)||(type==='unsubscribe'&&/^[0-9a-f-]{36}\.[0-9a-f]{64}$/.test(token)))){message.textContent='Deze link is ongeldig. Open de link uit je bevestigingsmail opnieuw.';return;}
  const isConfirm=type==='confirm';
  heading.textContent=isConfirm?'Bevestig je e-mailadres':'Meld je af voor wedstrijdmeldingen';
  intro.textContent=isConfirm?'Klik op Bevestigen om wedstrijdmeldingen voor je gekozen evenement te activeren.':'Klik op Afmelden om je e-mailmeldingen voor dit evenement te stoppen.';
