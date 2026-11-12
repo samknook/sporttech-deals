@@ -63,15 +63,26 @@ function htmlEvents(html){
  }
  return items;
 }
+function linkScore(url){
+ let pathname;
+ try{pathname=decodeURIComponent(new URL(url).pathname).toLowerCase()}catch{return -100}
+ if(/(?:sponsor|uitslag|results?|recreanten|start-to-run|race-app|raceshirt|shirt|foto|gallery|shop|blog|nieuws|news|privacy|cookie|terugblik|topatleten|parcoursrecord|belangstelling|eindklassement|dagzege|debuut)/i.test(pathname))return -100;
+ let score=0;
+ if(/(?:^|\/)(?:event|events|evenementen|wedstrijden|kalender|agenda)(?:\/|$)/i.test(pathname))score+=8;
+ if(/2027|2028/i.test(pathname))score+=5;
+ if(/(?:inschrijf|registr|triathlon|duathlon|marathon|cross|toertocht|gravel|mtb|sportive|trail|run|loop|race)/i.test(pathname))score+=4;
+ if(pathname.split('/').filter(Boolean).length>4)score-=2;
+ return score;
+}
 function links(html,base,host){
  const result=[];
  for(const m of html.matchAll(/<a\b[^>]*href\s*=\s*["']([^"'<>]+)["'][^>]*>/gi)){
   const v=m[1].replace(/&amp;/gi,'&');
   let u;
   try{u=safeUrl(new URL(v,base).toString(),host)}catch{continue}
-  if(u&&acceptLink.test(new URL(u).pathname)&&!result.includes(u))result.push(u);
+  if(u&&acceptLink.test(new URL(u).pathname)&&linkScore(u)>0&&!result.includes(u))result.push(u);
  }
- return result;
+ return result.sort((a,b)=>linkScore(b)-linkScore(a));
 }
 function eventDate(raw,today){
  const day=String(raw||'').match(/^(20\d{2}-\d{2}-\d{2})(?:$|T)/)?.[1];
@@ -280,4 +291,4 @@ async function main(){
  console.log(JSON.stringify({pagesChecked:result.pagesChecked,structuredEvents:result.structuredEvents,newEvents:result.newEvents.length,updated:result.changed.length,review:result.review.length,pageChanges:result.contentChanges.length,feedChanged:Boolean(materiallyChanged)}));
 }
 if(require.main===module)main().catch(e=>{console.error(e.message);process.exitCode=1});
-module.exports={safeUrl,htmlEvents,links,eventDate,parseEvent,choose,discover,readCatalog,monitorExisting,verifiedOrganizerSources,fingerprint};
+module.exports={safeUrl,htmlEvents,links,linkScore,eventDate,parseEvent,choose,discover,readCatalog,monitorExisting,verifiedOrganizerSources,fingerprint};
