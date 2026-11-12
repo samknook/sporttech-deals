@@ -1,94 +1,158 @@
-/* RaceAtlas event intelligence: published, read-only race facts. No account required. */
+/* RaceAtlas registration radar — sourced historical dates, never live availability claims. */
 (() => {
   'use strict';
-  const API = 'https://lpzndnxloykcthbsqcet.supabase.co/rest/v1/raceatlas_event_intelligence';
-  const KEY = 'sb_publishable_AE_Qr8VLmWb2020QCOEAKQ_Nl5mZ5Sw';
-  const el = (tag, className, value) => {
-    const n = document.createElement(tag);
-    if (className) n.className = className;
-    if (value != null) n.textContent = value;
-    return n;
+  const API='https://lpzndnxloykcthbsqcet.supabase.co/rest/v1/raceatlas_event_intelligence';
+  const KEY='sb_publishable_AE_Qr8VLmWb2020QCOEAKQ_Nl5mZ5Sw';
+  const SEASON_KEY='raceatlas-saved-v2';
+  const LOCAL_PREF_KEY='raceatlas-intel-season-only-v1';
+  const el=(tag,klass,value)=>{
+    const node=document.createElement(tag);
+    if(klass)node.className=klass;
+    if(value!==undefined)node.textContent=value;
+    return node;
   };
-  const day = s => s ? new Date(s).toLocaleDateString('nl-NL',{day:'numeric',month:'short',year:'numeric',timeZone:'Europe/Amsterdam'}) : '';
-  const validHttps = u => {
-    try { return new URL(u).protocol === 'https:'; } catch { return false; }
+  const parseDate=(value)=>value?new Date(value):null;
+  const fmt=(value)=>{
+    const date=parseDate(value);
+    return date&&!Number.isNaN(date.getTime())?date.toLocaleDateString('nl-NL',{day:'numeric',month:'short',year:'numeric',timeZone:'Europe/Amsterdam'}):'Onbekend';
   };
-  function installPanel() {
-    const summary = document.getElementById('verificationSummary');
-    if (!summary || document.getElementById('raIntelPanel')) return null;
-    const panel = el('section','raIntelPanel');
-    panel.id = 'raIntelPanel';
-    panel.setAttribute('aria-label','Inschrijfkalender met broninformatie');
-    const head=el('div','raIntelHead');
-    head.append(el('div','', 'INSCHRIJFRADAR'), el('h2','', 'Houd je volgende inschrijving in de gaten'));
-    const info=el('p','raIntelNote','We tonen alleen bekende inschrijfdatums uit gepubliceerde brongegevens. Dit is geen live controle van vrije startbewijzen.');
-    const status=el('p','raIntelStatus','Brongegevens laden…');
-    status.setAttribute('role','status');
-    const list=el('div','raIntelList');
-    panel.append(head,info,status,list);
-    summary.after(panel);
-    return {status,list};
-  }
-  async function load() {
-    const ui=installPanel();
-    if(!ui) return;
+  const eventFmt=value=>{
+    if(!/^20\d{2}-\d{2}-\d{2}$/.test(value||''))return 'Onbekend';
+    return new Date(value+'T12:00:00Z').toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'});
+  };
+  const https=value=>{try{return new URL(value).protocol==='https:'}catch{return false}};
+  const dateKey=value=>value?String(value).slice(0,10):'';
+  const savedIds=()=>{
     try {
-      const response=await fetch(API+'?select=event_id,event_name,sport,start_date,registration_opens_at,registration_closes_at,registration_status,official_event_url,official_registration_url,verification_source_url,last_verified_at&publish_status=eq.published&order=start_date.asc&limit=500',{
-        headers:{'apikey':KEY,'Accept':'application/json'},
-        signal:AbortSignal.timeout(9000)
-      });
-      if(!response.ok) throw new Error('Racegegevens tijdelijk niet beschikbaar');
-      const records=await response.json();
-      if(!Array.isArray(records)) throw new Error('Ongeldig antwoord');
-      const now=new Date(), soon=new Date(now.getTime()+120*86400000);
-      const upcoming=records.filter(r=>{
-        if(!r.registration_opens_at || !r.start_date)return false;
-        const opens=new Date(r.registration_opens_at);
-        const race=new Date(r.start_date+'T23:59:59Z');
-        return opens>=new Date(now.getTime()-14*86400000) && opens<=soon && race>=now;
-      }).sort((a,b)=>new Date(a.registration_opens_at)-new Date(b.registration_opens_at)).slice(0,6);
-      ui.status.textContent=records.length+' wedstrijden met gepubliceerde brongegevens · '+upcoming.length+' relevante inschrijfdatums in beeld';
-      if(!upcoming.length){
-        ui.list.append(el('p','raIntelEmpty','Geen binnenkort openende inschrijvingen met bekende startdatum. Bekijk de wedstrijdkaart voor meer informatie.'));
-        return;
+      const items=JSON.parse(localStorage.getItem(SEASON_KEY)||'[]');
+      return new Set(Array.isArray(items)?items.filter(x=>/^ra-\d{1,8}$/.test(x)):[]);
+    }catch{return new Set()}
+  };
+  const seasonOnly=()=>{
+    try{return localStorage.getItem(LOCAL_PREF_KEY)==='true'}catch{return false}
+  };
+  const setSeasonOnly=value=>{
+    try{localStorage.setItem(LOCAL_PREF_KEY,String(value))}catch{}
+  };
+  function classify(r,now){
+    const race=parseDate((r.start_date||'')+'T23:59:59Z');
+    if(!race||Number.isNaN(race.getTime())||race<now)return null;
+    const opens=parseDate(r.registration_opens_at);
+    const closes=parseDate(r.registration_closes_at);
+    const dayInMs=86400000;
+    const daysToOpen=opens?Math.ceil((opens.getTime()-now.getTime())/dayInMs):null;
+    const daysToClose=closes?Math.ceil((closes.getTime()-now.getTime())/dayInMs):null;
+    if(closes&&closes<now)return {group:'closed',label:'Vermelde deadline verstreken · '+fmt(closes),priority:4};
+    if(opens&&opens>now&&daysToOpen<=120)return {group:'soon',label:'Openingsdatum volgens bron · '+fmt(opens),priority:0};
+    if(opens&&opens<=now&&daysToClose!==null&&daysToClose>=0&&daysToClose<=30)return {group:'deadline',label:'Deadline volgens bron · '+fmt(closes),priority:1};
+    if(opens&&opens<=now)return {group:'past',label:'Opening was op '+fmt(opens)+' · beschikbaarheid onbekend',priority:2};
+    if(closes&&closes>=now&&daysToClose<=30)return {group:'deadline',label:'Deadline volgens bron · '+fmt(closes),priority:1};
+    return null;
+  }
+  function install(){
+    const summary=document.getElementById('verificationSummary');
+    if(!summary||document.getElementById('raIntelPanel'))return null;
+    const panel=el('section','raIntelPanel');panel.id='raIntelPanel';
+    panel.setAttribute('aria-label','Inschrijfradar met broninformatie');
+    const head=el('div','raIntelHead');
+    head.append(el('div','', 'INSCHRIJFRADAR'),el('h2','', 'Mis geen belangrijke inschrijfdatum'));
+    const intro=el('p','raIntelNote','Gebaseerd op eerder gepubliceerde informatie van organisatoren. Een verstreken openingsdatum betekent niet dat er nog startbewijzen beschikbaar zijn.');
+    const controls=el('div','raIntelControls');
+    const label=el('label','raIntelToggle');
+    const check=document.createElement('input');check.type='checkbox';check.checked=seasonOnly();
+    label.append(check,el('span','','Alleen mijn opgeslagen wedstrijden'));
+    controls.append(label);
+    const status=el('p','raIntelStatus','Brongegevens laden…');status.setAttribute('role','status');
+    const list=el('div','raIntelList');
+    panel.append(head,intro,controls,status,list);
+    summary.after(panel);
+    return {panel,check,status,list};
+  }
+  function render(ui,records){
+    ui.list.replaceChildren();
+    const now=new Date(), saved=savedIds();
+    const classified=records.map(r=>({r,kind:classify(r,now)})).filter(x=>x.kind);
+    const selected=classified.filter(x=>!ui.check.checked||saved.has(x.r.event_id));
+    const ordered=selected.sort((a,b)=>{
+      const savedA=saved.has(a.r.event_id)?0:1;
+      const savedB=saved.has(b.r.event_id)?0:1;
+      if(savedA!==savedB)return savedA-savedB;
+      if(a.kind.priority!==b.kind.priority)return a.kind.priority-b.kind.priority;
+      return String(a.r.registration_opens_at||a.r.start_date).localeCompare(String(b.r.registration_opens_at||b.r.start_date));
+    }).slice(0,9);
+    ui.status.textContent=ui.check.checked
+      ?saved.size+' wedstrijden opgeslagen · '+selected.length+' met relevante inschrijfinformatie'
+      :records.length+' wedstrijden met broninformatie · '+classified.length+' met relevante inschrijfdatums';
+    if(!ordered.length){
+      ui.list.append(el('p','raIntelEmpty',ui.check.checked
+        ?'Geen bekende aankomende inschrijfdatums bij jouw opgeslagen races. Bewaar een wedstrijd om deze hier te volgen.'
+        :'Momenteel geen inschrijfdatums in beeld. Controleer altijd de organisator voor de actuele stand.'));
+      return;
+    }
+    for(const {r,kind} of ordered){
+      const item=el('article','raIntelItem');
+      const body=el('div','');
+      const badge=saved.has(r.event_id)?'★ Mijn seizoen':'Wedstrijdkalender';
+      body.append(el('span','raIntelEyebrow',badge+' · '+kind.label),el('strong','',r.event_name),el('small','', 'Wedstrijd '+eventFmt(r.start_date)));
+      if(r.last_verified_at){
+        const checked=el('small','raIntelChecked','Bron laatst vastgelegd: '+fmt(r.last_verified_at));
+        const age=(now-parseDate(r.last_verified_at))/86400000;
+        if(age>30)checked.textContent+=' · ouder dan 30 dagen';
+        body.append(checked);
+      }else{
+        body.append(el('small','raIntelChecked','Laatste broncontrole niet geregistreerd'));
       }
-      for(const race of upcoming){
-        const item=el('article','raIntelItem');
-        const body=el('div','');
-        const opens=new Date(race.registration_opens_at);
-        const past=opens<=now;
-        body.append(
-          el('span','raIntelEyebrow',past?'Opening was op '+day(race.registration_opens_at):'Verwachte opening · '+day(race.registration_opens_at)),
-          el('strong','',race.event_name),
-          el('small','',race.start_date?'Wedstrijd '+new Date(race.start_date+'T12:00:00Z').toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}):'Wedstrijddatum onbekend')
-        );
-        const actions=el('div','raIntelActions');
-        const detail=el('button','raIntelButton','Bekijk wedstrijd');
-        detail.type='button';
-        detail.addEventListener('click',()=>{
-          const target=document.querySelector('[data-ra-detail="'+race.event_id+'"]');
-          if(target){target.click();}
-          else {
-            const u=new URL(location.href);
-            u.searchParams.set('event',race.event_id);
-            location.href=u.toString();
-          }
-        });
-        actions.append(detail);
-        const url=race.verification_source_url||race.official_event_url;
-        if(validHttps(url)){
-          const link=el('a','raIntelSource','Bron ↗');
-          link.href=url;link.target='_blank';link.rel='noopener noreferrer';
-          actions.append(link);
+      const actions=el('div','raIntelActions');
+      const detail=el('button','raIntelButton','Wedstrijddetails');
+      detail.type='button';
+      detail.addEventListener('click',()=>{
+        const target=document.querySelector('[data-ra-detail="'+r.event_id+'"]');
+        if(target)target.click();
+        else{
+          const url=new URL(location.href);
+          url.searchParams.set('event',r.event_id);
+          location.href=url.toString();
         }
-        item.append(body,actions);
-        ui.list.append(item);
+      });
+      actions.append(detail);
+      const source=r.verification_source_url||r.official_event_url;
+      if(https(source)){
+        const a=el('a','raIntelSource','Controleer bron ↗');
+        a.href=source;a.target='_blank';a.rel='noopener noreferrer';
+        actions.append(a);
       }
-    } catch (error) {
-      ui.status.textContent='Inschrijfgegevens konden niet worden geladen.';
-      ui.list.append(el('p','raIntelEmpty','De gewone wedstrijdkalender blijft beschikbaar. Controleer inschrijfdatums altijd bij de organisator.'));
+      item.append(body,actions);
+      ui.list.append(item);
     }
   }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',load,{once:true});
+  async function load(){
+    const ui=install();if(!ui)return;
+    try {
+      const response=await fetch(API+'?select=event_id,event_name,start_date,registration_opens_at,registration_closes_at,official_event_url,verification_source_url,last_verified_at&publish_status=eq.published&order=start_date.asc&limit=500',{
+        headers:{apikey:KEY,Accept:'application/json'},
+        signal:AbortSignal.timeout(9000)
+      });
+      if(!response.ok)throw Error('HTTP '+response.status);
+      const records=await response.json();
+      if(!Array.isArray(records))throw Error('Invalid response');
+      const refresh=()=>render(ui,records);
+      ui.check.addEventListener('change',()=>{setSeasonOnly(ui.check.checked);refresh()});
+      window.addEventListener('storage',event=>{
+        if(event.key===SEASON_KEY||event.key===LOCAL_PREF_KEY){
+          if(event.key===LOCAL_PREF_KEY)ui.check.checked=seasonOnly();
+          refresh();
+        }
+      });
+      // Existing save controls update localStorage synchronously, and click bubbles to document.
+      document.addEventListener('click',event=>{
+        if(event.target.closest('.save'))queueMicrotask(refresh);
+      });
+      refresh();
+    }catch{
+      ui.status.textContent='Inschrijfradar tijdelijk niet beschikbaar.';
+      ui.list.append(el('p','raIntelEmpty','De gewone evenementenkalender blijft werken. Bekijk de organisatorsite voor inschrijfgegevens.'));
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load,{once:true});
   else load();
 })();
