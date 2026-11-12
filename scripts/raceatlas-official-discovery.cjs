@@ -322,6 +322,28 @@ async function verifiedOrganizerSources(fetchImpl=fetch){
     discover:false}));
  }catch{return []}
 }
+function candidatePriority(candidate,today){
+ if(candidate.matchingIds.length===1&&candidate.rank===2)return 1;
+ const soon=Date.parse(candidate.dateCandidate+'T12:00:00Z')-Date.parse(today+'T12:00:00Z');
+ if(candidate.rank===2&&soon<=90*86400000)return 2;
+ if(candidate.rank===2)return 3;
+ return 4;
+}
+function csvCell(value){
+ const raw=String(value??'').replace(/[\r\n\t]+/g,' ').trim();
+ return '"'+(/^[=+@-]/.test(raw)?"'"+raw:raw).replace(/"/g,'""')+'"';
+}
+function candidateReviewRows(items,today){
+ const records=[...items].sort((a,b)=>candidatePriority(a,today)-candidatePriority(b,today)
+  ||a.dateCandidate.localeCompare(b.dateCandidate)||a.eventTitle.localeCompare(b.eventTitle));
+ const keys=['priority','eventTitle','dateCandidate','sport','country','matchingIds','url','context','reason','autoPublished'];
+ const rows=[keys.map(csvCell).join(',')];
+ for(const record of records){
+  const output={...record,priority:candidatePriority(record,today),matchingIds:record.matchingIds.join(';')};
+  rows.push(keys.map(key=>csvCell(output[key])).join(','));
+ }
+ return rows.join('\n')+'\n';
+}
 async function main(){
  const config=JSON.parse(fs.readFileSync(INPUT,'utf8'));
  const catalog=readCatalog(fs.readFileSync(SITE+'/index.html','utf8'));
@@ -340,6 +362,7 @@ async function main(){
    structuredEvents:result.structuredEvents,newEvents:result.newEvents,changed:result.changed,
    needsReview:result.review,plainHtmlCandidates:result.plainCandidates,contentChanges:result.contentChanges,sourceResults:result.sourceResults,autoPublished:success};
  fs.writeFileSync('out/raceatlas-discovery-report.json',JSON.stringify(report,null,2)+'\n');
+ fs.writeFileSync('out/raceatlas-plain-html-review.csv',candidateReviewRows(result.plainCandidates,today));
  fs.writeFileSync('out/raceatlas-discovery-report.md',
    '# RaceAtlas official-source discovery\n\nOfficial organizers only. Published changes require structured event date and place. No prices or registration availability inferred.\n\n'+
    '- Pages checked: '+result.pagesChecked+'\n- Structured events: '+result.structuredEvents+'\n- Newly qualified events: '+result.newEvents.length+
@@ -354,4 +377,4 @@ async function main(){
  console.log(JSON.stringify({pagesChecked:result.pagesChecked,structuredEvents:result.structuredEvents,newEvents:result.newEvents.length,updated:result.changed.length,review:result.review.length,plainCandidates:result.plainCandidates.length,pageChanges:result.contentChanges.length,feedChanged:Boolean(materiallyChanged)}));
 }
 if(require.main===module)main().catch(e=>{console.error(e.message);process.exitCode=1});
-module.exports={safeUrl,htmlEvents,links,linkScore,eventDate,parseEvent,raceLike,choose,discover,readCatalog,monitorExisting,verifiedOrganizerSources,fingerprint};
+module.exports={safeUrl,htmlEvents,links,linkScore,eventDate,parseEvent,raceLike,choose,discover,readCatalog,monitorExisting,verifiedOrganizerSources,fingerprint,candidatePriority,candidateReviewRows};
