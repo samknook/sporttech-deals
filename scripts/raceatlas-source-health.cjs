@@ -66,12 +66,12 @@ async function run(opts={}){
  const selected=items.filter(x=>x.review_bucket==='urgent').sort((a,b)=>String(a.event_id).localeCompare(String(b.event_id))).slice(0,MAX_URLS);
  const cache=new Map(), results=[];
  const sourceUsage=new Map();
- for(const event of selected){const u=safeUrl(event.official_event_url||event.verification_source_url);if(u)sourceUsage.set(u,(sourceUsage.get(u)||0)+1)}
+ for(const event of selected){const u=safeUrl(event.official_event_url);if(u)sourceUsage.set(u,(sourceUsage.get(u)||0)+1)}
  for(const event of selected){
-  const raw=event.official_event_url||event.verification_source_url;
+  const raw=event.official_event_url;
   const url=safeUrl(raw);
   let outcome;
-  if(!url)outcome={error:'missing_or_unsafe_url'};
+  if(!url)outcome={error:'official_organizer_source_missing'};
   else if(cache.has(url))outcome=cache.get(url);
   else {outcome=await fetchLimited(url,fetchImpl);cache.set(url,outcome)}
   results.push({event_id:event.event_id,event_name:event.event_name,source_url:url,source_specificity:!url?'missing':sourceUsage.get(url)>1?'shared_catalog_page':'individual_source_page',status:classify(outcome),...outcome});
