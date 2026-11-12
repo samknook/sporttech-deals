@@ -594,13 +594,12 @@ Object.assign(strings,{
   "Toon minder": "Show less",
   "Toon meer": "Show more"
 });
-const extendedPatterns=[["^Openingsdatum volgens bron · (.+)$","Registration opening according to source · $1"],["^Deadline volgens bron · (.+)$","Deadline according to source · $1"],["^Datum vermeld — check bij organisator$","Date listed — check with the organizer"],["^(.+) · nog niet automatisch gecontroleerd$","$1 · not automatically reviewed"],["^([A-Za-zÀ-ÿ]+) · bron laatst gecontroleerd op (.+)$","$1 · source last checked on $2"],["^([\\u{1F3C3}\\u{1F6B4}\\u{1F3CA}]+\\\\s*)Wielrennen: (\\\\d+)$","$1Cycling: $2"],["^(\\\\d+) (ingeschreven|op wachtlijst|nog te regelen)$","$1 $2"]].map(([p,to])=>[new RegExp(p,"iu"),to]);
+const extendedPatterns=[["^Openingsdatum volgens bron · (.+)$","Registration opening according to source · $1"],["^Deadline volgens bron · (.+)$","Deadline according to source · $1"],["^Datum vermeld — check bij organisator$","Date listed — check with the organizer"],["^(.+) · nog niet automatisch gecontroleerd$","$1 · not automatically reviewed"],["^([A-Za-zÀ-ÿ]+) · bron laatst gecontroleerd op (.+)$","$1 · source last checked on $2"],["^(\\\\d+) (ingeschreven|op wachtlijst|nog te regelen)$","$1 $2"]].map(([p,to])=>[new RegExp(p,"iu"),to]);
 const shortMonths=[["jan","Jan"],["feb","Feb"],["mrt","Mar"],["apr","Apr"],["mei","May"],["jun","Jun"],["jul","Jul"],["aug","Aug"],["sep","Sep"],["okt","Oct"],["nov","Nov"],["dec","Dec"]];
 const shortMonthRegex=/\b(jan|feb|mrt|apr|mei|jun|jul|aug|sep|okt|nov|dec)\b/gi;
 const dateMonthTranslation=match=>shortMonths.find(([nl])=>nl===match.toLowerCase())?.[1]||match;
 const monthDateContext=/\b\d{1,2}\s+(?:jan|feb|mrt|apr|mei|jun|jul|aug|sep|okt|nov|dec)\b/i;
 const datedMonthLabels=/^(?:jan|feb|mrt|apr|mei|jun|jul|aug|sep|okt|nov|dec)(?:\.?)$/i;
-const placeholderForFuture=0;
 const placeholders={
 'Bijv. Egmond, gravel, marathon…':'E.g. Egmond, gravel, marathon…',
 'Zoek op wedstrijd of plaats':'Search by event or location',
