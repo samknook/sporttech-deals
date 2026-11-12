@@ -11,7 +11,7 @@
   let siteRecorded=false;
   let observer=null;
   function enabled(){
-    return typeof location!=='undefined'&&location.hostname==='samknook.github.io'&&/^https:\/\//.test(ENDPOINT);
+    return typeof location!=='undefined'&&['samknook.github.io','trizentro.com','www.trizentro.com'].includes(location.hostname)&&/^https:\/\//.test(ENDPOINT);
   }
   function valid(eventId,kind){
     return KINDS.has(kind)&&((eventId==='ra-site'&&kind==='site_view')||(CARD_ID.test(eventId)&&kind!=='site_view'));
