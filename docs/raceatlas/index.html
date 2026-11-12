@@ -309,6 +309,7 @@ window.TriZentroSeason={
  toggle:toggleSavedEvent,
  count:()=>saved.length
 };
+function eventSlug(e){return String(e.name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,75)||'wedstrijd'}
 function eventCard(e){
  const d=getDate(e),sportClass=e.sport==='Fietsen'?'bike':e.sport==='Triatlon'?'tri':'';
  const duo=/duat(h)?lon|run[ -]?bike[ -]?run|\brbr\b|wintertria/i.test([e.name,e.discipline].join(' '));
@@ -325,7 +326,7 @@ function eventCard(e){
  '<div class="raCardVisual '+visualClass+'" role="img" aria-label="Sfeerbeeld '+safe(e.sport)+'; niet de wedstrijdlocatie">'+
  '<div class="raDateBadge"><strong>'+safe(visualDate.day)+'</strong><span>'+safe(visualDate.label)+'</span></div>'+
  (e.major?'<div class="raFeatureBadge">★ Groot evenement</div>':'')+'</div>'+
- '<div class="raCardBody"><h3 class="eventname">'+safe(e.name)+'</h3>'+
+ '<div class="raCardBody"><h3 class="eventname"><a class="tz-event-permalink" href="wedstrijden/'+safe(eventSlug(e))+'-'+safe(e.id)+'.html" aria-label="Bekijk wedstrijdpagina van '+safe(e.name)+'">'+safe(e.name)+'</a></h3>'+
  '<div class="raCardLocation">⌖ '+safe(e.place)+' · '+safe(e.country)+'</div>'+
  '<div class="raCardTags"><span class="raSportTag '+(duo?'duo':sportClass)+'">'+sportIcon+' '+safe(sportLabel)+'</span><span class="raDistanceTag">'+safe(e.distance)+'</span></div>'+
  (distanceKm!==null?'<div class="raCardInfo">📏 '+distanceKm+' km hemelsbreed</div>':'')+
