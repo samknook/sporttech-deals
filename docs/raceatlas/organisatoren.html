@@ -117,4 +117,4 @@ $('eventForm').addEventListener('submit',async e=>{
  }finally{button.disabled=false;button.textContent='Evenement aanmelden ↗';}
 });
 $('copy').onclick=async()=>{if(!$('eventForm').reportValidity())return;const t=details();try{await navigator.clipboard.writeText(t);$('status').textContent='Gegevens gekopieerd.'}catch{$('preview').style.display='block';$('preview').textContent=t;$('status').textContent='Selecteer en kopieer bovenstaande gegevens.'}};
-</script><script src="i18n.js?v=20261112a" defer></script></body></html>
+</script><script src="i18n.js?v=20261112-enfix" defer></script></body></html>
