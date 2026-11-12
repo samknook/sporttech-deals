@@ -1,0 +1,41 @@
+/* RaceAtlas global brand system — Discover. Plan. Race. */
+:root{--ra-brand-ink:#071a25;--ra-brand-ink-2:#0e3341;--ra-brand-lime:#c7ff37;--ra-brand-offwhite:#f7faf7;--ra-brand-line:#dce5e3;--ra-brand-focus:#95ec4d}
+html{scroll-behavior:smooth}
+body{font-feature-settings:"ss01" on;letter-spacing:-.005em}
+header{background:var(--ra-brand-ink)!important;border-bottom:1px solid #ffffff1c!important}
+header .brand,header .logo{color:#fff!important;text-decoration:none;font-style:normal!important;letter-spacing:-.065em!important;font-weight:950!important;display:inline-flex;align-items:center;gap:9px;white-space:nowrap}
+header .brand b,header .logo b,header .logo span{color:var(--ra-brand-lime)!important}
+.raLogoMark{width:32px;height:32px;display:inline-block;flex:0 0 32px;position:relative;clip-path:none!important;background:none!important}
+.raLogoMark::before{content:"";position:absolute;inset:3px;border:3px solid var(--ra-brand-lime);border-radius:50%;transform:rotate(-30deg) scaleX(.72)}
+.raLogoMark::after{content:"";position:absolute;width:28px;height:4px;top:14px;left:2px;transform:rotate(-33deg);background:var(--ra-brand-lime);border-radius:4px;box-shadow:0 0 0 2px var(--ra-brand-ink)}
+.raBrandTagline{font-size:10px;font-weight:850;letter-spacing:.22em;color:#c8d8d7;text-transform:uppercase;margin:0}
+.raLanguageSwitch{display:inline-flex;align-items:center;justify-content:center;padding:3px;border:1px solid #73918c80;border-radius:999px;background:#071923;gap:2px;flex-shrink:0}
+.raLanguageSwitch button{font-family:inherit;font-weight:850;font-size:11px!important;letter-spacing:.025em;min-width:37px;min-height:33px;padding:7px 9px!important;border:0!important;border-radius:999px!important;background:transparent!important;color:#bbd5d6!important;box-shadow:none!important;line-height:1!important}
+.raLanguageSwitch button.active,.raLanguageSwitch button[aria-pressed="true"]{background:var(--ra-brand-lime)!important;color:#102b25!important}
+.raLanguageSwitch button:focus-visible{outline:3px solid #fff;outline-offset:2px}
+header .raLanguageSwitch{margin-left:4px}
+header:has(>.brand) {display:flex;align-items:center;gap:15px;flex-wrap:wrap}
+header:has(>.logo) {display:flex;align-items:center;gap:15px;flex-wrap:wrap}
+header:has(>.brand) .raLanguageSwitch,header:has(>.logo) .raLanguageSwitch{margin-left:auto}
+.hero .eyebrow{color:var(--ra-brand-lime)!important}
+.hero h1 em{color:var(--ra-brand-lime)!important}
+.raBrandProof{display:flex;gap:10px 18px;align-items:center;flex-wrap:wrap;margin:18px 0 0;color:#dceae7;font-size:12px;font-weight:750}
+.raBrandProof span:before{content:"✓";margin-right:8px;color:var(--ra-brand-lime);font-weight:900}
+.raBrandHeading{font-size:10px;font-weight:900;letter-spacing:.2em;color:var(--ra-brand-lime);text-transform:uppercase}
+.raBrandManifesto{border-left:3px solid var(--ra-brand-lime);padding:8px 0 8px 14px;margin:18px 0;color:#bad1d0;font-size:13px}
+@media(max-width:800px){
+ header .nav{gap:8px;flex-wrap:wrap}
+ header .navright{gap:5px;flex-wrap:wrap;justify-content:flex-end}
+ header .brand{font-size:21px!important}
+ .raLanguageSwitch button{min-width:35px;min-height:35px}
+}
+@media(max-width:570px){
+ header .nav{padding:12px 15px!important;align-items:flex-start}
+ header .brand{font-size:20px!important}
+ header .navright{width:100%;justify-content:space-between;gap:5px}
+ header .navright button:not(.raLanguageSwitch button){padding:9px 8px!important;font-size:12px!important}
+ header .navright .organizerNav{padding:10px 8px!important;font-size:12px!important}
+ .raLanguageSwitch{margin-left:auto}
+ .raBrandProof{font-size:11px;gap:7px 12px}
+ header:has(>.brand),header:has(>.logo){padding:14px 5%!important}
+}
