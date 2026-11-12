@@ -13,7 +13,7 @@ const eventLink=e=>{const url=new URL(location.href);url.searchParams.set('event
 function closeDialog(){const d=$('raceatlasDetails');if(!d)return;const previous=d.dataset.returnfocus;d.remove();const url=new URL(location.href);if(url.searchParams.has('event')){url.searchParams.delete('event');history.replaceState(null,'',url.pathname+url.search+url.hash)}if(previous){const b=document.querySelector('[data-ra-detail="'+previous+'"]');if(b)b.focus()}}
 function detail(e,fromLink=false){
  if(!e)return;const old=$('raceatlasDetails');if(old)old.remove();
- const overlay=el('div',null,'ra-detail-overlay');overlay.id='raceatlasDetails';overlay.setAttribute('role','presentation');overlay.dataset.returnfocus=fromLink?'':e.id;
+ const overlay=el('div',null,'ra-detail-overlay');overlay.id='raceatlasDetails';overlay.setAttribute('role','presentation');overlay.dataset.returnfocus=fromLink?'':e.id;overlay.dataset.raEvent=e.id;window.RaceAtlasTracking?.detailView(e.id);
  const dlg=el('section',null,'ra-detail-dialog');dlg.setAttribute('role','dialog');dlg.setAttribute('aria-modal','true');dlg.setAttribute('aria-label',e.name);
  const heading=el('div',null,'ra-detail-heading');
  heading.append(el('div',e.sport+' · '+e.discipline,'ra-detail-kicker'),el('h2',e.name));
