@@ -6,7 +6,7 @@
 const ALLOWED_ORIGIN = "https://samknook.github.io";
 const PROJECT_URL = Deno.env.get("SUPABASE_URL") || "https://lpzndnxloykcthbsqcet.supabase.co";
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
-const allowedKinds = new Set(["organizer","registration","source","promotion"]);
+const allowedKinds = new Set(["organizer","registration","source","promotion","site_view","card_view","detail_view"]);
 const CORS = {
   "Access-Control-Allow-Origin":ALLOWED_ORIGIN,
   "Access-Control-Allow-Methods":"POST, OPTIONS",
@@ -33,7 +33,7 @@ Deno.serve(async (request:Request):Promise<Response>=>{
  }catch{return respond(400,{ok:false})}
  const eventId=String(data.eventId||"");
  const kind=String(data.kind||"");
- if(!/^ra-[0-9]{1,8}$/.test(eventId)||!allowedKinds.has(kind))return respond(400,{ok:false});
+ if(!allowedKinds.has(kind)||!((eventId==="ra-site"&&kind==="site_view")||(/^ra-[0-9]{1,8}$/.test(eventId)&&kind!=="site_view")))return respond(400,{ok:false});
  if(!SERVICE_KEY)return respond(503,{ok:false});
  try{
   const result=await fetch(PROJECT_URL+"/rest/v1/rpc/raceatlas_record_outbound_click",{
