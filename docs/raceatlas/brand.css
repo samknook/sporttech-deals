@@ -39,3 +39,7 @@ header:has(>.brand) .raLanguageSwitch,header:has(>.logo) .raLanguageSwitch{margi
  .raBrandProof{font-size:11px;gap:7px 12px}
  header:has(>.brand),header:has(>.logo){padding:14px 5%!important}
 }
+
+.raBrandAboutLink{display:inline-flex;align-items:center;min-height:36px;color:#d5e6e2!important;text-decoration:underline;text-underline-offset:4px;font-weight:750;font-size:13px}
+.raBrandAboutLink:hover{color:var(--ra-brand-lime)!important}
+footer .raBrandAboutLink{color:#a8c6c0!important}
