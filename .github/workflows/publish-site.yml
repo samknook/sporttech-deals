@@ -48,7 +48,9 @@ jobs:
           node tests/test-raceatlas-html-candidates.cjs
           node tests/test-raceatlas-auto-events.cjs
       - name: Verify commercial placements and safe public disclosures
-        run: node tests/test-raceatlas-commercial.cjs
+        run: |
+          node tests/test-raceatlas-commercial.cjs
+          node tests/test-raceatlas-tracking.cjs
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload website files only
