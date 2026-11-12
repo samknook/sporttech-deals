@@ -14,7 +14,7 @@ assert.ok(html.includes('intelligence.js?v=20261112-email2'));
 assert.doesNotThrow(()=>new Function(alert));
 assert.doesNotThrow(()=>new Function(intel));
 assert.ok(alert.includes("data.enabled===true"),'Email form must remain hidden when backend disabled');
-assert.ok(alert.includes('input.type=\\'email\\''),'Email address input required');
+assert.ok(alert.includes("input.type='email'"),'Email address input required');
 assert.ok(manager.includes('name="referrer" content="no-referrer"'),'Do not leak private token through Referer');
 assert.ok(manager.includes('history.replaceState(null'),'Remove token from address bar');
 assert.ok(!manager.includes('onload="'),'No automatic confirm or unsubscribe');
