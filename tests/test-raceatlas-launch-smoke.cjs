@@ -53,7 +53,7 @@ check(detailJs.includes('window.TriZentroSeason?.toggle(e.id)'),'Detail save mus
 check(detailJs.includes('Bekijk inschrijving ↗'),'Registration CTA missing');
 check(eventsPage.includes('window.TriZentroSeason={'),'Shared season save controller missing');
 check(eventsPage.includes('class="tz-season-shortcuts"'),'Season shortcut navigation missing');
-check(eventsPage.includes('details.js?v=20261112-detail7'),'Detail version not refreshed');
+check(eventsPage.includes('details.js?v=20261112-pages1'),'Detail version not refreshed');
 try{new Function(detailJs)}catch(error){errors.push('Event detail JS syntax: '+error.message)}
 const mobileEventJs=fs.readFileSync(path.join(siteRoot,'raceatlas/mobile-events.js'),'utf8');
 check(mobileEventJs.includes("select.dispatchEvent(new Event('change'"),'Mobile sport chips must trigger the existing event filter');
