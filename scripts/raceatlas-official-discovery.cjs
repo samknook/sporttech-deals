@@ -232,7 +232,7 @@ async function discover(config,catalog,previous,opts={}){
 }
 function monitorExisting(catalog,today){
  const skip=/^(?:www\.)?(?:fietssport\.nl|hardloopkalendernederland\.nl|triathlonplan\.nl|worldsmarathons\.com)$/i;
- const rows=catalog.filter(e=>e.dateEvidence==='official'&&e.date>=today&&safeUrl(e.officialEventUrl)
+ const rows=catalog.filter(e=>e.dateEvidence==='official'&&e.sourceType==='organizer'&&e.date>=today&&safeUrl(e.officialEventUrl)
    &&!skip.test(new URL(e.officialEventUrl).hostname));
  const uniq=[...new Map(rows.map(e=>[normalizedUrl(e.officialEventUrl),e])).values()];
  // Check imminent races every day; rotate the rest so established sources are revisited regularly.
