@@ -41,3 +41,34 @@ body.tz-performance{background:var(--tz-paper)!important;color:var(--tz-ink)!imp
 .tz-performance a:focus-visible,.tz-performance button:focus-visible{outline:3px solid #88cc66;outline-offset:3px}
 @media(max-width:760px){.tz-performance .top .nav{align-items:flex-start;flex-direction:column;gap:12px}.tz-performance .top nav[aria-label="Navigatie"]{width:100%;gap:6px}.tz-performance .top nav[aria-label="Navigatie"] a{font-size:12px;padding:9px 11px}.tz-performance .tri-hero>.wrap{padding-top:40px;padding-bottom:44px}.tz-performance :is(.panel,.tri-panel){padding:18px}.tz-performance .tz-tool-hero{padding:35px 0 42px}}
 @media print{.tz-performance .top,.tz-performance .tz-tool-hero{display:none!important}}
+
+/* TriZentro global header and Performance cards: matched to Events */
+.tz-performance .tz-site-header{background:#102123!important;color:white}
+.tz-performance .tz-site-header .tz-site-nav{width:100%;max-width:1180px;min-height:78px;padding:18px 24px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.tz-performance .tz-site-header .tz-site-brand{display:inline-flex;align-items:center;gap:9px;font-size:22px;font-weight:950;letter-spacing:-.9px;color:#fff;text-decoration:none;white-space:nowrap}
+.tz-performance .tz-site-header .tz-site-brand b{color:#a9f275}
+.tz-performance .tz-logo-mark{display:inline-block;width:30px;height:30px;border:3px solid #b9fa83;border-right-color:transparent;transform:rotate(-35deg);border-radius:50%}
+.tz-performance .tz-site-header .tz-site-links{display:flex;justify-content:flex-end;align-items:center;gap:8px;flex-wrap:wrap}
+.tz-performance .tz-site-header .tz-site-links a{background:#243839;color:white;border:1px solid #486062;padding:10px 16px;border-radius:100px;font-size:13px;font-weight:750;text-decoration:none;line-height:1.3}
+.tz-performance .tz-site-header .tz-site-links a:hover,.tz-performance .tz-site-header .tz-site-links a[aria-current="page"]{background:#b9fa83;color:#11231c;border-color:#b9fa83}
+.tz-performance .tz-site-header .tz-site-links .tz-organizers{margin-left:4px}
+.tz-performance .tz-page-hero{background:#102123;color:#fff;padding:55px 24px 85px}
+.tz-performance .tz-page-hero .tz-hero-inner{max-width:1132px;margin:auto}
+.tz-performance .tz-page-hero .tz-kicker{color:#b9fa83;font-size:12px;text-transform:uppercase;letter-spacing:.15em;font-weight:800}
+.tz-performance .tz-page-hero h1{font-size:clamp(38px,5.2vw,70px);letter-spacing:-.06em;line-height:1.04;margin:16px 0;max-width:850px;color:#fff}
+.tz-performance .tz-page-hero h1 em{font-style:normal;color:#b9fa83}
+.tz-performance .tz-page-hero p{color:#bacdcb;font-size:17px;line-height:1.6;max-width:650px}
+.tz-performance .tz-page-main{max-width:1180px;margin:-35px auto 65px;padding:0 24px;position:relative}
+.tz-performance .tz-tool-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tz-performance .tz-tool-card{min-height:242px;background:white;border:1px solid #e1e7df;border-radius:15px;padding:22px;box-shadow:0 10px 36px #1021230a;display:flex;flex-direction:column}
+.tz-performance .tz-tool-card .tz-card-label{color:#55756a;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.tz-performance .tz-tool-card h2{font-size:24px;letter-spacing:-.04em;margin:14px 0 8px;line-height:1.15}
+.tz-performance .tz-tool-card p{color:#71817a;font-size:14px;line-height:1.5;margin:0 0 22px}
+.tz-performance .tz-tool-card a{display:inline-flex;align-items:center;justify-content:center;align-self:flex-start;background:#173c31;border-radius:9px;color:#fff;font-size:13px;font-weight:800;padding:11px 15px;text-decoration:none;margin-top:auto}
+.tz-performance .tz-tool-card a:hover{background:#285d49}
+.tz-performance .tz-smallprint{font-size:12px;color:#687971;margin:22px 0}
+.tz-performance .tz-tool-hero{background:#102123!important}
+.tz-performance .tz-tool-hero .wrap{width:min(1132px,calc(100% - 48px))}
+@media(max-width:840px){.tz-performance .tz-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.tz-performance .tz-site-header .tz-site-nav{flex-direction:column;align-items:flex-start;padding:16px 20px}.tz-performance .tz-site-header .tz-site-links{justify-content:flex-start;gap:6px}.tz-performance .tz-site-header .tz-site-links a{font-size:12px;padding:9px 11px}.tz-performance .tz-tool-grid{grid-template-columns:1fr}.tz-performance .tz-page-hero{padding:39px 20px 70px}.tz-performance .tz-page-main{padding:0 20px}}
+@media print{.tz-performance .tz-site-header{display:none!important}}
