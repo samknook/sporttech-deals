@@ -166,6 +166,12 @@ function skip(node){
 function visitText(node){
  if(!node||node.nodeType!==3||skip(node))return;
  const current=node.nodeValue||'';
+ const option=node.parentElement?.closest('option');
+ if(option&&!option.hasAttribute('value')){
+   // Preserve semantic form values when translating visible labels.
+   const original=originals.get(node)?.nl||current;
+   option.setAttribute('value',original.trim());
+ }
  let saved=originals.get(node);
  if(!saved||current!==saved.nl&&current!==saved.en){saved={nl:current,en:null};originals.set(node,saved)}
  if(saved.en===null)saved.en=translation(saved.nl);
