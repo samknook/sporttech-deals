@@ -1,0 +1,26 @@
+name: TriZentro daily verified registration alerts
+on:
+  schedule:
+    - cron: '20 8 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Dispatch source-verified email updates (only when configured)
+        env:
+          RADAR_SECRET: ${{ secrets.TRIZENTRO_RADAR_CRON_SECRET }}
+        run: |
+          if [ -z "$RADAR_SECRET" ]; then
+            echo "Inschrijfradar email dispatch disabled: configure TRIZENTRO_RADAR_CRON_SECRET."
+            exit 0
+          fi
+          curl --fail --silent --show-error --max-time 60 --retry 2 \
+            -X POST \
+            -H "x-radar-secret: $RADAR_SECRET" \
+            -H "content-type: application/json" \
+            --data '{}' \
+            'https://lpzndnxloykcthbsqcet.supabase.co/functions/v1/trizentro-radar-dispatch'
