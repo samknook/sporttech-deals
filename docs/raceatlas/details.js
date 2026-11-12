@@ -67,11 +67,11 @@ function detail(e,fromLink=false){
  if(isValidUrl(e.registrationInfoUrl)){
    const source=el('p',null,'ra-detail-registration-source');
    source.append(el('strong','Bron inschrijfgegevens: '));
-   const link=el('a','Bekijk informatie van de organisator ↗');link.href=e.registrationInfoUrl;link.target='_blank';link.rel='noopener noreferrer';source.append(link);dlg.append(source);
+   const link=el('a','Bekijk inschrijfbron ↗');link.href=e.registrationInfoUrl;link.target='_blank';link.rel='noopener noreferrer';source.append(link);dlg.append(source);
  }
  const actions=el('div',null,'ra-detail-actions');
- const url=e.registrationUrl||e.officialEventUrl||e.source;
- if(isValidUrl(url)){const a=el('a',e.registrationUrl?'Bekijk evenement / inschrijving ↗':e.officialEventUrl?'Bekijk organisator ↗':'Bekijk kalenderbron ↗','ra-detail-primary');a.href=url;a.rel='noopener noreferrer';a.target='_blank';a.dataset.raEvent=e.id;a.dataset.raOutbound=e.registrationUrl?'registration':e.officialEventUrl?'organizer':'source';actions.append(a)}
+ const url=e.officialEventUrl||e.registrationUrl||null;
+ if(isValidUrl(url)){const a=el('a',e.officialEventUrl?'Officiële website ↗':'Inschrijfpagina ↗','ra-detail-primary');a.href=url;a.rel='noopener noreferrer';a.target='_blank';a.dataset.raEvent=e.id;a.dataset.raOutbound=e.officialEventUrl?'organizer':'registration';actions.append(a)}
  const notify=el('button','🔔 Meldingen instellen','ra-detail-secondary');notify.onclick=()=>{closeDialog();if(window.RaceAtlasAlerts?.openForEvent)window.RaceAtlasAlerts.openForEvent(e.id);};actions.append(notify);
  const share=el('button','Deel evenement','ra-detail-secondary');share.onclick=async()=>{const u=eventLink(e);if(navigator.share){try{await navigator.share({title:e.name,url:u});return}catch{}}share.textContent=await copy(u)?'Link gekopieerd ✓':'Kopiëren niet gelukt';};actions.append(share);
  const report=el('button','Gegevens corrigeren','ra-detail-secondary');report.onclick=()=>{
