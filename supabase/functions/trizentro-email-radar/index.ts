@@ -58,10 +58,15 @@ Deno.serve(async request=>{
   if(records[0]?.requested_at&&Date.now()-Date.parse(records[0].requested_at)<15*60*1000)return answer(origin,202,{ok:true,message:'check_inbox'});
   const confirm=token(),unsub=token();
   const emailBody='Bevestig je TriZentro Inschrijfradar voor '+races[0].event_name+'.\n\nKlik op de link en kies Bevestigen om e-mailmeldingen voor deze wedstrijd te ontvangen:\n'+manageLink('confirm',confirm)+'\n\nNiet zelf aangevraagd? Negeer dit bericht. De aanvraag verloopt en zonder bevestiging sturen we geen updates.\n\nAfmelden of verzoek verwijderen: '+manageLink('unsubscribe',unsub)+'\n';
-  const sent=await send(email,'Bevestig je Inschrijfradar | TriZentro',emailBody);
-  if(!sent)return answer(origin,503,{ok:false,error:'mail_delivery_failed'});
+  // Persist the token before requesting delivery; never email a confirmation URL that is not saved.
   const write=await db('trizentro_email_alerts?on_conflict=email,event_id',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify({email,event_id:eventId,state:'pending',confirm_token_hash:await hash(confirm),unsubscribe_token_hash:await hash(unsub),requested_at:new Date().toISOString(),confirmed_at:null,unsubscribed_at:null})});
   if(!write.ok)return answer(origin,503,{ok:false});
+  const sent=await send(email,'Bevestig je Inschrijfradar | TriZentro',emailBody);
+  if(!sent){
+   // Permit a new request after a provider outage without weakening confirmation requirements.
+   await db('trizentro_email_alerts?email=eq.'+encodeURIComponent(email)+'&event_id=eq.'+eventId,{method:'PATCH',body:JSON.stringify({requested_at:new Date(Date.now()-16*60000).toISOString()})}).catch(()=>{});
+   return answer(origin,503,{ok:false,error:'mail_delivery_failed'});
+  }
   return answer(origin,202,{ok:true,message:'check_inbox'});
  }
  if(action==='confirm'||action==='unsubscribe'){
