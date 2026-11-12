@@ -147,3 +147,6 @@ body.tz-performance .tz-calc-result{background:#f0f7ed;border-color:#e1e8ed}
 body.tz-performance .tz-site-brand img.tz-logo-image{display:block!important;width:52px!important;height:52px!important;min-width:52px!important;object-fit:contain;background:white;border-radius:13px;padding:2px;box-shadow:0 4px 18px #0003}
 body.tz-performance .tz-site-brand{display:inline-flex;align-items:center;line-height:1;text-decoration:none}
 @media(max-width:660px){body.tz-performance .tz-site-brand img.tz-logo-image{width:45px!important;height:45px!important;min-width:45px!important;border-radius:11px}}
+
+/* Transparent emblem in header: never place on a white tile. */
+body.tz-performance .tz-site-brand img.tz-logo-image{background:transparent!important;border-radius:0!important;padding:0!important;box-shadow:none!important;object-fit:contain!important}
