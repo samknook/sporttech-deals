@@ -51,7 +51,10 @@ if(recoveryRequested||callbackParams.has('access_token')||callbackParams.has('er
 const button=(label,action)=>{const b=el('button',label);b.type='button';b.addEventListener('click',action);return b};
 function appendNotice(text){content.append(el('p',text))}
 function callbackUrl(recovery=false){
- const url=new URL(location.pathname,location.origin);
+ // Keep the historically configured Supabase callback path for email links.
+ // The public legacy route redirects back to /events/, retaining query and hash.
+ const source=document.currentScript?.src||Array.from(document.scripts).find(x=>/\/raceatlas\/account\.js(?:\?|$)/.test(x.src))?.src;
+ const url=source?new URL('./',source):new URL(location.pathname,location.origin);
  if(previewActive)url.searchParams.set('ra_account_preview','1');
  if(recovery)url.searchParams.set('ra_password_reset','1');
  return url.toString();
