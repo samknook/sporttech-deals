@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://samknook.github.io/sporttech-deals/sitemap.xml
+Sitemap: https://trizentro.com/sitemap.xml
