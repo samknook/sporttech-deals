@@ -23,6 +23,13 @@ for(const e of majors){
   assert.ok(e.imageCredit&&e.imageSourceUrl,'Licensed image requires attribution and source for '+e.name);
  }
 }
+// Generating a cover is not complete until the actual binary exists in GitHub.
+for(const id of [423,424,425,426,427,430,431,432,433]){
+ const event=events.find(e=>e.id==='ra-'+id);
+ assert.equal(event?.imageRights,'generated','Custom artwork not activated for ra-'+id);
+ assert.equal(event?.imageUrl,'images/featured/ra-'+id+'.webp','Wrong active event cover for ra-'+id);
+ assert.ok(fs.existsSync('docs/raceatlas/images/featured/ra-'+id+'.webp'),'Missing deployed cover asset ra-'+id);
+}
 const ironman=events.filter(e=>/^IRONMAN\b/i.test(e.name));
 assert.ok(ironman.length>=40,'IRONMAN coverage regressed');
 assert.ok(ironman.filter(e=>e.officialEventUrl!=='https://www.ironman.com/races').length>=42,'specific IRONMAN race links regressed');
