@@ -23,9 +23,14 @@ for(const rel of pages){
  // Keep Events-specific buttons, language switch and season state intact.
  if(rel!=='raceatlas/index.html'){
   const first=html.match(/<header\b[^>]*>[\s\S]*?<\/header>/i);
-  if(first&&first[0].length<1600){html=html.replace(first[0],shell(prefix))}
-  else if(!first){html=html.replace(/(<body\b[^>]*>)/i,'$1'+shell(prefix))}
-  else throw Error('Unsafe non-standard header; review '+rel);
+  if(first&&first[0].length<1600&&!/<h1\\b/i.test(first[0])){html=html.replace(first[0],shell(prefix))}
+  else if(!first){html=html.replace(/(<body\\b[^>]*>)/i,'$1'+shell(prefix))}
+  else{
+    // Hero-bearing legacy headers contain actual content. Preserve their
+    // introduction and controls instead of deleting them.
+    html=html.replace(first[0],first[0].replace(/^<header\\b/i,'<header data-tz-legacy-content'));
+    html=html.replace(/(<body\\b[^>]*>)/i,'$1'+shell(prefix));
+  }
  }
  const css='<link rel="stylesheet" href="'+prefix+'shared-ui.css?v='+version+'">';
  const js='<script src="'+prefix+'shared-ui.js?v='+version+'" defer></script>';
