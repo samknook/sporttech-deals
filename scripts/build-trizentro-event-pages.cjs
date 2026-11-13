@@ -50,7 +50,7 @@ for(const e of list){
  '<main><a class="back" href="../">← Alle evenementen</a><h1>'+safe(e.name)+'</h1><p class="sub">'+safe([e.place,e.country,e.distance].filter(Boolean).join(' · '))+'</p>',
  '<section class="hero">'+image+'<div><strong>'+safe(date(e))+'</strong><p>'+safe(status)+'</p></div></section>',
  '<section class="facts" aria-label="Wedstrijdinformatie">'+facts+'</section>',
- '<div class="actions">'+cta+'<button id="saveRace" type="button" aria-pressed="false">☆ Bewaar in mijn seizoen</button><a href="../?event='+encodeURIComponent(e.id)+'">Open in wedstrijdkalender</a></div>',
+ '<div class="actions">'+cta+'<button id="saveRace" type="button" aria-pressed="false">☆ Bewaar in mijn seizoen</button><a href="../?event='+encodeURIComponent(e.id)+'">Open in wedstrijdkalender</a><a href="../../performance.html">Bereid je voor ↗</a></div>',
  '<p class="note">TriZentro verzamelt beschikbare wedstrijdinformatie. Datums, prijzen en inschrijfstatussen kunnen veranderen. Controleer de actuele informatie altijd bij de organisator.</p>',
  official?'<p class="source">Bron: <a href="'+safe(official)+'" target="_blank" rel="noopener noreferrer">Organisator ↗</a></p>':'',
  '<div class="foot">TriZentro · Find. Prepare. Perform.</div></main>',
