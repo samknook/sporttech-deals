@@ -68,7 +68,7 @@ function addPasswordToggle(input,form){
 }
 function showAuth(){
  content.replaceChildren();
- appendNotice('Heb je al een RaceAtlas-account? Kies Inloggen en gebruik je bestaande wachtwoord. Registreren is alleen voor nieuwe accounts. E-maillinks en wachtwoordherstel kunnen tijdelijk beperkt zijn door de mailprovider.');
+ appendNotice('Log in om je wedstrijdseizoen op meerdere apparaten te openen. Heb je nog geen account? Kies Registreren.');
  const tabs=el('div');tabs.className='raAuthTabs';tabs.setAttribute('role','group');tabs.setAttribute('aria-label','Inlogmethode');
  const fields=el('div');
  for(const [kind,title] of [['login','Inloggen'],['signup','Registreren'],['magic','Inloglink']]){
@@ -443,10 +443,10 @@ function showSignedIn(){
  appendNotice('Ingelogd als '+(user.email||'RaceAtlas-gebruiker')+'.');
  if(mode==='cloud'){
   appendNotice('Je wedstrijdseizoen wordt veilig gesynchroniseerd.');
-  appendNotice('E-mailmeldingen zijn nog niet actief. Je krijgt pas e-mail na een aparte, expliciete aanmelding zodra de verzenddienst beschikbaar is.');
+  appendNotice('Wil je een e-mail over een inschrijfdatum? Open Meldingen bij de wedstrijd en bevestig je e-mailadres.');
   content.append(button('Seizoen verversen',chooseCloud));
   renderStatusControls();
-  renderAlertControls();
+
   content.append(button('Synchronisatie opnieuw proberen',()=>{void flushPending()}));
   content.append(button('Download mijn seizoensgegevens',exportSeason));
   content.append(button('Verwijder cloudseizoen',eraseCloudSeason));
@@ -491,14 +491,14 @@ script.onload=async()=>{
  client=window.supabase.createClient(cfg.supabaseUrl,cfg.publishableKey,{auth:{detectSessionInUrl:true,persistSession:true,autoRefreshToken:true}});
  const authErrorParams=new URLSearchParams(location.hash.slice(1));
  const callbackError=authErrorParams.get('error_description')||new URLSearchParams(location.search).get('error_description');
- if(callbackError)setStatus('Inloggen via de e-maillink is niet gelukt: '+callbackError.slice(0,170));
  client.auth.onAuthStateChange((event,session)=>{
   if(event==='PASSWORD_RECOVERY'){setStatus('Je bent geverifieerd. Stel hieronder je nieuwe wachtwoord in.');}
   const id=session?.user?.id||null;
-  if(id!==user?.id){authVersion++;pending.clear();cloudEvents=[];alertPrefs.clear();marketingPref={email_opt_in:false,consented_at:null,revoked_at:null};marketingReady=false;savedApi().useGuest();user=session?.user||null;mode='local';if(user){showSignedIn();void onAuth()}else showAuth()}
+  if(id!==user?.id){authVersion++;pending.clear();cloudEvents=[];alertPrefs.clear();marketingPref={email_opt_in:false,consented_at:null,revoked_at:null};marketingReady=false;savedApi().useGuest();user=session?.user||null;mode='local';if(user){showSignedIn();setTimeout(()=>{if(user?.id===id)void onAuth()},0)}else showAuth()}
  });
  await onAuth();
- if(recoveryRequested&&!user&&!callbackError)setStatus('Open de nieuwste herstelmail om een nieuw wachtwoord in te stellen. Is de link verlopen? Vraag hieronder een nieuwe aan.');
+ if(callbackError)setStatus('Deze e-maillink is ongeldig of verlopen. Vraag een nieuwe link aan.');
+ else if(recoveryRequested&&!user)setStatus('Open de nieuwste herstelmail om een nieuw wachtwoord in te stellen. Is de link verlopen? Vraag hieronder een nieuwe aan.');
 };
 script.onerror=()=>{const fallback=el('script');fallback.src='https://unpkg.com/@supabase/supabase-js@2';fallback.onload=script.onload;fallback.onerror=()=>setStatus('Accountdienst niet beschikbaar. Controleer je verbinding of schakel scriptblokkering uit voor deze site.');document.head.append(fallback)};
 document.head.append(script);
