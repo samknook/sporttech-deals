@@ -9,6 +9,7 @@ on:
       - 'tests/test-mkb-ai-customer-offer.js'
       - 'scripts/build-trizentro-event-pages.cjs'
       - 'scripts/build-trizentro-platform-shell.cjs'
+      - 'config/trizentro-public-pages.json'
       - 'scripts/prepare-trizentro-domain.cjs'
       - '.github/trizentro-domain.json'
       - 'scripts/raceatlas-html-candidates.cjs'
