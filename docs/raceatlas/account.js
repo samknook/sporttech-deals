@@ -45,7 +45,8 @@ accountNav.id='raAccountNav';accountNav.type='button';accountNav.className='raAc
 accountNav.addEventListener('click',()=>{document.getElementById('navSaved')?.click();wrapper.scrollIntoView({behavior:'smooth',block:'start'})});
 document.querySelector('.navright')?.append(accountNav);
 const recoveryRequested=new URLSearchParams(location.search).get('ra_password_reset')==='1';
-if(recoveryRequested)accountNav.click();
+const callbackParams=new URLSearchParams(location.hash.slice(1));
+if(recoveryRequested||callbackParams.has('access_token')||callbackParams.has('error')||new URLSearchParams(location.search).has('code'))accountNav.click();
 const button=(label,action)=>{const b=el('button',label);b.type='button';b.addEventListener('click',action);return b};
 function appendNotice(text){content.append(el('p',text))}
 function callbackUrl(recovery=false){
@@ -71,6 +72,7 @@ function showAuth(){
  appendNotice('Log in om je wedstrijdseizoen op meerdere apparaten te openen. Heb je nog geen account? Kies Registreren.');
  const tabs=el('div');tabs.className='raAuthTabs';tabs.setAttribute('role','group');tabs.setAttribute('aria-label','Inlogmethode');
  const fields=el('div');
+ let enteredEmail='';
  for(const [kind,title] of [['login','Inloggen'],['signup','Registreren'],['magic','Inloglink']]){
   const b=button(title,()=>renderMethod(kind));b.dataset.raAuthMode=kind;tabs.append(b);
  }
@@ -80,6 +82,7 @@ function showAuth(){
   for(const b of tabs.querySelectorAll('button')){const active=b.dataset.raAuthMode===kind;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',String(active))}
   const form=el('form'),email=el('input'),submit=el('button',kind==='signup'?'Maak gratis account':kind==='magic'?'Stuur inloglink':'Inloggen');
   form.className='raAuthForm';email.type='email';email.required=true;email.autocomplete='email';email.placeholder='E-mailadres';email.setAttribute('aria-label','E-mailadres');
+  email.value=enteredEmail;email.addEventListener('input',()=>{enteredEmail=email.value});
   form.append(email);
   let password=null;
   if(kind!=='magic'){password=makePasswordInput(kind==='signup'?'new-password':'current-password');form.append(password);addPasswordToggle(password,form)}
@@ -112,7 +115,7 @@ function showAuth(){
     if(!email.checkValidity()){setStatus('Vul eerst je e-mailadres in om een herstelmail aan te vragen.');email.focus();email.reportValidity();return}
     if(!client){setStatus('Accountdienst wordt nog geladen.');return}
     if(checkMailBlock())return;
-    forgot.disabled=true;
+    forgot.disabled=true;setStatus('Herstelmail aanvragen…');
     try{
      const {error}=await client.auth.resetPasswordForEmail(address,{redirectTo:callbackUrl(true)});
      if(error)throw error;
