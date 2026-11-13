@@ -37,7 +37,8 @@ for(const e of list){
  const fields=[['Wedstrijddatum',date(e)],['Locatie',[e.place,e.country].filter(Boolean).join(', ')],['Afstand',e.distance||'Onbekend'],['Sport',e.sport||'Sportevenement'],['Inschrijfstatus',e.registrationStatusNote||'Controleer actuele status bij organisator'],['Prijs',typeof e.priceEur==='number'?'€ '+e.priceEur.toFixed(2).replace('.',','):e.priceNote||'Niet bevestigd']];
  const facts=fields.map(x=>'<div class="fact"><span>'+safe(x[0])+'</span><strong>'+safe(x[1])+'</strong></div>').join('');
  const image=e.major&&/^ra-\d+$/.test(e.id)?'<img src="../images/featured/'+e.id+'.webp" alt="TriZentro sfeerbeeld '+safe(e.name)+'" onerror="this.remove()">':'';
- const cta=link?'<a class="primary" href="'+safe(link)+'" target="_blank" rel="noopener noreferrer" data-ra-event="'+safe(e.id)+'" data-ra-outbound="organizer">Officiële website ↗</a>':'';
+ const directoryOnly=link==='https://www.ironman.com/races';
+ const cta=link?'<a class="primary" href="'+safe(link)+'" target="_blank" rel="noopener noreferrer" data-ra-event="'+safe(e.id)+'" data-ra-outbound="organizer">'+(directoryOnly?'Zoek wedstrijd op IRONMAN ↗':'Officiële website ↗')+'</a>':'';
  const json={'@context':'https://schema.org','@type':'SportsEvent',name:e.name,url,eventStatus:'https://schema.org/EventScheduled'};
  if(confirmed&&e.date)json.startDate=e.date;
  if(e.place)json.location={'@type':'Place',name:e.place};
