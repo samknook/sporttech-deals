@@ -41,6 +41,6 @@ assert.ok(cleanDetail.includes('saveRace'),'clean event must preserve season sav
 assert.ok(fs.readFileSync(path.join(root,'raceatlas/wedstrijden',sample),'utf8').includes('location.replace('),'old event URL must redirect');
 assert.ok(fs.readFileSync(path.join(root,'sitemap.xml'),'utf8').includes('/events/wedstrijden/'+sample),'event sitemap should use clean URL');
 for(const rel of ['raceatlas/index.html','performance.html','raceatlas/organisatoren.html']){
- assert.ok(fs.readFileSync(path.join(root,rel),'utf8').includes('location.replace(new URL('),'legacy path must redirect: '+rel);
+ assert.ok(fs.readFileSync(path.join(root,rel),'utf8').includes('location.replace('),'legacy path must redirect: '+rel);
 }
 console.log('PASS: '+files.length+' public TriZentro pages use one platform shell without duplicate assets');
