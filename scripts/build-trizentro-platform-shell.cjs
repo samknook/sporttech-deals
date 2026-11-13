@@ -46,6 +46,8 @@ for(const rel of pages){
 // address, rather than maintaining independent copies of page content.
 const routes=[
  {source:'raceatlas/index.html',destination:'events/index.html',base:'../raceatlas/',canonical:'events/'},
+ {source:'raceatlas/index.html',destination:'seizoen/index.html',base:'../raceatlas/',canonical:'seizoen/'},
+ {source:'raceatlas/index.html',destination:'account/index.html',base:'../raceatlas/',canonical:'account/'},
  {source:'performance.html',destination:'performance/index.html',base:'../',canonical:'performance/'},
  {source:'raceatlas/organisatoren.html',destination:'organisatoren/index.html',base:'../raceatlas/',canonical:'organisatoren/'}
 ];
