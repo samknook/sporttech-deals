@@ -17,6 +17,7 @@ for(const e of majors){
  assert.ok(e.imageUrl,'Every major race must have its own photo: '+e.name);
  assert.ok(['generated','licensed'].includes(e.imageRights),'Major race photo must be original or licensed: '+e.name);
  assert.ok(!imageUrls.has(e.imageUrl),'Major race photo must not be reused: '+e.name);
+ if(e.imageRights==='generated')assert.ok(fs.existsSync('docs/raceatlas/'+e.imageUrl),'Generated major event must include its image file: '+e.name);
  imageUrls.add(e.imageUrl);
  if(e.imageRights==='licensed'){
   assert.ok(/^https:\/\/commons\.wikimedia\.org\/wiki\/Special:FilePath\//.test(e.imageUrl),'Use licensed Wikimedia photo for '+e.name);
