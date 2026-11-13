@@ -13,7 +13,7 @@ const getLang=()=>{if(queryLang==='nl'||queryLang==='en')return queryLang;try{re
 const tr=(nl,en)=>getLang()==='en'?en:nl;
 const link=(p,hash='')=>p+(getLang()==='en'?'?lang=en':'')+hash;
 const isOrganizer=path.includes('/organisatoren.html');
-const isPerformance=/\/(performance|calculator|triathlon-calculator|pace-calculator|race-dashboard|race-fuel-planner)\.html$/.test(path);
+const isPerformance=/\/(performance|calculator|triathlon-calculator|pace-calculator|race-dashboard|race-fuel-planner|race-planner|70-3-raceplan|70-3-readiness-check|70-3-eindtijd-calculator|goal-feasibility|race-day-timeline|triatlon-afstanden|first-70-3-race-week-checklist)\.html$/.test(path);
 const isSeason=isEvents&&location.hash==='#mijn-seizoen';
 const items=[
  {id:'events',nl:'Events',en:'Events',icon:'⌕',url:link(root),active:isEvents&&!isSeason},
