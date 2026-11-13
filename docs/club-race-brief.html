@@ -42,8 +42,8 @@
 @media print{.top,.club form,.club-actions,.club .intro,.club .nonprint,footer{display:none!important}.club{padding:0;width:100%}.club-panel{border:0;box-shadow:none;padding:0}.club h1{font-size:30px}body{background:white}.club-table td{font-size:12px}}
 </style>
 <script src="translations-bundle.js"></script><script src="i18n.js"></script><script defer src="navigation.js"></script>
-</head><body>
-<header class="top"><div class="wrap"><div class="nav"><a class="brand" href="./"><img src="trizentro-icon.svg" class="brand-icon" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><nav aria-label="Navigatie"><a href="index.html">Home</a><a href="products.html">Producten</a></nav></div></div></header>
+<link rel="stylesheet" href="shared-ui.css?v=20261113-platform3"></head><body>
+<header class="tz-site-header"><nav class="tz-site-nav" aria-label="Hoofdnavigatie"><a class="tz-site-brand" href="raceatlas/" aria-label="TriZentro Events"><img class="tz-logo-image" src="trizentro-mark.svg" alt="TriZentro" width="48" height="48"></a><div class="tz-site-links" aria-label="TriZentro onderdelen"></div></nav></header>
 <main class="club">
 <div class="eyebrow">TriZentro voor clubs en organisatoren · GRATIS DEMO</div>
 <h1>Maak één duidelijke<br><em>wedstrijdbriefing.</em></h1>
@@ -297,4 +297,4 @@ el('copy-brief').addEventListener('click',async()=>{if(!output)return;try{await 
 el('print-brief').addEventListener('click',()=>window.print());
 update();
 })();
-</script></body></html>
+</script><script src="shared-ui.js?v=20261113-platform3" defer></script></body></html>
