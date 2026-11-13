@@ -92,9 +92,9 @@ if(fs.existsSync(sitemapFile)){
  let sitemap=fs.readFileSync(sitemapFile,'utf8');
  sitemap=sitemap.replace(/\/raceatlas\/wedstrijden\//g,'/events/wedstrijden/');
  sitemap=sitemap.replaceAll('https://samknook.github.io/sporttech-deals/events/wedstrijden/','https://trizentro.com/events/wedstrijden/');
- sitemap=sitemap.replaceAll('https://samknook.github.io/sporttech-deals/raceatlas/','https://trizentro.com/events/');
- sitemap=sitemap.replaceAll('https://samknook.github.io/sporttech-deals/performance.html','https://trizentro.com/performance/');
  sitemap=sitemap.replaceAll('https://samknook.github.io/sporttech-deals/raceatlas/organisatoren.html','https://trizentro.com/organisatoren/');
+ sitemap=sitemap.replaceAll('https://samknook.github.io/sporttech-deals/performance.html','https://trizentro.com/performance/');
+ sitemap=sitemap.replaceAll('https://samknook.github.io/sporttech-deals/raceatlas/','https://trizentro.com/events/');
  fs.writeFileSync(sitemapFile,sitemap);
 }
 console.log('Published '+detailCount+' consistent Events detail URLs');
