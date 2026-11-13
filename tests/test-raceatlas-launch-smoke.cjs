@@ -114,7 +114,7 @@ check(index.includes('id="cards"')&&index.includes('id="more"'),'Discover result
 check(index.indexOf('id="cards"')<index.indexOf('id="more"')&&index.indexOf('id="more"')<index.indexOf('class="raSeasonPreview"'),'Event results must be above season preview');
 check(read('intelligence.js').includes('resultsMore.after(panel)'),'Registration radar must appear below results');
 check(!index.includes('id="raQualitySummary"')&&!index.includes('<strong>Transparantie:</strong>'),'Hide internal audit blocks from public homepage');
-check(read('account-config.js').includes('enabled:false'),'Account feature must remain disabled until ready');
+check(read('account-config.js').includes('previewEnabled:false'),'Account preview bypass must remain disabled');
 check(index.includes('auto-events.js?v='),'Auto-discovery feed loader is required');
 check(fs.existsSync(path.join(root,'auto-events.json')),'Auto-event feed must exist');
 for(const [filename,html] of pages){
