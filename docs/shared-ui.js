@@ -22,7 +22,16 @@ const items=[
  {id:'account',nl:'Mijn account',en:'My account',icon:'♙',url:link(root,'#mijn-account')},
  {id:'organizers',nl:'Voor organisatoren',en:'For organizers',icon:'▤',url:link(root+'organisatoren.html'),active:isOrganizer}
 ];
+// Normalize the actual HTML classes, not just the appearance. Events still
+// keeps its functional buttons; the other pages share precisely the same shell.
+const siteHeader=nav.parentElement;
+siteHeader.classList.add('tz-site-header');
+nav.classList.add('tz-site-nav');
+const brand=nav.querySelector('.brand,.tz-site-brand');
+if(brand)brand.classList.add('tz-site-brand');
 const desktop=nav.querySelector('.navright,.tz-site-links');
+if(desktop)desktop.classList.add('tz-site-links');
+
 const current=(id)=>id==='events'?document.getElementById('navExplore'):id==='season'?document.getElementById('navSaved'):id==='account'?document.getElementById('raAccountNav'):null;
 const savedCount=()=>{try{const ids=JSON.parse(localStorage.getItem('raceatlas-saved-v2')||'[]');return Array.isArray(ids)?ids.length:0}catch{return 0}};
 const seasonText=()=>tr('Mijn seizoen','My season')+(savedCount()?' · '+savedCount():'');
