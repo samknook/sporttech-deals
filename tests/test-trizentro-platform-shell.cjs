@@ -14,6 +14,9 @@ for(const rel of files){
  assert.equal((data.match(/shared-ui\.css\?v=[0-9a-f]{12}/g)||[]).length,1,'shared CSS count '+rel);
  assert.ok(data.includes('trizentro-mark.svg'),'shared logo absent '+rel);
  assert.ok(data.includes('Hoofdnavigatie'),'main navigation missing '+rel);
+ assert.ok(/<header[^>]*class="[^"]*tz-site-header/.test(data),'same header shell missing '+rel);
+ assert.ok(/<nav[^>]*class="[^"]*tz-site-nav/.test(data),'shared nav class missing '+rel);
+ assert.ok(/class="[^"]*tz-site-links/.test(data),'shared nav destinations missing '+rel);
  if(rel.includes('/wedstrijden/'))assert.ok(data.includes('saveRace'),'event action lost '+rel);
  if(rel==='raceatlas/index.html'){
   assert.ok(data.includes('id="raMobileFilters"'),'Events filters lost');
