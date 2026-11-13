@@ -98,6 +98,18 @@ items.forEach(item=>{
 });
 (window.__tzHeaderControls||nav).append(menuButton);
 nav.append(menu);
+// RaceAtlas i18n may create the language control on DOMContentLoaded,
+// after this deferred script. Relocate it into the shared header once ready.
+function reconcileLanguageControl(){
+ const controls=window.__tzHeaderControls;
+ if(!controls)return;
+ const switches=Array.from(document.querySelectorAll('body>header #raLanguageSwitch,body>header .raLanguageSwitch'));
+ for(const el of switches){
+  if(el.parentElement!==controls)controls.prepend(el);
+ }
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',reconcileLanguageControl);
+else reconcileLanguageControl();
 function close(){menu.hidden=true;menuButton.setAttribute('aria-expanded','false');menuButton.setAttribute('aria-label',tr('Open navigatiemenu','Open navigation menu'))}
 menuButton.addEventListener('click',()=>{
  const willOpen=menu.hidden;menu.hidden=!willOpen;menuButton.setAttribute('aria-expanded',String(willOpen));
