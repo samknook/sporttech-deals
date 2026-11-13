@@ -789,7 +789,7 @@ function setLanguage(next,updateUrl=true){
  try{localStorage.setItem(KEY,next);localStorage.setItem('trizentro.language',next)}catch{}
  document.documentElement.lang=next;
  const path=location.pathname||'';
- const page=path.includes('organisatoren.html')?'organizer':path.includes('gegevenskwaliteit.html')?'quality':path.includes('privacy.html')?'privacy':path.includes('over.html')?'about':'home';
+ const page=(path.includes('organisatoren.html')||/\/organisatoren\/?$/.test(path))?'organizer':path.includes('gegevenskwaliteit.html')?'quality':path.includes('privacy.html')?'privacy':path.includes('over.html')?'about':'home';
  const titles={home:{nl:'TriZentro — Vind jouw volgende wedstrijd',en:'TriZentro — Discover. Plan. Race.'},organizer:{nl:'Voor organisatoren — TriZentro',en:'For Organizers — TriZentro'},quality:{nl:'Gegevenskwaliteit & correcties — TriZentro',en:'Data Quality & Corrections — TriZentro'},privacy:{nl:'Privacy — TriZentro',en:'Privacy — TriZentro'},about:{nl:'Over TriZentro',en:'About TriZentro'}};
  document.title=titles[page][next];
  if(updateUrl){
