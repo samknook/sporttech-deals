@@ -718,3 +718,15 @@ body.tz-performance .tz-sport-switch [role="tab"]:focus-visible{
 .tz-dashboard-empty p{font-size:14px!important;color:#dce9ee!important;margin:0 0 15px!important}
 @media(max-width:1000px){.tz-dashboard-grid{grid-template-columns:1fr 1fr}.tz-dashboard-card:last-child{grid-column:1/-1}}
 @media(max-width:650px){.tz-personal-dashboard{padding:17px!important;margin:0 0 21px!important}.tz-dashboard-grid{grid-template-columns:1fr}.tz-dashboard-card:last-child{grid-column:auto}.tz-dashboard-card{padding:17px!important}}
+
+/* Organic discovery: share a race from every event card. */
+.raCardActions .tz-race-share{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ min-height:36px!important;padding:7px 11px!important;border:1px solid #bad0d4!important;
+ border-radius:9px!important;background:transparent!important;color:#143847!important;
+ font:750 12px/1.25 Inter,system-ui,sans-serif!important;
+ cursor:pointer!important;white-space:nowrap!important;
+}
+.raCardActions .tz-race-share:hover{background:#e7f7d0!important;border-color:#a4df49!important}
+.raCardActions .tz-race-share:focus-visible{outline:3px solid #a4df49!important;outline-offset:2px!important}
+@media(max-width:600px){.raCardActions .tz-race-share{min-height:40px!important;padding:8px 10px!important}}
