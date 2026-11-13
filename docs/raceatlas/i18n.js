@@ -758,7 +758,7 @@ function preserveLinks(){
  }
 }
 function buttons(){
- let nav=document.querySelector('.navright')||document.querySelector('.navlinks')||document.querySelector('header');
+ let nav=document.querySelector('.tz-header-controls')||document.querySelector('.navright')||document.querySelector('.tz-site-links')||document.querySelector('.navlinks')||document.querySelector('header');
  if(!nav||document.getElementById('raLanguageSwitch'))return;
  const group=document.createElement('div');
  group.id='raLanguageSwitch';group.className='raLanguageSwitch';
