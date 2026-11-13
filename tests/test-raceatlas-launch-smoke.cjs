@@ -49,7 +49,7 @@ const detailJs=fs.readFileSync(path.join(siteRoot,'raceatlas/details.js'),'utf8'
 const eventsPage=fs.readFileSync(path.join(siteRoot,'raceatlas/index.html'),'utf8');
 check(detailJs.includes('tz-detail-highlight'),'Mobile event summary missing');
 check(detailJs.includes('tz-detail-quick-actions'),'Mobile registration and save actions missing');
-check(detailJs.includes('window.TriZentroSeason?.toggle(e.id)'),'Detail save must reuse season storage');
+check(detailJs.includes('window.TriZentroSeason.toggle(e.id)'),'Detail save must reuse season storage');
 check(detailJs.includes('Bekijk inschrijving ↗'),'Registration CTA missing');
 check(eventsPage.includes('window.TriZentroSeason={'),'Shared season save controller missing');
 check(eventsPage.includes('class="tz-season-shortcuts"'),'Season shortcut navigation missing');
