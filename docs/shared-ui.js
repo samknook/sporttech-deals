@@ -58,7 +58,7 @@ if(desktop){
     if(item.id==='season'){
       const badge=document.createElement('span');badge.id='savedCount';
       badge.textContent=window.RaceAtlasSaved?.get()?.length??'0';
-      existing.append(' ',badge);
+      existing.append(' · ',badge);
     }
   }else if(item.id==='account')existing.textContent=tr(item.nl,item.en);
   return existing;
@@ -71,9 +71,10 @@ if(desktop){
 }
 const navigateLocal=id=>{
  if(!isEvents)return false;
- if(id==='events'){document.getElementById('navExplore')?.click();return true}
- if(id==='season'){document.getElementById('navSaved')?.click();return true}
+ if(id==='events'){if(!/\/events\/?$/.test(path))return false;document.getElementById('navExplore')?.click();return true}
+ if(id==='season'){if(!/\/seizoen\/?$/.test(path))return false;document.getElementById('navSaved')?.click();return true}
  if(id==='account'){
+  if(!/\/account\/?$/.test(path))return false;
   const account=document.getElementById('raAccountNav');
   if(account){account.click();return true}
   document.getElementById('navSaved')?.click();
@@ -94,7 +95,7 @@ const updateSelected=()=>{
  const saved=isEvents&&document.getElementById('navSaved')?.classList.contains('current');
  for(const el of nav.querySelectorAll('[data-tz-destination]')){
   const id=el.dataset.tzDestination;
-  const active=isEvents?(id==='account'?isAccount:id==='season'?saved:id==='events'?!saved&&!isAccount:false):!!items.find(x=>x.id===id)?.active;
+  const active=isEvents?(id==='account'?isAccount:id==='season'?saved&&!isAccount:id==='events'?!saved&&!isAccount:false):!!items.find(x=>x.id===id)?.active;
   if(active)el.setAttribute('aria-current','page');
   else el.removeAttribute('aria-current');
  }
@@ -133,7 +134,16 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape')close()});
 document.addEventListener('click',event=>{if(!nav.contains(event.target))close()});
 window.addEventListener('resize',()=>{if(innerWidth>900)close()});
 if(isEvents){
- desktop?.addEventListener('click',e=>{const target=e.target.closest('[data-tz-destination]');if(!target)return;if(target.tagName==='A'&&navigateLocal(target.dataset.tzDestination)){e.preventDefault();updateSelected()}else requestAnimationFrame(updateSelected)});
+ desktop?.addEventListener('click',e=>{
+  const target=e.target.closest('[data-tz-destination]');if(!target)return;
+  const id=target.dataset.tzDestination;
+  if(target.tagName==='A'&&navigateLocal(id)){e.preventDefault();updateSelected();return}
+  if(target.tagName==='BUTTON'&&['events','season','account'].includes(id)){
+   const destination=items.find(item=>item.id===id)?.url;
+   if(destination&&!navigateLocal(id)){location.assign(destination);return}
+  }
+  requestAnimationFrame(updateSelected);
+ });
 }
 const existingBottom=document.querySelector('.tz-mobile-destinations');
 existingBottom?.remove();
