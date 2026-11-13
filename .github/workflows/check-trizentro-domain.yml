@@ -1,0 +1,16 @@
+name: Check TriZentro domain DNS and HTTPS
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check-domain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify A records, www redirect, SSL and race page
+        run: node scripts/check-trizentro-dns.cjs
