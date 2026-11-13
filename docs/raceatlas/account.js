@@ -115,9 +115,12 @@ function showAuth(){
    const forgot=button('Wachtwoord vergeten?',()=>{renderMethod('recovery');fields.querySelector('input[type=email]')?.focus()});
    forgot.className='raForgot';fields.append(forgot);
   }
-  if(kind==='recovery')fields.append(button('Terug naar inloggen',()=>renderMethod('login')));
+  if(kind==='recovery'){
+   form.prepend(el('p','Vul het e-mailadres van je account in. Je ontvangt een link om een nieuw wachtwoord te kiezen.'));
+   fields.append(button('Terug naar inloggen',()=>{setStatus('');renderMethod('login')}));
+  }
  }
- renderMethod('login');
+ renderMethod(new URLSearchParams(location.search).get('ra_password_reset')==='1'?'recovery':'login');
  const privacy=el('p'),link=el('a','Privacy en e-mailvoorkeuren');link.href='privacy.html';
  privacy.append('Geen marketingmails zonder aparte toestemming. ',link);content.append(privacy);
 }
