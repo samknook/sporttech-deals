@@ -63,6 +63,27 @@ for(const route of routes){
  html=html.replace(/<link\b[^>]*rel=["']canonical["'][^>]*>/gi,'');
  html=html.replace(/<meta\b[^>]*property=["']og:url["'][^>]*>/gi,'');
  html=html.replace(/<\/head>/i,'<link rel="canonical" href="'+canonical+'"><meta property="og:url" content="'+canonical+'"></head>');
+ // Give Google an explicit, accurate organization/website identity. These are
+ // descriptive facts, not fabricated reviews, ratings or search actions.
+ if(route.canonical==='events/'){
+  const identity={
+   '@context':'https://schema.org',
+   '@graph':[
+    {'@type':'Organization','@id':'https://trizentro.com/#organization',
+     name:'TriZentro',url:'https://trizentro.com/',
+     logo:{'@type':'ImageObject',url:'https://trizentro.com/trizentro-mark.svg'}},
+    {'@type':'WebSite','@id':'https://trizentro.com/#website',
+     name:'TriZentro',alternateName:'TriZentro wedstrijdkalender',
+     url:'https://trizentro.com/',inLanguage:'nl-NL',
+     publisher:{'@id':'https://trizentro.com/#organization'}},
+    {'@type':'CollectionPage','@id':canonical+'#page',name:'TriZentro wedstrijdkalender 2027',
+     url:canonical,isPartOf:{'@id':'https://trizentro.com/#website'},
+     description:'Ontdek hardloopwedstrijden, triatlons en wielerevenementen en bewaar je wedstrijdseizoen.'}
+   ]
+  };
+  html=html.replace(/<\/head>/i,'<meta property="og:image" content="https://trizentro.com/social/trizentro-live-instagram.png"><meta name="twitter:card" content="summary_large_image"><script type="application/ld+json">'+JSON.stringify(identity)+'</script></head>');
+ }
+
  fs.writeFileSync(target,html);
 }
 // Event detail pages also live below Events, with the same data and save
