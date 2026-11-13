@@ -8,6 +8,7 @@ on:
       - 'tests/test-mkb-ai-businesscase.js'
       - 'tests/test-mkb-ai-customer-offer.js'
       - 'scripts/build-trizentro-event-pages.cjs'
+      - 'scripts/build-trizentro-platform-shell.cjs'
       - 'scripts/prepare-trizentro-domain.cjs'
       - '.github/trizentro-domain.json'
       - 'scripts/raceatlas-html-candidates.cjs'
@@ -16,6 +17,7 @@ on:
       - 'tests/test-trizentro-radar-security.cjs'
       - 'tests/test-trizentro-domain-cutover.cjs'
       - 'tests/test-trizentro-unified-navigation.cjs'
+      - 'tests/test-trizentro-platform-shell.cjs'
   workflow_dispatch:
 permissions:
   contents: read
@@ -86,6 +88,10 @@ jobs:
         run: |
           node scripts/build-trizentro-event-pages.cjs
           node tests/test-trizentro-event-pages.cjs
+      - name: Apply one TriZentro platform shell to every published page
+        run: |
+          node scripts/build-trizentro-platform-shell.cjs
+          node tests/test-trizentro-platform-shell.cjs
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload website files only
