@@ -33,6 +33,13 @@ for(const route of routes){
  assert.equal((data.match(/shared-ui\\.css\\?v=[0-9a-f]{12}/g)||[]).length,1,'missing shared CSS '+route);
  assert.ok(data.includes('tz-site-header'),'missing central header '+route);
 }
+const sample=eventFiles[Math.floor(eventFiles.length/2)];
+const cleanDetail=fs.readFileSync(path.join(root,'events/wedstrijden',sample),'utf8');
+assert.ok(cleanDetail.includes('<base href="../../raceatlas/wedstrijden/">'),'clean event must reuse asset directory');
+assert.ok(cleanDetail.includes('https://trizentro.com/events/wedstrijden/'+sample),'clean event canonical missing');
+assert.ok(cleanDetail.includes('saveRace'),'clean event must preserve season save action');
+assert.ok(fs.readFileSync(path.join(root,'raceatlas/wedstrijden',sample),'utf8').includes('location.replace('),'old event URL must redirect');
+assert.ok(fs.readFileSync(path.join(root,'sitemap.xml'),'utf8').includes('/events/wedstrijden/'+sample),'event sitemap should use clean URL');
 for(const rel of ['raceatlas/index.html','performance.html','raceatlas/organisatoren.html']){
  assert.ok(fs.readFileSync(path.join(root,rel),'utf8').includes('location.replace(new URL('),'legacy path must redirect: '+rel);
 }
