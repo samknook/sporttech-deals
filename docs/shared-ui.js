@@ -5,22 +5,25 @@ if(!nav)return;
 const events=document.getElementById('navExplore');
 const isEvents=!!events;
 const path=location.pathname;
-const inRace=path.includes('/raceatlas/');
-const prefix=path.includes('/raceatlas/wedstrijden/')?'../../':inRace?'../':'';
-const root=prefix+'raceatlas/';
+// Base URL comes from this shared asset, so clean routes and project previews work.
+const scriptUrl=document.currentScript?.src||Array.from(document.scripts).find(x=>/\/shared-ui\.js(?:\?|$)/.test(x.src))?.src||location.href;
+const basePath=new URL('.',scriptUrl).pathname;
+const root=basePath+'events/';
+const performanceRoot=basePath+'performance/';
+const organizerRoot=basePath+'organisatoren/';
 const queryLang=new URLSearchParams(location.search).get('lang');
 const getLang=()=>{if(queryLang==='nl'||queryLang==='en')return queryLang;if(/\/en\.html$/.test(path))return 'en';try{return localStorage.getItem('trizentro.language')||localStorage.getItem('raceatlas-language-v1')||'nl'}catch{return 'nl'}};
 const tr=(nl,en)=>getLang()==='en'?en:nl;
 const link=(p,hash='')=>p+(getLang()==='en'?'?lang=en':'')+hash;
-const isOrganizer=path.includes('/organisatoren.html');
-const isPerformance=/\/(performance|calculator|triathlon-calculator|pace-calculator|race-dashboard|race-fuel-planner|race-planner|70-3-raceplan|70-3-readiness-check|70-3-eindtijd-calculator|goal-feasibility|race-day-timeline|triatlon-afstanden|first-70-3-race-week-checklist)\.html$/.test(path);
+const isOrganizer=path.includes('/organisatoren.html')||/\/organisatoren\/?$/.test(path);
+const isPerformance=/\/performance\/?$/.test(path)||/\/(performance|calculator|triathlon-calculator|pace-calculator|race-dashboard|race-fuel-planner|race-planner|70-3-raceplan|70-3-readiness-check|70-3-eindtijd-calculator|goal-feasibility|race-day-timeline|triatlon-afstanden|first-70-3-race-week-checklist)\.html$/.test(path);
 const isSeason=isEvents&&['#mijn-seizoen','#saved'].includes(location.hash);
 const items=[
  {id:'events',nl:'Events',en:'Events',icon:'⌕',url:link(root),active:isEvents&&!isSeason},
  {id:'season',nl:'Mijn seizoen',en:'My season',icon:'☆',url:link(root,'#mijn-seizoen'),active:isSeason},
- {id:'performance',nl:'Performance',en:'Performance',icon:'⚡',url:link(prefix+'performance.html'),active:isPerformance},
+ {id:'performance',nl:'Performance',en:'Performance',icon:'⚡',url:link(performanceRoot),active:isPerformance},
  {id:'account',nl:'Mijn account',en:'My account',icon:'♙',url:link(root,'#mijn-account')},
- {id:'organizers',nl:'Voor organisatoren',en:'For organizers',icon:'▤',url:link(root+'organisatoren.html'),active:isOrganizer}
+ {id:'organizers',nl:'Voor organisatoren',en:'For organizers',icon:'▤',url:link(organizerRoot),active:isOrganizer}
 ];
 // Normalize the actual HTML classes, not just the appearance. Events still
 // keeps its functional buttons; the other pages share precisely the same shell.
