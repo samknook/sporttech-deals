@@ -36,7 +36,9 @@ for(const e of list){
  const status=confirmed?'Officieel bevestigde datum':'Datum nog niet officieel bevestigd';
  const fields=[['Wedstrijddatum',date(e)],['Locatie',[e.place,e.country].filter(Boolean).join(', ')],['Afstand',e.distance||'Onbekend'],['Sport',e.sport||'Sportevenement'],['Inschrijfstatus',e.registrationStatusNote||'Controleer actuele status bij organisator'],['Prijs',typeof e.priceEur==='number'?'€ '+e.priceEur.toFixed(2).replace('.',','):e.priceNote||'Niet bevestigd']];
  const facts=fields.map(x=>'<div class="fact"><span>'+safe(x[0])+'</span><strong>'+safe(x[1])+'</strong></div>').join('');
- const image=e.major&&/^ra-\d+$/.test(e.id)?'<img src="../images/featured/'+e.id+'.webp" alt="TriZentro sfeerbeeld '+safe(e.name)+'" onerror="this.remove()">':'';
+ const hasLicensedImage=e.major&&e.imageRights==='licensed'&&valid(e.imageUrl);
+ const image=hasLicensedImage?'<figure class="event-photo"><img src="'+safe(e.imageUrl)+'" alt="Locatiefoto bij '+safe(e.name)+'; geen opname van de wedstrijd" loading="lazy" onerror="this.parentElement.remove()"><figcaption>Foto: '+safe(e.imageCredit||'Wikimedia Commons')+' · <a target="_blank" rel="noopener noreferrer" href="'+safe(e.imageSourceUrl||'https://commons.wikimedia.org/')+'">Bron en licentie ↗</a></figcaption></figure>':
+  e.major&&/^ra-\\d+$/.test(e.id)&&e.imageRights==='generated'?'<img src="../images/featured/'+e.id+'.webp" alt="AI-sfeerbeeld voor '+safe(e.name)+'; geen officiële foto" onerror="this.remove()">':'';
  const directoryOnly=link==='https://www.ironman.com/races';
  const cta=link?'<a class="primary" href="'+safe(link)+'" target="_blank" rel="noopener noreferrer" data-ra-event="'+safe(e.id)+'" data-ra-outbound="organizer">'+(directoryOnly?'Zoek wedstrijd op IRONMAN ↗':'Officiële website ↗')+'</a>':'';
  const json={'@context':'https://schema.org','@type':'SportsEvent',name:e.name,url,eventStatus:'https://schema.org/EventScheduled'};
