@@ -44,6 +44,8 @@ const accountNav=el('button','Mijn account');
 accountNav.id='raAccountNav';accountNav.type='button';accountNav.className='raAccountNav';
 accountNav.addEventListener('click',()=>{document.getElementById('navSaved')?.click();wrapper.scrollIntoView({behavior:'smooth',block:'start'})});
 document.querySelector('.navright')?.append(accountNav);
+const recoveryRequested=new URLSearchParams(location.search).get('ra_password_reset')==='1';
+if(recoveryRequested)accountNav.click();
 const button=(label,action)=>{const b=el('button',label);b.type='button';b.addEventListener('click',action);return b};
 function appendNotice(text){content.append(el('p',text))}
 function callbackUrl(recovery=false){
@@ -107,7 +109,7 @@ function showAuth(){
   if(kind==='login'){
    const forgot=button('Wachtwoord vergeten?',async()=>{
     const address=email.value.trim();
-    if(!email.checkValidity()){email.reportValidity();return}
+    if(!email.checkValidity()){setStatus('Vul eerst je e-mailadres in om een herstelmail aan te vragen.');email.focus();email.reportValidity();return}
     if(!client){setStatus('Accountdienst wordt nog geladen.');return}
     if(checkMailBlock())return;
     forgot.disabled=true;
@@ -141,6 +143,7 @@ function renderPasswordSettings(){
    password.value='';confirm.value='';
    const url=new URL(location.href);url.searchParams.delete('ra_password_reset');
    history.replaceState(history.state,'',url.pathname+url.search+url.hash);
+   showSignedIn();
    setStatus('Wachtwoord veilig opgeslagen. Je kunt voortaan met e-mailadres en wachtwoord inloggen.');
   }catch(err){setStatus(formatAuthError(err))}finally{submit.disabled=false}
  });
@@ -433,6 +436,10 @@ function renderMarketingControls(){
 
 function showSignedIn(){
  content.replaceChildren();
+ if(new URLSearchParams(location.search).get('ra_password_reset')==='1'){
+  renderPasswordSettings();
+  return;
+ }
  appendNotice('Ingelogd als '+(user.email||'RaceAtlas-gebruiker')+'.');
  if(mode==='cloud'){
   appendNotice('Je wedstrijdseizoen wordt veilig gesynchroniseerd.');
@@ -491,6 +498,7 @@ script.onload=async()=>{
   if(id!==user?.id){authVersion++;pending.clear();cloudEvents=[];alertPrefs.clear();marketingPref={email_opt_in:false,consented_at:null,revoked_at:null};marketingReady=false;savedApi().useGuest();user=session?.user||null;mode='local';if(user){showSignedIn();void onAuth()}else showAuth()}
  });
  await onAuth();
+ if(recoveryRequested&&!user&&!callbackError)setStatus('Open de nieuwste herstelmail om een nieuw wachtwoord in te stellen. Is de link verlopen? Vraag hieronder een nieuwe aan.');
 };
 script.onerror=()=>{const fallback=el('script');fallback.src='https://unpkg.com/@supabase/supabase-js@2';fallback.onload=script.onload;fallback.onerror=()=>setStatus('Accountdienst niet beschikbaar. Controleer je verbinding of schakel scriptblokkering uit voor deze site.');document.head.append(fallback)};
 document.head.append(script);
