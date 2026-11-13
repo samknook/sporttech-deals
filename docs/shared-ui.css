@@ -680,3 +680,41 @@ body.tz-performance .tz-sport-switch [role="tab"]:focus-visible{
  body.tz-performance .tz-performance-journey a{width:100%;font-size:13px!important}
  body.tz-performance .tz-page-main{margin-top:-18px!important}
 }
+
+/* Personalized season overview — shared sports design language. */
+.tz-personal-dashboard{
+ margin:0 0 25px!important;padding:25px!important;border-radius:20px!important;
+ background:#091e2d!important;color:#fff!important;
+ box-shadow:0 12px 34px rgba(5,28,41,.12);
+}
+.tz-dashboard-head{margin-bottom:20px}
+.tz-dashboard-eyebrow{color:#c7ff37!important;font:850 11px/1.4 Inter,system-ui,sans-serif!important;letter-spacing:.15em}
+.tz-dashboard-head h3{font-size:clamp(24px,3vw,32px)!important;letter-spacing:-.045em!important;color:#fff!important;margin:8px 0!important}
+.tz-dashboard-head p{margin:0!important;font-size:13px!important;color:#d2e3eb!important}
+.tz-dashboard-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tz-dashboard-card{
+ padding:20px!important;background:#123347!important;border:1px solid #355265!important;
+ border-radius:15px!important;display:flex!important;flex-direction:column!important;
+ align-items:flex-start!important;min-width:0;gap:10px;
+}
+.tz-dashboard-card .tz-dashboard-label{font-size:12px!important;letter-spacing:.03em;color:#c7ff37!important;font-weight:800!important}
+.tz-dashboard-card .tz-dashboard-value{display:block;color:#fff!important;font-size:20px!important;font-weight:900!important;line-height:1.3!important;letter-spacing:-.025em!important;overflow-wrap:anywhere}
+.tz-dashboard-card p{font-size:13px!important;line-height:1.5!important;color:#d2e3eb!important;margin:0!important}
+.tz-dashboard-card small{font-size:11px!important;line-height:1.5!important;color:#bad0da!important}
+.tz-dashboard-text-link{color:#c7ff37!important;font-size:13px!important;font-weight:800!important;text-decoration:none!important;margin-top:auto}
+.tz-dashboard-primary-link{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ min-height:43px!important;padding:11px 15px!important;border-radius:9px!important;
+ color:#10241b!important;background:#c7ff37!important;font-size:13px!important;
+ font-weight:850!important;text-decoration:none!important;margin-top:auto!important;
+}
+.tz-dashboard-form{display:flex!important;flex-direction:column!important;gap:8px!important;width:100%!important;font-size:12px!important;font-weight:750!important}
+.tz-dashboard-form select{
+ display:block!important;min-height:43px!important;width:100%!important;
+ border:1px solid #9bb4be!important;border-radius:8px!important;padding:8px 10px!important;
+ background:white!important;color:#123!important;font:700 13px Inter,system-ui,sans-serif!important;
+}
+.tz-dashboard-empty{border:1px dashed #517086;border-radius:13px;padding:22px}
+.tz-dashboard-empty p{font-size:14px!important;color:#dce9ee!important;margin:0 0 15px!important}
+@media(max-width:1000px){.tz-dashboard-grid{grid-template-columns:1fr 1fr}.tz-dashboard-card:last-child{grid-column:1/-1}}
+@media(max-width:650px){.tz-personal-dashboard{padding:17px!important;margin:0 0 21px!important}.tz-dashboard-grid{grid-template-columns:1fr}.tz-dashboard-card:last-child{grid-column:auto}.tz-dashboard-card{padding:17px!important}}
