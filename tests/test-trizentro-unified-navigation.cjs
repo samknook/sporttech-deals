@@ -23,4 +23,8 @@ assert.ok(src.includes("const isPerformance=/\\/performance\\/?$/.test(path)"),'
 assert.ok(src.includes("if(active)el.setAttribute('aria-current','page')"),'aria-current activation missing');
 assert.ok(css.includes('a[data-tz-destination][aria-current="page"]'),'active page CSS missing');
 assert.ok(css.includes('body.tz-performance .tz-page-main'),'Performance grid alignment CSS missing');
+const perf=fs.readFileSync('docs/performance.html','utf8');
+assert.ok(perf.includes("url.searchParams.set('sport',s)"),'sport selector must preserve canonical Performance URL');
+assert.ok(perf.includes("url.pathname+url.search+url.hash"),'sport selection must use an absolute path, not the HTML base URL');
+assert.ok(!perf.includes("history.replaceState(null,'','?sport='+s)"),'regression: relative sport URL removes /performance/ path');
 console.log('PASS: TriZentro pages share functional and mobile-safe navigation');
