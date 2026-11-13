@@ -784,7 +784,7 @@ $('raMobileExplore').onclick=()=>switchPage('explore');$('raMobileSaved').onclic
 $('raSeeSeason').onclick=()=>switchPage('saved');
 $('raAccountCta').onclick=()=>switchPage('saved');
 function openAccount(){switchPage('saved');$('raAccount')?.scrollIntoView({block:'start'})}
-$('raHeroAccount').onclick=openAccount;
+$('raHeroAccount').onclick=()=>{const css=document.querySelector('link[href*="shared-ui.css"]');const base=css?new URL('.',css.href):new URL('../',location.href);location.assign(new URL('seizoen/',base).pathname+(location.search.includes('lang=en')?'?lang=en':''))};
 
 
 $('navExplore').onclick=()=>switchPage('explore');$('navSaved').onclick=()=>switchPage('saved');
