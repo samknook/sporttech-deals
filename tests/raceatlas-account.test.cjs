@@ -8,13 +8,13 @@ const dir=path.resolve(__dirname,'..','docs','raceatlas');
 const html=fs.readFileSync(path.join(dir,'index.html'),'utf8');
 const moduleCode=fs.readFileSync(path.join(dir,'account.js'),'utf8');
 const config=fs.readFileSync(path.join(dir,'account-config.js'),'utf8');
-test('Account UI is paused until SMTP is verified',()=>{
-  assert.match(config,/enabled:false/);
+test('Account UI is enabled after SMTP verification',()=>{
+  assert.match(config,/enabled:true/);
   assert.doesNotMatch(config,/service_role|sk_live_|re_[A-Za-z0-9]{16,}/);
   assert.match(config,/previewEnabled:false/);
   assert.match(moduleCode,/if\(cfg\.enabled!==true&&!previewActive\)return/);
   assert.match(moduleCode,/ra_account_preview/);
-  assert.match(html,/src="account-config\.js" defer/);
+  assert.match(html,/src="account-config\.js(?:\?v=[^"]+)?" defer/);
   assert.match(html,/src="account\.js(?:\?v=[^"]+)?" defer/);
 });
 test('Account code and config are syntactically valid',()=>{
@@ -174,11 +174,11 @@ test('Account UI exposes explicit deletion, not an unverified browser admin acti
   assert.doesNotMatch(moduleCode,/auth\.admin\.deleteUser/);
 });
 
-test('Magic link callback code remains prepared while account access is disabled',()=>{
+test('Magic link callback uses the account callback URL',()=>{
  assert.match(moduleCode,/previewActive=cfg\.previewEnabled===true&&new URLSearchParams/);
  assert.match(moduleCode,/url\.searchParams\.set\('ra_account_preview','1'\)/);
  assert.match(moduleCode,/emailRedirectTo:callbackUrl\(\)/);
- assert.match(config,/enabled:false/);
+ assert.match(config,/enabled:true/);
 });
 
 test('Account browser SDK uses the documented Supabase CDN and exposes useful sign-in errors',()=>{
