@@ -6,6 +6,12 @@ const html=fs.readFileSync(path.join(dir,'index.html'),'utf8');
 const i=html.indexOf('const EVENTS=');if(i<0)throw Error('EVENTS missing');
 const st=i+'const EVENTS='.length,en=html.indexOf(';\n',st);if(en<0)throw Error('EVENTS end missing');
 const list=JSON.parse(html.slice(st,en));
+const vm=require('node:vm');
+const catalogue={window:{RACEATLAS_EVENTS:list}};
+for(const match of html.matchAll(/<script src="((?:official-sources|organizer-first)[\w-]*\.js)(?:\?[^\"]*)?" defer>/g)){
+ const script=match[1];
+ vm.runInNewContext(fs.readFileSync(path.join(dir,script),'utf8'),catalogue,{filename:script});
+}
 const feed=JSON.parse(fs.readFileSync(path.join(dir,'auto-events.json'),'utf8'));
 const updates=new Map((feed.updates||[]).map(e=>[e.id,e]));
 for(const e of list){const u=updates.get(e.id);if(u&&u.date&&u.officialEventUrl&&u.source){e.date=u.date;e.dateEvidence='official';e.officialEventUrl=u.officialEventUrl;e.source=u.source}}
