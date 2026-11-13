@@ -7,7 +7,56 @@ const guest=byId('accountGuest'),signed=byId('accountSignedIn'),loading=byId('ac
 const authForm=byId('accountAuthForm'),profileForm=byId('accountProfileForm');
 const email=byId('accountEmail'),password=byId('accountPassword');
 const authButton=byId('accountAuthSubmit'),passwordRow=byId('accountPasswordRow');
-let authMode='login',client=null,user=null,recovery=false;
+let authMode='login',client=null,user=null,recovery=false,marketingLoaded=false;
+async function loadMarketing(){
+ marketingLoaded=false;byId('accountMarketing').disabled=true;byId('accountMarketingSave').disabled=true;
+ if(!client||!user)return;
+ const uid=user.id;
+ try{
+  const {data,error}=await client.from('raceatlas_marketing_preferences')
+   .select('email_opt_in').eq('user_id',uid).maybeSingle();
+  if(error)throw error;
+  if(!user||uid!==user.id)return;
+  byId('accountMarketing').checked=data?.email_opt_in===true;
+  marketingLoaded=true;byId('accountMarketing').disabled=false;byId('accountMarketingSave').disabled=false;
+ }catch{feedback('Je e-mailvoorkeuren konden niet worden opgehaald. Er is niets gewijzigd.',true)}
+}
+byId('accountMarketingSave').addEventListener('click',async()=>{
+ if(!user||!client||!marketingLoaded)return;
+ const save=byId('accountMarketingSave'),enabled=byId('accountMarketing').checked,owner=user.id;
+ save.disabled=true;
+ try{
+  const {data:existing,error:readError}=await client.from('raceatlas_marketing_preferences')
+   .select('consented_at').eq('user_id',owner).maybeSingle();
+  if(readError)throw readError;
+  const time=new Date().toISOString();
+  const {error}=await client.from('raceatlas_marketing_preferences').upsert({
+   user_id:owner,email_opt_in:enabled,consent_version:'2026-11',
+   consented_at:enabled?(existing?.consented_at||time):existing?.consented_at||null,
+   revoked_at:enabled?null:time,updated_at:time
+  },{onConflict:'user_id'});
+  if(error)throw error;
+  feedback(enabled?'Je toestemming voor optionele e-mails is opgeslagen.':'Je bent afgemeld voor commerciële e-mails.');
+ }catch{feedback('E-mailvoorkeur opslaan mislukt. Je eerdere voorkeur blijft gelden.',true)}
+ finally{save.disabled=false}
+});
+byId('accountDelete').addEventListener('click',async()=>{
+ if(!client||!user)return;
+ if(window.prompt('Definitief verwijderen? Typ VERWIJDER MIJN ACCOUNT om te bevestigen:')!=='VERWIJDER MIJN ACCOUNT')return;
+ const button=byId('accountDelete');button.disabled=true;
+ try{
+  const {data:auth,error:sessionError}=await client.auth.getSession();
+  if(sessionError||!auth?.session?.access_token)throw new Error('Session missing');
+  const {data,error}=await client.functions.invoke('raceatlas-delete-account',{
+   body:{confirm:'VERWIJDER MIJN ACCOUNT'},
+   headers:{Authorization:'Bearer '+auth.session.access_token}
+  });
+  if(error||data?.deleted!==true)throw new Error('Account deletion failed');
+  try{await client.auth.signOut({scope:'local'})}catch{}
+  user=null;show(false);feedback('Je account is verwijderd.');
+ }catch{feedback('Account verwijderen is mislukt. Je account is behouden.',true)}
+ finally{button.disabled=false}
+});
 const show=(logged)=>{loading.hidden=true;guest.hidden=logged;signed.hidden=!logged};
 const validBirth=value=>{
  if(!value)return true;
@@ -53,7 +102,7 @@ async function refresh(){
   if(error)throw error;
   user=data?.user||null;
   show(!!user);
-  if(user)fillProfile();
+  if(user){fillProfile();void loadMarketing();}
  }catch{user=null;show(false);feedback('Accountstatus kon niet worden gecontroleerd. Controleer je verbinding.',true)}
 }
 const friendlyError=error=>{
