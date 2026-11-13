@@ -39,4 +39,7 @@ assert.ok(perf.includes("['ArrowLeft','ArrowRight','Home','End']"),'sport tabs s
 assert.ok(perf.includes("window.addEventListener('popstate'"),'sport panel should track browser navigation');
 const performanceTranslations=fs.readFileSync('docs/performance-translations.js','utf8');
 assert.ok(performanceTranslations.includes("['Mijn wedstrijdseizoen','My race season']"),'new season action must be bilingual');
+assert.ok(eventsHtml.includes('class="tz-race-share"'),'every race card must include a share action');
+assert.ok(eventsHtml.includes('await navigator.share(data)'),'native mobile sharing must remain available');
+assert.ok(eventsHtml.includes('navigator.clipboard.writeText(url)'),'desktop sharing must include a copy-link fallback');
 console.log('PASS: TriZentro pages share functional and mobile-safe navigation');
