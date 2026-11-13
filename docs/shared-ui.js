@@ -9,7 +9,7 @@ const inRace=path.includes('/raceatlas/');
 const prefix=path.includes('/raceatlas/wedstrijden/')?'../../':inRace?'../':'';
 const root=prefix+'raceatlas/';
 const queryLang=new URLSearchParams(location.search).get('lang');
-const getLang=()=>{if(queryLang==='nl'||queryLang==='en')return queryLang;try{return localStorage.getItem('trizentro.language')||localStorage.getItem('raceatlas-language-v1')||'nl'}catch{return 'nl'}};
+const getLang=()=>{if(queryLang==='nl'||queryLang==='en')return queryLang;if(/\/en\.html$/.test(path))return 'en';try{return localStorage.getItem('trizentro.language')||localStorage.getItem('raceatlas-language-v1')||'nl'}catch{return 'nl'}};
 const tr=(nl,en)=>getLang()==='en'?en:nl;
 const link=(p,hash='')=>p+(getLang()==='en'?'?lang=en':'')+hash;
 const isOrganizer=path.includes('/organisatoren.html');
