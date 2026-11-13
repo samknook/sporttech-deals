@@ -43,6 +43,7 @@ jobs:
           test -s docs/account-profile.html
           node --check docs/raceatlas/details.js
           node tests/test-trizentro-ironman-links.cjs
+          node tests/test-trizentro-seo.cjs
           test -s docs/index.html
           test -s docs/events/index.html
           test -s docs/performance/index.html
