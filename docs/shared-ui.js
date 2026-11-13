@@ -122,9 +122,9 @@ document.addEventListener('click',event=>{
  const control=event.target.closest('body>header [data-tz-destination], .tz-mobile-menu [data-tz-destination], .tz-mobile-destinations [data-tz-destination], .tz-platform-links [data-tz-destination], body>header a.performanceNav');
  if(!control)return;
  const id=control.dataset.tzDestination||(control.matches('a.performanceNav')?'performance':null);
- if(!id||!items.some(item=>item.id===id))return;
- // Current-page Events/Season buttons must retain their local view behavior.
- if((id==='events'||id==='season')&&navigateLocal(id)){event.preventDefault();return}
+ if(!id||!items.some(item=>item.id===id)||control.tagName!=='A')return;
+ // Legacy Events buttons keep their existing in-page behavior; only actual
+ // links are normalized here so a programmatic click cannot recurse.
  const target=link(canonicalFor(id));
  const url=new URL(target,location.origin);
  if(url.pathname===location.pathname&&url.search===location.search)return;
