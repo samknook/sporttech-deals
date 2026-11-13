@@ -319,3 +319,18 @@ body .tz-site-links>a{transition:color .15s,background .15s}
  body .tz-global-footer{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
  body .tz-mobile-menu [data-tz-destination="account"]{padding:14px 13px}
 }
+
+/* Legacy landing pages retain their useful hero content, not their old menu. */
+body>header[data-tz-legacy-content] .nav{display:none!important}
+body>header[data-tz-legacy-content]{
+ position:relative!important;z-index:1!important;
+ padding:24px 4% 34px!important;
+ background:linear-gradient(110deg,#091d2e,#0b2b33)!important
+}
+body>header[data-tz-legacy-content] .hero,
+body>header[data-tz-legacy-content] .intro-hero{max-width:1280px;margin:auto}
+body>header[data-tz-legacy-content] h1{color:#fff}
+body>header[data-tz-legacy-content] a{color:inherit}
+@media(max-width:700px){
+ body>header[data-tz-legacy-content]{padding:22px 16px 28px!important}
+}
