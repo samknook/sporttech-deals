@@ -66,6 +66,23 @@ if(desktop){
  desktop.replaceChildren(...nodes);
  const controls=document.createElement('div');controls.className='tz-header-controls';
  controls.append(...preservedLanguage);
+ // Standalone account screen does not load the legacy translation switch.
+ if(document.body.classList.contains('tz-account-page')&&!preservedLanguage.length){
+  const languages=document.createElement('div');languages.id='raLanguageSwitch';
+  languages.className='raLanguageSwitch';languages.setAttribute('role','group');
+  languages.setAttribute('aria-label','Language / Taal');
+  for(const code of ['nl','en']){
+   const b=document.createElement('button');b.type='button';b.textContent=code.toUpperCase();
+   b.dataset.language=code;b.classList.toggle('active',getLang()===code);
+   b.setAttribute('aria-pressed',String(getLang()===code));
+   b.addEventListener('click',()=>{
+    try{localStorage.setItem('trizentro.language',code);localStorage.setItem('raceatlas-language-v1',code)}catch{}
+    const target=new URL(location.href);target.searchParams.set('lang',code);location.assign(target.toString());
+   });
+   languages.append(b);
+  }
+  controls.append(languages);
+ }
  nav.append(controls);
  window.__tzHeaderControls=controls;
 }
