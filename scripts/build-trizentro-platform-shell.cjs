@@ -86,6 +86,13 @@ for(const route of routes){
 
  fs.writeFileSync(target,html);
 }
+// Legacy URLs are for backwards compatibility, not for Google indexing.
+function markLegacy(html,canonical){
+ html=html.replace(/<link\b[^>]*rel=["']canonical["'][^>]*>/gi,'');
+ html=html.replace(/<meta\b[^>]*property=["']og:url["'][^>]*>/gi,'');
+ html=html.replace(/<meta\b[^>]*name=["']robots["'][^>]*>/gi,'');
+ return html.replace(/<\/head>/i,'<link rel="canonical" href="'+canonical+'"><meta name="robots" content="noindex,follow"></head>');
+}
 // Event detail pages also live below Events, with the same data and save
 // actions as the generated legacy pages.
 const cleanDetailsDir=path.join(base,'events/wedstrijden');
@@ -106,7 +113,7 @@ for(const filename of fs.readdirSync(eventsDir)){
  detailCount++;
  // Keep old shared links working, but move the visitor to the uniform URL.
  const redirect='<script>location.replace(new URL("../../events/wedstrijden/'+filename+'",location.href).pathname+location.search+location.hash)</script>';
- const legacy=fs.readFileSync(original,'utf8').replace(/<head\b[^>]*>/i,match=>match+redirect);
+ const legacy=markLegacy(fs.readFileSync(original,'utf8').replace(/<head\b[^>]*>/i,match=>match+redirect),canonical);
  fs.writeFileSync(original,legacy);
 }
 // Search engines should index real, canonical trizentro.com routes. Generate
@@ -152,6 +159,8 @@ for(const item of redirects){
   ?'<script>(function(){const target=new URL("../events/",location.href);const q=new URLSearchParams(location.search);const auth=q.has("code")||q.has("ra_password_reset")||/access_token=|type=recovery|error=/.test(location.hash);if(auth)target.pathname=target.pathname.replace(/events\\/$/,"account/");location.replace(target.pathname+location.search+location.hash)})()</script>'
   :'<script>location.replace(new URL('+JSON.stringify(item.target)+',location.href).pathname+location.search+location.hash)</script>';
  html=html.replace(/<head\b[^>]*>/i,match=>match+redirect);
+ const canonicalDest=item.file==='raceatlas/index.html'?'events/':item.file==='performance.html'?'performance/':item.file==='raceatlas/organisatoren.html'?'organisatoren/':'account/';
+ html=markLegacy(html,'https://trizentro.com/'+canonicalDest);
  fs.writeFileSync(file,html);
 }
 console.log('Built '+routes.length+' clean TriZentro routes from shared source pages');
