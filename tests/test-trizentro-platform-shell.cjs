@@ -43,4 +43,12 @@ assert.ok(fs.readFileSync(path.join(root,'sitemap.xml'),'utf8').includes('/event
 for(const rel of ['raceatlas/index.html','performance.html','raceatlas/organisatoren.html']){
  assert.ok(fs.readFileSync(path.join(root,rel),'utf8').includes('location.replace('),'legacy path must redirect: '+rel);
 }
+const robots=fs.readFileSync(path.join(root,'robots.txt'),'utf8');
+assert.ok(robots.includes('Sitemap: https://trizentro.com/sitemap.xml'),'robots.txt must advertise the correct domain');
+const sitemap=fs.readFileSync(path.join(root,'sitemap.xml'),'utf8');
+assert.ok(sitemap.includes('<loc>https://trizentro.com/events/</loc>'),'main Events route missing from sitemap');
+assert.ok(sitemap.includes('<loc>https://trizentro.com/performance/</loc>'),'Performance route missing from sitemap');
+assert.ok(!sitemap.includes('samknook.github.io'),'old GitHub Pages URLs must not be indexed');
+assert.ok(!sitemap.includes('/raceatlas/wedstrijden/'),'legacy race URLs must not be indexed');
+assert.ok((sitemap.match(/<url>/g)||[]).length>=eventFiles.length,'all generated event pages must be discoverable');
 console.log('PASS: '+files.length+' public TriZentro pages use one platform shell without duplicate assets');
