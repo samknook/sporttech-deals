@@ -33,7 +33,7 @@ const makeAnchor=item=>{
  return a;
 };
 if(desktop){
- const preservedLanguage=Array.from(desktop.children).filter(el=>el.id==='raLanguageSwitch'||el.classList.contains('raLanguageSwitch'));
+ const preservedLanguage=Array.from(document.querySelectorAll('body>header #raLanguageSwitch,body>header .raLanguageSwitch')).filter((el,i,arr)=>arr.indexOf(el)===i);
  const nodes=items.map(item=>{
   const existing=isEvents?current(item.id):null;
   if(!existing)return makeAnchor(item);
