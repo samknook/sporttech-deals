@@ -32,8 +32,8 @@
 @media print{.top,.vr form,.vr-actions,footer,.vr .nonprint{display:none!important}body{background:white}.vr{width:100%;padding:0}.vr-panel{border:0;padding:0}.vr-statgrid{grid-template-columns:repeat(4,1fr)}}
 </style>
 <script src="translations-bundle.js"></script><script src="i18n.js"></script><script defer src="navigation.js"></script>
-</head><body>
-<header class="top"><div class="wrap"><div class="nav"><a class="brand" href="./"><img src="trizentro-icon.svg" class="brand-icon" alt="" width="36" height="36">TRI<span>ZENTRO.</span></a><nav aria-label="Navigatie"><a href="index.html">Home</a><a href="club-race-brief.html">Voor organisatoren</a></nav></div></div></header>
+<link rel="stylesheet" href="shared-ui.css?v=20261113-platform3"></head><body>
+<header class="tz-site-header"><nav class="tz-site-nav" aria-label="Hoofdnavigatie"><a class="tz-site-brand" href="raceatlas/" aria-label="TriZentro Events"><img class="tz-logo-image" src="trizentro-mark.svg" alt="TriZentro" width="48" height="48"></a><div class="tz-site-links" aria-label="TriZentro onderdelen"></div></nav></header>
 <main class="vr">
 <div class="eyebrow">TriZentro · Voor sportevenementen</div>
 <h1>Stop met puzzelen.<br>Plan je vrijwilligers.</h1>
@@ -138,4 +138,4 @@ get('print-roster').addEventListener('click',()=>window.print());
 draw();
 })();
 </script>
-</body></html>
+<script src="shared-ui.js?v=20261113-platform3" defer></script></body></html>
