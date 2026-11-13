@@ -7,12 +7,15 @@ const isEvents=!!events;
 const path=location.pathname;
 // Base URL comes from this shared asset, so clean routes and project previews work.
 const scriptUrl=document.currentScript?.src||Array.from(document.scripts).find(x=>/\/shared-ui\.js(?:\?|$)/.test(x.src))?.src||location.href;
-const basePath=new URL('.',scriptUrl).pathname;
-const root=basePath+'events/';
-const seasonRoot=basePath+'seizoen/';
-const accountRoot=basePath+'account/';
-const performanceRoot=basePath+'performance/';
-const organizerRoot=basePath+'organisatoren/';
+// Every destination is site-absolute. Never let <base> or an older
+// relative performance.html link decide the route on the current page.
+const siteBase=new URL('.',scriptUrl);
+const routePath=segment=>new URL(segment,siteBase).pathname;
+const root=routePath('events/');
+const seasonRoot=routePath('seizoen/');
+const accountRoot=routePath('account/');
+const performanceRoot=routePath('performance/');
+const organizerRoot=routePath('organisatoren/');
 const getLang=()=>{const queryLang=new URLSearchParams(location.search).get('lang');if(queryLang==='nl'||queryLang==='en')return queryLang;if(/\/en\.html$/.test(path))return 'en';try{return localStorage.getItem('trizentro.language')||localStorage.getItem('raceatlas-language-v1')||'nl'}catch{return 'nl'}};
 const tr=(nl,en)=>getLang()==='en'?en:nl;
 const link=(p,hash='')=>p+(getLang()==='en'?'?lang=en':'')+hash;
@@ -99,6 +102,36 @@ const navigateLocal=id=>{
  }
  return false;
 };
+// Defensive canonicalization: old page code sometimes inserts legacy links
+// after the header was built, including during language switching.
+const canonicalFor=id=>id==='events'?root:id==='season'?seasonRoot:id==='performance'?performanceRoot:id==='account'?accountRoot:organizerRoot;
+const fixNavigationLinks=()=>{
+ for(const anchor of document.querySelectorAll('body>header a[data-tz-destination], .tz-mobile-menu a[data-tz-destination], .tz-mobile-destinations a[data-tz-destination], .tz-platform-links a[data-tz-destination]')){
+  const id=anchor.dataset.tzDestination;
+  if(items.some(item=>item.id===id))anchor.href=link(canonicalFor(id));
+ }
+ // Remove stale event-page header URLs, which can otherwise point at
+ // performance.html or resolve against /raceatlas/ instead of /.
+ for(const anchor of document.querySelectorAll('body>header a.performanceNav')){
+  anchor.href=link(performanceRoot);
+ }
+};
+// Ensure all menu click paths resolve to the same canonical route, including
+// legacy buttons recreated by the Events UI after initialization.
+document.addEventListener('click',event=>{
+ const control=event.target.closest('body>header [data-tz-destination], .tz-mobile-menu [data-tz-destination], .tz-mobile-destinations [data-tz-destination], .tz-platform-links [data-tz-destination], body>header a.performanceNav');
+ if(!control)return;
+ const id=control.dataset.tzDestination||(control.matches('a.performanceNav')?'performance':null);
+ if(!id||!items.some(item=>item.id===id))return;
+ // Current-page Events/Season buttons must retain their local view behavior.
+ if((id==='events'||id==='season')&&navigateLocal(id)){event.preventDefault();return}
+ const target=link(canonicalFor(id));
+ const url=new URL(target,location.origin);
+ if(url.pathname===location.pathname&&url.search===location.search)return;
+ event.preventDefault();
+ event.stopImmediatePropagation();
+ location.assign(url.href);
+},true);
 const updateSeasonCounts=()=>{
  for(const a of document.querySelectorAll('a[data-tz-destination="season"]')){
    const label=a.querySelector('.tz-tab-label');
@@ -238,8 +271,10 @@ const updatePlatformLanguage=()=>{
   button.classList.toggle('active',code===language);
   button.setAttribute('aria-pressed',String(code===language));
  }
+ fixNavigationLinks();
  updateSelected();
 };
 window.addEventListener('raceatlas:languagechange',updatePlatformLanguage);
+fixNavigationLinks();
 updatePlatformLanguage();
 })();
