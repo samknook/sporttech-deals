@@ -33,4 +33,10 @@ assert.ok(src.includes("control.tagName!=='A'"),'Events state buttons must not b
 assert.ok(src.includes("fixNavigationLinks();"),'legacy nav links must be normalized');
 const eventsHtml=fs.readFileSync('docs/raceatlas/index.html','utf8');
 assert.ok(eventsHtml.includes('class="performanceNav" href="/performance/"'),'Events header must link directly to Performance');
+assert.ok(perf.includes('class="tz-performance-journey"'),'Performance must connect to Events and Season');
+assert.ok(perf.includes('href="/events/"')&&perf.includes('href="/seizoen/"'),'Performance journey URLs must be canonical');
+assert.ok(perf.includes("['ArrowLeft','ArrowRight','Home','End']"),'sport tabs should support keyboard navigation');
+assert.ok(perf.includes("window.addEventListener('popstate'"),'sport panel should track browser navigation');
+const performanceTranslations=fs.readFileSync('docs/performance-translations.js','utf8');
+assert.ok(performanceTranslations.includes("['Mijn wedstrijdseizoen','My race season']"),'new season action must be bilingual');
 console.log('PASS: TriZentro pages share functional and mobile-safe navigation');
