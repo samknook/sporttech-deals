@@ -230,5 +230,5 @@ test('Provider email rate limit is not disguised as a one-minute cooldown',()=>{
  assert.doesNotMatch(moduleCode,/Probeer over ongeveer een minuut opnieuw/);
  assert.match(moduleCode,/De e-maildienst van RaceAtlas heeft de verzendlimiet bereikt/);
  assert.match(moduleCode,/if\(kind!=='login'&&checkMailBlock\(\)\)return/);
- assert.match(moduleCode,/if\(checkMailBlock\(\)\)return/);
+ assert.match(moduleCode,/if\(kind==='recovery'\)result=await client\.auth\.resetPasswordForEmail/);
 });
