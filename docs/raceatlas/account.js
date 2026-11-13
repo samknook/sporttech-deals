@@ -80,12 +80,12 @@ function showAuth(){
  function renderMethod(kind){
   fields.replaceChildren();
   for(const b of tabs.querySelectorAll('button')){const active=b.dataset.raAuthMode===kind;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',String(active))}
-  const form=el('form'),email=el('input'),submit=el('button',kind==='signup'?'Maak gratis account':kind==='magic'?'Stuur inloglink':'Inloggen');
+  const form=el('form'),email=el('input'),submit=el('button',kind==='signup'?'Maak gratis account':kind==='magic'?'Stuur inloglink':kind==='recovery'?'Stuur herstelmail':'Inloggen');
   form.className='raAuthForm';email.type='email';email.required=true;email.autocomplete='email';email.placeholder='E-mailadres';email.setAttribute('aria-label','E-mailadres');
   email.value=enteredEmail;email.addEventListener('input',()=>{enteredEmail=email.value});
   form.append(email);
   let password=null;
-  if(kind!=='magic'){password=makePasswordInput(kind==='signup'?'new-password':'current-password');form.append(password);addPasswordToggle(password,form)}
+  if(kind==='login'||kind==='signup'){password=makePasswordInput(kind==='signup'?'new-password':'current-password');form.append(password);addPasswordToggle(password,form)}
   if(kind==='signup'){const help=el('p','Alleen voor een nieuw account. Heb je eerder een e-maillink gebruikt, kies Inloggen; maak geen tweede account. Nieuwe registraties kunnen een bevestigingsmail vereisen.');form.append(help)}
   submit.type='submit';form.append(submit);
   form.addEventListener('submit',async event=>{
@@ -93,15 +93,17 @@ function showAuth(){
    if(!client){setStatus('De accountdienst wordt nog geladen. Probeer het opnieuw zodra deze beschikbaar is.');return}
    if(kind==='signup'&&password&&password.value.length<12){setStatus('Gebruik voor nieuwe accounts een wachtwoord van minimaal 12 tekens.');return}
    if(kind!=='login'&&checkMailBlock())return;
-   submit.disabled=true;setStatus('Accountaanvraag verwerken…');
+   submit.disabled=true;setStatus(kind==='recovery'?'Herstelmail aanvragen…':'Accountaanvraag verwerken…');
    try{
     const address=email.value.trim();
     let result;
-    if(kind==='signup')result=await client.auth.signUp({email:address,password:password.value,options:{emailRedirectTo:callbackUrl()}});
+    if(kind==='recovery')result=await client.auth.resetPasswordForEmail(address,{redirectTo:callbackUrl(true)});
+    else if(kind==='signup')result=await client.auth.signUp({email:address,password:password.value,options:{emailRedirectTo:callbackUrl()}});
     else if(kind==='login')result=await client.auth.signInWithPassword({email:address,password:password.value});
     else result=await client.auth.signInWithOtp({email:address,options:{emailRedirectTo:callbackUrl(),shouldCreateUser:false}});
     if(result.error)throw result.error;
-    if(kind==='signup')setStatus(result.data?.session?'Je account is aangemaakt en je bent ingelogd.':'Controleer je e-mail om je registratie te bevestigen. Gebruik daarna Inloggen.');
+    if(kind==='recovery')setStatus('Als het e-mailadres bekend is, ontvang je een link om een nieuw wachtwoord in te stellen.');
+    else if(kind==='signup')setStatus(result.data?.session?'Je account is aangemaakt en je bent ingelogd.':'Controleer je e-mail om je registratie te bevestigen. Gebruik daarna Inloggen.');
     else if(kind==='login')setStatus('Je bent ingelogd. Je kunt nu je wedstrijdseizoen openen.');
     else setStatus('Als er een account bestaat, ontvang je een inloglink. Controleer je inbox en spam.');
     if(password)password.value='';
@@ -110,19 +112,10 @@ function showAuth(){
   });
   fields.append(form);
   if(kind==='login'){
-   const forgot=button('Wachtwoord vergeten?',async()=>{
-    const address=email.value.trim();
-    if(!email.checkValidity()){setStatus('Vul eerst je e-mailadres in om een herstelmail aan te vragen.');email.focus();email.reportValidity();return}
-    if(!client){setStatus('Accountdienst wordt nog geladen.');return}
-    if(checkMailBlock())return;
-    forgot.disabled=true;setStatus('Herstelmail aanvragen…');
-    try{
-     const {error}=await client.auth.resetPasswordForEmail(address,{redirectTo:callbackUrl(true)});
-     if(error)throw error;
-     setStatus('Als het e-mailadres bekend is, ontvang je een link om een nieuw wachtwoord in te stellen.');
-    }catch(err){registerMailError(err);setStatus(formatAuthError(err,'recovery'))}finally{forgot.disabled=false}
-   });forgot.className='raForgot';fields.append(forgot);
+   const forgot=button('Wachtwoord vergeten?',()=>{renderMethod('recovery');fields.querySelector('input[type=email]')?.focus()});
+   forgot.className='raForgot';fields.append(forgot);
   }
+  if(kind==='recovery')fields.append(button('Terug naar inloggen',()=>renderMethod('login')));
  }
  renderMethod('login');
  const privacy=el('p'),link=el('a','Privacy en e-mailvoorkeuren');link.href='privacy.html';
