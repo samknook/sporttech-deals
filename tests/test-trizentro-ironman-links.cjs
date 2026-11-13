@@ -42,9 +42,11 @@ for(const id of ['ra-423','ra-424','ra-425','ra-426','ra-427','ra-428','ra-429',
  assert.ok(e.officialEventUrl?.startsWith('https://'),'organizer link missing: '+id);
 }
 const maastricht=events.find(x=>x.id==='ra-423');
+assert.equal(maastricht.name,'IRONMAN 70.3 Maastricht-Limburg','Maastricht should use correct official race name');
+assert.equal(maastricht.officialEventUrl,'https://www.ironman.com/races/im703-maastricht-limburg','Maastricht must go to its own IRONMAN race page');
+assert.match(maastricht.distance,/1,9 km.*90 km.*21,1 km/,'Maastricht must show 70.3 distances');
 assert.equal(maastricht.date,'2027-09-05');
-assert.ok(/nog (niet )?officieel|nog niet|bevestig/i.test(maastricht.distance),
- 'Maastricht race distance must not be invented');
+
 const zevenheuvelen=events.find(x=>x.id==='ra-433');
 assert.ok(!zevenheuvelen.date,'unverified 2027 Zevenheuvelenloop date must stay unknown');
 assert.ok(html.includes('id="tzPersonalDashboard"'),'existing season features must be preserved');
