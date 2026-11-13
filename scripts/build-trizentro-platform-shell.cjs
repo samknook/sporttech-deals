@@ -73,6 +73,7 @@ for(const filename of fs.readdirSync(eventsDir)){
  if(!filename.endsWith('.html'))continue;
  const original=path.join(eventsDir,filename);
  let html=fs.readFileSync(original,'utf8');
+ html=html.replaceAll('/raceatlas/wedstrijden/'+filename,'/events/wedstrijden/'+filename);
  html=html.replace(/<head\b[^>]*>/i,match=>match+'<base href="../../raceatlas/wedstrijden/">');
  const canonical='https://trizentro.com/events/wedstrijden/'+filename;
  html=html.replace(/<link\b[^>]*rel=["']canonical["'][^>]*>/gi,'');
