@@ -14,6 +14,8 @@ wrapper.append(title,status,content);
 const where=document.querySelector('#savedPage .sectionHeading');
 if(!where)return;
 where.insertAdjacentElement('afterend',wrapper);
+// The old season panel stays available to the sync engine, not as account UI.
+wrapper.hidden=true;
 let client=null,user=null,mode='local',saving=false;
 const pending=new Map();
 let authVersion=0;
@@ -44,7 +46,8 @@ const accountNav=el('button','Mijn account');
 accountNav.id='raAccountNav';accountNav.type='button';accountNav.className='raAccountNav';
 accountNav.addEventListener('click',()=>{document.getElementById('navSaved')?.click();wrapper.scrollIntoView({behavior:'smooth',block:'start'})});
 const accountLinks=document.querySelector('.navright');
-accountLinks?.insertBefore(accountNav,accountLinks.querySelector('.organizerNav'));
+// The public account destination is now a dedicated page in shared-ui.js.
+// Do not inject a second account button into the season navigation.
 const recoveryRequested=new URLSearchParams(location.search).get('ra_password_reset')==='1';
 const callbackParams=new URLSearchParams(location.hash.slice(1));
 if(recoveryRequested||callbackParams.has('access_token')||callbackParams.has('error')||new URLSearchParams(location.search).has('code'))accountNav.click();
