@@ -7,6 +7,7 @@ TriZentroCommonTranslations([
 ]);
 TriZentroAddTranslations('performance.html','nl',[
  ['Bereid je voor.','Get ready.'],['Race slimmer.','Race smarter.'],
+ ['Mijn wedstrijdseizoen','My race season'],['Wedstrijden ontdekken','Discover races'],
  ['TRIZENTRO / PERFORMANCE','TRIZENTRO / PERFORMANCE'],
  ['Kies hardlopen, wielrennen of triatlon en gebruik alleen de tools die passen bij jouw wedstrijd.','Choose running, cycling or triathlon and use only the tools that suit your race.'],
  ['Performance voor hardlopers','Performance for runners'],
