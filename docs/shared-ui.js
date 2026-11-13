@@ -14,7 +14,7 @@ const tr=(nl,en)=>getLang()==='en'?en:nl;
 const link=(p,hash='')=>p+(getLang()==='en'?'?lang=en':'')+hash;
 const isOrganizer=path.includes('/organisatoren.html');
 const isPerformance=/\/(performance|calculator|triathlon-calculator|pace-calculator|race-dashboard|race-fuel-planner|race-planner|70-3-raceplan|70-3-readiness-check|70-3-eindtijd-calculator|goal-feasibility|race-day-timeline|triatlon-afstanden|first-70-3-race-week-checklist)\.html$/.test(path);
-const isSeason=isEvents&&location.hash==='#mijn-seizoen';
+const isSeason=isEvents&&['#mijn-seizoen','#saved'].includes(location.hash);
 const items=[
  {id:'events',nl:'Events',en:'Events',icon:'⌕',url:link(root),active:isEvents&&!isSeason},
  {id:'season',nl:'Mijn seizoen',en:'My season',icon:'☆',url:link(root,'#mijn-seizoen'),active:isSeason},
@@ -48,7 +48,11 @@ if(desktop){
   }else if(item.id==='account')existing.textContent=tr(item.nl,item.en);
   return existing;
  });
- desktop.replaceChildren(...nodes,...preservedLanguage);
+ desktop.replaceChildren(...nodes);
+ const controls=document.createElement('div');controls.className='tz-header-controls';
+ controls.append(...preservedLanguage);
+ nav.append(controls);
+ window.__tzHeaderControls=controls;
 }
 const navigateLocal=id=>{
  if(!isEvents)return false;
@@ -92,7 +96,8 @@ const heading=document.createElement('div');heading.className='tz-mobile-menu-he
 items.forEach(item=>{
  const a=makeAnchor(item);a.addEventListener('click',ev=>{if(navigateLocal(item.id)){ev.preventDefault();updateSelected()}close()});menu.append(a);
 });
-nav.append(menuButton,menu);
+(window.__tzHeaderControls||nav).append(menuButton);
+nav.append(menu);
 function close(){menu.hidden=true;menuButton.setAttribute('aria-expanded','false');menuButton.setAttribute('aria-label',tr('Open navigatiemenu','Open navigation menu'))}
 menuButton.addEventListener('click',()=>{
  const willOpen=menu.hidden;menu.hidden=!willOpen;menuButton.setAttribute('aria-expanded',String(willOpen));
@@ -106,7 +111,7 @@ if(isEvents){
 }
 const existingBottom=document.querySelector('.tz-mobile-destinations');
 existingBottom?.remove();
-if(!isEvents){
+{
 const bottom=document.createElement('nav');bottom.className='tz-mobile-destinations';bottom.setAttribute('aria-label',tr('Snelle navigatie','Quick navigation'));
 for(const item of items.slice(0,3)){
  const a=makeAnchor(item);
