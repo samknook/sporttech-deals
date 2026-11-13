@@ -10,8 +10,8 @@ for(const file of eventFiles)files.push('raceatlas/wedstrijden/'+file);
 for(const rel of files){
  const data=fs.readFileSync(path.join(root,rel),'utf8');
  assert.ok(data.includes('tz-site-header')||rel==='raceatlas/index.html','missing branded header on '+rel);
- assert.equal((data.match(/shared-ui\.js\?v=20261113-platform3/g)||[]).length,1,'shared runtime count '+rel);
- assert.equal((data.match(/shared-ui\.css\?v=20261113-platform3/g)||[]).length,1,'shared CSS count '+rel);
+ assert.equal((data.match(/shared-ui\.js\?v=20261113-unified6/g)||[]).length,1,'shared runtime count '+rel);
+ assert.equal((data.match(/shared-ui\.css\?v=20261113-unified6/g)||[]).length,1,'shared CSS count '+rel);
  assert.ok(data.includes('trizentro-mark.svg'),'shared logo absent '+rel);
  assert.ok(data.includes('Hoofdnavigatie'),'main navigation missing '+rel);
  if(rel.includes('/wedstrijden/'))assert.ok(data.includes('saveRace'),'event action lost '+rel);
