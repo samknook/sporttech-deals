@@ -64,6 +64,35 @@ for(const route of routes){
  html=html.replace(/<\/head>/i,'<link rel="canonical" href="'+canonical+'"><meta property="og:url" content="'+canonical+'"></head>');
  fs.writeFileSync(target,html);
 }
+// Event detail pages also live below Events, with the same data and save
+// actions as the generated legacy pages.
+const cleanDetailsDir=path.join(base,'events/wedstrijden');
+fs.mkdirSync(cleanDetailsDir,{recursive:true});
+let detailCount=0;
+for(const filename of fs.readdirSync(eventsDir)){
+ if(!filename.endsWith('.html'))continue;
+ const original=path.join(eventsDir,filename);
+ let html=fs.readFileSync(original,'utf8');
+ html=html.replace(/<head\b[^>]*>/i,match=>match+'<base href="../../raceatlas/wedstrijden/">');
+ const canonical='https://trizentro.com/events/wedstrijden/'+filename;
+ html=html.replace(/<link\b[^>]*rel=["']canonical["'][^>]*>/gi,'');
+ html=html.replace(/<meta\b[^>]*property=["']og:url["'][^>]*>/gi,'');
+ html=html.replace(/<\/head>/i,'<link rel="canonical" href="'+canonical+'"><meta property="og:url" content="'+canonical+'"></head>');
+ fs.writeFileSync(path.join(cleanDetailsDir,filename),html);
+ detailCount++;
+ // Keep old shared links working, but move the visitor to the uniform URL.
+ const redirect='<script>location.replace(new URL("../../events/wedstrijden/'+filename+'",location.href).pathname+location.search+location.hash)</script>';
+ const legacy=fs.readFileSync(original,'utf8').replace(/<head\b[^>]*>/i,match=>match+redirect);
+ fs.writeFileSync(original,legacy);
+}
+// Index the visitor-facing routes rather than the old technical subdirectory.
+const sitemapFile=path.join(base,'sitemap.xml');
+if(fs.existsSync(sitemapFile)){
+ let sitemap=fs.readFileSync(sitemapFile,'utf8');
+ sitemap=sitemap.replace(/\/raceatlas\/wedstrijden\//g,'/events/wedstrijden/');
+ fs.writeFileSync(sitemapFile,sitemap);
+}
+console.log('Published '+detailCount+' consistent Events detail URLs');
 // Redirect only the three legacy entry URLs. Query parameters and fragments
 // (including account callbacks) are preserved; generated event-detail pages stay intact.
 const redirects=[
