@@ -2,12 +2,14 @@
 'use strict';
 // One deployment-time shell for every public TriZentro visitor journey.
 // Retains existing tools, data, forms, Events state, and noindex flags.
-const fs=require('node:fs'),path=require('node:path');
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const base=path.resolve(__dirname,'../docs');
 const pages=JSON.parse(fs.readFileSync(path.join(__dirname,'../config/trizentro-public-pages.json'),'utf8')).pages;
 const eventsDir=path.join(base,'raceatlas/wedstrijden');
 if(fs.existsSync(eventsDir))for(const filename of fs.readdirSync(eventsDir)){if(filename.endsWith('.html'))pages.push('raceatlas/wedstrijden/'+filename)}
-const version='20261113-unified6';
+// Content-derived asset versions prevent browser caches from serving old shared navigation.
+const versionFor=file=>crypto.createHash('sha256').update(fs.readFileSync(path.join(base,file))).digest('hex').slice(0,12);
+const cssVersion=versionFor('shared-ui.css'),jsVersion=versionFor('shared-ui.js');
 function shell(prefix){
  const home=prefix+'raceatlas/';
  return '<header class="tz-site-header"><nav class="tz-site-nav" aria-label="Hoofdnavigatie">'+
@@ -32,8 +34,8 @@ for(const rel of pages){
     html=html.replace(/(<body\b[^>]*>)/i,'$1'+shell(prefix));
   }
  }
- const css='<link rel="stylesheet" href="'+prefix+'shared-ui.css?v='+version+'">';
- const js='<script src="'+prefix+'shared-ui.js?v='+version+'" defer></script>';
+ const css='<link rel="stylesheet" href="'+prefix+'shared-ui.css?v='+cssVersion+'">';
+ const js='<script src="'+prefix+'shared-ui.js?v='+jsVersion+'" defer></script>';
  html=html.replace(/<link\b[^>]*href=["'][^"']*shared-ui\.css(?:\?[^"']*)?["'][^>]*>/gi,'');
  html=html.replace(/<script\b[^>]*src=["'][^"']*shared-ui\.js(?:\?[^"']*)?["'][^>]*>\s*<\/script>/gi,'');
  html=html.replace(/<\/head>/i,css+'</head>');
