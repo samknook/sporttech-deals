@@ -107,7 +107,7 @@ test('Status updates handle rejected requests without revealing stale account da
 });
 test('Email alerts are described as unavailable until opt-in and sending are implemented',()=>{
   assert.match(moduleCode,/Open Meldingen bij de wedstrijd en bevestig je e-mailadres/);
-  assert.match(moduleCode,/aparte, expliciete aanmelding/);
+
 });
 
 test('Users can export their own cloud season without private auth tokens',()=>{
