@@ -336,6 +336,7 @@ function eventCard(e){
  '</div><div class="raCardActions">'+
  '<a class="ra-detail-btn" href="'+safe(eventPage(e))+'">Details</a>'+
  '<button type="button" class="ra-alert-btn" data-ra-alert="'+safe(e.id)+'">🔔 Meldingen</button>'+
+ '<button type="button" class="tz-race-share" aria-label="Deel '+safe(e.name)+'" data-tz-share="'+safe(e.id)+'">↗ Deel</button>'+
  '<button class="save '+(isSaved?'selected':'')+'" type="button" aria-label="'+(isSaved?'Verwijder uit mijn seizoen':'Bewaar in mijn seizoen')+'">'+(isSaved?'✓ Bewaard':'+ Bewaar')+'</button>'+
  (eventUrl?'<a class="registerLink" href="'+safe(eventUrl)+'" data-ra-event="'+safe(e.id)+'" data-ra-outbound="organizer" rel="noopener noreferrer" target="_blank">Officiële website ↗</a>':'')+'</div>';
  if(visualArt){
@@ -360,7 +361,15 @@ function eventCard(e){
   }
  }
 
- card.querySelector('.save').onclick=()=>toggleSavedEvent(e.id);
+ card.querySelector('.tz-race-share').onclick=async()=>{
+ const url=new URL(eventPage(e),location.origin).href;
+ const english=document.documentElement.lang==='en';
+ const data={title:e.name,text:(english?'Discover this race on TriZentro: ':'Bekijk deze wedstrijd op TriZentro: ')+e.name,url};
+ if(navigator.share){try{await navigator.share(data);return}catch(error){if(error?.name==='AbortError')return}}
+ try{await navigator.clipboard.writeText(url);const button=card.querySelector('.tz-race-share');button.textContent=english?'✓ Copied':'✓ Gekopieerd';setTimeout(()=>{if(button.isConnected)button.textContent=english?'↗ Share':'↗ Deel'},2400)}
+ catch{window.prompt(english?'Copy race link:':'Kopieer de wedstrijdlink:',url)}
+};
+card.querySelector('.save').onclick=()=>toggleSavedEvent(e.id);
  return card
 }
 function renderCards(id,arr){const el=$(id);el.replaceChildren();if(!arr.length){const div=document.createElement('div');div.className='empty';div.textContent=id==='savedCards'?'Je hebt nog geen evenementen bewaard. Bekijk de evenementen en klik op + Bewaar.':'Geen wedstrijden voor deze combinatie van filters.';const reset=document.createElement('button');reset.type='button';reset.className='miniBtn';reset.textContent=id==='savedCards'?'Bekijk evenementen':'Wis filters en bekijk alle evenementen';reset.onclick=()=>{if(id==='savedCards')switchPage('explore');else $('reset').click()};div.append(document.createElement('p'),reset);el.append(div)}else{const frag=document.createDocumentFragment();arr.forEach(e=>frag.append(eventCard(e)));el.append(frag);window.RaceAtlasTracking?.observeCards(el)}}
