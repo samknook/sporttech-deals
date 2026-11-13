@@ -24,4 +24,16 @@ for(const rel of files){
   assert.ok(data.includes('account-config.js'),'account functionality lost');
  }
 }
+const routes=['events','seizoen','account','performance','organisatoren'];
+for(const route of routes){
+ const data=fs.readFileSync(path.join(root,route,'index.html'),'utf8');
+ assert.ok(data.includes('<base href='),'clean route missing original asset base '+route);
+ assert.ok(data.includes('https://trizentro.com/'+route+'/'),'missing canonical '+route);
+ assert.equal((data.match(/shared-ui\\.js\\?v=[0-9a-f]{12}/g)||[]).length,1,'missing shared JS '+route);
+ assert.equal((data.match(/shared-ui\\.css\\?v=[0-9a-f]{12}/g)||[]).length,1,'missing shared CSS '+route);
+ assert.ok(data.includes('tz-site-header'),'missing central header '+route);
+}
+for(const rel of ['raceatlas/index.html','performance.html','raceatlas/organisatoren.html']){
+ assert.ok(fs.readFileSync(path.join(root,rel),'utf8').includes('location.replace(new URL('),'legacy path must redirect: '+rel);
+}
 console.log('PASS: '+files.length+' public TriZentro pages use one platform shell without duplicate assets');
