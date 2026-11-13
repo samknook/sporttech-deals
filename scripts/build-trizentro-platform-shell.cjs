@@ -109,7 +109,9 @@ const redirects=[
 for(const item of redirects){
  const file=path.join(base,item.file);
  let html=fs.readFileSync(file,'utf8');
- const redirect='<script>location.replace(new URL('+JSON.stringify(item.target)+',location.href).pathname+location.search+location.hash)</script>';
+ const redirect=item.file==='raceatlas/index.html'
+  ?'<script>(function(){const target=new URL("../events/",location.href);const q=new URLSearchParams(location.search);const auth=q.has("code")||q.has("ra_password_reset")||/access_token=|type=recovery|error=/.test(location.hash);if(auth)target.pathname=target.pathname.replace(/events\\/$/,"account/");location.replace(target.pathname+location.search+location.hash)})()</script>'
+  :'<script>location.replace(new URL('+JSON.stringify(item.target)+',location.href).pathname+location.search+location.hash)</script>';
  html=html.replace(/<head\b[^>]*>/i,match=>match+redirect);
  fs.writeFileSync(file,html);
 }
