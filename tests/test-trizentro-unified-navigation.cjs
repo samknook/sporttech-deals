@@ -2,7 +2,7 @@
 const fs=require('node:fs'),assert=require('node:assert/strict');
 const src=fs.readFileSync('docs/shared-ui.js','utf8');
 new Function(src);
-const pages=['docs/raceatlas/index.html','docs/performance.html','docs/raceatlas/organisatoren.html'];
+const pages=JSON.parse(fs.readFileSync('config/trizentro-public-pages.json','utf8')).pages.map(x=>'docs/'+x);
 for(const file of pages){
  const html=fs.readFileSync(file,'utf8');
  assert.ok(html.includes('shared-ui.js?v=20261113-platform3'),file+' missing shared navigation');
