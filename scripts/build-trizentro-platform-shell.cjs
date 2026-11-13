@@ -58,6 +58,7 @@ for(const route of routes){
  // Keep the exact existing data, forms and functionality; only relative
  // assets resolve through the original source directory.
  html=html.replace(/<head\b[^>]*>/i,match=>match+'<base href="'+route.base+'">');
+ if(['seizoen/','account/'].includes(route.canonical))html=html.replace(/<\/head>/i,'<meta name="robots" content="noindex,follow"></head>');
  const canonical='https://trizentro.com/'+route.canonical;
  html=html.replace(/<link\b[^>]*rel=["']canonical["'][^>]*>/gi,'');
  html=html.replace(/<meta\b[^>]*property=["']og:url["'][^>]*>/gi,'');
