@@ -75,8 +75,6 @@ jobs:
           persist-credentials: false
       - name: Build public noindex staging preview (isolated from live analytics)
         run: node scripts/build-raceatlas-preview.cjs
-      - name: Check unified navigation across public pages
-        run: node tests/test-trizentro-unified-navigation.cjs
       - name: Protect domain cutover until verified
         run: node tests/test-trizentro-domain-cutover.cjs
       - name: Prepare verified TriZentro domain cutover (no-op until enabled)
@@ -93,6 +91,7 @@ jobs:
         run: |
           node scripts/build-trizentro-platform-shell.cjs
           node tests/test-trizentro-platform-shell.cjs
+          node tests/test-trizentro-unified-navigation.cjs
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload website files only
