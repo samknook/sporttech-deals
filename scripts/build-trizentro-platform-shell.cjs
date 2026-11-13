@@ -105,7 +105,8 @@ console.log('Published '+detailCount+' consistent Events detail URLs');
 const redirects=[
  {file:'raceatlas/index.html',target:'../events/'},
  {file:'performance.html',target:'./performance/'},
- {file:'raceatlas/organisatoren.html',target:'../organisatoren/'}
+ {file:'raceatlas/organisatoren.html',target:'../organisatoren/'},
+ {file:'account-profile.html',target:'./account/'}
 ];
 for(const item of redirects){
  const file=path.join(base,item.file);
