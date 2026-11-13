@@ -18,4 +18,9 @@ assert.ok(src.includes('if(item.id===\'organizers\')'),'organizers must be the f
 assert.ok(src.includes("window.addEventListener('raceatlas:languagechange',updatePlatformLanguage)"),'menu does not update after language switching');
 assert.ok(src.includes("const queryLang=new URLSearchParams(location.search).get('lang');"),'language must be read dynamically');
 assert.ok(src.includes("const label=el.querySelector('.tz-tab-label')"),'mobile labels must update with language');
+const css=fs.readFileSync('docs/shared-ui.css','utf8');
+assert.ok(src.includes("const isPerformance=/\\/performance\\/?$/.test(path)"),'clean Performance route not active');
+assert.ok(src.includes("if(active)el.setAttribute('aria-current','page')"),'aria-current activation missing');
+assert.ok(css.includes('a[data-tz-destination][aria-current="page"]'),'active page CSS missing');
+assert.ok(css.includes('body.tz-performance .tz-page-main'),'Performance grid alignment CSS missing');
 console.log('PASS: TriZentro pages share functional and mobile-safe navigation');
