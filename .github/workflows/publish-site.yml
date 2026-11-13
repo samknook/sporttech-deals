@@ -8,6 +8,8 @@ on:
       - 'tests/test-mkb-ai-businesscase.js'
       - 'tests/test-mkb-ai-customer-offer.js'
       - 'scripts/build-trizentro-event-pages.cjs'
+      - 'scripts/prepare-trizentro-domain.cjs'
+      - '.github/trizentro-domain.json'
       - 'scripts/raceatlas-html-candidates.cjs'
       - 'scripts/raceatlas-official-discovery.cjs'
       - 'tests/test-raceatlas-*.cjs'
@@ -68,7 +70,13 @@ jobs:
           persist-credentials: false
       - name: Build public noindex staging preview (isolated from live analytics)
         run: node scripts/build-raceatlas-preview.cjs
+      - name: Prepare verified TriZentro domain cutover (no-op until enabled)
+        env:
+          TRIZENTRO_DOMAIN_CONFIRMED: ${{ vars.TRIZENTRO_DOMAIN_CONFIRMED }}
+        run: node scripts/prepare-trizentro-domain.cjs
       - name: Build search-engine indexable TriZentro race pages
+        env:
+          TRIZENTRO_DOMAIN_CONFIRMED: ${{ vars.TRIZENTRO_DOMAIN_CONFIRMED }}
         run: |
           node scripts/build-trizentro-event-pages.cjs
           node tests/test-trizentro-event-pages.cjs
