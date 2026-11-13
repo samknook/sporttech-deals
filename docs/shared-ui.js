@@ -38,7 +38,7 @@ if(brand){brand.classList.add('tz-site-brand');brand.href=root;}
 const desktop=nav.querySelector('.navright,.tz-site-links');
 if(desktop)desktop.classList.add('tz-site-links');
 
-const current=(id)=>id==='events'?document.getElementById('navExplore'):id==='season'?document.getElementById('navSaved'):id==='account'?document.getElementById('raAccountNav'):null;
+const current=(id)=>id==='events'?document.getElementById('navExplore'):id==='season'?document.getElementById('navSaved'):null;
 const savedCount=()=>{try{const ids=JSON.parse(localStorage.getItem('raceatlas-saved-v2')||'[]');return Array.isArray(ids)?ids.length:0}catch{return 0}};
 const seasonText=()=>tr('Mijn seizoen','My season')+(savedCount()?' · '+savedCount():'');
 const makeAnchor=item=>{
