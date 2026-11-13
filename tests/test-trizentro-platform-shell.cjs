@@ -1,7 +1,7 @@
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const root=path.join(__dirname,'../docs');
-const files=['raceatlas/index.html','raceatlas/organisatoren.html','raceatlas/over.html','raceatlas/privacy.html','raceatlas/gegevenskwaliteit.html','raceatlas/alerts-beheren.html','performance.html','pace-calculator.html','triathlon-calculator.html','race-dashboard.html','race-fuel-planner.html','race-planner.html','70-3-raceplan.html','70-3-readiness-check.html','goal-feasibility.html','race-day-timeline.html','triatlon-afstanden.html','first-70-3-race-week-checklist.html'];
+const files=JSON.parse(fs.readFileSync(path.join(__dirname,'../config/trizentro-public-pages.json'),'utf8')).pages.slice();
 const raceDir=path.join(root,'raceatlas/wedstrijden');
 assert.ok(fs.existsSync(raceDir),'generated race pages missing');
 const eventFiles=fs.readdirSync(raceDir).filter(f=>f.endsWith('.html'));
