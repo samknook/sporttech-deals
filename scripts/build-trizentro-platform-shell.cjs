@@ -75,6 +75,7 @@ for(const filename of fs.readdirSync(eventsDir)){
  const original=path.join(eventsDir,filename);
  let html=fs.readFileSync(original,'utf8');
  html=html.replaceAll('/raceatlas/wedstrijden/'+filename,'/events/wedstrijden/'+filename);
+ html=html.replaceAll('https://samknook.github.io/sporttech-deals/events/wedstrijden/'+filename,'https://trizentro.com/events/wedstrijden/'+filename);
  html=html.replace(/<head\b[^>]*>/i,match=>match+'<base href="../../raceatlas/wedstrijden/">');
  const canonical='https://trizentro.com/events/wedstrijden/'+filename;
  html=html.replace(/<link\b[^>]*rel=["']canonical["'][^>]*>/gi,'');
