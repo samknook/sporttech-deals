@@ -309,7 +309,7 @@ window.TriZentroSeason={
  toggle:toggleSavedEvent,
  count:()=>saved.length
 };
-function eventPage(e){return 'wedstrijden/'+eventSlug(e)+'-'+e.id+'.html'}
+function eventPage(e){const css=document.querySelector('link[href*="shared-ui.css"]');const base=css?new URL('.',css.href):new URL('../',location.href);return new URL('events/wedstrijden/'+eventSlug(e)+'-'+e.id+'.html',base).pathname}
 function eventSlug(e){return String(e.name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,75)||'wedstrijd'}
 function eventCard(e){
  const d=getDate(e),sportClass=e.sport==='Fietsen'?'bike':e.sport==='Triatlon'?'tri':'';
