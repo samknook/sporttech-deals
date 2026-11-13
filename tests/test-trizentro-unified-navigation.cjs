@@ -15,4 +15,7 @@ assert.ok(src.includes('const bottom=document.createElement'), 'unified mobile n
 assert.ok(src.includes("document.getElementById('navSaved')?.click()"),'saved season functionality lost');
 assert.ok(src.includes("document.getElementById('raAccountNav')"),'account navigation lost');
 assert.ok(src.includes('if(item.id===\'organizers\')'),'organizers must be the final nav destination');
+assert.ok(src.includes("window.addEventListener('raceatlas:languagechange',updatePlatformLanguage)"),'menu does not update after language switching');
+assert.ok(src.includes("const queryLang=new URLSearchParams(location.search).get('lang');"),'language must be read dynamically');
+assert.ok(src.includes("const label=el.querySelector('.tz-tab-label')"),'mobile labels must update with language');
 console.log('PASS: TriZentro pages share functional and mobile-safe navigation');
