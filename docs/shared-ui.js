@@ -113,5 +113,25 @@ if(isEvents){
   document.getElementById(id)?.addEventListener('click',()=>requestAnimationFrame(updateSelected));
  }
 }
+
+// Shared wayfinding and footer: visitors can move between discovery, season and preparation
+// without encountering independent product silos.
+const footerLinks=document.createElement('nav');
+footerLinks.className='tz-platform-links';
+footerLinks.setAttribute('aria-label',tr('TriZentro onderdelen','TriZentro sections'));
+for(const item of items){
+ const a=document.createElement('a');
+ a.href=item.url;a.textContent=tr(item.nl,item.en);
+ footerLinks.append(a);
+}
+const footerHost=document.querySelector('body>footer,body .foot,body .tz-footer');
+if(footerHost){footerHost.append(footerLinks);}
+else{
+ const footer=document.createElement('footer');footer.className='tz-global-footer';
+ const name=document.createElement('strong');name.textContent='TriZentro';
+ const summary=document.createElement('span');summary.textContent=tr('Ontdek. Plan. Race.','Discover. Plan. Race.');
+ footer.append(name,summary,footerLinks);document.body.append(footer);
+}
+
 updateSelected();
 })();
