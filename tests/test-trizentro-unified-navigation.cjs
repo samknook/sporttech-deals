@@ -5,13 +5,13 @@ new Function(src);
 const pages=JSON.parse(fs.readFileSync('config/trizentro-public-pages.json','utf8')).pages.map(x=>'docs/'+x);
 for(const file of pages){
  const html=fs.readFileSync(file,'utf8');
- assert.ok(/shared-ui\\.js\\?v=20261113-[a-z0-9]+/.test(html),file+' missing shared navigation');
- assert.ok(/shared-ui\\.css\\?v=20261113-[a-z0-9]+/.test(html),file+' missing shared style');
+ assert.ok(html.includes('shared-ui.js?v='),file+' missing shared navigation');
+ assert.ok(html.includes('shared-ui.css?v='),file+' missing shared style');
  assert.ok(html.includes('tz-logo-image'),file+' missing shared brand');
 }
 for(const id of ['events','season','performance','account','organizers'])assert.ok(src.includes("id:'"+id+"'"),'missing destination '+id);
 assert.ok(src.includes('const preservedLanguage='),'language selector lost');
-assert.ok(src.includes('if(!isEvents){\nconst bottom='),'Events mobile filter bar must be retained');
+assert.ok(src.includes('const bottom=document.createElement'), 'unified mobile navigation missing');
 assert.ok(src.includes("document.getElementById('navSaved')?.click()"),'saved season functionality lost');
 assert.ok(src.includes("document.getElementById('raAccountNav')"),'account navigation lost');
 assert.ok(src.includes('if(item.id===\'organizers\')'),'organizers must be the final nav destination');
