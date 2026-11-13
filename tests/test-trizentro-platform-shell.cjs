@@ -29,8 +29,8 @@ for(const route of routes){
  const data=fs.readFileSync(path.join(root,route,'index.html'),'utf8');
  assert.ok(data.includes('<base href='),'clean route missing original asset base '+route);
  assert.ok(data.includes('https://trizentro.com/'+route+'/'),'missing canonical '+route);
- assert.equal((data.match(/shared-ui\\.js\\?v=[0-9a-f]{12}/g)||[]).length,1,'missing shared JS '+route);
- assert.equal((data.match(/shared-ui\\.css\\?v=[0-9a-f]{12}/g)||[]).length,1,'missing shared CSS '+route);
+ assert.equal((data.match(/shared-ui\.js\?v=[0-9a-f]{12}/g)||[]).length,1,'missing shared JS '+route);
+ assert.equal((data.match(/shared-ui\.css\?v=[0-9a-f]{12}/g)||[]).length,1,'missing shared CSS '+route);
  assert.ok(data.includes('tz-site-header'),'missing central header '+route);
 }
 const sample=eventFiles[Math.floor(eventFiles.length/2)];
