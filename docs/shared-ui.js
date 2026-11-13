@@ -126,7 +126,7 @@ menuButton.addEventListener('click',()=>{
 });
 document.addEventListener('keydown',event=>{if(event.key==='Escape')close()});
 document.addEventListener('click',event=>{if(!nav.contains(event.target))close()});
-window.addEventListener('resize',()=>{if(innerWidth>700)close()});
+window.addEventListener('resize',()=>{if(innerWidth>900)close()});
 if(isEvents){
  desktop?.addEventListener('click',e=>{const target=e.target.closest('[data-tz-destination]');if(!target)return;if(target.tagName==='A'&&navigateLocal(target.dataset.tzDestination)){e.preventDefault();updateSelected()}else requestAnimationFrame(updateSelected)});
 }
