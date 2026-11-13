@@ -59,7 +59,7 @@ function detail(e,fromLink=false){
  const quickActions=el('div',null,'tz-detail-quick-actions');
  const primaryRegistration=isValidUrl(e.registrationUrl)?e.registrationUrl:isValidUrl(e.officialEventUrl)?e.officialEventUrl:null;
  if(primaryRegistration){
-  const a=el('a',isValidUrl(e.registrationUrl)?'Bekijk inschrijving ↗':'Officiële website ↗','tz-quick-registration');
+  const a=el('a',isValidUrl(e.registrationUrl)?'Bekijk inschrijving ↗':e.officialEventUrl==='https://www.ironman.com/races'?'Zoek op IRONMAN ↗':'Officiële website ↗','tz-quick-registration');
   a.href=primaryRegistration;a.target='_blank';a.rel='noopener noreferrer';
   a.dataset.raEvent=e.id;a.dataset.raOutbound=isValidUrl(e.registrationUrl)?'registration':'organizer';quickActions.append(a);
  }
@@ -103,7 +103,7 @@ function detail(e,fromLink=false){
   register.dataset.raEvent=e.id;register.dataset.raOutbound='registration';
   actions.append(register);
  }else if(officialUrl){
-  const official=el('a','Bekijk organisator ↗','ra-detail-primary');
+  const official=el('a',officialUrl==='https://www.ironman.com/races'?'Zoek wedstrijd op IRONMAN ↗':'Bekijk organisator ↗','ra-detail-primary');
   official.href=officialUrl;official.rel='noopener noreferrer';official.target='_blank';
   official.dataset.raEvent=e.id;official.dataset.raOutbound='organizer';
   actions.append(official);
