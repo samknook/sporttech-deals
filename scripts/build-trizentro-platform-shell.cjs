@@ -88,17 +88,33 @@ for(const filename of fs.readdirSync(eventsDir)){
  const legacy=fs.readFileSync(original,'utf8').replace(/<head\b[^>]*>/i,match=>match+redirect);
  fs.writeFileSync(original,legacy);
 }
-// Index the visitor-facing routes rather than the old technical subdirectory.
-const sitemapFile=path.join(base,'sitemap.xml');
-if(fs.existsSync(sitemapFile)){
- let sitemap=fs.readFileSync(sitemapFile,'utf8');
- sitemap=sitemap.replace(/\/raceatlas\/wedstrijden\//g,'/events/wedstrijden/');
- sitemap=sitemap.replaceAll('https://samknook.github.io/sporttech-deals/events/wedstrijden/','https://trizentro.com/events/wedstrijden/');
- sitemap=sitemap.replaceAll('https://samknook.github.io/sporttech-deals/raceatlas/organisatoren.html','https://trizentro.com/organisatoren/');
- sitemap=sitemap.replaceAll('https://samknook.github.io/sporttech-deals/performance.html','https://trizentro.com/performance/');
- sitemap=sitemap.replaceAll('https://samknook.github.io/sporttech-deals/raceatlas/','https://trizentro.com/events/');
- fs.writeFileSync(sitemapFile,sitemap);
-}
+// Search engines should index real, canonical trizentro.com routes. Generate
+// the entire sitemap from the pages actually published, including each race.
+const urls=[
+ {pathname:'/events/',priority:'1.0',frequency:'daily'},
+ {pathname:'/performance/',priority:'0.9',frequency:'weekly'},
+ {pathname:'/organisatoren/',priority:'0.5',frequency:'monthly'}
+];
+const publicTools=[
+ 'triathlon-calculator.html','race-planner.html','triatlon-afstanden.html',
+ 'first-70-3-race-week-checklist.html','70-3-readiness-check.html',
+ '70-3-eindtijd-calculator.html','race-day-timeline.html',
+ 'race-fuel-planner.html','pace-calculator.html','goal-feasibility.html'
+];
+for(const p of publicTools)if(fs.existsSync(path.join(base,p)))urls.push({pathname:'/'+p,priority:'0.7',frequency:'monthly'});
+for(const filename of fs.readdirSync(cleanDetailsDir))if(filename.endsWith('.html'))
+ urls.push({pathname:'/events/wedstrijden/'+filename,priority:'0.7',frequency:'weekly'});
+const escapeXml=value=>value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const today=new Date().toISOString().slice(0,10);
+const sitemap='<?xml version="1.0" encoding="UTF-8"?>\n'+
+ '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+
+ urls.map(u=>'  <url><loc>'+escapeXml('https://trizentro.com'+u.pathname)+
+ '</loc><lastmod>'+today+'</lastmod><changefreq>'+u.frequency+
+ '</changefreq><priority>'+u.priority+'</priority></url>').join('\n')+
+ '\n</urlset>\n';
+fs.writeFileSync(path.join(base,'sitemap.xml'),sitemap);
+fs.writeFileSync(path.join(base,'robots.txt'),'User-agent: *\nAllow: /\nSitemap: https://trizentro.com/sitemap.xml\n');
+console.log('Published '+urls.length+' canonical URLs in sitemap.xml');
 console.log('Published '+detailCount+' consistent Events detail URLs');
 // Redirect only the three legacy entry URLs. Query parameters and fragments
 // (including account callbacks) are preserved; generated event-detail pages stay intact.
