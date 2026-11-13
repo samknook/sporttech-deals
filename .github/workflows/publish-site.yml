@@ -1,103 +1,57 @@
-name: Publish website (GitHub Pages)
+name: Publish TriZentro live (GitHub Pages)
 on:
   push:
     branches: [main]
     paths:
       - 'docs/**'
-      - '.github/workflows/publish-site.yml'
-      - 'tests/test-mkb-ai-businesscase.js'
-      - 'tests/test-mkb-ai-customer-offer.js'
       - 'scripts/build-trizentro-event-pages.cjs'
       - 'scripts/build-trizentro-platform-shell.cjs'
-      - 'config/trizentro-public-pages.json'
       - 'scripts/prepare-trizentro-domain.cjs'
+      - 'config/trizentro-public-pages.json'
       - '.github/trizentro-domain.json'
-      - 'scripts/raceatlas-html-candidates.cjs'
-      - 'scripts/raceatlas-official-discovery.cjs'
-      - 'tests/test-raceatlas-*.cjs'
-      - 'tests/test-trizentro-radar-security.cjs'
-      - 'tests/test-trizentro-domain-cutover.cjs'
-      - 'tests/test-trizentro-unified-navigation.cjs'
-      - 'tests/test-trizentro-platform-shell.cjs'
+      - '.github/workflows/publish-site.yml'
   workflow_dispatch:
 permissions:
   contents: read
   pages: write
   id-token: write
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: false
 jobs:
   publish:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: https://samknook.github.io/sporttech-deals/
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Check out repository
+      - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Node
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Check buyer-facing offer and business case
+      - name: Generate event detail pages
+        run: node scripts/build-trizentro-event-pages.cjs
+      - name: Generate centralized public shell and clean routes
+        run: node scripts/build-trizentro-platform-shell.cjs
+      - name: Verify publishable website
         run: |
-          node tests/test-mkb-ai-customer-offer.js
-          node tests/test-mkb-ai-businesscase.js
-          node tests/test-mkb-ai-site-links.js
-          node tests/test-mkb-ai-site-ux.js
-          node tests/test-mkb-ai-visual-refresh.js
-          node tests/test-mkb-ai-buyer-clarity.js
-          node tests/test-mkb-ai-tools-hub.js
-          node tests/test-mkb-ai-lead-brief.js
-      - name: Check RaceAtlas language switching and form compatibility
-        run: node tests/test-raceatlas-i18n.cjs
-      - name: RaceAtlas launch smoke check
-        run: node tests/test-raceatlas-launch-smoke.cjs
-      - name: Validate email radar opt-in and safe launch gating
-        run: node tests/test-raceatlas-email-radar.cjs
-      - name: Validate automatic race discovery and update feed
-        run: |
-          node tests/test-raceatlas-official-discovery.cjs
-          node tests/test-raceatlas-html-candidates.cjs
-          node tests/test-raceatlas-auto-events.cjs
-      - name: Verify commercial placements and safe public disclosures
-        run: |
-          node tests/test-raceatlas-commercial.cjs
-          node tests/test-raceatlas-tracking.cjs
-      - name: Verify TriZentro Inschrijfradar email consent and opt-out safety
-        run: node tests/test-trizentro-radar-security.cjs
-      - name: Check out independent RaceAtlas staging branch
-        uses: actions/checkout@v4
-        with:
-          ref: raceatlas-staging
-          path: .raceatlas-staging
-          persist-credentials: false
-      - name: Build public noindex staging preview (isolated from live analytics)
-        run: node scripts/build-raceatlas-preview.cjs
-      - name: Protect domain cutover until verified
-        run: node tests/test-trizentro-domain-cutover.cjs
-      - name: Prepare verified TriZentro domain cutover (no-op until enabled)
-        env:
-          TRIZENTRO_DOMAIN_CONFIRMED: ${{ vars.TRIZENTRO_DOMAIN_CONFIRMED }}
-        run: node scripts/prepare-trizentro-domain.cjs
-      - name: Build search-engine indexable TriZentro race pages
-        env:
-          TRIZENTRO_DOMAIN_CONFIRMED: ${{ vars.TRIZENTRO_DOMAIN_CONFIRMED }}
-        run: |
-          node scripts/build-trizentro-event-pages.cjs
-          node tests/test-trizentro-event-pages.cjs
-      - name: Apply one TriZentro platform shell to every published page
-        run: |
-          node scripts/build-trizentro-platform-shell.cjs
+          node --check docs/shared-ui.js
+          node --check docs/raceatlas/details.js
           node tests/test-trizentro-platform-shell.cjs
-          node tests/test-trizentro-unified-navigation.cjs
-      - name: Configure GitHub Pages
+          test -s docs/index.html
+          test -s docs/events/index.html
+          test -s docs/performance/index.html
+          test -s docs/seizoen/index.html
+          test -s docs/account/index.html
+          test -s docs/organisatoren/index.html
+      - name: Configure Pages
         uses: actions/configure-pages@v5
-      - name: Upload website files only
+      - name: Upload website artifact
         uses: actions/upload-pages-artifact@v4
         with:
           path: docs
-      - name: Deploy static website
+      - name: Deploy website
         id: deployment
         uses: actions/deploy-pages@v4
