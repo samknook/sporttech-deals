@@ -517,3 +517,28 @@ body.tz-performance .tz-page-hero:after{z-index:-1!important}
  }
  body .hero p,body.tz-performance .tz-page-hero p{font-size:14px!important;line-height:1.55!important}
 }
+
+/* Same sports imagery treatment on Events, Performance and organizers.
+   Their copy and individual page actions remain distinct. */
+body .hero::before,body.tz-performance .tz-page-hero::before{
+ display:block!important;content:""!important;position:absolute!important;
+ inset:0 0 0 48%!important;opacity:.58!important;z-index:-1!important;
+ background:linear-gradient(90deg,rgba(8,29,43,.8),rgba(8,29,43,.3)),
+ url("https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=1300&q=85") center 38%/cover no-repeat!important;
+ filter:saturate(.84) contrast(1.08)!important;
+}
+body .hero::after,body.tz-performance .tz-page-hero::after{
+ display:block!important;content:""!important;position:absolute!important;
+ width:85px!important;height:150%!important;right:25%!important;top:-25%!important;
+ transform:skew(-29deg)!important;z-index:-1!important;opacity:.9!important;
+ background:linear-gradient(180deg,#c7ff37,#9be500)!important;
+ clip-path:polygon(0 0,24% 0,100% 100%,75% 100%)!important;
+}
+@media(max-width:700px){
+ body .hero::before,body.tz-performance .tz-page-hero::before{inset:0 0 0 29%!important;opacity:.28!important}
+ body .hero::after,body.tz-performance .tz-page-hero::after{width:32px!important;right:12%!important;opacity:.45!important}
+}
+/* Never emphasize both season and account as current on the account route. */
+body:has(#raAccount) .tz-site-links [data-tz-destination="season"]:not([aria-current="page"]){
+ box-shadow:none!important;
+}
