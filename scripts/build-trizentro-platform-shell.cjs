@@ -7,7 +7,7 @@ const base=path.resolve(__dirname,'../docs');
 const pages=JSON.parse(fs.readFileSync(path.join(__dirname,'../config/trizentro-public-pages.json'),'utf8')).pages;
 const eventsDir=path.join(base,'raceatlas/wedstrijden');
 if(fs.existsSync(eventsDir))for(const filename of fs.readdirSync(eventsDir)){if(filename.endsWith('.html'))pages.push('raceatlas/wedstrijden/'+filename)}
-const version='20261113-platform3';
+const version='20261113-unified6';
 function shell(prefix){
  const home=prefix+'raceatlas/';
  return '<header class="tz-site-header"><nav class="tz-site-nav" aria-label="Hoofdnavigatie">'+
