@@ -9,6 +9,8 @@ const path=location.pathname;
 const scriptUrl=document.currentScript?.src||Array.from(document.scripts).find(x=>/\/shared-ui\.js(?:\?|$)/.test(x.src))?.src||location.href;
 const basePath=new URL('.',scriptUrl).pathname;
 const root=basePath+'events/';
+const seasonRoot=basePath+'seizoen/';
+const accountRoot=basePath+'account/';
 const performanceRoot=basePath+'performance/';
 const organizerRoot=basePath+'organisatoren/';
 const queryLang=new URLSearchParams(location.search).get('lang');
@@ -17,12 +19,13 @@ const tr=(nl,en)=>getLang()==='en'?en:nl;
 const link=(p,hash='')=>p+(getLang()==='en'?'?lang=en':'')+hash;
 const isOrganizer=path.includes('/organisatoren.html')||/\/organisatoren\/?$/.test(path);
 const isPerformance=/\/performance\/?$/.test(path)||/\/(performance|calculator|triathlon-calculator|pace-calculator|race-dashboard|race-fuel-planner|race-planner|70-3-raceplan|70-3-readiness-check|70-3-eindtijd-calculator|goal-feasibility|race-day-timeline|triatlon-afstanden|first-70-3-race-week-checklist)\.html$/.test(path);
-const isSeason=isEvents&&['#mijn-seizoen','#saved'].includes(location.hash);
+const isSeason=(isEvents&&['#mijn-seizoen','#saved'].includes(location.hash))||/\/seizoen\/?$/.test(path);
+const isAccount=/\/account\/?$/.test(path)||location.hash==='#mijn-account';
 const items=[
  {id:'events',nl:'Events',en:'Events',icon:'⌕',url:link(root),active:isEvents&&!isSeason},
- {id:'season',nl:'Mijn seizoen',en:'My season',icon:'☆',url:link(root,'#mijn-seizoen'),active:isSeason},
+ {id:'season',nl:'Mijn seizoen',en:'My season',icon:'☆',url:link(seasonRoot),active:isSeason},
  {id:'performance',nl:'Performance',en:'Performance',icon:'⚡',url:link(performanceRoot),active:isPerformance},
- {id:'account',nl:'Mijn account',en:'My account',icon:'♙',url:link(root,'#mijn-account')},
+ {id:'account',nl:'Mijn account',en:'My account',icon:'♙',url:link(accountRoot),active:isAccount},
  {id:'organizers',nl:'Voor organisatoren',en:'For organizers',icon:'▤',url:link(organizerRoot),active:isOrganizer}
 ];
 // Normalize the actual HTML classes, not just the appearance. Events still
@@ -31,7 +34,7 @@ const siteHeader=nav.parentElement;
 siteHeader.classList.add('tz-site-header');
 nav.classList.add('tz-site-nav');
 const brand=nav.querySelector('.brand,.tz-site-brand');
-if(brand)brand.classList.add('tz-site-brand');
+if(brand){brand.classList.add('tz-site-brand');brand.href=root;}
 const desktop=nav.querySelector('.navright,.tz-site-links');
 if(desktop)desktop.classList.add('tz-site-links');
 
@@ -68,13 +71,12 @@ if(desktop){
 }
 const navigateLocal=id=>{
  if(!isEvents)return false;
- if(id==='events'){document.getElementById('navExplore')?.click();history.replaceState(null,'',location.pathname+location.search);return true}
- if(id==='season'){document.getElementById('navSaved')?.click();history.replaceState(null,'',location.pathname+location.search+'#mijn-seizoen');return true}
+ if(id==='events'){document.getElementById('navExplore')?.click();return true}
+ if(id==='season'){document.getElementById('navSaved')?.click();return true}
  if(id==='account'){
   const account=document.getElementById('raAccountNav');
-  if(account){account.click();history.replaceState(null,'',location.pathname+location.search+'#mijn-account');return true}
+  if(account){account.click();return true}
   document.getElementById('navSaved')?.click();
-  history.replaceState(null,'',location.pathname+location.search+'#mijn-account');
   document.querySelector('#raAccount,#raSeasonBackup')?.scrollIntoView({behavior:'smooth',block:'start'});
   return true;
  }
@@ -92,7 +94,7 @@ const updateSelected=()=>{
  const saved=isEvents&&document.getElementById('navSaved')?.classList.contains('current');
  for(const el of nav.querySelectorAll('[data-tz-destination]')){
   const id=el.dataset.tzDestination;
-  const active=isEvents?(id==='season'?saved:id==='events'?!saved:false):!!items.find(x=>x.id===id)?.active;
+  const active=isEvents?(id==='account'?isAccount:id==='season'?saved:id==='events'?!saved&&!isAccount:false):!!items.find(x=>x.id===id)?.active;
   if(active)el.setAttribute('aria-current','page');
   else el.removeAttribute('aria-current');
  }
@@ -172,6 +174,11 @@ else{
  footer.append(name,summary,footerLinks);document.body.append(footer);
 }
 
+// Clean season/account routes reuse the Events engine and open the correct view.
+if(isEvents){
+ if(isAccount)navigateLocal('account');
+ else if(isSeason)navigateLocal('season');
+}
 updateSeasonCounts();
 updateSelected();
 })();
