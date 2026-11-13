@@ -64,5 +64,19 @@ for(const route of routes){
  html=html.replace(/<\/head>/i,'<link rel="canonical" href="'+canonical+'"><meta property="og:url" content="'+canonical+'"></head>');
  fs.writeFileSync(target,html);
 }
+// Redirect only the three legacy entry URLs. Query parameters and fragments
+// (including account callbacks) are preserved; generated event-detail pages stay intact.
+const redirects=[
+ {file:'raceatlas/index.html',target:'../events/'},
+ {file:'performance.html',target:'./performance/'},
+ {file:'raceatlas/organisatoren.html',target:'../organisatoren/'}
+];
+for(const item of redirects){
+ const file=path.join(base,item.file);
+ let html=fs.readFileSync(file,'utf8');
+ const redirect='<script>location.replace(new URL('+JSON.stringify(item.target)+',location.href).pathname+location.search+location.hash)</script>';
+ html=html.replace(/<head\b[^>]*>/i,match=>match+redirect);
+ fs.writeFileSync(file,html);
+}
 console.log('Built '+routes.length+' clean TriZentro routes from shared source pages');
 console.log('Centralized TriZentro platform shell on '+modified+' pages');
