@@ -1,46 +1,115 @@
-/* Unified responsive navigation. Keeps Events' functional filter tabs intact. */
+/* TriZentro shared navigation v2 — same destinations and behaviour on every page. */
 (()=>{'use strict';
-const isEventsHome=!!document.querySelector('.raMobileNav');
-const inEventsFolder=location.pathname.includes('/raceatlas/');
-const prefix=location.pathname.includes('/raceatlas/wedstrijden/')?'../../':inEventsFolder?'../':'';
-const language=()=>{const q=new URLSearchParams(location.search).get('lang');if(q==='nl'||q==='en')return q;try{return localStorage.getItem('trizentro.language')||localStorage.getItem('raceatlas-language-v1')||'nl'}catch{return 'nl'}};
-const languageQuery=()=>language()==='en'?'?lang=en':'';
-const href=(path,hash='')=>path+languageQuery()+hash;
-const perf=location.pathname.includes('/performance.html')||location.pathname.includes('/calculator.html')||location.pathname.includes('/race-dashboard.html')||location.pathname.includes('/race-fuel-planner.html')||location.pathname.includes('/pace-calculator.html');
-const destinations=[
- {nl:'Events',en:'Events',icon:'⌕',href:href(prefix+'raceatlas/'),active:isEventsHome},
- {nl:'Mijn seizoen',en:'My season',icon:'☆',href:href(prefix+'raceatlas/','#mijn-seizoen')},
- {nl:'Performance',en:'Performance',icon:'⚡',href:href(prefix+'performance.html'),active:perf},
- {nl:'Mijn account',en:'My account',icon:'♙',href:href(prefix+'raceatlas/','#mijn-account')},
- {nl:'Voor organisatoren',en:'For organizers',icon:'▤',href:href(prefix+'raceatlas/organisatoren.html'),active:location.pathname.includes('/organisatoren.html')}
-];
 const nav=document.querySelector('body>header>nav');
-if(nav&&!isEventsHome){
- const links=nav.querySelector('.tz-site-links');
- if(links)links.replaceChildren();
- if(links)destinations.forEach(item=>{
-  const a=document.createElement('a');a.href=item.href;a.textContent=language()==='en'?item.en:item.nl;
-  if(item.active)a.setAttribute('aria-current','page');
-  if(item.nl==='Voor organisatoren')a.className='tz-organizers';
-  links.append(a);
+if(!nav)return;
+const events=document.getElementById('navExplore');
+const isEvents=!!events;
+const path=location.pathname;
+const inRace=path.includes('/raceatlas/');
+const prefix=path.includes('/raceatlas/wedstrijden/')?'../../':inRace?'../':'';
+const root=prefix+'raceatlas/';
+const queryLang=new URLSearchParams(location.search).get('lang');
+const getLang=()=>{if(queryLang==='nl'||queryLang==='en')return queryLang;try{return localStorage.getItem('trizentro.language')||localStorage.getItem('raceatlas-language-v1')||'nl'}catch{return 'nl'}};
+const tr=(nl,en)=>getLang()==='en'?en:nl;
+const link=(p,hash='')=>p+(getLang()==='en'?'?lang=en':'')+hash;
+const isOrganizer=path.includes('/organisatoren.html');
+const isPerformance=/\/(performance|calculator|triathlon-calculator|pace-calculator|race-dashboard|race-fuel-planner)\.html$/.test(path);
+const isSeason=isEvents&&location.hash==='#mijn-seizoen';
+const items=[
+ {id:'events',nl:'Events',en:'Events',icon:'⌕',url:link(root),active:isEvents&&!isSeason},
+ {id:'season',nl:'Mijn seizoen',en:'My season',icon:'☆',url:link(root,'#mijn-seizoen'),active:isSeason},
+ {id:'performance',nl:'Performance',en:'Performance',icon:'⚡',url:link(prefix+'performance.html'),active:isPerformance},
+ {id:'account',nl:'Mijn account',en:'My account',icon:'♙',url:link(root,'#mijn-account')},
+ {id:'organizers',nl:'Voor organisatoren',en:'For organizers',icon:'▤',url:link(root+'organisatoren.html'),active:isOrganizer}
+];
+const desktop=nav.querySelector('.navright,.tz-site-links');
+const current=(id)=>id==='events'?document.getElementById('navExplore'):id==='season'?document.getElementById('navSaved'):id==='account'?document.getElementById('raAccountNav'):null;
+const makeAnchor=item=>{
+ const a=document.createElement('a');a.href=item.url;a.textContent=tr(item.nl,item.en);a.dataset.tzDestination=item.id;
+ if(item.active)a.setAttribute('aria-current','page');
+ if(item.id==='organizers')a.className=isEvents?'organizerNav':'tz-organizers';
+ return a;
+};
+if(desktop){
+ const preservedLanguage=Array.from(desktop.children).filter(el=>el.id==='raLanguageSwitch'||el.classList.contains('raLanguageSwitch'));
+ const nodes=items.map(item=>{
+  const existing=isEvents?current(item.id):null;
+  if(!existing)return makeAnchor(item);
+  existing.dataset.tzDestination=item.id;
+  if(item.id==='events'||item.id==='season'){
+    existing.textContent=tr(item.nl,item.en);
+    if(item.id==='season'){
+      const badge=document.createElement('span');badge.id='savedCount';
+      badge.textContent=window.RaceAtlasSaved?.get()?.length??'0';
+      existing.append(' ',badge);
+    }
+  }else if(item.id==='account')existing.textContent=tr(item.nl,item.en);
+  return existing;
  });
+ desktop.replaceChildren(...nodes,...preservedLanguage);
 }
-if(nav&&!nav.querySelector('.tz-menu-toggle')){
- const button=document.createElement('button');button.className='tz-menu-toggle';button.type='button';button.setAttribute('aria-expanded','false');button.setAttribute('aria-controls','tz-mobile-menu');button.setAttribute('aria-label',language()==='en'?'Open navigation menu':'Open navigatiemenu');
- button.innerHTML='<span class="tz-menu-glyph" aria-hidden="true">☰</span><span class="tz-menu-title">Menu</span>';
- const menu=document.createElement('div');menu.id='tz-mobile-menu';menu.className='tz-mobile-menu';menu.hidden=true;
- const heading=document.createElement('div');heading.className='tz-mobile-menu-heading';heading.textContent=language()==='en'?'Navigate':'Navigatie';menu.append(heading);
- destinations.forEach(item=>{const a=document.createElement('a');a.href=item.href;a.textContent=language()==='en'?item.en:item.nl;if(item.active)a.setAttribute('aria-current','page');menu.append(a)});
- nav.append(button,menu);
- const close=()=>{menu.hidden=true;button.setAttribute('aria-expanded','false');button.setAttribute('aria-label',language()==='en'?'Open navigation menu':'Open navigatiemenu')};
- button.addEventListener('click',()=>{const open=menu.hidden;menu.hidden=!open;button.setAttribute('aria-expanded',String(open));button.setAttribute('aria-label',open?(language()==='en'?'Close navigation menu':'Sluit navigatiemenu'):(language()==='en'?'Open navigation menu':'Open navigatiemenu'))});
- document.addEventListener('keydown',ev=>{if(ev.key==='Escape')close()});
- document.addEventListener('click',ev=>{if(!nav.contains(ev.target))close()});
- window.addEventListener('resize',()=>{if(innerWidth>700)close()});
+const navigateLocal=id=>{
+ if(!isEvents)return false;
+ if(id==='events'){document.getElementById('navExplore')?.click();history.replaceState(null,'',location.pathname+location.search);return true}
+ if(id==='season'){document.getElementById('navSaved')?.click();history.replaceState(null,'',location.pathname+location.search+'#mijn-seizoen');return true}
+ if(id==='account'){
+  const account=document.getElementById('raAccountNav');
+  if(account){account.click();history.replaceState(null,'',location.pathname+location.search+'#mijn-account');return true}
+  document.getElementById('navSaved')?.click();
+  history.replaceState(null,'',location.pathname+location.search+'#mijn-account');
+  document.querySelector('#raAccount,#raSeasonBackup')?.scrollIntoView({behavior:'smooth',block:'start'});
+  return true;
+ }
+ return false;
+};
+const updateSelected=()=>{
+ const saved=isEvents&&document.getElementById('navSaved')?.classList.contains('current');
+ for(const el of nav.querySelectorAll('[data-tz-destination]')){
+  const id=el.dataset.tzDestination;
+  const active=isEvents?(id==='season'?saved:id==='events'?!saved:false):!!items.find(x=>x.id===id)?.active;
+  if(active)el.setAttribute('aria-current','page');
+  else el.removeAttribute('aria-current');
+ }
+ for(const el of document.querySelectorAll('.tz-mobile-destinations [data-tz-destination]')){
+  const id=el.dataset.tzDestination,active=isEvents?(id==='season'?saved:id==='events'?!saved:false):!!items.find(x=>x.id===id)?.active;
+  if(active)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');
+ }
+};
+const menuButton=document.createElement('button');menuButton.className='tz-menu-toggle';menuButton.type='button';menuButton.setAttribute('aria-expanded','false');menuButton.setAttribute('aria-controls','tz-mobile-menu');menuButton.setAttribute('aria-label',tr('Open navigatiemenu','Open navigation menu'));
+menuButton.innerHTML='<span class="tz-menu-glyph" aria-hidden="true">☰</span><span class="tz-menu-title">Menu</span>';
+const menu=document.createElement('div');menu.id='tz-mobile-menu';menu.className='tz-mobile-menu';menu.hidden=true;
+const heading=document.createElement('div');heading.className='tz-mobile-menu-heading';heading.textContent=tr('Navigatie','Navigation');menu.append(heading);
+items.forEach(item=>{
+ const a=makeAnchor(item);a.addEventListener('click',ev=>{if(navigateLocal(item.id)){ev.preventDefault();updateSelected()}close()});menu.append(a);
+});
+nav.append(menuButton,menu);
+function close(){menu.hidden=true;menuButton.setAttribute('aria-expanded','false');menuButton.setAttribute('aria-label',tr('Open navigatiemenu','Open navigation menu'))}
+menuButton.addEventListener('click',()=>{
+ const willOpen=menu.hidden;menu.hidden=!willOpen;menuButton.setAttribute('aria-expanded',String(willOpen));
+ menuButton.setAttribute('aria-label',willOpen?tr('Sluit navigatiemenu','Close navigation menu'):tr('Open navigatiemenu','Open navigation menu'));
+});
+document.addEventListener('keydown',event=>{if(event.key==='Escape')close()});
+document.addEventListener('click',event=>{if(!nav.contains(event.target))close()});
+window.addEventListener('resize',()=>{if(innerWidth>700)close()});
+if(isEvents){
+ desktop?.addEventListener('click',e=>{const target=e.target.closest('[data-tz-destination]');if(!target)return;if(target.tagName==='A'&&navigateLocal(target.dataset.tzDestination)){e.preventDefault();updateSelected()}else requestAnimationFrame(updateSelected)});
 }
-if(!isEventsHome&&!document.querySelector('.tz-mobile-destinations')){
- const bottom=document.createElement('nav');bottom.className='tz-mobile-destinations';bottom.setAttribute('aria-label',language()==='en'?'Quick navigation':'Snelle navigatie');
- destinations.slice(0,3).forEach(item=>{const a=document.createElement('a');a.href=item.href;const glyph=document.createElement('span');glyph.setAttribute('aria-hidden','true');glyph.className='tz-tab-icon';glyph.textContent=item.icon;const text=document.createElement('span');text.className='tz-tab-label';text.textContent=language()==='en'?item.en:item.nl;a.append(glyph,text);if(item.active)a.setAttribute('aria-current','page');bottom.append(a)});
- document.body.append(bottom);
+const existingBottom=document.querySelector('.tz-mobile-destinations');
+existingBottom?.remove();
+const bottom=document.createElement('nav');bottom.className='tz-mobile-destinations';bottom.setAttribute('aria-label',tr('Snelle navigatie','Quick navigation'));
+for(const item of items.slice(0,3)){
+ const a=makeAnchor(item);
+ const glyph=document.createElement('span');glyph.className='tz-tab-icon';glyph.setAttribute('aria-hidden','true');glyph.textContent=item.icon;
+ const name=document.createElement('span');name.className='tz-tab-label';name.textContent=tr(item.nl,item.en);
+ a.replaceChildren(glyph,name);
+ a.addEventListener('click',e=>{if(navigateLocal(item.id)){e.preventDefault();updateSelected()}});
+ bottom.append(a);
 }
+document.body.append(bottom);
+if(isEvents){
+ for(const id of ['navExplore','navSaved']){
+  document.getElementById(id)?.addEventListener('click',()=>requestAnimationFrame(updateSelected));
+ }
+}
+updateSelected();
 })();
