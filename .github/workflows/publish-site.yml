@@ -38,6 +38,7 @@ jobs:
       - name: Verify publishable website
         run: |
           node --check docs/shared-ui.js
+          node --check docs/season-dashboard.js
           node --check docs/account-profile.js
           test -s docs/account-profile.html
           node --check docs/raceatlas/details.js
