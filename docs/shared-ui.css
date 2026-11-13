@@ -578,3 +578,66 @@ body:has(#raAccount) .tz-site-links [data-tz-destination="season"]:not([aria-cur
 @media(max-width:700px){
  body>header.tz-site-header>nav.tz-site-nav{height:66px!important;min-height:66px!important;max-height:66px!important}
 }
+
+/* Performance layout consolidation: one 1320px grid for hero and content.
+   Performance's legacy stylesheet must not add extra outer horizontal padding. */
+body.tz-performance .tz-page-hero{
+ padding:0!important;margin:0!important;width:100%!important;min-height:450px!important;
+}
+body.tz-performance .tz-page-hero>.tz-hero-inner,
+body.tz-performance .tz-page-hero>.wrap{
+ width:100%!important;max-width:1320px!important;min-height:450px!important;
+ margin:0 auto!important;padding:70px 30px 80px!important;
+ left:auto!important;right:auto!important;transform:none!important;
+ box-sizing:border-box!important;
+}
+body.tz-performance .tz-page-main{
+ box-sizing:border-box!important;max-width:1320px!important;width:100%!important;
+ margin:-32px auto 70px!important;padding:0 30px!important;
+ left:auto!important;right:auto!important;transform:none!important;
+}
+body.tz-performance .tz-page-main .tz-sport-toolbar{
+ margin:0 0 30px!important;
+}
+body.tz-performance .tz-site-header .tz-site-brand img.tz-logo-image{
+ width:108px!important;min-width:108px!important;max-width:108px!important;
+ height:54px!important;padding:0!important;margin:0!important;
+ background:transparent!important;border:0!important;border-radius:0!important;
+ box-shadow:none!important;object-fit:contain!important;
+}
+/* Active top-level destination: matches Events, Season and Account. */
+body>header.tz-site-header .tz-site-links>a[data-tz-destination][aria-current="page"]:not([data-tz-destination="organizers"]),
+body>header.tz-site-header .tz-site-links>button[data-tz-destination][aria-current="page"]{
+ color:#c7ff37!important;
+ background:transparent!important;
+ border:0!important;
+ border-bottom:3px solid #c7ff37!important;
+ border-radius:0!important;
+ box-shadow:none!important;
+ font-weight:850!important;
+}
+body>header.tz-site-header .tz-site-links>a[data-tz-destination]:not([aria-current="page"]):not([data-tz-destination="organizers"]){
+ border-bottom:3px solid transparent!important;
+}
+body>header.tz-site-header .tz-mobile-destinations a[aria-current="page"],
+body .tz-mobile-destinations a[aria-current="page"]{
+ color:#c7ff37!important;
+}
+@media(min-width:701px) and (max-width:900px){
+ body.tz-performance .tz-page-main{padding:0 20px!important}
+ body.tz-performance .tz-page-hero>.tz-hero-inner,
+ body.tz-performance .tz-page-hero>.wrap{padding-left:20px!important;padding-right:20px!important}
+}
+@media(max-width:700px){
+ body.tz-performance .tz-page-hero{min-height:0!important}
+ body.tz-performance .tz-page-hero>.tz-hero-inner,
+ body.tz-performance .tz-page-hero>.wrap{
+  min-height:0!important;padding:34px 17px 58px!important;
+ }
+ body.tz-performance .tz-page-main{
+  margin:-20px auto 48px!important;padding:0 17px!important;
+ }
+ body.tz-performance .tz-site-header .tz-site-brand img.tz-logo-image{
+  width:94px!important;min-width:94px!important;max-width:94px!important;height:50px!important;
+ }
+}
