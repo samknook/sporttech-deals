@@ -273,3 +273,49 @@ body .tz-footer a,body .foot a{color:#c9dbd2!important}
 /* Event titles lead to indexable, individual race pages. */
 .raCardBody .tz-event-permalink{color:inherit!important;text-decoration:none!important}
 .raCardBody .tz-event-permalink:hover,.raCardBody .tz-event-permalink:focus-visible{color:#0d5b44!important;text-decoration:underline!important;text-underline-offset:3px}
+
+
+/* TriZentro platform shell v3: one visual system across event discovery,
+   season, performance tools, race details and organizer information. */
+body>header .tz-site-links [data-tz-destination="account"],
+body>header .navright [data-tz-destination="account"]{
+  border:1px solid #496674!important;border-radius:10px!important;
+  background:#15303d!important;color:#fff!important;min-height:42px!important;
+}
+body>header .tz-site-links [data-tz-destination="account"]:hover,
+body>header .navright [data-tz-destination="account"]:hover{background:#214659!important}
+body .tz-site-header{width:100%}
+body .tz-platform-links{
+ display:flex;align-items:center;justify-content:center;gap:9px 19px;
+ flex-wrap:wrap;margin:18px auto 0;padding:18px 12px 0;
+ border-top:1px solid #ffffff25;max-width:1100px
+}
+body .tz-platform-links a{
+ color:#dde9e8!important;text-decoration:none!important;
+ font:700 12px/1.4 Inter,system-ui,sans-serif!important;
+ padding:7px 2px;border-radius:3px
+}
+body .tz-platform-links a:hover,body .tz-platform-links a:focus-visible{
+ color:var(--tz-lime)!important;text-decoration:underline!important
+}
+body .tz-global-footer{
+ background:var(--tz-navy)!important;color:#dcece8!important;
+ padding:28px 20px 36px;text-align:center;
+ display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px 18px;
+ font:600 13px/1.5 Inter,system-ui,sans-serif
+}
+body .tz-global-footer strong{font-weight:950;font-size:16px;color:white}
+body .tz-global-footer .tz-platform-links{flex:0 0 100%;margin-top:5px}
+body .foot:has(.tz-platform-links){padding-bottom:24px!important}
+body .tz-mobile-menu [data-tz-destination="account"]{
+ border:1px solid #496674;background:#15303d;color:white!important
+}
+body .tz-mobile-menu [data-tz-destination="organizers"]{order:9}
+body .tz-site-nav .tz-site-links{min-width:0}
+body .tz-site-links>a{transition:color .15s,background .15s}
+@media(max-width:700px){
+ body .tz-platform-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 10px;text-align:center}
+ body .tz-platform-links a{padding:10px 5px;font-size:12px!important}
+ body .tz-global-footer{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
+ body .tz-mobile-menu [data-tz-destination="account"]{padding:14px 13px}
+}
