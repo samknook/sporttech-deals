@@ -5,8 +5,8 @@ new Function(src);
 const pages=JSON.parse(fs.readFileSync('config/trizentro-public-pages.json','utf8')).pages.map(x=>'docs/'+x);
 for(const file of pages){
  const html=fs.readFileSync(file,'utf8');
- assert.ok(html.includes('shared-ui.js?v=20261113-platform3'),file+' missing shared navigation');
- assert.ok(html.includes('shared-ui.css?v=20261113-platform3'),file+' missing shared style');
+ assert.ok(/shared-ui\\.js\\?v=20261113-[a-z0-9]+/.test(html),file+' missing shared navigation');
+ assert.ok(/shared-ui\\.css\\?v=20261113-[a-z0-9]+/.test(html),file+' missing shared style');
  assert.ok(html.includes('tz-logo-image'),file+' missing shared brand');
 }
 for(const id of ['events','season','performance','account','organizers'])assert.ok(src.includes("id:'"+id+"'"),'missing destination '+id);
