@@ -13,8 +13,7 @@ const seasonRoot=basePath+'seizoen/';
 const accountRoot=basePath+'account/';
 const performanceRoot=basePath+'performance/';
 const organizerRoot=basePath+'organisatoren/';
-const queryLang=new URLSearchParams(location.search).get('lang');
-const getLang=()=>{if(queryLang==='nl'||queryLang==='en')return queryLang;if(/\/en\.html$/.test(path))return 'en';try{return localStorage.getItem('trizentro.language')||localStorage.getItem('raceatlas-language-v1')||'nl'}catch{return 'nl'}};
+const getLang=()=>{const queryLang=new URLSearchParams(location.search).get('lang');if(queryLang==='nl'||queryLang==='en')return queryLang;if(/\/en\.html$/.test(path))return 'en';try{return localStorage.getItem('trizentro.language')||localStorage.getItem('raceatlas-language-v1')||'nl'}catch{return 'nl'}};
 const tr=(nl,en)=>getLang()==='en'?en:nl;
 const link=(p,hash='')=>p+(getLang()==='en'?'?lang=en':'')+hash;
 const isOrganizer=path.includes('/organisatoren.html')||/\/organisatoren\/?$/.test(path);
@@ -206,6 +205,41 @@ if(isEvents){
  if(isAccount)navigateLocal('account');
  else if(isSeason)navigateLocal('season');
 }
-updateSeasonCounts();
-updateSelected();
+// Language is a live state, not a one-time translation of newly inserted links.
+// The RaceAtlas translator changes history + emits this event without reloading.
+const updatePlatformLanguage=()=>{
+ const language=getLang();
+ document.documentElement.lang=language;
+ for(const el of document.querySelectorAll('[data-tz-destination]')){
+  const id=el.dataset.tzDestination,item=items.find(x=>x.id===id);
+  if(!item)continue;
+  el.href&&(el.href=link(id==='events'?root:id==='season'?seasonRoot:id==='performance'?performanceRoot:id==='account'?accountRoot:organizerRoot));
+  const translated=tr(item.nl,item.en);
+  const label=el.querySelector('.tz-tab-label');
+  if(label)label.textContent=translated;
+  else if(el.tagName==='A'||el.tagName==='BUTTON'){
+   if(id==='season'&&el.querySelector('#savedCount')){
+    const badge=el.querySelector('#savedCount');
+    el.replaceChildren(document.createTextNode(translated+' · '),badge);
+   }else el.textContent=id==='season'?seasonText():translated;
+  }
+ }
+ for(let i=0;i<items.length;i++){
+  const el=footerLinks.children[i],item=items[i];
+  if(el&&item){el.textContent=tr(item.nl,item.en);
+   el.href=link(item.id==='events'?root:item.id==='season'?seasonRoot:item.id==='performance'?performanceRoot:item.id==='account'?accountRoot:organizerRoot)}
+ }
+ heading.textContent=tr('Navigatie','Navigation');
+ menuButton.setAttribute('aria-label',menu.hidden?tr('Open navigatiemenu','Open navigation menu'):tr('Sluit navigatiemenu','Close navigation menu'));
+ document.querySelector('.tz-mobile-destinations')?.setAttribute('aria-label',tr('Snelle navigatie','Quick navigation'));
+ footerLinks.setAttribute('aria-label',tr('TriZentro onderdelen','TriZentro sections'));
+ for(const button of nav.querySelectorAll('#raLanguageSwitch button')){
+  const code=button.dataset.language;
+  button.classList.toggle('active',code===language);
+  button.setAttribute('aria-pressed',String(code===language));
+ }
+ updateSelected();
+};
+window.addEventListener('raceatlas:languagechange',updatePlatformLanguage);
+updatePlatformLanguage();
 })();
