@@ -25,7 +25,7 @@ function detail(e,fromLink=false){
    const isAi=e.imageRights==='generated';
    const image=el('img');
    image.src=artwork;
-   image.alt=isAi?'AI-gegenereerd sfeerbeeld bij '+e.name+' (geen echte opname)':'Evenementfoto bij '+e.name;
+   image.alt=isAi?'AI-gegenereerd sfeerbeeld bij '+e.name+' (geen echte opname)':'Locatiebeeld van '+e.place+' bij '+e.name+'; geen opname van de wedstrijd';
    image.loading='lazy';image.decoding='async';
    const caption=el('figcaption',isAi?'Bron: TriZentro · AI-gegenereerd sfeerbeeld, geen officiële evenementfoto':(e.imageCredit||'Evenementfoto'));
    if(!isAi&&e.imageRights==='licensed'&&isValidUrl(e.imageSourceUrl)){
@@ -35,9 +35,8 @@ function detail(e,fromLink=false){
    if(!isAi&&e.imageRights==='licensed'&&/^ra-\d+$/.test(e.id)){
     image.addEventListener('error',()=>{
      image.onerror=null;
-     image.src='images/featured/'+e.id+'.jpg';
-     image.alt='AI-gegenereerd reserve-sfeerbeeld bij '+e.name;
-     caption.textContent='Bron: TriZentro · AI-gegenereerd reservebeeld, geen officiële evenementfoto';
+     image.remove();
+     caption.textContent='Locatiefoto tijdelijk niet bereikbaar; bronvermelding: '+(e.imageCredit||'Wikimedia Commons');
     },{once:true});
    }
    hero.append(image,caption);
