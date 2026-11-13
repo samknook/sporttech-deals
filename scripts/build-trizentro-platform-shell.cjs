@@ -4,14 +4,7 @@
 // Retains existing tools, data, forms, Events state, and noindex flags.
 const fs=require('node:fs'),path=require('node:path');
 const base=path.resolve(__dirname,'../docs');
-const pages=[
- 'raceatlas/index.html','raceatlas/organisatoren.html','raceatlas/over.html',
- 'raceatlas/privacy.html','raceatlas/gegevenskwaliteit.html','raceatlas/alerts-beheren.html',
- 'performance.html','pace-calculator.html','triathlon-calculator.html',
- 'race-dashboard.html','race-fuel-planner.html','race-planner.html',
- '70-3-raceplan.html','70-3-readiness-check.html','goal-feasibility.html',
- 'race-day-timeline.html','triatlon-afstanden.html','first-70-3-race-week-checklist.html'
-];
+const pages=JSON.parse(fs.readFileSync(path.join(__dirname,'../config/trizentro-public-pages.json'),'utf8')).pages;
 const eventsDir=path.join(base,'raceatlas/wedstrijden');
 if(fs.existsSync(eventsDir))for(const filename of fs.readdirSync(eventsDir)){if(filename.endsWith('.html'))pages.push('raceatlas/wedstrijden/'+filename)}
 const version='20261113-platform3';
