@@ -29,7 +29,7 @@ for(const filename of coreTools){
  check(html.includes('performance-theme.css'),'Shared Performance styling missing: '+filename);
  check(!html.includes('src="navigation.js"'),'Legacy navigation injection must not appear: '+filename);
  for(const legacy of legacyPaths)check(!html.includes('href="'+legacy),'Hidden tool linked from '+filename+': '+legacy);
- check(html.indexOf('>Voor organisatoren</a>')>html.indexOf('>Performance</a>'),'Organizer destination must remain last: '+filename);
+ check(html.includes('tz-site-links')&&fs.readFileSync(path.join(siteRoot,'shared-ui.js'),'utf8').indexOf("id:'organizers'")>fs.readFileSync(path.join(siteRoot,'shared-ui.js'),'utf8').indexOf("id:'performance'"),'Organizer destination must remain last in the shared navigation: '+filename);
 }
 const performanceCss=fs.readFileSync(path.join(siteRoot,'performance-theme.css'),'utf8');
 const performanceNavigation=fs.readFileSync(path.join(siteRoot,'performance-navigation.js'),'utf8');
