@@ -96,6 +96,7 @@ if(isEvents){
 }
 const existingBottom=document.querySelector('.tz-mobile-destinations');
 existingBottom?.remove();
+if(!isEvents){
 const bottom=document.createElement('nav');bottom.className='tz-mobile-destinations';bottom.setAttribute('aria-label',tr('Snelle navigatie','Quick navigation'));
 for(const item of items.slice(0,3)){
  const a=makeAnchor(item);
@@ -106,6 +107,7 @@ for(const item of items.slice(0,3)){
  bottom.append(a);
 }
 document.body.append(bottom);
+}
 if(isEvents){
  for(const id of ['navExplore','navSaved']){
   document.getElementById(id)?.addEventListener('click',()=>requestAnimationFrame(updateSelected));
