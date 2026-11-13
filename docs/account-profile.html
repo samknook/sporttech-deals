@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mijn account | TriZentro</title><meta name="description" content="Beheer je persoonlijke TriZentro-profiel, sportvoorkeuren en accountinstellingen.">
+<meta name="robots" content="noindex,follow"><link rel="icon" href="trizentro-mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="account-profile.css">
+<script src="raceatlas/account-config.js"></script></head>
+<body class="tz-account-page">
+<header class="tz-site-header"><nav class="tz-site-nav" aria-label="Hoofdnavigatie">
+<a class="tz-site-brand" href="events/" aria-label="TriZentro"><img class="tz-logo-image" src="trizentro-mark.svg" alt="TriZentro" width="108" height="54"></a>
+<div class="tz-site-links"></div></nav></header>
+<section class="tz-account-hero"><div class="tz-account-width">
+<div class="tz-account-kicker">TRIZENTRO / MIJN ACCOUNT</div><h1>Jouw sportprofiel<span>.</span></h1>
+<p>Beheer je gegevens en voorkeuren. Je wedstrijden staan apart onder Mijn seizoen.</p>
+</div></section>
+<main class="tz-account-main">
+<section id="accountLoading" class="tz-account-card" role="status">Je account wordt geladen…</section>
+<section id="accountGuest" class="tz-account-card" hidden>
+<h2>Inloggen of registreren</h2><p>Log in voor je persoonlijke gegevens, ook op een ander apparaat.</p>
+<div class="tz-account-tabs" role="group" aria-label="Accountactie"><button type="button" data-auth="login" class="active">Inloggen</button><button type="button" data-auth="signup">Registreren</button><button type="button" data-auth="recovery">Wachtwoord herstellen</button></div>
+<form id="accountAuthForm" class="tz-account-form">
+<label>E-mailadres<input type="email" id="accountEmail" required autocomplete="email" maxlength="254"></label>
+<label id="accountPasswordRow">Wachtwoord<input type="password" id="accountPassword" minlength="12" autocomplete="current-password"></label>
+<button id="accountAuthSubmit" type="submit" class="tz-account-primary">Inloggen</button></form>
+<p class="tz-account-muted">Nieuwe accounts gebruiken minimaal 12 tekens. Herstel- en bevestigingsmails kunnen verzendlimieten hebben.</p></section>
+<section id="accountSignedIn" hidden>
+<div class="tz-account-card"><div class="tz-account-heading"><div><span class="tz-account-kicker">PERSOONLIJKE GEGEVENS</span><h2>Mijn profiel</h2><p id="accountSignedEmail"></p></div><a class="tz-account-secondary" href="seizoen/">Bekijk mijn seizoen</a></div>
+<form id="accountProfileForm" class="tz-account-form">
+<div class="tz-account-fields">
+<label>Voornaam<input id="profileFirst" name="first_name" autocomplete="given-name" maxlength="70" placeholder="Voornaam"></label>
+<label>Achternaam<input id="profileLast" name="last_name" autocomplete="family-name" maxlength="90" placeholder="Achternaam"></label>
+<label>Geboortedatum <small>(optioneel)</small><input id="profileBirth" name="birth_date" type="date" autocomplete="bday"></label>
+<label>Woonplaats <small>(optioneel)</small><input id="profileCity" name="city" maxlength="100" autocomplete="address-level2" placeholder="Woonplaats"></label>
+</div><p id="profileAge" class="tz-account-muted"></p>
+<fieldset class="tz-account-sports"><legend>Mijn sporten</legend><label><input type="checkbox" name="sport" value="running"> Hardlopen</label><label><input type="checkbox" name="sport" value="cycling"> Wielrennen</label><label><input type="checkbox" name="sport" value="triathlon"> Triatlon</label><label><input type="checkbox" name="sport" value="duathlon"> Duatlon</label></fieldset>
+<button type="submit" class="tz-account-primary" id="profileSave">Profiel opslaan</button>
+</form><p class="tz-account-muted">Je profiel wordt opgeslagen bij je ingelogde account. Deze gegevens zijn niet openbaar en worden niet gebruikt voor marketing zonder aparte toestemming.</p>
+</div>
+<div class="tz-account-grid">
+<section class="tz-account-card"><h2>Mijn wedstrijden en resultaten</h2><p>Plan wedstrijden in Mijn seizoen. Hier komt later je persoonlijke wedstrijdhistorie, uitslagen en voortgang.</p><a href="seizoen/" class="tz-account-secondary">Open Mijn seizoen</a><p class="tz-account-muted">Resultaten zijn nog niet gekoppeld.</p></section>
+<section class="tz-account-card"><h2>Accountbeveiliging</h2><p>Beheer je wachtwoord en sessie.</p>
+<form id="accountNewPassword" class="tz-account-form"><label>Nieuw wachtwoord<input id="profileNewPassword" type="password" autocomplete="new-password" minlength="12" placeholder="Minimaal 12 tekens"></label><button type="submit" class="tz-account-secondary">Wachtwoord wijzigen</button></form>
+<button type="button" id="accountSignOut" class="tz-account-secondary">Uitloggen</button></section>
+</div></section>
+<p id="accountFeedback" class="tz-account-feedback" role="status" aria-live="polite"></p>
+</main><script src="account-profile.js" defer></script></body></html>
