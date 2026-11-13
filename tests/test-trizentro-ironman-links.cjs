@@ -13,6 +13,8 @@ for(const e of events){
 }
 const ironman=events.filter(e=>/^IRONMAN\b/i.test(e.name));
 assert.ok(ironman.length>=40,'IRONMAN coverage regressed');
+assert.ok(ironman.filter(e=>e.officialEventUrl!=='https://www.ironman.com/races').length>=42,'specific IRONMAN race links regressed');
+assert.equal(events.find(e=>e.id==='ra-295').date,null,'Unconfirmed Weymouth date must not be asserted as fact');
 for(const e of ironman){
  assert.match(e.officialEventUrl||'',/^https:\/\/www\.ironman\.com\/races(?:\/|$)/,
   'IRONMAN official outbound must not point at third-party calendar: '+e.name);
