@@ -106,7 +106,7 @@ test('Status updates handle rejected requests without revealing stale account da
   assert.match(moduleCode,/if\(currentUser!==user\?\.id\|\|version!==authVersion\)return/);
 });
 test('Email alerts are described as unavailable until opt-in and sending are implemented',()=>{
-  assert.match(moduleCode,/E-mailmeldingen zijn nog niet actief/);
+  assert.match(moduleCode,/Open Meldingen bij de wedstrijd en bevestig je e-mailadres/);
   assert.match(moduleCode,/aparte, expliciete aanmelding/);
 });
 
