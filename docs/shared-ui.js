@@ -2,7 +2,7 @@
 (()=>{'use strict';
 const isEventsHome=!!document.querySelector('.raMobileNav');
 const inEventsFolder=location.pathname.includes('/raceatlas/');
-const prefix=inEventsFolder?'../':'';
+const prefix=location.pathname.includes('/raceatlas/wedstrijden/')?'../../':inEventsFolder?'../':'';
 const language=()=>{const q=new URLSearchParams(location.search).get('lang');if(q==='nl'||q==='en')return q;try{return localStorage.getItem('trizentro.language')||localStorage.getItem('raceatlas-language-v1')||'nl'}catch{return 'nl'}};
 const languageQuery=()=>language()==='en'?'?lang=en':'';
 const href=(path,hash='')=>path+languageQuery()+hash;
@@ -11,9 +11,20 @@ const destinations=[
  {nl:'Events',en:'Events',icon:'⌕',href:href(prefix+'raceatlas/'),active:isEventsHome},
  {nl:'Mijn seizoen',en:'My season',icon:'☆',href:href(prefix+'raceatlas/','#mijn-seizoen')},
  {nl:'Performance',en:'Performance',icon:'⚡',href:href(prefix+'performance.html'),active:perf},
+ {nl:'Mijn account',en:'My account',icon:'♙',href:href(prefix+'raceatlas/','#mijn-account')},
  {nl:'Voor organisatoren',en:'For organizers',icon:'▤',href:href(prefix+'raceatlas/organisatoren.html'),active:location.pathname.includes('/organisatoren.html')}
 ];
 const nav=document.querySelector('body>header>nav');
+if(nav&&!isEventsHome){
+ const links=nav.querySelector('.tz-site-links');
+ if(links)links.replaceChildren();
+ if(links)destinations.forEach(item=>{
+  const a=document.createElement('a');a.href=item.href;a.textContent=language()==='en'?item.en:item.nl;
+  if(item.active)a.setAttribute('aria-current','page');
+  if(item.nl==='Voor organisatoren')a.className='tz-organizers';
+  links.append(a);
+ });
+}
 if(nav&&!nav.querySelector('.tz-menu-toggle')){
  const button=document.createElement('button');button.className='tz-menu-toggle';button.type='button';button.setAttribute('aria-expanded','false');button.setAttribute('aria-controls','tz-mobile-menu');button.setAttribute('aria-label',language()==='en'?'Open navigation menu':'Open navigatiemenu');
  button.innerHTML='<span class="tz-menu-glyph" aria-hidden="true">☰</span><span class="tz-menu-title">Menu</span>';

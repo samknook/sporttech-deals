@@ -25,13 +25,13 @@ for(const e of list){
  if(!/^ra-\d{1,8}$/.test(e.id)||!e.name)continue;
  const file=filename(e),url=base+'/raceatlas/wedstrijden/'+file;
  const desc=[e.name,e.place,e.country,e.sport,e.distance,date(e)].filter(Boolean).join(' · ').slice(0,190);
- const official=valid(e.officialEventUrl||e.source),registration=valid(e.registrationUrl),link=registration||official;
+ const official=valid(e.officialEventUrl)||valid(e.source),link=official;
  const confirmed=e.dateEvidence==='official';
  const status=confirmed?'Officieel bevestigde datum':'Datum nog niet officieel bevestigd';
  const fields=[['Wedstrijddatum',date(e)],['Locatie',[e.place,e.country].filter(Boolean).join(', ')],['Afstand',e.distance||'Onbekend'],['Sport',e.sport||'Sportevenement'],['Inschrijfstatus',e.registrationStatusNote||'Controleer actuele status bij organisator'],['Prijs',typeof e.priceEur==='number'?'€ '+e.priceEur.toFixed(2).replace('.',','):e.priceNote||'Niet bevestigd']];
  const facts=fields.map(x=>'<div class="fact"><span>'+safe(x[0])+'</span><strong>'+safe(x[1])+'</strong></div>').join('');
  const image=e.major&&/^ra-\d+$/.test(e.id)?'<img src="../images/featured/'+e.id+'.webp" alt="TriZentro sfeerbeeld '+safe(e.name)+'" onerror="this.remove()">':'';
- const cta=link?'<a class="primary" href="'+safe(link)+'" target="_blank" rel="noopener noreferrer" data-ra-event="'+safe(e.id)+'" data-ra-outbound="'+(registration?'registration':'organizer')+'">'+(registration?'Bekijk inschrijving':'Officiële website')+' ↗</a>':'';
+ const cta=link?'<a class="primary" href="'+safe(link)+'" target="_blank" rel="noopener noreferrer" data-ra-event="'+safe(e.id)+'" data-ra-outbound="organizer">Officiële website ↗</a>':'';
  const json={'@context':'https://schema.org','@type':'SportsEvent',name:e.name,url,eventStatus:'https://schema.org/EventScheduled'};
  if(confirmed&&e.date)json.startDate=e.date;
  if(e.place)json.location={'@type':'Place',name:e.place};
@@ -39,17 +39,17 @@ for(const e of list){
  const document=['<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#071925">',
  '<title>'+safe(e.name)+' | TriZentro</title><meta name="description" content="'+safe(desc)+'">',
  '<link rel="canonical" href="'+safe(url)+'"><meta property="og:site_name" content="TriZentro"><meta property="og:title" content="'+safe(e.name)+' | TriZentro"><meta property="og:description" content="'+safe(desc)+'"><meta property="og:url" content="'+safe(url)+'">',
- '<script type="application/ld+json">'+JSON.stringify(json).replace(/</g,'\\u003c')+'</script><style>'+style+'</style></head>',
- '<body><header><div class="inner"><a href="../" aria-label="TriZentro"><img src="../../trizentro-mark.svg" alt="TriZentro"></a><nav><a href="../">Events</a><a href="../#mijn-seizoen">Mijn seizoen</a><a href="../../performance.html">Performance</a></nav></div></header>',
+ '<script type="application/ld+json">'+JSON.stringify(json).replace(/</g,'\\u003c')+'</script><style>'+style+'</style><link rel="stylesheet" href="../../shared-ui.css?v=20261113-unified"></head>',
+ '<body><header class="tz-site-header"><nav class="tz-site-nav" aria-label="Hoofdnavigatie"><a class="tz-site-brand" href="../" aria-label="TriZentro"><img class="tz-logo-image" src="../../trizentro-mark.svg" alt="TriZentro"></a><div class="tz-site-links"><a href="../">Events</a><a href="../#mijn-seizoen">Mijn seizoen</a><a href="../../performance.html">Performance</a><a href="../#mijn-account">Mijn account</a><a href="../organisatoren.html">Voor organisatoren</a></div></nav></header>',
  '<main><a class="back" href="../">← Alle evenementen</a><h1>'+safe(e.name)+'</h1><p class="sub">'+safe([e.place,e.country,e.distance].filter(Boolean).join(' · '))+'</p>',
  '<section class="hero">'+image+'<div><strong>'+safe(date(e))+'</strong><p>'+safe(status)+'</p></div></section>',
  '<section class="facts" aria-label="Wedstrijdinformatie">'+facts+'</section>',
- '<div class="actions">'+cta+'<button id="saveRace" type="button" aria-pressed="false">☆ Bewaar in mijn seizoen</button><a href="../?event='+encodeURIComponent(e.id)+'">Meer details</a></div>',
+ '<div class="actions">'+cta+'<button id="saveRace" type="button" aria-pressed="false">☆ Bewaar in mijn seizoen</button><a href="../?event='+encodeURIComponent(e.id)+'">Open in wedstrijdkalender</a></div>',
  '<p class="note">TriZentro verzamelt beschikbare wedstrijdinformatie. Datums, prijzen en inschrijfstatussen kunnen veranderen. Controleer de actuele informatie altijd bij de organisator.</p>',
  official?'<p class="source">Bron: <a href="'+safe(official)+'" target="_blank" rel="noopener noreferrer">Organisator ↗</a></p>':'',
  '<div class="foot">TriZentro · Find. Prepare. Perform.</div></main>',
  '<script>(function(){const k="raceatlas-saved-v2",id='+JSON.stringify(e.id)+',b=document.getElementById("saveRace");function read(){try{const v=JSON.parse(localStorage.getItem(k)||"[]");return Array.isArray(v)?v:[]}catch{return []}}function render(){const on=read().includes(id);b.textContent=on?"✓ Bewaard in mijn seizoen":"☆ Bewaar in mijn seizoen";b.setAttribute("aria-pressed",String(on))}b.addEventListener("click",()=>{const v=read(),n=v.includes(id)?v.filter(x=>x!==id):[...v,id];try{localStorage.setItem(k,JSON.stringify(n))}catch{}render()});render()})()</script>',
- '<script src="../tracking.js?v=20261112-domain1" defer></script></body></html>'].join('\n');
+ '<script src="../../shared-ui.js?v=20261113-unified" defer></script><script src="../tracking.js?v=20261112-domain1" defer></script></body></html>'].join('\n');
  fs.writeFileSync(path.join(output,file),document);total++;
 }
 const sitemapPath=path.join(root,'sitemap.xml');

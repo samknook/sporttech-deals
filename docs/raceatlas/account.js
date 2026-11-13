@@ -43,7 +43,8 @@ const registerMailError=error=>{if(String(error?.code||'').toLowerCase()==='over
 const accountNav=el('button','Mijn account');
 accountNav.id='raAccountNav';accountNav.type='button';accountNav.className='raAccountNav';
 accountNav.addEventListener('click',()=>{document.getElementById('navSaved')?.click();wrapper.scrollIntoView({behavior:'smooth',block:'start'})});
-document.querySelector('.navright')?.append(accountNav);
+const accountLinks=document.querySelector('.navright');
+accountLinks?.insertBefore(accountNav,accountLinks.querySelector('.organizerNav'));
 const recoveryRequested=new URLSearchParams(location.search).get('ra_password_reset')==='1';
 const callbackParams=new URLSearchParams(location.hash.slice(1));
 if(recoveryRequested||callbackParams.has('access_token')||callbackParams.has('error')||new URLSearchParams(location.search).has('code'))accountNav.click();

@@ -93,7 +93,7 @@ test('Account module remains prepared but the public interface is gated',()=>{
   assert.match(moduleCode,/if\(cfg\.enabled!==true&&!previewActive\)return/);
   assert.match(moduleCode,/ra_account_preview/);
   assert.match(moduleCode,/accountNav\.id='raAccountNav'/);
-  assert.match(moduleCode,/document\.querySelector\('\.navright'\)\?\.append\(accountNav\)/);
+  assert.match(moduleCode,/accountLinks\?\.insertBefore\(accountNav,accountLinks\.querySelector\('\.organizerNav'\)\)/);
   assert.match(moduleCode,/\.raAccountNav\{display:none\}/);
 });
 test('Failed writes from a previous account cannot contaminate the new account',()=>{
