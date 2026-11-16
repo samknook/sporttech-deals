@@ -28,4 +28,23 @@ for(const oldName of detailFiles.slice(0,5)){
  const legacy=fs.readFileSync(base+'raceatlas/wedstrijden/'+oldName,'utf8');
  assert.ok(legacy.includes('noindex,follow'),'Legacy race page must be noindex: '+oldName);
 }
+// Every published SportsEvent must have valid startDate; unknown dates stay regular pages.
+let richResultEvents=0,ordinaryEventPages=0;
+for(const name of detailFiles){
+ const page=fs.readFileSync(base+'events/wedstrijden/'+name,'utf8');
+ const ld=[...page.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+ for(const match of ld){
+  const item=JSON.parse(match[1]);
+  if(item['@type']!=='SportsEvent')continue;
+  richResultEvents++;
+  assert.match(item.startDate||'',/^\d{4}-\d{2}-\d{2}$/,'Missing startDate in '+name);
+  assert.ok(item.description,'Missing structured description in '+name);
+  if(item.location)assert.ok(item.location.address?.addressLocality,'Location address missing for '+name);
+ }
+ if(ld.length===0)ordinaryEventPages++;
+ assert.ok(page.includes('https://trizentro.com/events/wedstrijden/'+name),'Canonical public page mismatch: '+name);
+}
+assert.ok(richResultEvents>0,'No structured dated events');
+assert.ok(ordinaryEventPages>0,'Unknown-date pages should omit Event structured data');
+console.log('Structured events validated: '+richResultEvents+' rich results, '+ordinaryEventPages+' ordinary pages');
 console.log('SEO PASS: canonical brand identity, robots, sitemap and '+detailFiles.length+' race pages');
