@@ -1,0 +1,41 @@
+.hero .event-photo { margin: 0; }
+.event-photo figcaption { padding: 8px 20px; color: #e1ebef; font-size: .75rem; }
+.hero .event-illustration {
+  --sport-accent: #aaddff;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  align-content: center;
+  gap: .45rem;
+  min-height: 190px;
+  padding: clamp(20px, 5vw, 42px);
+  background: linear-gradient(110deg, #102a3d, #071925 75%);
+  overflow-wrap: anywhere;
+}
+.event-illustration::after {
+  content: "";
+  position: absolute;
+  inset: -65% -14% -65% 55%;
+  z-index: -1;
+  transform: rotate(-27deg);
+  background: repeating-linear-gradient(90deg, transparent 0 24px, var(--sport-accent) 25px 27px, transparent 28px 40px);
+  opacity: .22;
+}
+.hero .event-illustration--run { --sport-accent: #c7ff37; }
+.hero .event-illustration--bike { --sport-accent: #ffc96e; }
+.hero .event-illustration--multi { --sport-accent: #64f5d9; }
+.event-illustration span:first-child { color: var(--sport-accent); font-weight: 800; }
+.hero .event-illustration strong { font-size: clamp(1.6rem, 4.5vw, 2.7rem); line-height: 1.1; }
+.event-illustration .event-place { color: #e1ebef; font-size: 1.06rem; }
+.hero .event-date { border-top: 1px solid #294151; }
+.event-prep { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 24px 0; }
+.prep-card { padding: clamp(14px, 3vw, 22px); background: #fff; border: 1px solid #dbe5ea; border-radius: 12px; }
+.prep-card h2 { margin: 0 0 .65rem; font-size: 1.2rem; }
+.prep-card p { margin: .5rem 0; color: #385567; line-height: 1.5; }
+.prep-links { display: flex; flex-wrap: wrap; gap: .6rem 1rem; margin-top: .75rem; }
+.prep-card a { color: #116146; font-size: .875rem; font-weight: 750; }
+.course-map { display: block; width: 100%; max-height: 320px; object-fit: contain; background: #f5f8fa; border-radius: 8px; }
+@media (max-width: 700px) {
+  .event-prep { grid-template-columns: 1fr; }
+}
