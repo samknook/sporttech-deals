@@ -43,7 +43,7 @@ for(const e of list){
  const cta=link?'<a class="primary" href="'+safe(link)+'" target="_blank" rel="noopener noreferrer" data-ra-event="'+safe(e.id)+'" data-ra-outbound="organizer">'+(directoryOnly?'Zoek wedstrijd op IRONMAN ↗':'Officiële website ↗')+'</a>':'';
  // Google requires startDate for a valid Event rich result. Unconfirmed race dates
  // remain discoverable as ordinary pages, without misleading Event markup.
- const json=confirmed&&/^\\d{4}-\\d{2}-\\d{2}$/.test(e.date||'')?{
+ const json=confirmed&&/^\d{4}-\d{2}-\d{2}$/.test(e.date||'')?{
   '@context':'https://schema.org','@type':'SportsEvent',
   name:e.name,url,description:desc,startDate:e.date,
   eventStatus:'https://schema.org/EventScheduled'
@@ -56,8 +56,8 @@ for(const e of list){
  }
  if(json&&official)json.sameAs=official;
  if(json&&e.organizerName&&official)json.organizer={'@type':'Organization',name:e.organizerName,url:official};
- if(json&&e.endDate&&/^\\d{4}-\\d{2}-\\d{2}$/.test(e.endDate)&&e.endDate>=e.date)json.endDate=e.endDate;
- const structuredData=json?'<script type="application/ld+json">'+JSON.stringify(json).replace(/</g,'\\\\u003c')+'</script>':'';
+ if(json&&e.endDate&&/^\d{4}-\d{2}-\d{2}$/.test(e.endDate)&&e.endDate>=e.date)json.endDate=e.endDate;
+ const structuredData=json?'<script type="application/ld+json">'+JSON.stringify(json).replace(/</g,'\\u003c')+'</script>':'';
  const document=['<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#071925">',
  '<title>'+safe(e.name)+' | TriZentro</title><meta name="description" content="'+safe(desc)+'">',
  '<link rel="canonical" href="'+safe(url)+'"><meta property="og:site_name" content="TriZentro"><meta property="og:title" content="'+safe(e.name)+' | TriZentro"><meta property="og:description" content="'+safe(desc)+'"><meta property="og:url" content="'+safe(url)+'">',
