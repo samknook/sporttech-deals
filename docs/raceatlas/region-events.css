@@ -1,0 +1,13 @@
+body { margin: 0; background: #f5f8fa; color: #102432; font-family: Inter, system-ui, sans-serif; }
+.region-content { max-width: 1080px; margin: 0 auto; padding: 2rem clamp(1rem,4vw,2.5rem) 4rem; }
+.region-content h1 { margin: 12px 0; font-size: clamp(2rem,5.5vw,3.45rem); line-height: 1.06; letter-spacing: -.04em; }
+.region-content p { margin: 0 0 1.5rem; color: #385567; max-width: 70ch; }
+.region-content a, .region-links a { color: #116146; font-weight: 750; text-underline-offset: .18em; }
+.region-back, .region-content nav a, .region-content aside a, .region-links a { display: inline-flex; align-items: center; min-height: 44px; }
+.region-races { margin: 0 0 1.5rem; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,16rem),1fr)); gap: .8rem; }
+.region-races li { display: grid; align-content: start; gap: .35rem; background: white; padding: 1rem; border: 1px solid #dbe5ea; border-radius: .85rem; }
+.region-races li a { display: flex; align-items: center; min-height: 44px; }
+.region-races small { color: #536d7b; line-height: 1.4; }
+.region-content nav, .region-links { display: flex; flex-wrap: wrap; gap: .35rem 1.05rem; }
+.region-content aside { margin-top: 1rem; }
+.region-links { margin: 1.25rem 0; border-top: 1px solid #dbe5ea; padding-top: .5rem; }
