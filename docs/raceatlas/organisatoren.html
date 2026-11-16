@@ -5,17 +5,17 @@
 <section id="contact" class="orgContactSection"><div class="tag">Contact</div><h2>Stel ons een vraag.</h2><p>Wil je meer weten over TriZentro, een samenwerking bespreken of gegevens laten corrigeren? Laat hieronder weten waarover je contact zoekt. Je kunt ook rechtstreeks mailen naar <a href="mailto:trizentro.team@gmail.com">trizentro.team@gmail.com</a>.</p>
 <div class="panel"><form id="contactForm" action="https://formsubmit.co/ajax/trizentro.team@gmail.com" method="POST">
 <div class="field"><label for="contactName">Naam / organisatie *</label><input id="contactName" required maxlength="120" autocomplete="organization" placeholder="Naam organisatie"></div>
-<div class="field"><label for="contactEmail">Zakelijk e-mailadres *</label><input id="contactEmail" type="email" required maxlength="180" autocomplete="email" placeholder="naam@organisatie.nl"></div><div class="field"><label for="contactSubject">Onderwerp *</label><select id="contactSubject" required><option value="">Kies een onderwerp</option><option>Algemene vraag</option><option>Evenementgegevens aanpassen</option><option>Samenwerken</option><option>Extra zichtbaarheid / promotie</option><option>Anders</option></select></div>
+<div class="field"><label for="contactEmail">Zakelijk e-mailadres *</label><input id="contactEmail" type="email" required maxlength="180" autocomplete="email" placeholder="naam@organisatie.nl"></div><div class="field"><label for="contactSubject">Onderwerp *</label><select id="contactSubject" required><option value="">Kies een onderwerp</option><option>Algemene vraag</option><option>Evenementgegevens aanpassen</option><option value="Claim je evenement">Claim je evenement</option><option>Samenwerken</option><option>Extra zichtbaarheid / promotie</option><option>Anders</option></select></div>
 <div class="field wide"><label for="contactEvent">Naam evenement / website (optioneel)</label><input id="contactEvent" maxlength="250" placeholder="Bijv. Stadsloop, https://..."></div>
-<fieldset id="correctionFields" class="wide orgCorrection" hidden><legend>Gegevens van je wijziging</legend>
-<p class="muted">Vul alleen de onderdelen in die wijzigen. Lege velden worden niet geïnterpreteerd als een nieuwe datum of prijs. We publiceren wijzigingen pas na controle.</p>
+<fieldset id="correctionFields" class="wide orgCorrection" hidden><legend id="correctionLegend">Gegevens van je wijziging</legend>
+<p id="correctionHelp" class="muted">Vul alleen de onderdelen in die wijzigen. Lege velden worden niet geïnterpreteerd als een nieuwe datum of prijs. We publiceren wijzigingen pas na controle.</p>
 <div class="orgCorrectionGrid">
 <div class="field"><label for="correctionEventId">TriZentro evenement-ID (optioneel)</label><input id="correctionEventId" maxlength="20" placeholder="ra-123" pattern="ra-[0-9]{1,8}"></div>
-<div class="field"><label for="correctionField">Wat wil je corrigeren? *</label><select id="correctionField"><option value="">Kies een onderwerp</option><option value="wedstrijddatum">Wedstrijddatum</option><option value="inschrijfopening">Inschrijfopening</option><option value="inschrijfdeadline">Inschrijfdeadline</option><option value="inschrijfstatus">Inschrijfstatus / uitverkocht</option><option value="inschrijfprijs">Inschrijfprijs</option><option value="afstanden">Afstanden / onderdelen</option><option value="officiële website">Officiële website / inschrijflink</option><option value="overige">Overige informatie</option></select></div>
-<div class="field"><label for="correctionDate">Nieuwe datum (indien van toepassing)</label><input id="correctionDate" type="date"></div>
-<div class="field"><label for="correctionStatus">Inschrijfstatus</label><select id="correctionStatus"><option value="">Niet van toepassing / onbekend</option><option value="Nog niet geopend">Nog niet geopend</option><option value="Inschrijven mogelijk volgens bron">Inschrijven mogelijk volgens bron</option><option value="Verschilt per afstand">Verschilt per afstand</option><option value="Uitverkocht">Uitverkocht</option><option value="Gesloten">Gesloten</option></select></div>
-<div class="field wide"><label for="correctionSource">Officiële bronlink voor deze wijziging *</label><input id="correctionSource" type="url" maxlength="500" pattern="https://.*" placeholder="https://www.organisatie.nl/inschrijven"></div>
-<div class="field wide"><label for="correctionNotes">Wat is gewijzigd? *</label><textarea id="correctionNotes" rows="3" maxlength="1000" placeholder="Bijvoorbeeld: de inschrijving voor 21,1 km is gesloten; 10 km is nog beschikbaar."></textarea></div>
+<div class="field" data-correction-only><label for="correctionField">Wat wil je corrigeren? *</label><select id="correctionField"><option value="">Kies een onderwerp</option><option value="wedstrijddatum">Wedstrijddatum</option><option value="inschrijfopening">Inschrijfopening</option><option value="inschrijfdeadline">Inschrijfdeadline</option><option value="inschrijfstatus">Inschrijfstatus / uitverkocht</option><option value="inschrijfprijs">Inschrijfprijs</option><option value="afstanden">Afstanden / onderdelen</option><option value="officiële website">Officiële website / inschrijflink</option><option value="overige">Overige informatie</option></select></div>
+<div class="field" data-correction-only><label for="correctionDate">Nieuwe datum (indien van toepassing)</label><input id="correctionDate" type="date"></div>
+<div class="field" data-correction-only><label for="correctionStatus">Inschrijfstatus</label><select id="correctionStatus"><option value="">Niet van toepassing / onbekend</option><option value="Nog niet geopend">Nog niet geopend</option><option value="Inschrijven mogelijk volgens bron">Inschrijven mogelijk volgens bron</option><option value="Verschilt per afstand">Verschilt per afstand</option><option value="Uitverkocht">Uitverkocht</option><option value="Gesloten">Gesloten</option></select></div>
+<div class="field wide"><label id="correctionSourceLabel" for="correctionSource">Officiële bronlink voor deze wijziging *</label><input id="correctionSource" type="url" maxlength="500" pattern="https://.*" placeholder="https://www.organisatie.nl/inschrijven"></div>
+<div class="field wide"><label id="correctionNotesLabel" for="correctionNotes">Wat is gewijzigd? *</label><textarea id="correctionNotes" rows="3" maxlength="1000" placeholder="Bijvoorbeeld: de inschrijving voor 21,1 km is gesloten; 10 km is nog beschikbaar."></textarea></div>
 </div></fieldset>
 <div class="field wide"><label for="contactMessage">Jouw bericht *</label><textarea id="contactMessage" required maxlength="2000" rows="5" placeholder="Waar kunnen we je mee helpen?"></textarea></div>
 <div class="field wide orgHoney" aria-hidden="true"><label for="contactWebsite">Website (niet invullen)</label><input id="contactWebsite" name="_honey" type="text" autocomplete="off" tabindex="-1"></div>
@@ -36,12 +36,24 @@ function prefillOrganizerContact(){
  const source=query.get('bron')||'';
  if(source.length<=500&&/^https:\/\/[^\s]+$/i.test(source))$('correctionSource').value=source;
  updateCorrectionFields();
- if(eventId&&!$('contactMessage').value)$('contactMessage').value='Correctieverzoek vanuit TriZentro evenementdetails.';
+ if(eventId&&subject==='Evenementgegevens aanpassen'&&!$('contactMessage').value)$('contactMessage').value='Correctieverzoek vanuit TriZentro evenementdetails.';
 }
 function updateCorrectionFields(){
- const active=$('contactSubject').value==='Evenementgegevens aanpassen';
+ const subject=$('contactSubject').value;
+ const claim=subject==='Claim je evenement';
+ const correction=subject==='Evenementgegevens aanpassen';
+ const active=claim||correction;
  const root=$('correctionFields');root.hidden=!active;
- for(const id of ['correctionField','correctionSource','correctionNotes'])$(id).required=active;
+ for(const field of root.querySelectorAll('[data-correction-only]'))field.hidden=!correction;
+ $('correctionField').required=correction;
+ $('correctionSource').required=active;
+ $('correctionNotes').required=active;
+ $('contactEvent').required=claim;
+ $('correctionLegend').textContent=claim?'Gegevens van je aanvraag':'Gegevens van je wijziging';
+ $('correctionHelp').textContent=claim?'Gebruik je zakelijke e-mailadres en beschrijf je rol. TriZentro verifieert je relatie met het evenement via de officiële organisatie voordat een aanvraag wordt goedgekeurd.':'Vul alleen de onderdelen in die wijzigen. Lege velden worden niet geïnterpreteerd als een nieuwe datum of prijs. We publiceren wijzigingen pas na controle.';
+ $('correctionSourceLabel').textContent=claim?'Officiële evenementwebsite *':'Officiële bronlink voor deze wijziging *';
+ $('correctionNotesLabel').textContent=claim?'Wat is je rol bij het evenement? *':'Wat is gewijzigd? *';
+ $('correctionNotes').placeholder=claim?'Bijvoorbeeld: ik coördineer de inschrijvingen voor dit evenement.':'Bijvoorbeeld: de inschrijving voor 21,1 km is gesloten; 10 km is nog beschikbaar.';
  $('contactMessage').required=!active;
  $('contactMessage').placeholder=active?'Optioneel: extra toelichting voor het TriZentro-team':'Waar kunnen we je mee helpen?';
 }
@@ -52,6 +64,11 @@ prefillOrganizerContact();
 function correctionText(){
  if($('correctionFields').hidden)return '';
  const g=id=>$(id).value.trim();
+ if($('contactSubject').value==='Claim je evenement'){
+  return '\n\nTriZentro evenement-ID: '+(g('correctionEventId')||'Niet opgegeven')+
+   '\nOfficiële evenementwebsite: '+g('correctionSource')+
+   '\nRol bij het evenement: '+g('correctionNotes');
+ }
  return '\n\nTriZentro evenement-ID: '+(g('correctionEventId')||'Niet opgegeven')+
  '\nTe corrigeren veld: '+g('correctionField')+
  '\nNieuwe datum (indien relevant): '+(g('correctionDate')||'Niet opgegeven')+
@@ -76,7 +93,7 @@ $('contactForm').addEventListener('submit',async e=>{
     const response=await fetch(CONTACT_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(formData)});
     const data=await response.json();
     if(response.ok&&formSubmitResult(data)){
-      status.className='muted wide orgSendSuccess';status.textContent=$('correctionFields').hidden?'De formulierdienst heeft je bericht geaccepteerd. Bedankt! We nemen contact op als er meer informatie nodig is.':'De formulierdienst heeft je correctieverzoek geaccepteerd. TriZentro controleert de bron vóór eventuele aanpassing; de kalender is nog niet gewijzigd.';
+      status.className='muted wide orgSendSuccess';status.textContent=$('contactSubject').value==='Claim je evenement'?'Je aanvraag is geaccepteerd door de formulierdienst. TriZentro controleert je relatie met het evenement.':$('correctionFields').hidden?'De formulierdienst heeft je bericht geaccepteerd. Bedankt! We nemen contact op als er meer informatie nodig is.':'De formulierdienst heeft je correctieverzoek geaccepteerd. TriZentro controleert de bron vóór eventuele aanpassing; de kalender is nog niet gewijzigd.';
       form.reset();updateCorrectionFields();
     }else if(isPendingActivation(data)){
       status.className='muted wide orgSendError';status.textContent='De formulierdienst wacht nog op een eenmalige activatie door TriZentro. Je bericht is nog niet bevestigd als afgeleverd. Gebruik voorlopig de knop Kopieer bericht of mail rechtstreeks.';
