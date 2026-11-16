@@ -9,7 +9,7 @@
     "https://www.savatletiek.nl/recreanten/start-to-run/": "56f64fb4b66a470fa63ec80a49cc70a6e461cc9fd4b5526d104256c1745a0578",
     "https://www.savatletiek.nl/wedstrijden/kalender/": "021d2cc3180fa4579026eea23d9497c7eb03837a93ab68118edfb338a5cce800",
     "https://www.savatletiek.nl/wedstrijden/uitslagen-2/": "80ade1598d69f40059055ec4deeeaa55d403932f6d8cc997c9e92fa5ffc2f1e5",
-    "https://stgeorgecross.nl/": "f6ad675fbde7c7eeee7f7c0ba034123dc25657fe88641f5e4cf406e88a259625",
+    "https://stgeorgecross.nl/": "f66e58a82b37ba879985b97f05ecbd860d52c206b08f93590bc9a28df8010983",
     "https://www.tcsamsterdammarathon.nl/": "9f3e75121bd9cd4b34244b8e23465081e4af17c0a87b2f3b81bbdbfac4d63d96",
     "https://www.tcsamsterdammarathon.nl/official-mizuno-raceshirt": "e0394f767dc0115d1d7ad49f454910d65cdada01ae1bc57f0458ff2fa94c7e26",
     "https://www.tcsamsterdammarathon.nl/race-app": "ef09140053963899c8605f460bc1ac20ac41ca73676293a854538e14651a4baf",
@@ -29,7 +29,7 @@
     "https://www.drenthe200.nl/": "cf752faa4826544c9e896e87e4e9c0b4f86d9bd5b5df4846d0343d46afaac86b",
     "https://www.drenthe200.nl/route-2026": "2d7bfafbfba2b3e1b87b3e84ae6270e530d74065b48c38f272a47d937b5e735f",
     "https://rtcprinsenbeek.nl/veldtoertocht/": "d3886f78a32f4b055fe739a8830313c686758563bae4c1c31c55e80bd1138343",
-    "https://www.tempo-soest.nl/evenementen": "4d9b10e5e3dbb62fb943fc716684d0881072e3f7c5e3edd169216e4100dc2480",
+    "https://www.tempo-soest.nl/evenementen": "86e8d9fafd4da5c9e0eb0c41467a69bfd3fc81643ffb2498580fe31df01b3577",
     "https://www.tempo-soest.nl/evenementen/zondagochtendclubrit-15-november---gravel--en-wegrit---koffie2go---09-30u": "270901614dec5eb7488c3012a78ae886756761a5ca101cee95640e4c0a96a64e",
     "https://www.tempo-soest.nl/evenementen/zondagochtendclubrit-22-november---gravel--en-wegrit---koffie2go---09-30u": "6fa95d385570d08ec4bcca4057c46b3b13588e5b00db8af7d3ad77869ccb8a07",
     "https://www.tempo-soest.nl/evenementen/zondagochtendclubrit-29-november---gravel--en-wegrit---koffie2go---09-30u": "849944b443cf9b3eb27fdd3340da091c05ae381f313b41b51691d78e592fcfba",
@@ -61,12 +61,13 @@
     "https://www.tempo-soest.nl/": "63109fe0af13a11aa1892a74c734d19205b0923ca978604a045b4a737bff944e",
     "https://www.adelaar.org/wielrennen/toerfietsen/rittenkalender/": "0b5572a2504f2a69e6bb21beba430c5de10b2202f0c3c4e3579366cd9f63cb3a",
     "https://www.wstexel.nl/": "c447d77b9e566ed0306dba1c7ede580473f2eb4dbc09857de84ed0bda6060287",
-    "https://wtczijtaart.nl/": "1e7a8ea4c49c88d5e788df4d7edb8b0a2e9742f2552dd3ed11d575ea94e6faad",
+    "https://wtczijtaart.nl/": "88a693b9cfb45d6e7d909f842ab6a5c219e0153cfffdcdf4f020a5253fc352b8",
     "https://www.avedam.nl/": "ade8fac4ed3b77da71ecacbf6fe7de68223d772b20bf4141d55e13c1107766e2",
     "https://www.westeinderloop.nl/": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "https://www.dutchmastersofmtb.nl/": "2047fa668cf2d88a5ddcc466395e51cbdca2a9c05a22ec707f4843d910616c11",
+    "https://www.dutchmastersofmtb.nl/": "9533f7622fa527a1787d739b5617f0159f432421061e09c4d1ed41b1add70013",
     "https://www.veluwserunbikerun.nl/reglement/": "a90d420317b4992a205bcd04e8d9ceb473829e68a3e073a8cd7793bf6fa61fb7",
     "https://www.ijmuiden.nl/evenement/av-suomi-sinterklaasloop-2026/": "56fc0eef29c2dbbeff56189f8cdd6435ef2a593d8c81e68f8ebc098d97c1a0c6",
-    "https://www.ironman.com/races/im703-maastricht-limburg": "b74a471ab1bf9ed3b519f8d6054e2fed6addef07fb454fd225186a055aaa7c69"
+    "https://www.ironman.com/races/im703-maastricht-limburg": "b74a471ab1bf9ed3b519f8d6054e2fed6addef07fb454fd225186a055aaa7c69",
+    "https://www.tempo-soest.nl/evenementen/zondagochtendclubrit-6-december---gravel--en-wegrit---koffie2go---09-30u": "2d2f8015c9b1a61ed806012b2e7bf181bf388b3072d67e44e49452b5e8d90b33"
   }
 }
