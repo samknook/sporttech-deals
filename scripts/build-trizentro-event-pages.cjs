@@ -145,6 +145,7 @@ for(const e of list){
  '<script src="../../shared-ui.js?v=20261113-unified" defer></script><script src="../tracking.js?v=20261112-domain1" defer></script></body></html>'].join('\n');
  fs.writeFileSync(path.join(output,file),document);total++;
 }
+require('./trizentro-region-pages.cjs').writeRegionPages({root,events:list,filename,date});
 const sitemapPath=path.join(root,'sitemap.xml');
 let sitemap=fs.readFileSync(sitemapPath,'utf8');
 const links=list.filter(e=>/^ra-\d{1,8}$/.test(e.id)&&e.name).map(e=>'  <url><loc>'+safe(base+'/raceatlas/wedstrijden/'+filename(e))+'</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>').join('\n');
