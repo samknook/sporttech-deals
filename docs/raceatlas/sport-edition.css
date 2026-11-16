@@ -251,3 +251,41 @@ header{position:relative;z-index:12;background:#071927!important;border-bottom:1
 
 .raCardVisual.raUniqueVisual .raDateBadge,.raCardVisual.raUniqueVisual .raFeatureBadge{position:relative;z-index:2}
 @media(max-width:700px){.raCardVisual.raUniqueVisual{background-position:center}}
+
+.raCardVisual.raIllustratedVisual {
+  --illustration-accent: #c7ff37;
+  gap: 12px;
+  align-items: center;
+  height: auto;
+  background: linear-gradient(120deg, #163548, #081c2a);
+  color: #fff;
+}
+.raIllustratedVisual.biking { --illustration-accent: #ffc96e; }
+.raIllustratedVisual.triathlon, .raIllustratedVisual.duathlon { --illustration-accent: #64f5d9; }
+.raCardVisual.raIllustratedVisual::before { content: none; }
+.raCardVisual.raIllustratedVisual::after {
+  background: repeating-linear-gradient(125deg, transparent 0 28px, #ffffff12 28px 30px, transparent 30px 42px);
+}
+.raIllustrationText {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  overflow-wrap: anywhere;
+  line-height: 1.15;
+  font-size: .875rem;
+}
+.raIllustrationText span:first-child { color: var(--illustration-accent); font-weight: 800; }
+.raIllustrationText strong { font-size: clamp(1.1rem, 2.5vw, 1.55rem); }
+.raIllustrationText span:last-child { color: #e1ebef; }
+.cards.listMode .raIllustratedVisual {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.cards.listMode .raIllustrationText { flex: none; font-size: .75rem; }
+.cards.listMode .raIllustrationText strong { font-size: .875rem; }
+@media (max-width: 700px) {
+  .raCardVisual.raIllustratedVisual { height: auto !important; }
+  .cards.listMode .raCardVisual.raIllustratedVisual { height: 100% !important; }
+}
