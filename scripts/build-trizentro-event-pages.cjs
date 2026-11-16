@@ -105,6 +105,9 @@ for(const e of list){
  const sport=[e.sport,e.discipline].filter(Boolean).filter((value,index,items)=>items.findIndex(item=>String(item).toLowerCase()===String(value).toLowerCase())===index).join(' · ')||'Sportevenement';
  const sportKey=/triat|duat|multisport/i.test(sport)?'multi':/fiets|wiel|gravel|mtb/i.test(sport)?'bike':/hardlop|trail|run|marathon/i.test(sport)?'run':'other';
  const illustration='<div class="event-illustration event-illustration--'+sportKey+'"><span>'+safe(sport)+'</span><strong>'+safe(e.distance||'Afstand nog onbekend')+'</strong><span class="event-place">'+safe(e.place||'Plaats nog onbekend')+'</span></div>';
+ const claimParams=new URLSearchParams({onderwerp:'Claim je evenement',event:e.name,eventId:e.id});
+ if(official&&official!=='https://www.ironman.com/races')claimParams.set('bron',official);
+ const claimUrl='../../organisatoren/?'+claimParams.toString()+'#contact';
  const directoryOnly=link==='https://www.ironman.com/races';
  const cta=link?'<a class="primary" href="'+safe(link)+'" target="_blank" rel="noopener noreferrer" data-ra-event="'+safe(e.id)+'" data-ra-outbound="organizer">'+(directoryOnly?'Zoek wedstrijd op IRONMAN ↗':'Officiële website ↗')+'</a>':'';
  // Google requires startDate for a valid Event rich result. Unconfirmed race dates
@@ -134,6 +137,7 @@ for(const e of list){
  '<section class="facts" aria-label="Wedstrijdinformatie">'+facts+'</section>',
  '<div class="actions">'+cta+'<button id="saveRace" type="button" aria-pressed="false">☆ Bewaar in mijn seizoen</button><a href="../?event='+encodeURIComponent(e.id)+'">Open in wedstrijdkalender</a><a href="../../performance.html">Bereid je voor ↗</a></div>',
  courseAndWeather(e,official),
+ '<section class="prep-card event-claim" aria-labelledby="eventClaimHeading"><h2 id="eventClaimHeading">Organiseer je dit evenement?</h2><p>Vraag beheer aan om wedstrijddetails, inschrijfinformatie of het parcours door te geven. TriZentro controleert je aanvraag.</p><a href="'+safe(claimUrl)+'">Claim je evenement ↗</a></section>',
  '<p class="note">TriZentro verzamelt beschikbare wedstrijdinformatie. Datums, prijzen en inschrijfstatussen kunnen veranderen. Controleer de actuele informatie altijd bij de organisator.</p>',
  official?'<p class="source">Bron: <a href="'+safe(official)+'" target="_blank" rel="noopener noreferrer">Organisator ↗</a></p>':'',
  '<div class="foot">TriZentro · Find. Prepare. Perform.</div></main>',
