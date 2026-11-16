@@ -5,6 +5,8 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const base=path.resolve(__dirname,'../docs');
 const pages=JSON.parse(fs.readFileSync(path.join(__dirname,'../config/trizentro-public-pages.json'),'utf8')).pages;
+const {selections}=require('./trizentro-region-pages.cjs');
+for(const {slug} of selections)pages.push('events/'+slug+'/index.html');
 const eventsDir=path.join(base,'raceatlas/wedstrijden');
 if(fs.existsSync(eventsDir))for(const filename of fs.readdirSync(eventsDir)){if(filename.endsWith('.html'))pages.push('raceatlas/wedstrijden/'+filename)}
 // Content-derived asset versions prevent browser caches from serving old shared navigation.
@@ -95,6 +97,14 @@ function markLegacy(html,canonical){
 }
 // Event detail pages also live below Events, with the same data and save
 // actions as the generated legacy pages.
+const calendarFile=path.join(base,'events/index.html');
+const regionalLinks='<nav class="region-links" aria-label="Wedstrijden in Noord-Holland">'+selections.map(
+ ({slug,title})=>'<a href="../events/'+slug+'/">'+title+'</a>'
+).join('')+'</nav>';
+const calendarHtml=fs.readFileSync(calendarFile,'utf8')
+ .replace('</head>','<link rel="stylesheet" href="../raceatlas/region-events.css"></head>')
+ .replace('<section id="raCampaignSlot"',regionalLinks+'<section id="raCampaignSlot"');
+fs.writeFileSync(calendarFile,calendarHtml);
 const cleanDetailsDir=path.join(base,'events/wedstrijden');
 fs.mkdirSync(cleanDetailsDir,{recursive:true});
 let detailCount=0;
@@ -123,6 +133,7 @@ const urls=[
  {pathname:'/performance/',priority:'0.9',frequency:'weekly'},
  {pathname:'/organisatoren/',priority:'0.5',frequency:'monthly'}
 ];
+for(const {slug} of selections)urls.push({pathname:'/events/'+slug+'/',priority:'0.8',frequency:'weekly'});
 const publicTools=[
  'triathlon-calculator.html','race-planner.html','triatlon-afstanden.html',
  'first-70-3-race-week-checklist.html','70-3-readiness-check.html',
