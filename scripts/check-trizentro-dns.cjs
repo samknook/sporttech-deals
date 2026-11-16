@@ -1,7 +1,6 @@
 'use strict';
 const dns=require('node:dns').promises;
 const https=require('node:https');
-const assert=require('node:assert/strict');
 const expected=['185.199.108.153','185.199.109.153','185.199.110.153','185.199.111.153'];
 const host='trizentro.com';
 async function getUrl(url){
@@ -13,7 +12,20 @@ async function getUrl(url){
   request.on('error',reject);
  });
 }
+async function inspectMail(domain){
+ try{
+  const records=await dns.resolveMx(domain);
+  const exchanges=records.filter(record=>record.exchange && record.exchange!=='.');
+  return {domain,status:exchanges.length?'configured':'missing',exchanges};
+ }catch(error){
+  if(['ENODATA','ENOTFOUND'].includes(error.code)){
+   return {domain,status:'missing',exchanges:[]};
+  }
+  return {domain,status:'lookup failed',error:error.code||error.message};
+ }
+}
 (async()=>{
+ const mailChecks=Promise.all([inspectMail(host),inspectMail('send.'+host)]);
  const errors=[];
  let addresses=[];
  try{addresses=await dns.resolve4(host);const unknown=addresses.filter(x=>!expected.includes(x));if(unknown.length)errors.push('Unexpected A records: '+unknown.join(', '));if(!addresses.length)errors.push('No IPv4 addresses resolved');}
@@ -26,7 +38,7 @@ async function getUrl(url){
  catch(e){errors.push('HTTPS on main domain failed: '+e.message)}
  try{web=await getUrl('https://www.'+host+'/raceatlas/');if(![301,302,307,308].includes(web.status)||!web.location.startsWith('https://'+host+'/'))errors.push('www redirect to apex domain failed');}
  catch(e){errors.push('HTTPS www check failed: '+e.message)}
- console.log(JSON.stringify({domain:host,addresses,cname,apex:main,www:web,errors},null,2));
+ console.log(JSON.stringify({domain:host,addresses,cname,apex:main,www:web,mailDns:await mailChecks,errors},null,2));
  if(errors.length)process.exitCode=1;
- else console.log('PASS: TriZentro DNS, HTTPS and redirect are ready for canonical cutover.');
+ else console.log('PASS: TriZentro website DNS, HTTPS and redirect are working.');
 })().catch(e=>{console.error(e);process.exitCode=1});
