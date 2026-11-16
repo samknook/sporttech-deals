@@ -130,7 +130,7 @@ for(const e of list){
  structuredData+'<style>'+style+'</style><link rel="stylesheet" href="../event-details.css"><link rel="stylesheet" href="../../shared-ui.css?v=20261113-unified"></head>',
  '<body><header class="tz-site-header"><nav class="tz-site-nav" aria-label="Hoofdnavigatie"><a class="tz-site-brand" href="../" aria-label="TriZentro"><img class="tz-logo-image" src="../../trizentro-mark.svg" alt="TriZentro"></a><div class="tz-site-links"><a href="../">Events</a><a href="../#mijn-seizoen">Mijn seizoen</a><a href="../../performance.html">Performance</a><a href="../#mijn-account">Mijn account</a><a href="../organisatoren.html">Voor organisatoren</a></div></nav></header>',
  '<main><a class="back" href="../">← Alle evenementen</a><h1>'+safe(e.name)+'</h1><p class="sub">'+safe([e.place,e.country,e.distance].filter(Boolean).join(' · '))+'</p>',
- '<section class="hero">'+image+illustration+'<div class="event-date"><strong>'+safe(date(e))+'</strong><p>'+safe(status)+'</p></div></section>',
+ '<section class="hero">'+image+(e.major?'':illustration)+'<div class="event-date"><strong>'+safe(date(e))+'</strong><p>'+safe(status)+'</p></div></section>',
  '<section class="facts" aria-label="Wedstrijdinformatie">'+facts+'</section>',
  '<div class="actions">'+cta+'<button id="saveRace" type="button" aria-pressed="false">☆ Bewaar in mijn seizoen</button><a href="../?event='+encodeURIComponent(e.id)+'">Open in wedstrijdkalender</a><a href="../../performance.html">Bereid je voor ↗</a></div>',
  courseAndWeather(e,official),
