@@ -31,7 +31,7 @@ for(const e of list){
  if(!/^ra-\d{1,8}$/.test(e.id)||!e.name)continue;
  const file=filename(e),url=base+'/raceatlas/wedstrijden/'+file;
  const desc=[e.name,e.place,e.country,e.sport,e.distance,date(e)].filter(Boolean).join(' · ').slice(0,190);
- const official=valid(e.officialEventUrl)||valid(e.source),link=official;
+ const official=valid(e.officialEventUrl),link=official;
  const confirmed=e.dateEvidence==='official';
  const status=confirmed?'Officieel bevestigde datum':'Datum nog niet officieel bevestigd';
  const fields=[['Wedstrijddatum',date(e)],['Locatie',[e.place,e.country].filter(Boolean).join(', ')],['Afstand',e.distance||'Onbekend'],['Sport',e.sport||'Sportevenement'],['Inschrijfstatus',e.registrationStatusNote||'Controleer actuele status bij organisator'],['Prijs',typeof e.priceEur==='number'?'€ '+e.priceEur.toFixed(2).replace('.',','):e.priceNote||'Niet bevestigd']];
@@ -41,14 +41,27 @@ for(const e of list){
   e.major&&/^ra-\\d+$/.test(e.id)&&e.imageRights==='generated'?'<img src="../images/featured/'+e.id+'.webp" alt="AI-sfeerbeeld voor '+safe(e.name)+'; geen officiële foto" onerror="this.remove()">':'';
  const directoryOnly=link==='https://www.ironman.com/races';
  const cta=link?'<a class="primary" href="'+safe(link)+'" target="_blank" rel="noopener noreferrer" data-ra-event="'+safe(e.id)+'" data-ra-outbound="organizer">'+(directoryOnly?'Zoek wedstrijd op IRONMAN ↗':'Officiële website ↗')+'</a>':'';
- const json={'@context':'https://schema.org','@type':'SportsEvent',name:e.name,url,eventStatus:'https://schema.org/EventScheduled'};
- if(confirmed&&e.date)json.startDate=e.date;
- if(e.place)json.location={'@type':'Place',name:e.place};
- if(official)json.sameAs=official;
+ // Google requires startDate for a valid Event rich result. Unconfirmed race dates
+ // remain discoverable as ordinary pages, without misleading Event markup.
+ const json=confirmed&&/^\\d{4}-\\d{2}-\\d{2}$/.test(e.date||'')?{
+  '@context':'https://schema.org','@type':'SportsEvent',
+  name:e.name,url,description:desc,startDate:e.date,
+  eventStatus:'https://schema.org/EventScheduled'
+ }:null;
+ if(json&&e.place){
+  const address={'@type':'PostalAddress',addressLocality:e.place};
+  if(e.region)address.addressRegion=e.region;
+  if(e.country)address.addressCountry=e.country;
+  json.location={'@type':'Place',name:e.place,address};
+ }
+ if(json&&official)json.sameAs=official;
+ if(json&&e.organizerName&&official)json.organizer={'@type':'Organization',name:e.organizerName,url:official};
+ if(json&&e.endDate&&/^\\d{4}-\\d{2}-\\d{2}$/.test(e.endDate)&&e.endDate>=e.date)json.endDate=e.endDate;
+ const structuredData=json?'<script type="application/ld+json">'+JSON.stringify(json).replace(/</g,'\\\\u003c')+'</script>':'';
  const document=['<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#071925">',
  '<title>'+safe(e.name)+' | TriZentro</title><meta name="description" content="'+safe(desc)+'">',
  '<link rel="canonical" href="'+safe(url)+'"><meta property="og:site_name" content="TriZentro"><meta property="og:title" content="'+safe(e.name)+' | TriZentro"><meta property="og:description" content="'+safe(desc)+'"><meta property="og:url" content="'+safe(url)+'">',
- '<script type="application/ld+json">'+JSON.stringify(json).replace(/</g,'\\u003c')+'</script><style>'+style+'</style><link rel="stylesheet" href="../../shared-ui.css?v=20261113-unified"></head>',
+ structuredData+'<style>'+style+'</style><link rel="stylesheet" href="../../shared-ui.css?v=20261113-unified"></head>',
  '<body><header class="tz-site-header"><nav class="tz-site-nav" aria-label="Hoofdnavigatie"><a class="tz-site-brand" href="../" aria-label="TriZentro"><img class="tz-logo-image" src="../../trizentro-mark.svg" alt="TriZentro"></a><div class="tz-site-links"><a href="../">Events</a><a href="../#mijn-seizoen">Mijn seizoen</a><a href="../../performance.html">Performance</a><a href="../#mijn-account">Mijn account</a><a href="../organisatoren.html">Voor organisatoren</a></div></nav></header>',
  '<main><a class="back" href="../">← Alle evenementen</a><h1>'+safe(e.name)+'</h1><p class="sub">'+safe([e.place,e.country,e.distance].filter(Boolean).join(' · '))+'</p>',
  '<section class="hero">'+image+'<div><strong>'+safe(date(e))+'</strong><p>'+safe(status)+'</p></div></section>',
