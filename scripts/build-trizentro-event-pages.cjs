@@ -26,6 +26,69 @@ const customActive=customSettings.enabled===true&&customSettings.verifiedByOwner
 const base=(customActive?'https://trizentro.com':'https://samknook.github.io/sporttech-deals').replace(/\/+$/,'');
 const output=path.join(dir,'wedstrijden');fs.mkdirSync(output,{recursive:true});
 const style=':root{font-family:Inter,system-ui,sans-serif;color:#102432;background:#f5f8fa}*{box-sizing:border-box}body{margin:0}a{color:inherit}header{background:#071925;color:#fff}header .inner{max-width:1080px;margin:auto;display:flex;justify-content:space-between;align-items:center;padding:14px 20px;gap:12px}nav{display:flex;gap:16px}header a{font-size:13px;text-decoration:none;font-weight:800}header img{width:52px;height:39px}main{max-width:1000px;margin:auto;padding:25px 20px 80px}.back{font-size:13px;color:#486778;text-decoration:none}h1{font-size:clamp(28px,5vw,49px);line-height:1.12;letter-spacing:-.045em;margin:13px 0}.sub{color:#577184}.hero{background:#071925;color:#fff;border-radius:16px;overflow:hidden;margin:24px 0}.hero img{display:block;width:100%;height:245px;object-fit:cover}.hero div{padding:20px}.hero strong{font-size:21px}.hero p{font-size:12px;color:#cddfe4}.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.fact{background:#fff;border:1px solid #dbe5ea;border-radius:12px;padding:15px;display:flex;flex-direction:column;gap:7px}.fact span{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#63818b;font-weight:800}.fact strong{font-size:14px;line-height:1.4;overflow-wrap:anywhere}.actions{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0}.actions>*{padding:14px 18px;border-radius:10px;background:white;color:#153f34;border:1px solid #d6e2dc;min-height:49px;font-size:14px;font-weight:850;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer}.actions .primary{background:#c7ff37;border-color:#c7ff37;color:#0b2619}.note{padding:16px;background:#fff;border:1px solid #dbe5ea;border-radius:12px;color:#5b7280;font-size:13px;line-height:1.65}.source{font-size:13px}.source a{color:#116146;font-weight:800}.foot{padding-top:20px;border-top:1px solid #dce6e9;margin-top:30px;color:#667e88;font-size:12px}@media(max-width:700px){.facts{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.fact{padding:11px}.fact strong{font-size:12px}.hero img{height:160px}.actions{display:grid;grid-template-columns:1fr 1fr}.actions .primary{grid-column:1/-1}nav{gap:9px}main{padding:22px 15px 80px}}';
+const routeExamples={
+ 'ra-9':{
+  url:'https://www.amstel.nl/toerversie?lang=nl',
+  label:'Parcoursinformatie bij de organisator',
+  startLocation:'Shimano Experience Center, De Leeuwhof 2, Valkenburg',
+ },
+ 'ra-265':{
+  url:'https://www.challenge-roth.com/en/course-info.html',
+  label:'Parcourskaarten bij de organisator',
+  gpxUrl:'https://www.challenge-roth.com/files/downloads/Streckeninfo/DATEV%20Challenge%20Roth%20Bike%20Course.zip',
+  gpxLabel:'Fietsroute (GPX in zipbestand)',
+  conditions:'Het fietsparcours telt twee ronden en voert over de Solarer Berg.',
+ },
+ 'ra-11':{
+  url:'https://www.ironman.com/sites/default/files/2025-01/ironman_703_westfriesland_bike.pdf',
+  label:'Fietsparcours 2025 (pdf)',
+  elevationNote:'50 m hoogteverschil op de fietskaart van januari 2025.',
+  conditions:'De kaart van 2025 toont open stukken langs het IJsselmeer. Houd daar rekening met wind. Controleer het parcours voor de komende editie bij IRONMAN.',
+ },
+};
+const egmondRoute={
+ url:'https://www.egmondhalvemarathon.nl/halve-marathon',
+ label:'Parcours bij de organisator',
+ mapImage:'https://do.occdn.net/p/75/f/20251229-parcourskaart-egmond-totaal-hr-v3-juiste-2.png',
+ profileUrl:'https://www.nnegmondhalvemarathon.nl/uploads/hoogteprofiel-halve-hr-app.pdf',
+ conditions:'De halve marathon voert over strand, duinen en verharde wegen. Wind en getij kunnen vooral het strandgedeelte beïnvloeden.',
+};
+const climateSource='https://cdn.knmi.nl/knmi/map/page/klimatologie/klimaatatlas/tabel/stationsdata/maand-en-seizoen-jaarsommen-en-gemiddelden_9120.pdf';
+// Average daily maximum by month, KNMI station normals 1991–2020.
+const climateStations={
+ 'De Bilt':[6.1,7,10.5,14.8,18.3,20.9,23.1,22.9,19.5,14.8,9.9,6.7],
+ Berkhout:[5.9,6.5,9.5,13.7,17.3,19.7,22,21.9,18.8,14.4,9.7,6.7],
+ 'De Kooy':[6,6.2,8.7,12.4,15.8,18.5,20.8,21.1,18.3,14.3,10,7],
+};
+const months=['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+const decimal=new Intl.NumberFormat('nl-NL',{maximumFractionDigits:1});
+function courseAndWeather(event,official){
+ const egmond=event.place==='Egmond aan Zee'&&/egmond halve marathon/i.test(event.name)&&/21[,.]1/.test(event.distance||'');
+ const route=routeExamples[event.id]||(egmond?egmondRoute:null);
+ const routeUrl=valid(event.routeUrl)||route?.url;
+ const profileUrl=valid(event.elevationProfileUrl)||route?.profileUrl;
+ const gpxUrl=valid(event.gpxUrl)||route?.gpxUrl;
+ const startLocation=event.startLocation||route?.startLocation;
+ const location=[startLocation||event.place,event.country].filter(Boolean).join(', ');
+ const locationUrl=event.place||startLocation?'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(location):null;
+ const link=(url,label)=>url?'<a href="'+safe(url)+'" target="_blank" rel="noopener noreferrer">'+safe(label)+' ↗</a>':'';
+ const hasElevation=Number.isFinite(event.elevationGainM)&&event.elevationGainM>=0;
+ const month=event.dateEvidence==='official'?Number(event.date?.slice(5,7)):Number(event.expectedMonth);
+ const station=egmond?'De Kooy':event.id==='ra-11'?'Berkhout':'De Bilt';
+ const climate=event.country==='Nederland'&&months[month-1]?
+  '<p><strong>'+decimal.format(climateStations[station][month-1])+' °C</strong> gemiddeld dagmaximum in '+months[month-1]+' bij KNMI-station '+station+'.</p><p>Klimaatgemiddelde 1991–2020. '+link(climateSource,'KNMI-bron')+'</p>':
+  '<p>Bekijk kort voor de wedstrijd het lokale weerbericht voor temperatuur, wind en neerslag.</p>';
+ const weatherUrl=event.place?'https://www.google.com/search?q='+encodeURIComponent('weersverwachting '+[event.place,event.country].filter(Boolean).join(' ')):null;
+ return '<div class="event-prep"><section class="prep-card"><h2>Parcours en hoogte</h2>'+
+  (route?.mapImage?'<a href="'+safe(route.mapImage)+'" target="_blank" rel="noopener noreferrer"><img class="course-map" src="'+safe(route.mapImage)+'" alt="Parcourskaart Egmond Halve Marathon van de organisator" loading="lazy" onerror="this.remove()"></a>':'')+
+  (routeUrl||gpxUrl?'':'<p>Er is nog geen parcourskaart toegevoegd.</p>')+
+  (hasElevation?'<p><strong>'+decimal.format(event.elevationGainM)+' m totale stijging</strong></p>':route?.elevationNote?'<p>'+safe(route.elevationNote)+'</p>':'')+
+  '<div class="prep-links">'+link(routeUrl,valid(event.routeUrl)?'Bekijk parcourskaart':route?.label||'Bekijk parcourskaart')+link(profileUrl,'Hoogteprofiel')+link(gpxUrl,valid(event.gpxUrl)?'GPX-route':route?.gpxLabel||'GPX-route')+
+  link(locationUrl,startLocation?'Startlocatie op de kaart':'Plaats op de kaart')+(!routeUrl&&!gpxUrl?link(official,'Parcoursinfo bij organisator'):'')+'</div></section>'+
+  '<section class="prep-card"><h2>Weer en omstandigheden</h2>'+climate+
+  (route?.conditions?'<p>'+safe(route.conditions)+'</p>':'')+
+  '<div class="prep-links">'+link(weatherUrl,'Lokaal weerbericht')+'</div></section></div>';
+}
 let total=0;
 for(const e of list){
  if(!/^ra-\d{1,8}$/.test(e.id)||!e.name)continue;
@@ -38,7 +101,10 @@ for(const e of list){
  const facts=fields.map(x=>'<div class="fact"><span>'+safe(x[0])+'</span><strong>'+safe(x[1])+'</strong></div>').join('');
  const hasLicensedImage=e.major&&e.imageRights==='licensed'&&valid(e.imageUrl);
  const image=hasLicensedImage?'<figure class="event-photo"><img src="'+safe(e.imageUrl)+'" alt="Locatiefoto bij '+safe(e.name)+'; geen opname van de wedstrijd" loading="lazy" onerror="this.parentElement.remove()"><figcaption>Foto: '+safe(e.imageCredit||'Wikimedia Commons')+' · <a target="_blank" rel="noopener noreferrer" href="'+safe(e.imageSourceUrl||'https://commons.wikimedia.org/')+'">Bron en licentie ↗</a></figcaption></figure>':
-  e.major&&/^ra-\\d+$/.test(e.id)&&e.imageRights==='generated'?'<img src="../images/featured/'+e.id+'.webp" alt="AI-sfeerbeeld voor '+safe(e.name)+'; geen officiële foto" onerror="this.remove()">':'';
+  e.major&&e.imageRights==='generated'?'<img src="../images/featured/'+e.id+'.webp" alt="AI-sfeerbeeld voor '+safe(e.name)+'; geen officiële foto" onerror="this.remove()">':'';
+ const sport=[e.sport,e.discipline].filter(Boolean).filter((value,index,items)=>items.findIndex(item=>String(item).toLowerCase()===String(value).toLowerCase())===index).join(' · ')||'Sportevenement';
+ const sportKey=/triat|duat|multisport/i.test(sport)?'multi':/fiets|wiel|gravel|mtb/i.test(sport)?'bike':/hardlop|trail|run|marathon/i.test(sport)?'run':'other';
+ const illustration='<div class="event-illustration event-illustration--'+sportKey+'"><span>'+safe(sport)+'</span><strong>'+safe(e.distance||'Afstand nog onbekend')+'</strong><span class="event-place">'+safe(e.place||'Plaats nog onbekend')+'</span></div>';
  const directoryOnly=link==='https://www.ironman.com/races';
  const cta=link?'<a class="primary" href="'+safe(link)+'" target="_blank" rel="noopener noreferrer" data-ra-event="'+safe(e.id)+'" data-ra-outbound="organizer">'+(directoryOnly?'Zoek wedstrijd op IRONMAN ↗':'Officiële website ↗')+'</a>':'';
  // Google requires startDate for a valid Event rich result. Unconfirmed race dates
@@ -61,12 +127,13 @@ for(const e of list){
  const document=['<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#071925">',
  '<title>'+safe(e.name)+' | TriZentro</title><meta name="description" content="'+safe(desc)+'">',
  '<link rel="canonical" href="'+safe(url)+'"><meta property="og:site_name" content="TriZentro"><meta property="og:title" content="'+safe(e.name)+' | TriZentro"><meta property="og:description" content="'+safe(desc)+'"><meta property="og:url" content="'+safe(url)+'">',
- structuredData+'<style>'+style+'</style><link rel="stylesheet" href="../../shared-ui.css?v=20261113-unified"></head>',
+ structuredData+'<style>'+style+'</style><link rel="stylesheet" href="../event-details.css"><link rel="stylesheet" href="../../shared-ui.css?v=20261113-unified"></head>',
  '<body><header class="tz-site-header"><nav class="tz-site-nav" aria-label="Hoofdnavigatie"><a class="tz-site-brand" href="../" aria-label="TriZentro"><img class="tz-logo-image" src="../../trizentro-mark.svg" alt="TriZentro"></a><div class="tz-site-links"><a href="../">Events</a><a href="../#mijn-seizoen">Mijn seizoen</a><a href="../../performance.html">Performance</a><a href="../#mijn-account">Mijn account</a><a href="../organisatoren.html">Voor organisatoren</a></div></nav></header>',
  '<main><a class="back" href="../">← Alle evenementen</a><h1>'+safe(e.name)+'</h1><p class="sub">'+safe([e.place,e.country,e.distance].filter(Boolean).join(' · '))+'</p>',
- '<section class="hero">'+image+'<div><strong>'+safe(date(e))+'</strong><p>'+safe(status)+'</p></div></section>',
+ '<section class="hero">'+image+illustration+'<div class="event-date"><strong>'+safe(date(e))+'</strong><p>'+safe(status)+'</p></div></section>',
  '<section class="facts" aria-label="Wedstrijdinformatie">'+facts+'</section>',
  '<div class="actions">'+cta+'<button id="saveRace" type="button" aria-pressed="false">☆ Bewaar in mijn seizoen</button><a href="../?event='+encodeURIComponent(e.id)+'">Open in wedstrijdkalender</a><a href="../../performance.html">Bereid je voor ↗</a></div>',
+ courseAndWeather(e,official),
  '<p class="note">TriZentro verzamelt beschikbare wedstrijdinformatie. Datums, prijzen en inschrijfstatussen kunnen veranderen. Controleer de actuele informatie altijd bij de organisator.</p>',
  official?'<p class="source">Bron: <a href="'+safe(official)+'" target="_blank" rel="noopener noreferrer">Organisator ↗</a></p>':'',
  '<div class="foot">TriZentro · Find. Prepare. Perform.</div></main>',
