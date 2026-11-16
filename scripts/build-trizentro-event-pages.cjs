@@ -94,7 +94,8 @@ for(const e of list){
  if(!/^ra-\d{1,8}$/.test(e.id)||!e.name)continue;
  const file=filename(e),url=base+'/raceatlas/wedstrijden/'+file;
  const desc=[e.name,e.place,e.country,e.sport,e.distance,date(e)].filter(Boolean).join(' · ').slice(0,190);
- const official=valid(e.officialEventUrl),link=official;
+ const official=valid(e.officialEventUrl);
+ const registration=valid(e.registrationUrl);
  const confirmed=e.dateEvidence==='official';
  const status=confirmed?'Officieel bevestigde datum':'Datum nog niet officieel bevestigd';
  const fields=[['Wedstrijddatum',date(e)],['Locatie',[e.place,e.country].filter(Boolean).join(', ')],['Afstand',e.distance||'Onbekend'],['Sport',e.sport||'Sportevenement'],['Inschrijfstatus',e.registrationStatusNote||'Controleer actuele status bij organisator'],['Prijs',typeof e.priceEur==='number'?'€ '+e.priceEur.toFixed(2).replace('.',','):e.priceNote||'Niet bevestigd']];
@@ -105,8 +106,12 @@ for(const e of list){
  const sport=[e.sport,e.discipline].filter(Boolean).filter((value,index,items)=>items.findIndex(item=>String(item).toLowerCase()===String(value).toLowerCase())===index).join(' · ')||'Sportevenement';
  const sportKey=/triat|duat|multisport/i.test(sport)?'multi':/fiets|wiel|gravel|mtb/i.test(sport)?'bike':/hardlop|trail|run|marathon/i.test(sport)?'run':'other';
  const illustration='<div class="event-illustration event-illustration--'+sportKey+'"><span>'+safe(sport)+'</span><strong>'+safe(e.distance||'Afstand nog onbekend')+'</strong><span class="event-place">'+safe(e.place||'Plaats nog onbekend')+'</span></div>';
- const directoryOnly=link==='https://www.ironman.com/races';
- const cta=link?'<a class="primary" href="'+safe(link)+'" target="_blank" rel="noopener noreferrer" data-ra-event="'+safe(e.id)+'" data-ra-outbound="organizer">'+(directoryOnly?'Zoek wedstrijd op IRONMAN ↗':'Officiële website ↗')+'</a>':'';
+ const eventLink=(href,label,kind,primary=false)=>href?
+  '<a'+(primary?' class="primary"':'')+' href="'+safe(href)+'" target="_blank" rel="noopener noreferrer" data-ra-event="'+safe(e.id)+'" data-ra-outbound="'+kind+'">'+label+'</a>':'';
+ const organizerLabel=official==='https://www.ironman.com/races'?'Zoek wedstrijd op IRONMAN ↗':'Officiële website ↗';
+ const eventActions=registration?
+  eventLink(registration,'Bekijk inschrijving ↗','registration',true)+(official!==registration?eventLink(official,organizerLabel,'organizer'):''):
+  eventLink(official,organizerLabel,'organizer',true);
  // Google requires startDate for a valid Event rich result. Unconfirmed race dates
  // remain discoverable as ordinary pages, without misleading Event markup.
  const json=confirmed&&/^\d{4}-\d{2}-\d{2}$/.test(e.date||'')?{
@@ -128,11 +133,11 @@ for(const e of list){
  '<title>'+safe(e.name)+' | TriZentro</title><meta name="description" content="'+safe(desc)+'">',
  '<link rel="canonical" href="'+safe(url)+'"><meta property="og:site_name" content="TriZentro"><meta property="og:title" content="'+safe(e.name)+' | TriZentro"><meta property="og:description" content="'+safe(desc)+'"><meta property="og:url" content="'+safe(url)+'">',
  structuredData+'<style>'+style+'</style><link rel="stylesheet" href="../event-details.css"><link rel="stylesheet" href="../../shared-ui.css?v=20261113-unified"></head>',
- '<body><header class="tz-site-header"><nav class="tz-site-nav" aria-label="Hoofdnavigatie"><a class="tz-site-brand" href="../" aria-label="TriZentro"><img class="tz-logo-image" src="../../trizentro-mark.svg" alt="TriZentro"></a><div class="tz-site-links"><a href="../">Events</a><a href="../#mijn-seizoen">Mijn seizoen</a><a href="../../performance.html">Performance</a><a href="../#mijn-account">Mijn account</a><a href="../organisatoren.html">Voor organisatoren</a></div></nav></header>',
- '<main><a class="back" href="../">← Alle evenementen</a><h1>'+safe(e.name)+'</h1><p class="sub">'+safe([e.place,e.country,e.distance].filter(Boolean).join(' · '))+'</p>',
+ '<body><header class="tz-site-header"><nav class="tz-site-nav" aria-label="Hoofdnavigatie"><a class="tz-site-brand" href="../../events/" aria-label="TriZentro"><img class="tz-logo-image" src="../../trizentro-mark.svg" alt="TriZentro"></a><div class="tz-site-links"><a href="../../events/">Events</a><a href="../../seizoen/">Mijn seizoen</a><a href="../../performance/">Performance</a><a href="../../account/">Mijn account</a><a href="../../organisatoren/">Voor organisatoren</a></div></nav></header>',
+ '<main><a class="back" href="../../events/">← Alle evenementen</a><h1>'+safe(e.name)+'</h1><p class="sub">'+safe([e.place,e.country,e.distance].filter(Boolean).join(' · '))+'</p>',
  '<section class="hero">'+image+(e.major?'':illustration)+'<div class="event-date"><strong>'+safe(date(e))+'</strong><p>'+safe(status)+'</p></div></section>',
  '<section class="facts" aria-label="Wedstrijdinformatie">'+facts+'</section>',
- '<div class="actions">'+cta+'<button id="saveRace" type="button" aria-pressed="false">☆ Bewaar in mijn seizoen</button><a href="../?event='+encodeURIComponent(e.id)+'">Open in wedstrijdkalender</a><a href="../../performance.html">Bereid je voor ↗</a></div>',
+ '<div class="actions">'+eventActions+'<button id="saveRace" type="button" aria-pressed="false">☆ Bewaar in mijn seizoen</button><a href="../../events/?event='+encodeURIComponent(e.id)+'">Open in wedstrijdkalender</a><a href="../../performance/">Bereid je voor ↗</a></div>',
  courseAndWeather(e,official),
  '<p class="note">TriZentro verzamelt beschikbare wedstrijdinformatie. Datums, prijzen en inschrijfstatussen kunnen veranderen. Controleer de actuele informatie altijd bij de organisator.</p>',
  official?'<p class="source">Bron: <a href="'+safe(official)+'" target="_blank" rel="noopener noreferrer">Organisator ↗</a></p>':'',
