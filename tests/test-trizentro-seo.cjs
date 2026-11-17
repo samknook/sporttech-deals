@@ -97,6 +97,22 @@ assert.ok(registrationRadar.includes('new Intl.DateTimeFormat'),'Radar should di
 const liveCatalog=fs.readFileSync(base+'raceatlas/index.html','utf8');
 assert.ok(liveCatalog.includes('"registrationDate":"2026-11-19"'),'Maastricht registration date missing from catalog');
 assert.ok(liveCatalog.includes('Algemene inschrijving opent donderdag 19 november 2026 om 14:00'),'Maastricht registration opening time missing');
-assert.ok(trackedRegistrationPages>=5,'Known direct registration links must be tracked separately');
+// Count only genuinely separate HTTPS registration destinations.
+// Several organizer URLs already point to the same registration address;
+// rendering a second identical button would mislead athletes and analytics.
+const catalogStart=liveCatalog.indexOf('const EVENTS=')+'const EVENTS='.length;
+const catalogEnd=liveCatalog.indexOf(';\n',catalogStart);
+assert.ok(catalogStart>='const EVENTS='.length&&catalogEnd>catalogStart,'Event catalogue missing');
+const trackedCatalog=JSON.parse(liveCatalog.slice(catalogStart,catalogEnd));
+const eligibleRegistrationIds=new Set(trackedCatalog.filter(event=>{
+ try{
+  const registration=new URL(event.registrationUrl);
+  const official=new URL(event.officialEventUrl||event.source||'https://www.ironman.com/races');
+  return registration.protocol==='https:'&&registration.toString()!==official.toString();
+ }catch{return false}
+}).map(event=>event.id));
+assert.ok(eligibleRegistrationIds.size>0,'Separate verified registration URLs must remain available');
+assert.ok(trackedRegistrationPages>=eligibleRegistrationIds.size,
+ 'Every distinct catalog registration link must have its own measured action');
 console.log('Structured events validated: '+richResultEvents+' rich results, '+ordinaryEventPages+' ordinary pages');
 console.log('SEO PASS: canonical brand identity, robots, sitemap and '+detailFiles.length+' race pages');
