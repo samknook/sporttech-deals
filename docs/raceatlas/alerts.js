@@ -52,7 +52,7 @@
     notice.textContent='Agenda-herinneringen kun je direct downloaden. E-mailmeldingen werken na bevestiging van je e-mailadres. Lokale voorkeuren blijven op dit apparaat.';
     // Email alerts are gated server-side until a verified sending domain and dispatch process exist.
     const emailBox=document.createElement('section');emailBox.className='tz-radar-email';
-    const emailTitle=document.createElement('strong');emailTitle.textContent='📧 E-mail Inschrijfradar';
+    const emailTitle=document.createElement('strong');emailTitle.textContent='E-mail Inschrijfradar';
     const emailText=document.createElement('p');emailText.textContent='Ontvang een e-mail wanneer belangrijke inschrijfinformatie officieel is bevestigd. De beschikbaarheid van e-mailmeldingen wordt gecontroleerd.';
     const emailForm=document.createElement('form');emailForm.className='tz-radar-email-form';
     const input=document.createElement('input');input.type='email';input.autocomplete='email';input.placeholder='Jouw e-mailadres';input.required=true;input.maxLength=254;input.setAttribute('aria-label','E-mailadres voor wedstrijdmeldingen');
@@ -61,7 +61,7 @@
     emailForm.append(input,submit);
     emailForm.hidden=true;
     emailBox.append(emailTitle,emailText,emailForm,message);
-    dialog.append(emailBox);
+
     const endpoint='https://lpzndnxloykcthbsqcet.supabase.co/functions/v1/trizentro-email-radar';
     fetch(endpoint,{method:'GET',mode:'cors',cache:'no-store'}).then(r=>r.ok?r.json():null).then(data=>{
       if(!emailBox.isConnected)return;
@@ -88,7 +88,7 @@
     close.onclick=()=>overlay.remove();save.onclick=()=>{prefs[event.id]=settings();savePrefs();overlay.remove();syncButtons();};
     calendar.onclick=()=>downloadIcs(event,settings());
     overlay.onclick=e=>{if(e.target===overlay)overlay.remove();};
-    actions.append(close,calendar,save);dialog.append(h,p,form,notice,actions);overlay.append(dialog);document.body.append(overlay);save.focus();
+    actions.append(close,calendar,save);dialog.append(h,p,form,notice,emailBox,actions);overlay.append(dialog);document.body.append(overlay);save.focus();
   }
   function syncButtons(){document.querySelectorAll('[data-ra-alert]').forEach(b=>{b.classList.toggle('ra-set',!!prefs[b.dataset.raAlert]);b.title=prefs[b.dataset.raAlert]?'Meldingsvoorkeuren opgeslagen':'Meldingen instellen';});}
   document.addEventListener('click',e=>{
