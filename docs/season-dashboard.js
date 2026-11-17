@@ -8,9 +8,14 @@ const DATE=/^20\d{2}-\d{2}-\d{2}$/;
 function render(items,states,pageFor,setRegistration){
  host.replaceChildren();
  const today=new Date(),date=[today.getFullYear(),String(today.getMonth()+1).padStart(2,'0'),String(today.getDate()).padStart(2,'0')].join('-');
+ // Never elevate a speculative race date above a verified one.
+ // Keep unconfirmed races visible in the season, but clearly separate them.
  const upcoming=items.filter(item=>DATE.test(item.date||'')&&item.date>=date).sort((a,b)=>a.date.localeCompare(b.date));
- const next=upcoming[0];
+ const confirmed=upcoming.filter(item=>item.dateEvidence==='official');
+ const tentative=upcoming.filter(item=>item.dateEvidence!=='official');
+ const next=confirmed[0]||tentative[0];
  const registered=items.filter(item=>states[item.id]==='registered').length;
+ const waitlist=items.filter(item=>states[item.id]==='waitlist').length;
  const pending=items.filter(item=>!states[item.id]||states[item.id]==='planned').length;
  const intro=e('div',undefined,'tz-dashboard-head');
  intro.append(e('span',text('MIJN DASHBOARD','MY DASHBOARD'),'tz-dashboard-eyebrow'),
@@ -32,13 +37,18 @@ function render(items,states,pageFor,setRegistration){
    e('small',next.dateEvidence==='official'?text('Wedstrijddatum officieel bevestigd','Race date officially confirmed'):text('Datum controleren bij organisator','Verify date with organizer')));
   const link=e('a',text('Wedstrijddetails →','Race details →'),'tz-dashboard-text-link');
   link.href=pageFor(next);race.append(link);
+  if(tentative.length){
+   race.append(e('small',tentative.length+' '+text('opgeslagen wedstrijden met een nog onbevestigde datum','saved races with unconfirmed dates')));
+  }
  }else{
   race.append(e('strong',text('Nog geen aankomende wedstrijd met exacte datum','No upcoming race with an exact date'),'tz-dashboard-value'),
    e('p',text('Controleer de datum van je opgeslagen wedstrijden.','Check the date of your saved races.')));
  }
  const registration=card('✓',text('Inschrijvingen','Registrations'));
  registration.append(e('strong',pending+' '+text('nog te regelen','to arrange'),'tz-dashboard-value'),
-  e('p',text('Dit zijn jouw eigen notities, geen bevestigingen van organisatoren.','These are your own notes, not organizer confirmations.')));
+  e('p',registered+' '+text('ingeschreven','registered')+' · '+waitlist+' '+text('op wachtlijst','waitlisted')+'. '+text('Dit zijn jouw eigen notities, geen bevestigingen van organisatoren.','These are your notes, not organizer confirmations.')));
+ const radarLink=e('a',text('Bekijk Inschrijfradar →','View registration radar →'),'tz-dashboard-text-link');
+ radarLink.href='/seizoen/#raIntelPanel';registration.append(radarLink);
  if(next){
   const label=e('label',text('Mijn status voor volgende wedstrijd','My status for next race'),'tz-dashboard-form');
   const select=e('select');select.setAttribute('aria-label',label.textContent);
