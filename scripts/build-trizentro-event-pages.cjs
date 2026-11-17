@@ -21,7 +21,7 @@ const eventSpecificOfficial=url=>{
   const u=new URL(url);
   if(u.protocol!=='https:'||u.username||u.password)return false;
   if(u.hostname==='www.ironman.com'&&/^\/races\/?$/.test(u.pathname))return false;
-  if(/\/news\/|championship-calendar|\/evenementen\/?$/.test(u.pathname))return false;
+  if(/championship-calendar/.test(u.pathname))return false;
   return true;
  }catch{return false}
 };
