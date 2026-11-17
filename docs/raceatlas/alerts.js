@@ -33,10 +33,14 @@
     document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
   }
   function openDialog(event) {
+    // Only one radar dialog can be active. Keep focus within it for keyboard users.
+    const previous=document.querySelector('.ra-overlay');
+    if(previous)previous.remove();
+    const trigger=document.activeElement;
     const current=prefs[event.id]||{date:true,registration:true,race:true};
     const overlay=document.createElement('div');overlay.className='ra-overlay';
     const dialog=document.createElement('section');dialog.className='ra-dialog';dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');
-    const h=document.createElement('h2');h.textContent='Meldingen voor '+event.name;
+    const h=document.createElement('h2');h.textContent='Meldingen voor '+event.name;h.id='ra-alert-heading';dialog.setAttribute('aria-labelledby',h.id);
     const p=document.createElement('p');p.textContent='Bewaar je voorkeuren en voeg bekende wedstrijd- en inschrijfdatums toe aan je eigen agenda.';
     const fields={};
     const options=[['date','Officiële wedstrijddatum bekend'],['registration','Inschrijfdatum bekend'],['race','Herinnering: 1 week, 1 dag en op de dag zelf']];
@@ -45,8 +49,9 @@
       const line=document.createElement('label');const input=document.createElement('input');input.type='checkbox';input.checked=current[key]!==false;fields[key]=input;
       const text=document.createElement('span');text.textContent=label;line.append(input,text);form.append(line);
     });
+    let verification=null;
     if(event.dateEvidence!=='official'){
-      const verification=document.createElement('p');verification.className='ra-notice';verification.textContent='De wedstrijddatum is nog niet officieel bevestigd. Daarom maken we hiervoor geen kalenderherinnering. Een bevestigde openingsdatum voor inschrijving kan wel apart worden toegevoegd.';dialog.append(verification);
+      verification=document.createElement('p');verification.className='ra-notice';verification.textContent='De wedstrijddatum is nog niet officieel bevestigd. Daarom maken we hiervoor geen kalenderherinnering. Een bevestigde openingsdatum voor inschrijving kan wel apart worden toegevoegd.';
     }
     const notice=document.createElement('p');notice.className='ra-notice';
     notice.textContent='Agenda-herinneringen kun je direct downloaden. E-mailmeldingen werken na bevestiging van je e-mailadres. Lokale voorkeuren blijven op dit apparaat.';
@@ -85,10 +90,29 @@
     const calendar=document.createElement('button');calendar.type='button';calendar.textContent='Download agenda-alarmen';
     const save=document.createElement('button');save.type='button';save.textContent='Bewaar voorkeuren';save.className='ra-primary';
     const settings=()=>({date:fields.date.checked,registration:fields.registration.checked,race:fields.race.checked});
-    close.onclick=()=>overlay.remove();save.onclick=()=>{prefs[event.id]=settings();savePrefs();overlay.remove();syncButtons();};
+    const dismiss=()=>{
+      overlay.remove();
+      if(trigger&&typeof trigger.focus==='function'&&trigger.isConnected)trigger.focus();
+    };
+    close.onclick=dismiss;
+    save.onclick=()=>{prefs[event.id]=settings();savePrefs();dismiss();syncButtons();};
     calendar.onclick=()=>downloadIcs(event,settings());
-    overlay.onclick=e=>{if(e.target===overlay)overlay.remove();};
-    actions.append(close,calendar,save);dialog.append(h,p,form,notice,emailBox,actions);overlay.append(dialog);document.body.append(overlay);save.focus();
+    overlay.onclick=e=>{if(e.target===overlay)dismiss();};
+    overlay.addEventListener('keydown',event=>{
+      if(event.key==='Escape'){event.preventDefault();dismiss();return}
+      if(event.key!=='Tab')return;
+      const focusable=[...dialog.querySelectorAll('button:not([disabled]):not([hidden]),input:not([disabled]):not([hidden]),a[href],select:not([disabled])')]
+        .filter(element=>element.getClientRects().length>0);
+      if(!focusable.length){event.preventDefault();dialog.focus();return}
+      const first=focusable[0],last=focusable[focusable.length-1];
+      if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}
+      else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
+    });
+    actions.append(close,calendar,save);
+    dialog.append(h,p);
+    if(verification)dialog.append(verification);
+    dialog.append(form,notice,emailBox,actions);
+    overlay.append(dialog);document.body.append(overlay);close.focus();
   }
   function syncButtons(){document.querySelectorAll('[data-ra-alert]').forEach(b=>{b.classList.toggle('ra-set',!!prefs[b.dataset.raAlert]);b.title=prefs[b.dataset.raAlert]?'Meldingsvoorkeuren opgeslagen':'Meldingen instellen';});}
   document.addEventListener('click',e=>{
