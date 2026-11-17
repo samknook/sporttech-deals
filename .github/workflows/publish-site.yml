@@ -53,6 +53,7 @@ jobs:
           node tests/test-trizentro-cloud-season.cjs
           node tests/test-trizentro-status-writes.cjs
           node tests/test-trizentro-organizer-report.cjs
+          node tests/test-trizentro-organizer-dashboard.cjs
           test -s docs/index.html
           test -s docs/events/index.html
           test -s docs/performance/index.html
