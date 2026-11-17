@@ -22,7 +22,7 @@ assert.ok(sharedNav.includes("active:(isEvents||isEventDetail)&&!isSeason"),
 for(const canonical of ["routePath('events/')","routePath('seizoen/')","routePath('account/')","routePath('performance/')","routePath('organisatoren/')"])
  assert.ok(sharedNav.includes(canonical),'Shared nav must use central canonical route '+canonical);
 const detailFiles=fs.readdirSync(base+'events/wedstrijden').filter(n=>n.endsWith('.html'));
-assert.ok(detailFiles.length>=400,'Some races missing from canonical index');
+assert.ok(detailFiles.length>=120&&detailFiles.length<300,'Unexpected verified-only catalogue size');
 for(const name of detailFiles)assert.ok(sitemap.includes('<loc>https://trizentro.com/events/wedstrijden/'+name+'</loc>'),'Sitemap missing '+name);
 for(const name of ['seizoen','account'])assert.ok(!sitemap.includes('<loc>https://trizentro.com/'+name+'/</loc>'),'Private route must be excluded: '+name);
 for(const [oldName,canonical] of [
