@@ -14,6 +14,11 @@ assert.ok(!robots.includes('samknook.github.io'),'Old domain must not be promote
 assert.ok(!sitemap.includes('samknook.github.io'),'Old sitemap URL found');
 assert.ok(!sitemap.includes('/raceatlas/wedstrijden/'),'Old race detail URLs found');
 const sharedNav=fs.readFileSync(base+'shared-ui.js','utf8');
+assert.ok(sharedNav.includes("const isEventDetail=/\\/events\\/wedstrijden\\/"),
+ 'Individual event pages must be recognized in shared navigation');
+assert.ok(sharedNav.includes("active:(isEvents||isEventDetail)&&!isSeason"),
+ 'Events must be the active tab on race detail pages');
+
 for(const canonical of ["routePath('events/')","routePath('seizoen/')","routePath('account/')","routePath('performance/')","routePath('organisatoren/')"])
  assert.ok(sharedNav.includes(canonical),'Shared nav must use central canonical route '+canonical);
 const detailFiles=fs.readdirSync(base+'events/wedstrijden').filter(n=>n.endsWith('.html'));
