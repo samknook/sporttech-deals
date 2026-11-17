@@ -95,7 +95,7 @@
       if(savedA!==savedB)return savedA-savedB;
       if(a.kind.priority!==b.kind.priority)return a.kind.priority-b.kind.priority;
       return String(a.r.registration_opens_at||a.r.start_date).localeCompare(String(b.r.registration_opens_at||b.r.start_date));
-    }).slice(0,12);
+    });
     const visible=ui.expanded?ordered:ordered.slice(0,3);
     ui.more.hidden=ordered.length<=3;
     ui.more.textContent=ui.expanded?'Toon minder ↑':'Bekijk alle '+ordered.length+' inschrijfmomenten ↓';
