@@ -123,6 +123,36 @@ function detail(e,fromLink=false){
  const notify=el('button','🔔 Meldingen instellen','ra-detail-secondary');notify.onclick=()=>{closeDialog();if(window.RaceAtlasAlerts?.openForEvent)window.RaceAtlasAlerts.openForEvent(e.id);};actions.append(notify);
  const permalink=el('a','Open wedstrijdpagina ↗','ra-detail-secondary tz-detail-official');permalink.href=eventLink(e);permalink.setAttribute('aria-label','Open afzonderlijke pagina voor '+e.name);actions.append(permalink);
  const share=el('button','Deel evenement','ra-detail-secondary');share.onclick=async()=>{const u=eventLink(e);if(navigator.share){try{await navigator.share({title:e.name,url:u});return}catch{}}share.textContent=await copy(u)?'Link gekopieerd ✓':'Kopiëren niet gelukt';};actions.append(share);
+ // Organizers can claim an existing race directly, preserving its canonical ID.
+ // A claim is a review request, never automatic control of the event record.
+ const claim=el('button','Ik organiseer dit evenement','ra-detail-secondary');
+ claim.type='button';
+ claim.onclick=()=>{
+  const link=new URL('organisatoren.html',location.href);
+  link.hash='contact';
+  link.searchParams.set('onderwerp','Claim je evenement');
+  link.searchParams.set('event',e.name);
+  link.searchParams.set('eventId',e.id);
+  const official=e.officialEventUrl||e.registrationInfoUrl||e.source;
+  if(isValidUrl(official))link.searchParams.set('bron',official);
+  window.location.href=link.toString();
+ };
+ actions.append(claim);
+ // A report request references the same canonical event and does not expose
+ // private organizer analytics directly to anonymous site visitors.
+ const requestReport=el('button','Vraag evenementenrapport aan','ra-detail-secondary');
+ requestReport.type='button';
+ requestReport.onclick=()=>{
+  const link=new URL('organisatoren.html',location.href);
+  link.hash='contact';
+  link.searchParams.set('onderwerp','Evenementrapport aanvragen');
+  link.searchParams.set('event',e.name);
+  link.searchParams.set('eventId',e.id);
+  const official=e.officialEventUrl||e.registrationInfoUrl||e.source;
+  if(isValidUrl(official))link.searchParams.set('bron',official);
+  window.location.href=link.toString();
+ };
+ actions.append(requestReport);
  const report=el('button','Gegevens corrigeren','ra-detail-secondary');report.onclick=()=>{
  const link=new URL('organisatoren.html',location.href);
  link.hash='contact';

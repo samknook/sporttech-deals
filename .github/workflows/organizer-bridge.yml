@@ -1,0 +1,20 @@
+name: TriZentro organizer bridge
+on:
+  pull_request:
+    paths:
+      - 'docs/raceatlas/details.js'
+      - 'docs/raceatlas/organisatoren.html'
+      - 'tests/organizer-bridge.test.cjs'
+      - '.github/workflows/organizer-bridge.yml'
+  workflow_dispatch:
+jobs:
+  organizer-bridge:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/organizer-bridge.test.cjs
