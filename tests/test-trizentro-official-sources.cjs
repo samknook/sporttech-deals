@@ -24,8 +24,10 @@ for(const event of events){
 for(const id of ['ra-28','ra-150','ra-161','ra-163','ra-236','ra-252','ra-264','ra-284','ra-304','ra-311','ra-316','ra-327','ra-330','ra-332','ra-429']){
  assert.ok(ids.has(id),'Official source found during research must be retained: '+id);
 }
-for(const id of ['ra-34','ra-50','ra-105','ra-160','ra-303','ra-428']){
- assert.ok(!ids.has(id),'Generic third-party directory is insufficient: '+id);
+for(const event of events){
+ assert.ok(!/\/toertochten\/?$|\/evenementen\/?$/.test(new URL(event.officialEventUrl).pathname)
+  || /tempo-soest/.test(event.officialEventUrl),
+  'An unfiltered generic category listing is not an event-specific registration destination: '+event.id);
 }
 const pageBuilder=fs.readFileSync('scripts/build-trizentro-event-pages.cjs','utf8');
 const shell=fs.readFileSync('scripts/build-trizentro-platform-shell.cjs','utf8');
