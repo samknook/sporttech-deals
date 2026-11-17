@@ -18,7 +18,7 @@ test('dashboard requires a verified signed-in account and never embeds a secret 
 });
 test('dashboard reads only its approved organizer endpoint and shows no hardcoded analytics',()=>{
  assert.match(js,/functions\/v1\/trizentro-organizer-dashboard\?days=/);
- assert.match(js,/\[7,30,90\]/);
+ assert.match(page,/<option value="7">/); assert.match(page,/<option value="30"/); assert.match(page,/<option value="90">/);
  assert.match(page,/geen unieke bezoekers en geen bevestigde inschrijvingen/);
  assert.match(js,/Er zijn nog geen geverifieerde evenementen gekoppeld/);
  assert.doesNotMatch(js,/Math\.random/);
