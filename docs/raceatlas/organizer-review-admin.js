@@ -66,6 +66,22 @@ async function init(){
  if(error||!data.user||!data.user.email_confirmed_at){status.textContent='Log in met een bevestigd beheerdersaccount.';denied.hidden=false;return}
  userId=data.user.id;await load();
 }
+$('grantForm').addEventListener('submit',async event=>{
+ event.preventDefault();
+ const form=$('grantForm'),result=$('grantStatus'),button=$('grantSubmit');
+ if(busy||!form.reportValidity()||!userId)return;
+ const email=$('grantEmail').value.trim().toLowerCase();
+ const event_id=$('grantEvent').value.trim();
+ if(!/^ra-\d{1,8}$/.test(event_id)){result.textContent='Ongeldig evenement-ID.';return}
+ if(!window.confirm('Heb je de relatie met de organisator onafhankelijk gecontroleerd? Toegang wordt toegekend aan '+email+' voor '+event_id+'.'))return;
+ busy=true;button.disabled=true;result.textContent='Accounttoegang controleren en toekennen…';
+ try{
+  const data=await api('POST',null,{action:'grant_access',email,event_id});
+  result.textContent='Toegang toegekend voor '+(data.event_name||event_id)+'. De organisator kan nu het organisatordashboard gebruiken.';
+  $('grantEmail').value='';$('grantEvent').value='';
+ }catch(err){result.textContent=err.message==='access_denied'?'Geen beheerrechten.':'Toegang niet toegekend. Controleer het accountadres, de e-mailbevestiging en de officiële evenementstatus.'}
+ finally{busy=false;button.disabled=false}
+});
 $('filter').addEventListener('change',()=>{void load()});
 $('refresh').addEventListener('click',()=>{void load()});
 void init();
