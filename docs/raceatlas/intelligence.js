@@ -210,6 +210,11 @@
         if(event.target.closest('.save'))queueMicrotask(refresh);
       });
       refresh();
+      // The dashboard links here from My Season. The panel is created after
+      // initial page load, so native hash scrolling may have happened too soon.
+      if(location.hash==='#raIntelPanel'){
+        requestAnimationFrame(()=>ui.panel.scrollIntoView({block:'start'}));
+      }
     }catch{
       ui.status.textContent='Inschrijfradar tijdelijk niet beschikbaar.';
       ui.list.append(el('p','raIntelEmpty','De gewone evenementenkalender blijft werken. Bekijk de organisatorsite voor inschrijfgegevens.'));
