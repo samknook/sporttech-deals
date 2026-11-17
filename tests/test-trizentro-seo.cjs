@@ -35,6 +35,7 @@ for(const name of detailFiles){
  assert.ok(page.includes('event-save.js?v=20261117-cloudseason'),'Detail page must use shared account-aware season: '+name);
  assert.ok(page.includes('account-config.js'),'Detail page missing account configuration: '+name);
  assert.ok(page.includes('TriZentroEventSaveId'),'Detail page missing save event identity: '+name);
+ assert.ok(page.includes('/events/?ra_alert='),'Detail page missing direct Inschrijfradar signup: '+name);
  const ld=[...page.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
  for(const match of ld){
   const item=JSON.parse(match[1]);
@@ -53,5 +54,9 @@ const eventSave=fs.readFileSync(base+'raceatlas/event-save.js','utf8');
 assert.ok(eventSave.includes("raceatlas_saved_events"),'Account detail save must use the shared season table');
 assert.ok(eventSave.includes("raceatlas-saved-v2"),'Guest detail save must keep legacy local season support');
 assert.ok(eventSave.includes("client.auth.getUser()"),'Detail save must resolve authenticated user');
+const radar=fs.readFileSync(base+'raceatlas/alerts.js','utf8');
+assert.ok(radar.includes("params.get('ra_alert')"),'Radar deep-link handling missing');
+assert.ok(radar.includes('/^ra-[0-9]{1,8}$/'),'Radar must validate linked event IDs');
+assert.ok(radar.includes('dialog.append(h,p,form,notice,emailBox,actions)'),'Radar signup should be shown after instructions');
 console.log('Structured events validated: '+richResultEvents+' rich results, '+ordinaryEventPages+' ordinary pages');
 console.log('SEO PASS: canonical brand identity, robots, sitemap and '+detailFiles.length+' race pages');
