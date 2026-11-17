@@ -1,5 +1,5 @@
 import { createClient } from "npm:@supabase/supabase-js@2.95.0";
-const URL=Deno.env.get("SUPABASE_URL")||"";
+const SUPABASE_BASE=Deno.env.get("SUPABASE_URL")||"";
 const PUB=Deno.env.get("SUPABASE_ANON_KEY")||"";
 const SERVICE=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||"";
 const origins=new Set(["https://trizentro.com","https://www.trizentro.com","https://samknook.github.io"]);
@@ -13,14 +13,14 @@ Deno.serve(async req=>{
  if(origin&&!origins.has(origin))return respond({error:"origin_not_allowed"},403,origin);
  if(req.method==="OPTIONS")return origins.has(origin)?new Response(null,{status:204,headers:{"Access-Control-Allow-Origin":origin,"Access-Control-Allow-Methods":"GET,OPTIONS","Access-Control-Allow-Headers":"authorization,apikey,content-type","Vary":"Origin"}}):respond({error:"origin_not_allowed"},403,origin);
  if(req.method!=="GET")return respond({error:"method_not_allowed"},405,origin);
- if(!URL||!PUB||!SERVICE)return respond({error:"service_unavailable"},503,origin);
+ if(!SUPABASE_BASE||!PUB||!SERVICE)return respond({error:"service_unavailable"},503,origin);
  const token=(req.headers.get("Authorization")||"").replace(/^Bearer\s+/,"");
  if(!token||token.length<20)return respond({error:"sign_in_required"},401,origin);
  try{
-  const caller=createClient(URL,PUB,{auth:{persistSession:false,autoRefreshToken:false}});
+  const caller=createClient(SUPABASE_BASE,PUB,{auth:{persistSession:false,autoRefreshToken:false}});
   const {data:auth,error:authError}=await caller.auth.getUser(token);
   if(authError||!auth.user||!auth.user.email_confirmed_at)return respond({error:"verified_account_required"},401,origin);
-  const admin=createClient(URL,SERVICE,{auth:{persistSession:false,autoRefreshToken:false}});
+  const admin=createClient(SUPABASE_BASE,SERVICE,{auth:{persistSession:false,autoRefreshToken:false}});
   const {data:access,error:accessError}=await admin.from("raceatlas_organizer_event_access").select("event_id").eq("user_id",auth.user.id).is("revoked_at",null).limit(100);
   if(accessError)throw accessError;
   const ids=[...new Set((access||[]).map(x=>x.event_id).filter(x=>/^ra-\d{1,8}$/.test(x)))];
