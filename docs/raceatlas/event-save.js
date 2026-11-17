@@ -71,6 +71,10 @@ button.addEventListener('click',async()=>{
  }
 });
 window.addEventListener('storage',event=>{if(!cloud&&event.key===store)void refresh()});
+// Users commonly save a race in another tab; refresh when they return.
+// Skip any in-flight write so a slow refresh cannot undo a local click.
+window.addEventListener('focus',()=>{if(!busy)void refresh()});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!busy)void refresh()});
 async function init(){
  if(config.enabled===true&&/^https:\/\//.test(config.supabaseUrl||'')&&config.publishableKey){
   let factory=window.supabase?.createClient;
