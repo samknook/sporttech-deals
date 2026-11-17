@@ -298,10 +298,10 @@ window.TriZentroAccount={setSeasonStatus:(id,status)=>{
 // The per-event radar shares this verified account and its RLS-scoped Supabase client.
 function radarAccountState(){
  if(!user)return {signedIn:false,ready:true};
- return {signedIn:true,ready:mode==='cloud',verified:!!user.email_confirmed_at,email:user.email||''};
+ return {signedIn:true,ready:!!client,verified:!!user.email_confirmed_at,email:user.email||''};
 }
 async function saveRadarForAccount(eventId,choice){
- if(!user||mode!=='cloud'||!user.email_confirmed_at||alertBusy
+ if(!user||!client||!user.email_confirmed_at||alertBusy
    ||!/^ra-[0-9]{1,8}$/.test(eventId)
    ||!(window.RACEATLAS_EVENTS||[]).some(e=>e.id===eventId))return {ok:false,error:'account_unavailable'};
  const owner=user.id,version=authVersion;
@@ -324,7 +324,9 @@ async function saveRadarForAccount(eventId,choice){
   const {error}=await client.from('raceatlas_alert_preferences').upsert(next,{onConflict:'user_id,event_id'});
   if(error)throw error;
   if(user?.id!==owner||version!==authVersion)return {ok:false,error:'session_changed'};
-  await chooseCloud();
+  if(mode==='cloud')await chooseCloud();
+  // For accounts still displaying unsynchronized guest favourites, leave the
+  // local season untouched. The alert is persisted to the authenticated account.
   window.dispatchEvent(new CustomEvent('raceatlas:radar-preferences-changed',{detail:{eventId}}));
   return {ok:true};
  }catch{return {ok:false,error:'save_failed'}}
