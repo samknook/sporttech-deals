@@ -3,7 +3,7 @@
 const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('node:vm');
 const script=fs.readFileSync('docs/season-dashboard.js','utf8');
 const radar=fs.readFileSync('docs/raceatlas/intelligence.js','utf8');
-const host={children:[],replaceChildren(){this.children=[]},append(...nodes){this.children.push(...nodes)}};
+const host={children:[],replaceChildren(){this.children=[]},append(...nodes){this.children.push(...nodes)},get textContent(){return this.children.map(x=>x.textContent||'').join('')}};
 function element(tag){
  return {tag,children:[],attributes:{},className:'',value:'',href:'',
    append(...nodes){this.children.push(...nodes)},
