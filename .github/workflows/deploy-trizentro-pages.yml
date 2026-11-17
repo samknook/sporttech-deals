@@ -1,0 +1,85 @@
+name: Deploy TriZentro to GitHub Pages
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'scripts/build-trizentro-event-pages.cjs'
+      - 'scripts/build-trizentro-platform-shell.cjs'
+      - '.github/trizentro-domain.json'
+      - '.github/workflows/deploy-trizentro-pages.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/deploy-trizentro-pages.yml'
+      - '.github/trizentro-domain.json'
+      - 'scripts/build-trizentro-event-pages.cjs'
+      - 'scripts/build-trizentro-platform-shell.cjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: trizentro-pages-${{ github.event_name == 'pull_request' && 'check' || 'production' }}
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build canonical race detail pages
+        env:
+          TRIZENTRO_DOMAIN_CONFIRMED: 'true'
+        run: node scripts/build-trizentro-event-pages.cjs
+      - name: Build integrated Events, Organizers and Season routes
+        run: node scripts/build-trizentro-platform-shell.cjs
+      - name: Validate complete release
+        run: |
+          test -f docs/index.html
+          test -f docs/events/index.html
+          test -f docs/organisatoren/index.html
+          test -f docs/raceatlas/organizer-dashboard.html
+          test -f docs/raceatlas/organizer-dashboard.js
+          test -f docs/raceatlas/organizer-review-admin.html
+          test -f docs/raceatlas/organizer-review-admin.js
+          test -f docs/events/wedstrijden/garmin-zevenheuvelenloop-2027-ra-433.html
+          test -f docs/CNAME
+          grep -qx 'trizentro.com' docs/CNAME
+          grep -q 'organizer-dashboard.html' docs/organisatoren/index.html
+          grep -q '<urlset' docs/sitemap.xml
+          echo "Canonical race pages: $(find docs/events/wedstrijden -name '*.html' | wc -l)"
+          echo "Pages artifact size:"
+          du -sh docs
+      - uses: actions/configure-pages@v5
+        if: github.event_name != 'pull_request'
+      - uses: actions/upload-pages-artifact@v4
+        if: github.event_name != 'pull_request'
+        with:
+          path: docs
+  deploy:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish official domain
+        id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Verify new pages served by custom domain
+        run: |
+          for attempt in $(seq 1 12); do
+            if curl -fsSL --max-time 15 "https://trizentro.com/raceatlas/organizer-dashboard.html?release=${{ github.sha }}" | grep -q 'organizer-dashboard.js' &&
+               curl -fsSL --max-time 15 "https://trizentro.com/organisatoren/?release=${{ github.sha }}" | grep -q 'organizer-dashboard.html' &&
+               curl -fsSL --max-time 15 "https://trizentro.com/events/?release=${{ github.sha }}" | grep -q 'TriZentro'; then
+              echo "TriZentro production routes verified"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Deployment not visible yet on required production URLs"
+          exit 1
