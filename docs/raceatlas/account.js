@@ -240,7 +240,7 @@ async function readMarketingPreference(owner){
 }
 async function chooseCloud(){
  if(!user)return;
- if(pending.size||saving){setStatus('Er worden nog wijzigingen gesynchroniseerd. Probeer eerst opnieuw.');return}
+ if(pending.size||saving||statusWrites.size){setStatus('Er worden nog wijzigingen gesynchroniseerd. Probeer eerst opnieuw.');return}
  const owner=user.id,version=authVersion;
  try{
   const cloud=await readCloud();
