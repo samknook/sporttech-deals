@@ -10,7 +10,12 @@ const DATE=/^\d{4}-\d{2}-\d{2}$/;
 const ID=/^ra-\d{1,8}$/;
 const TYPES=['card_view','detail_view','organizer','registration','source','promotion','site_view'];
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const csvValue=value=>'"'+String(value??'').replace(/"/g,'""')+'"';
+// Protect spreadsheet recipients from CSV formula injection in event names.
+const csvValue=value=>{
+ const raw=String(value??'');
+ const safe=/^[\s]*[=+@-]/.test(raw)?"'"+raw:raw;
+ return '"'+safe.replace(/"/g,'""')+'"';
+};
 const safeNumber=value=>Number.isFinite(Number(value))?Math.max(0,Math.trunc(Number(value))):0;
 const parse=data=>{
  if(!DATE.test(data.periodStart)||!DATE.test(data.periodEnd)||data.periodEnd<data.periodStart)
