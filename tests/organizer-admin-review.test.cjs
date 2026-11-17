@@ -24,6 +24,6 @@ test('admin UI requires review notes, approval confirmation and safe text render
 });
 test('review requests can approve or reject but do not write to public events directly',()=>{
  assert.match(js,/decision,note:v/);
- assert.match(js,/\['approve','reject'\]/);
+ assert.match(js,/decision==='approve'/); assert.match(js,/decide\('reject'\)/);
  assert.doesNotMatch(js,/from\(['"]raceatlas_event_intelligence['"]\)\.update/);
 });
