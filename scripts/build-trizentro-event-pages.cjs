@@ -141,7 +141,8 @@ for(const e of list){
  '<p class="note">TriZentro verzamelt beschikbare wedstrijdinformatie. Datums, prijzen en inschrijfstatussen kunnen veranderen. Controleer de actuele informatie altijd bij de organisator.</p>',
  official?'<p class="source">Bron: <a href="'+safe(official)+'" target="_blank" rel="noopener noreferrer">Organisator ↗</a></p>':'',
  '<div class="foot">TriZentro · Find. Prepare. Perform.</div></main>',
- '<script>(function(){const k="raceatlas-saved-v2",id='+JSON.stringify(e.id)+',b=document.getElementById("saveRace");function read(){try{const v=JSON.parse(localStorage.getItem(k)||"[]");return Array.isArray(v)?v:[]}catch{return []}}function render(){const on=read().includes(id);b.textContent=on?"✓ Bewaard in mijn seizoen":"☆ Bewaar in mijn seizoen";b.setAttribute("aria-pressed",String(on))}b.addEventListener("click",()=>{const v=read(),n=v.includes(id)?v.filter(x=>x!==id):[...v,id];try{localStorage.setItem(k,JSON.stringify(n))}catch{}render()});render()})()</script>',
+ '<script>window.TriZentroEventSaveId='+JSON.stringify(e.id)+'</script>',
+ '<script src="../account-config.js"></script><script src="../event-save.js?v=20261117-cloudseason" defer></script>',
  '<script src="../../shared-ui.js?v=20261113-unified" defer></script><script src="../tracking.js?v=20261112-domain1" defer></script></body></html>'].join('\n');
  fs.writeFileSync(path.join(output,file),document);total++;
 }
