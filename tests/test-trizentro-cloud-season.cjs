@@ -12,6 +12,11 @@ assert.ok(events.includes('cloudRegistrations={}'), 'Cloud statuses must reset o
 assert.ok(!events.includes('window.TriZentroDashboard?.render(myEvents,myRegistrations,'),'Dashboard must not always use device-only statuses');
 assert.ok(account.includes('Object.fromEntries(cloud.map(e=>[e.event_id,e.season_status]))'),'Account must pass authoritative statuses into season');
 assert.ok(account.includes('window.TriZentroAccount={setSeasonStatus:'),'Account must expose authenticated status update');
+assert.ok(account.includes('const statusWrites=new Set()'),'Concurrent account status updates must be guarded');
+assert.ok(account.includes(".select('event_id').maybeSingle()"),'Status update must confirm database row exists');
+assert.ok(account.includes("result.data?.event_id===eventId"),'A zero-row database update must never be considered saved');
+assert.ok(account.includes('ignoreDuplicates:true'),'Saving existing races must preserve their status');
+assert.ok(account.includes("select.value=cloudEvents.find("),'Failed account status changes must restore saved selection');
 assert.ok(account.includes('savedApi()?.setCloudStatus?.(eventId,statusValue)'),'Confirmed status changes must propagate to dashboard');
 assert.ok(account.includes('return false}'),'Unsuccessful status changes should not be reported as saved');
 assert.ok(dashboard.includes('const cloud=window.RaceAtlasSaved?.isCloud?.()===true'),'Dashboard must detect cloud mode');
