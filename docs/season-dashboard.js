@@ -32,13 +32,14 @@ function render(items,states,pageFor,setRegistration){
  const card=(symbol,label)=>{const c=e('article',undefined,'tz-dashboard-card');c.append(e('span',symbol+' '+label,'tz-dashboard-label'));grid.append(c);return c};
  const race=card('🏁',text('Eerstvolgende wedstrijd','Next race'));
  if(next){
+  const daysUntil=Math.max(0,Math.round((Date.parse(next.date+'T12:00:00')-Date.parse(date+'T12:00:00'))/86400000));
   race.append(e('strong',next.name,'tz-dashboard-value'),
    e('p',new Date(next.date+'T12:00:00').toLocaleDateString(document.documentElement.lang==='en'?'en-GB':'nl-NL',{day:'numeric',month:'long',year:'numeric'})+' · '+next.place),
-   e('small',next.dateEvidence==='official'?text('Wedstrijddatum officieel bevestigd','Race date officially confirmed'):text('Datum controleren bij organisator','Verify date with organizer')));
+   e('small',(daysUntil===0?text('Vandaag','Today'):daysUntil===1?text('Morgen','Tomorrow'):text('Over '+daysUntil+' dagen','In '+daysUntil+' days'))+' · '+(next.dateEvidence==='official'?text('datum officieel bevestigd','date officially confirmed'):text('datum nog te controleren','date not yet verified'))));
   const link=e('a',text('Wedstrijddetails →','Race details →'),'tz-dashboard-text-link');
   link.href=pageFor(next);race.append(link);
   if(tentative.length){
-   race.append(e('small',tentative.length+' '+text('opgeslagen wedstrijden met een nog onbevestigde datum','saved races with unconfirmed dates')));
+   race.append(e('small',tentative.length+' '+(tentative.length===1?text('opgeslagen wedstrijd met onbevestigde datum','saved race with an unconfirmed date'):text('opgeslagen wedstrijden met onbevestigde datum','saved races with unconfirmed dates'))));
   }
  }else{
   race.append(e('strong',text('Nog geen aankomende wedstrijd met exacte datum','No upcoming race with an exact date'),'tz-dashboard-value'),
