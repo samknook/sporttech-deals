@@ -18,6 +18,7 @@ where.insertAdjacentElement('afterend',wrapper);
 wrapper.hidden=true;
 let client=null,user=null,mode='local',saving=false;
 const pending=new Map();
+const statusWrites=new Set();
 let authVersion=0;
 let cloudEvents=[];
 let alertPrefs=new Map();
@@ -177,7 +178,7 @@ async function flushPending(){
    pending.delete(id);
    try{
     if(active){
-     const {error}=await client.from('raceatlas_saved_events').upsert({user_id:owner,event_id:id},{onConflict:'user_id,event_id'});
+     const {error}=await client.from('raceatlas_saved_events').upsert({user_id:owner,event_id:id,season_status:'interested'},{onConflict:'user_id,event_id',ignoreDuplicates:true});
      if(error)throw error;
     }else{
      const {error}=await client.from('raceatlas_saved_events').delete().eq('user_id',owner).eq('event_id',id);
@@ -243,15 +244,24 @@ async function importLocal(){
  }catch{if(owner===user?.id&&version===authVersion)setStatus('Importeren is mislukt. Je lokale favorieten zijn niet verwijderd.')}
 }
 async function setSeasonStatus(eventId,statusValue){
- if(!user||mode!=='cloud'||!['interested','registered','completed'].includes(statusValue))return false;
+ if(!user||mode!=='cloud'||!['interested','registered','completed'].includes(statusValue)
+  ||!/^ra-[0-9]{1,8}$/.test(eventId)||!cloudEvents.some(e=>e.event_id===eventId)
+  ||statusWrites.has(eventId))return false;
  const currentUser=user.id,version=authVersion;
- let error;
+ statusWrites.add(eventId);
+ let updated=false;
  try{
-  const result=await client.from('raceatlas_saved_events').update({season_status:statusValue,updated_at:new Date().toISOString()}).eq('user_id',currentUser).eq('event_id',eventId);
-  error=result.error;
- }catch{error=new Error('Netwerkfout')}
- if(error){if(currentUser===user?.id&&version===authVersion)setStatus('Status opslaan is mislukt. Probeer het opnieuw.');return false}
+  // PostgREST can report no error when zero rows match an update. Require
+  // the exact event to be returned before confirming the user-visible status.
+  const result=await client.from('raceatlas_saved_events')
+   .update({season_status:statusValue,updated_at:new Date().toISOString()})
+   .eq('user_id',currentUser).eq('event_id',eventId).select('event_id').maybeSingle();
+  if(result.error)throw result.error;
+  updated=result.data?.event_id===eventId;
+ }catch{}
+ finally{statusWrites.delete(eventId)}
  if(currentUser!==user?.id||version!==authVersion)return false;
+ if(!updated){setStatus('Status opslaan is mislukt of de wedstrijd is verwijderd. Ververs je seizoen.');return false}
  cloudEvents=cloudEvents.map(item=>item.event_id===eventId?{...item,season_status:statusValue}:item);
  savedApi()?.setCloudStatus?.(eventId,statusValue);
  showSignedIn();setStatus('Wedstrijdstatus opgeslagen.');
@@ -274,7 +284,15 @@ function renderStatusControls(){
    const option=el('option',label);option.value=value;select.append(option);
   }
   select.value=entry.season_status||'interested';
-  select.addEventListener('change',async()=>{select.disabled=true;try{await setSeasonStatus(entry.event_id,select.value)}finally{select.disabled=false}});
+  select.addEventListener('change',async()=>{
+   select.disabled=true;
+   try{await setSeasonStatus(entry.event_id,select.value)}
+   finally{
+    // Never leave a failed optimistic selection in the account controls.
+    select.value=cloudEvents.find(item=>item.event_id===entry.event_id)?.season_status||'interested';
+    select.disabled=false;
+   }
+  });
   line.append(name,select);container.append(line);
  }
  if(cloudEvents.length)content.append(container);
