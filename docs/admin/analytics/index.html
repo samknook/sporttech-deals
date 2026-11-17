@@ -85,8 +85,9 @@ function exportCsv(rows,name){
  download(name,csv([columns,...rows.map(r=>columns.map(k=>r[k]))]),'text/csv;charset=utf-8');
 }
 function makeReport(event){
- const page=window.open('','_blank','noopener,noreferrer');
+ const page=window.open('','_blank');
  if(!page){exportCsv([event],'trizentro-rapport-'+event.event_id+'.csv');return}
+ page.opener=null;
  const doc=page.document;
  const title=elem('h1',event.event_name),container=elem('main');
  doc.title='TriZentro rapport '+event.event_id;
@@ -97,7 +98,7 @@ function makeReport(event){
  container.append(elem('p','Deze cijfers zijn geaggregeerde acties, geen unieke bezoekers of bevestigde inschrijvingen.'));
  doc.head.append(Object.assign(doc.createElement('meta'),{charset:'utf-8'}));
  const style=elem('style');style.textContent='body{font:16px/1.5 system-ui;color:#17392d;margin:48px}h1{font-size:32px}main{max-width:750px;margin:auto}';doc.head.append(style);doc.body.append(container);
- page.focus();page.print();
+ page.focus();setTimeout(()=>page.print(),120);
 }
 function draw(){
  if(!data)return;
