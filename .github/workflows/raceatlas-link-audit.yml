@@ -1,0 +1,27 @@
+name: RaceAtlas official link audit
+on:
+  pull_request:
+    paths:
+      - 'docs/raceatlas/index.html'
+      - 'scripts/check-raceatlas-official-links.py'
+      - '.github/workflows/raceatlas-link-audit.yml'
+  workflow_dispatch:
+jobs:
+  official-links:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate all organizer URLs
+        run: python scripts/check-raceatlas-official-links.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raceatlas-link-audit
+          path: raceatlas-link-audit.json
+          retention-days: 14
