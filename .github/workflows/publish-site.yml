@@ -50,6 +50,7 @@ jobs:
           node tests/test-trizentro-registration-radar.cjs
           node tests/test-trizentro-event-save.cjs
           node tests/test-trizentro-season-dashboard.cjs
+          node tests/test-trizentro-cloud-season.cjs
           test -s docs/index.html
           test -s docs/events/index.html
           test -s docs/performance/index.html
