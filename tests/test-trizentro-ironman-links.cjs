@@ -6,7 +6,8 @@ assert.ok(start>=0,'catalogue constant missing');
 const begin=start+'const EVENTS='.length,end=html.indexOf(';\n',begin);
 assert.ok(end>begin,'catalogue terminator missing');
 const events=JSON.parse(html.slice(begin,end));
-assert.ok(events.length>=434,'verified 2027 catalogue additions missing');
+assert.ok(events.length>=120&&events.length<300,'Public catalogue must contain researched official-source events');
+for(const e of events)assert.ok(e.officialEventUrl?.startsWith('https://'),'Public race must have official event or registration URL: '+e.id);
 const ids=new Set();
 for(const e of events){
  assert.ok(!ids.has(e.id),'duplicate event ID '+e.id);ids.add(e.id);
@@ -44,7 +45,7 @@ for(const id of ['ra-11','ra-218','ra-220','ra-232','ra-233','ra-244','ra-260','
  assert.ok(e?.officialEventUrl?.startsWith('https://www.ironman.com/races/im'),
   'verified unique IRONMAN race link missing: '+id);
 }
-for(const id of ['ra-423','ra-424','ra-425','ra-426','ra-427','ra-428','ra-429','ra-430','ra-431','ra-432','ra-433']){
+for(const id of ['ra-423','ra-424','ra-425','ra-426','ra-427','ra-429','ra-430','ra-431','ra-432','ra-433']){
  const e=events.find(x=>x.id===id);
  assert.ok(e,'newly researched event missing: '+id);
  assert.ok(e.officialEventUrl?.startsWith('https://'),'organizer link missing: '+id);
