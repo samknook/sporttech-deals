@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>TriZentro Analytics | Intern beheer</title>
+<meta name="description" content="Beveiligd beheerdersdashboard voor TriZentro.">
+<link rel="icon" href="/favicon.ico">
+<style>
+:root{color-scheme:light;--navy:#071925;--lime:#c7ff37;--ink:#142c32;--soft:#f3f7f6;--stroke:#dae5e5}
+*{box-sizing:border-box}body{margin:0;background:var(--soft);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:var(--ink)}
+a{color:#115d54}header{background:var(--navy);color:white;border-bottom:1px solid #ffffff25}
+header nav{max-width:1200px;margin:auto;display:flex;align-items:center;gap:25px;padding:13px 20px}
+header nav a{color:white;text-decoration:none;font-weight:650}header nav a:first-child{color:var(--lime);font-weight:900;letter-spacing:.5px}header nav a:last-child{margin-left:auto;color:#cde0e6}
+main{max-width:1200px;margin:auto;padding:28px 20px 60px}
+.kicker{font-size:11px;letter-spacing:2px;font-weight:850;color:#477c62}h1{font-size:clamp(27px,5vw,42px);margin:5px 0}h2{font-size:20px;margin:0 0 12px}p{margin:8px 0 13px}
+.hero{background:var(--navy);color:white;border-radius:18px;padding:28px 30px;margin-bottom:18px}
+.hero .kicker{color:var(--lime)}.hero p{color:#bed2d8}
+.panel,.metric{border:1px solid var(--stroke);background:white;border-radius:14px;padding:21px}
+.note{font-size:13px;color:#5c7379}.panel{margin-bottom:17px}
+.controls{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+button,select,input{font:inherit;border-radius:9px;border:1px solid #b7cfd0;padding:11px;background:white;color:var(--ink)}
+button{cursor:pointer;font-weight:700}button.primary{background:var(--lime);border-color:var(--lime)}
+button:disabled{opacity:.5;cursor:wait}
+input[type=search]{width:min(330px,100%)}
+.metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.metric{min-width:0}.metric strong{font-size:clamp(22px,2.5vw,32px);display:block;font-weight:900;letter-spacing:-1px}.metric span{font-size:12px;color:#687d83}
+table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px solid #e7eeee;text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left;white-space:normal}
+th{background:#f3f8f7;color:#45616b;font-size:12px}.scroll{overflow:auto}
+a.event{font-weight:750;text-decoration:none}small{color:#82929b}.hidden,[hidden]{display:none!important}
+.bar-chart{min-height:130px;display:flex;align-items:flex-end;gap:5px;padding:10px 0 0}
+.bar-col{display:flex;flex:1;min-width:7px;flex-direction:column;align-items:center;justify-content:end;min-height:135px}
+.bar-col div{width:100%;max-width:35px;background:#2e8c68;border-radius:5px 5px 0 0}
+.bar-col small{font-size:9px;white-space:nowrap;margin-top:6px}
+.feedback{border-left:4px solid #8aa0a4;padding-left:13px;margin-bottom:18px}
+.feedback.error{border-color:#c65a4c}
+@media(max-width:850px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}header nav{gap:10px;flex-wrap:wrap}}
+@media(max-width:580px){main{padding:14px}.hero{padding:20px}header nav{font-size:12px}.panel{padding:14px}.bar-col small{display:none}}
+@media print{header,.controls,.feedback,button,.note{display:none!important}main{max-width:none}.panel{break-inside:avoid}body{background:white}}
+</style>
+</head>
+<body>
+<header><nav aria-label="TriZentro navigatie"><a href="/events/">TRIZENTRO</a><a href="/seizoen/">Mijn seizoen</a><a href="/performance/">Performance</a><a href="/organisatoren/">Organisatoren</a><a href="/account/">Mijn account</a></nav></header>
+<main>
+<section class="hero"><div class="kicker">INTERNE ANALYTICS / BEVEILIGD</div><h1>Event Performance</h1><p>Inzicht in bereik en uitgaande klikken. Alleen beschikbaar voor geautoriseerde TriZentro-beheerders.</p></section>
+<div class="panel" id="authPanel"><h2>Toegang controleren</h2><p id="authStatus" role="status">We controleren je ingelogde account.</p><a href="/account/" id="loginLink">Naar Mijn account om in te loggen</a></div>
+<div id="app" hidden>
+<div class="controls"><label>Rapportperiode <select id="period"><option value="7">Laatste 7 dagen</option><option value="30" selected>Laatste 30 dagen</option><option value="90">Laatste 90 dagen</option></select></label><button id="reload" type="button">Verversen</button><button id="exportAll" type="button" class="primary">Download CSV</button><span id="asOf" class="note"></span></div>
+<p id="feedback" class="feedback" role="status">Cijfers laden…</p>
+<div class="metrics" id="metrics" aria-label="Totale gemeten acties"></div>
+<section class="panel"><h2>Dagelijkse uitgaande klikken</h2><p class="note">Som van klikken naar officiële websites en afzonderlijke inschrijflinks; geen unieke bezoekers.</p><div class="bar-chart" id="chart"></div></section>
+<section class="panel"><h2>Evenementen vergelijken</h2><div class="controls"><input id="search" type="search" placeholder="Zoek evenement of ID" aria-label="Zoek evenement"><label>Sorteren <select id="sort"><option value="clicks">Meeste websiteklikken</option><option value="card_views">Kaartweergaven</option><option value="detail_views">Detailweergaven</option><option value="registration_clicks">Inschrijfklikken</option></select></label></div><div class="scroll"><table><thead><tr><th>Evenement</th><th>Kaart</th><th>Detail</th><th>Website</th><th>Inschrijven</th><th>Rapport</th></tr></thead><tbody id="races"></tbody></table></div><p class="note" id="empty" hidden>Geen wedstrijden gevonden.</p></section>
+<section class="panel note"><strong>Meetdefinities.</strong> Kaartweergaven en detailopeningen zijn gemeten acties, geen unieke bezoekers. Een klik is geen bevestigde inschrijving. Browserblokkeringen, netwerkfouten en de meetperiode kunnen aantallen beïnvloeden. Deel per organisator uitsluitend zijn eigen rapport.</section>
+</div>
+</main>
+<script src="/raceatlas/account-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0/dist/umd/supabase.min.js"></script>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const config=window.RACEATLAS_ACCOUNT_CONFIG||{};
+const ENDPOINT=(config.supabaseUrl||'')+'/functions/v1/trizentro-admin-analytics';
+let client=null,data=null;
+const fmt=n=>Number(n||0).toLocaleString('nl-NL');
+const clear=node=>node.replaceChildren();
+const elem=(tag,value)=>{const node=document.createElement(tag);if(value!==undefined)node.textContent=String(value);return node};
+const status=(message,error=false)=>{$('feedback').textContent=message;$('feedback').classList.toggle('error',error)};
+function csv(rows){
+ const cell=x=>'"'+String(x??'').replace(/^[\s]*[=+@-]/,s=>"'"+s).replace(/"/g,'""')+'"';
+ return rows.map(row=>row.map(cell).join(',')).join('\r\n')+'\r\n';
+}
+function download(name,contents,type){
+ const blob=new Blob([contents],{type}),url=URL.createObjectURL(blob),a=elem('a');
+ a.href=url;a.download=name;document.body.append(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function selected(){
+ const q=$('search').value.trim().toLocaleLowerCase('nl-NL');
+ const sort=$('sort').value;
+ return [...(data?.events||[])].filter(row=>(row.event_name+' '+row.event_id).toLocaleLowerCase('nl-NL').includes(q))
+ .sort((a,b)=>sort==='clicks'?Number(b.organizer_clicks||0)+Number(b.registration_clicks||0)-Number(a.organizer_clicks||0)-Number(a.registration_clicks||0):Number(b[sort]||0)-Number(a[sort]||0));
+}
+function exportCsv(rows,name){
+ const columns=['event_id','event_name','card_views','detail_views','organizer_clicks','registration_clicks','sponsored_clicks'];
+ download(name,csv([columns,...rows.map(r=>columns.map(k=>r[k]))]),'text/csv;charset=utf-8');
+}
+function makeReport(event){
+ const page=window.open('','_blank','noopener,noreferrer');
+ if(!page){exportCsv([event],'trizentro-rapport-'+event.event_id+'.csv');return}
+ const doc=page.document;
+ const title=elem('h1',event.event_name),container=elem('main');
+ doc.title='TriZentro rapport '+event.event_id;
+ container.append(elem('h3','TriZentro · Evenementrapport'),title,elem('p','Meetperiode: '+data.periodStart+' t/m '+data.periodEnd));
+ for(const [label,key] of [['Kaartweergaven','card_views'],['Detailweergaven','detail_views'],['Klikken officiële website','organizer_clicks'],['Klikken inschrijflink','registration_clicks'],['Promotieklikken','sponsored_clicks']]){
+  const para=elem('p');para.append(elem('strong',label+': '),elem('span',fmt(event[key])));container.append(para);
+ }
+ container.append(elem('p','Deze cijfers zijn geaggregeerde acties, geen unieke bezoekers of bevestigde inschrijvingen.'));
+ doc.head.append(Object.assign(doc.createElement('meta'),{charset:'utf-8'}));
+ const style=elem('style');style.textContent='body{font:16px/1.5 system-ui;color:#17392d;margin:48px}h1{font-size:32px}main{max-width:750px;margin:auto}';doc.head.append(style);doc.body.append(container);
+ page.focus();page.print();
+}
+function draw(){
+ if(!data)return;
+ const entries=[['Kaartweergaven','card_views'],['Detailweergaven','detail_views'],['Officiële websiteklikken','organizer_clicks'],['Inschrijfklikken','registration_clicks'],['Promotieklikken','sponsored_clicks']];
+ clear($('metrics'));
+ for(const [label,key] of entries){const metric=elem('article');metric.className='metric';metric.append(elem('strong',fmt(data.totals?.[key])),elem('span',label));$('metrics').append(metric)}
+ const daily=new Map();
+ for(const item of data.daily||[])if(item.kind==='organizer'||item.kind==='registration')daily.set(item.day,(daily.get(item.day)||0)+Number(item.clicks||0));
+ const days=[...daily].sort((a,b)=>a[0].localeCompare(b[0])),max=Math.max(1,...days.map(d=>d[1]));
+ clear($('chart'));
+ if(!days.length)$('chart').append(elem('p','Nog geen geregistreerde uitgaande klikken.'));
+ for(const [date,value] of days){const col=elem('div');col.className='bar-col';col.title=date+': '+value+' klikken';const bar=elem('div');bar.style.height=Math.max(2,Math.round(110*value/max))+'px';col.append(bar,elem('small',date.slice(5)));$('chart').append(col)}
+ clear($('races'));
+ const filtered=selected();
+ for(const e of filtered){
+  const tr=elem('tr'),name=elem('td'),link=elem('a',e.event_name);
+  link.href='/events/?event='+encodeURIComponent(e.event_id);link.target='_blank';link.rel='noopener';link.className='event';name.append(link,elem('small',e.event_id));tr.append(name);
+  for(const field of ['card_views','detail_views','organizer_clicks','registration_clicks'])tr.append(elem('td',fmt(e[field])));
+  const td=elem('td'),button=elem('button','Rapport');button.type='button';button.addEventListener('click',()=>makeReport(e));td.append(button);tr.append(td);$('races').append(tr);
+ }
+ $('empty').hidden=filtered.length>0;
+ $('asOf').textContent='Bijgewerkt: '+new Date(data.asOf).toLocaleString('nl-NL');
+}
+async function load(){
+ if(!client)return;
+ const {data:authData,error}=await client.auth.getSession();
+ const token=authData?.session?.access_token;
+ if(error||!token){$('authStatus').textContent='Log eerst in met een geautoriseerd beheerdersaccount.';return}
+ $('authStatus').textContent='Ingelogd. Beheerdersrechten worden gecontroleerd…';
+ try{
+  const response=await fetch(ENDPOINT+'?days='+$('period').value,{headers:{Authorization:'Bearer '+token,apikey:config.publishableKey,Accept:'application/json'},cache:'no-store'});
+  const result=await response.json().catch(()=>({}));
+  if(response.status===401){$('authStatus').textContent='Je sessie is verlopen. Log opnieuw in via Mijn account.';return}
+  if(response.status===403){$('authStatus').textContent='Dit account is ingelogd maar heeft nog geen TriZentro-beheerdersrechten. Neem contact op met de beheerder.';return}
+  if(!response.ok)throw Error(result.error||'Rapportage niet bereikbaar');
+  data=result;$('authPanel').hidden=true;$('app').hidden=false;status('Meetgegevens geladen. Dit overzicht is alleen zichtbaar voor beheerders.');draw();
+ }catch(err){$('authStatus').textContent='Analytics laden is mislukt. Controleer je verbinding of probeer opnieuw.';status('Gegevens ophalen is mislukt.',true)}
+}
+async function init(){
+ if(!config.enabled||!config.publishableKey||!window.supabase?.createClient){$('authStatus').textContent='De accountdienst is niet beschikbaar.';return}
+ client=window.supabase.createClient(config.supabaseUrl,config.publishableKey,{auth:{detectSessionInUrl:false,persistSession:true,autoRefreshToken:true}});
+ $('period').addEventListener('change',load);$('reload').addEventListener('click',load);
+ $('search').addEventListener('input',draw);$('sort').addEventListener('change',draw);
+ $('exportAll').addEventListener('click',()=>data&&exportCsv(selected(),'trizentro-analytics-'+data.periodStart+'-'+data.periodEnd+'.csv'));
+ await load();
+}
+void init();
+})();
+</script>
+</body></html>
