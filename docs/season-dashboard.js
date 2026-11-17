@@ -15,6 +15,7 @@ function render(items,states,pageFor,setRegistration){
  const tentative=upcoming.filter(item=>item.dateEvidence!=='official');
  const next=confirmed[0]||tentative[0];
  const registered=items.filter(item=>states[item.id]==='registered').length;
+ const completed=items.filter(item=>states[item.id]==='completed').length;
  const waitlist=items.filter(item=>states[item.id]==='waitlist').length;
  const pending=items.filter(item=>!states[item.id]||states[item.id]==='planned').length;
  const intro=e('div',undefined,'tz-dashboard-head');
@@ -47,13 +48,16 @@ function render(items,states,pageFor,setRegistration){
  }
  const registration=card('✓',text('Inschrijvingen','Registrations'));
  registration.append(e('strong',pending+' '+text('nog te regelen','to arrange'),'tz-dashboard-value'),
-  e('p',registered+' '+text('ingeschreven','registered')+' · '+waitlist+' '+text('op wachtlijst','waitlisted')+'. '+text('Dit zijn jouw eigen notities, geen bevestigingen van organisatoren.','These are your notes, not organizer confirmations.')));
+  e('p',registered+' '+text('ingeschreven','registered')+' · '+completed+' '+text('voltooid','completed')+' · '+waitlist+' '+text('op wachtlijst','waitlisted')+'. '+text('Dit zijn jouw eigen notities, geen bevestigingen van organisatoren.','These are your notes, not organizer confirmations.')));
  const radarLink=e('a',text('Bekijk Inschrijfradar →','View registration radar →'),'tz-dashboard-text-link');
  radarLink.href='/events/#raIntelPanel';registration.append(radarLink);
  if(next){
   const label=e('label',text('Mijn status voor volgende wedstrijd','My status for next race'),'tz-dashboard-form');
   const select=e('select');select.setAttribute('aria-label',label.textContent);
-  for(const [value,nl,en] of [['planned','Nog te regelen','Not registered'],['registered','Ingeschreven','Registered'],['waitlist','Wachtlijst','Waitlisted']]){
+  const cloud=window.RaceAtlasSaved?.isCloud?.()===true;
+  const options=[['planned','Nog te regelen','Not registered'],['registered','Ingeschreven','Registered'],['completed','Voltooid','Completed']];
+  if(!cloud)options.splice(2,0,['waitlist','Wachtlijst','Waitlisted']);
+  for(const [value,nl,en] of options){
    const option=e('option',text(nl,en));option.value=value;select.append(option);
   }
   select.value=states[next.id]||'planned';
