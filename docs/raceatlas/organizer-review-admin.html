@@ -1,0 +1,24 @@
+<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TriZentro | Beheercentrum organisatoren</title><meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="../trizentro-mark.svg" type="image/svg+xml"><link rel="stylesheet" href="../shared-ui.css"><link rel="stylesheet" href="../performance-theme.css">
+<style>
+:root{font-family:Inter,system-ui,-apple-system,sans-serif;color:#142b23;background:#f6f9f5}*{box-sizing:border-box}body{margin:0}
+main{max-width:1080px;margin:0 auto;padding:32px 18px 90px}h1{font-size:clamp(30px,5vw,48px);letter-spacing:-.045em;margin:14px 0}p{line-height:1.6}
+.intro{color:#526b5c;max-width:730px}.panel{background:white;border:1px solid #dce9de;border-radius:18px;padding:24px;margin:18px 0}
+.bar{display:flex;align-items:center;flex-wrap:wrap;gap:12px}.bar label{font-weight:750}
+select,textarea{font:inherit;border:1px solid #adc9b6;border-radius:10px;padding:11px;background:white}
+textarea{width:100%;resize:vertical;min-height:82px}
+button{font:inherit;min-height:42px;padding:10px 15px;border:1px solid #a7c4af;border-radius:10px;background:#e8f3e6;color:#164b32;font-weight:800;cursor:pointer}
+button:disabled{opacity:.55;cursor:wait}.primary{background:#154b32;color:white}.danger{color:#963f39;background:#fff2f1;border-color:#eac4be}
+.item{border:1px solid #d7e5d9;background:#fff;border-radius:16px;margin:16px 0;padding:22px}
+.item h2{margin:0 0 7px;font-size:20px}.meta{font-size:13px;color:#5b7264}.value{border-left:3px solid #4a9970;background:#f1f7f0;padding:13px 16px;margin:14px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}.hint{font-size:13px;color:#58705e}
+#app[hidden],#denied[hidden]{display:none}@media(max-width:640px){.panel,.item{padding:16px}}
+</style></head><body class="tz-performance">
+<header class="tz-site-header"><nav class="tz-site-nav" aria-label="Hoofdnavigatie"><a class="tz-site-brand" href="../raceatlas/" aria-label="TriZentro Events"><img src="../trizentro-mark.svg" alt="TriZentro" width="48" height="48"></a><div class="tz-site-links"></div></nav></header>
+<main><p class="intro">TRIZENTRO / BEHEER</p><h1>Organisatorverzoeken</h1><p class="intro">Beoordeel bronbewijzen en voorgestelde wedstrijdwijzigingen. Goedkeuring verwerkt de wijziging pas na een bewuste beheerdersactie.</p>
+<section class="panel"><p id="status" role="status" aria-live="polite">Beheerdersrechten controleren…</p>
+<div id="denied" hidden><p>Deze pagina is alleen voor bevoegde TriZentro-beheerders. Gebruik eerst een bevestigd TriZentro-account en vraag zo nodig toegang aan bij het team.</p><a href="organisatoren.html">Terug naar organisatoren</a></div>
+<div id="app" hidden><div class="bar"><label for="filter">Verzoeken</label><select id="filter"><option value="pending">In behandeling</option><option value="approved">Goedgekeurd</option><option value="rejected">Afgewezen</option></select><button id="refresh" type="button">Vernieuwen</button></div><p class="hint">Controleer altijd of de bron echt van de organisator is en bij de juiste editie hoort. Een goedgekeurde wijziging wordt in de database toegepast; statische pagina's kunnen afzonderlijke synchronisatie vereisen.</p><div id="requests" aria-live="polite"></div></div></section>
+</main>
+<script src="account-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0"></script><script src="organizer-review-admin.js" defer></script><script src="../shared-ui.js" defer></script></body></html>
