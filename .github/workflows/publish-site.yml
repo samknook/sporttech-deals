@@ -48,6 +48,7 @@ jobs:
           node tests/test-trizentro-ironman-links.cjs
           node tests/test-trizentro-seo.cjs
           node tests/test-trizentro-registration-radar.cjs
+          node tests/test-trizentro-event-save.cjs
           test -s docs/index.html
           test -s docs/events/index.html
           test -s docs/performance/index.html
