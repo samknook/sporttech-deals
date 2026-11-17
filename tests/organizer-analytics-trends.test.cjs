@@ -29,6 +29,14 @@ test('CSV respects event filter and dangerous spreadsheet formulas are escaped',
  assert.match(js,/const csvValue=/);
  assert.match(js,/setTimeout\(\(\)=>URL\.revokeObjectURL/);
 });
+const apiSource=fs.readFileSync(path.resolve(__dirname,'../supabase/functions/trizentro-organizer-dashboard/index.ts'),'utf8');
+test('API does not shadow built-in URL parser and only returns approved published trends',()=>{
+ assert.match(apiSource,/new URL\(req\.url\)/);
+ assert.doesNotMatch(apiSource,/const URL\s*=/);
+ assert.match(apiSource,/publishedIds\.has\(d\.event_id\)/);
+ assert.match(apiSource,/trend,asOf:/);
+ assert.match(apiSource,/\.eq\("user_id",auth\.user\.id\)/);
+});
 test('sensitive backend access remains token based',()=>{
  assert.match(js,/client\.auth\.getSession\(\)/);
  assert.match(js,/Authorization:'Bearer '/);
