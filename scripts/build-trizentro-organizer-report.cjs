@@ -58,6 +58,8 @@ if(require.main===module){
   fs.mkdirSync(dir,{recursive:true});
   for(const report of result.reports)fs.writeFileSync(path.join(dir,report.filename),report.html);
   fs.writeFileSync(path.join(dir,'trizentro-organisatoren-overzicht.csv'),'\uFEFF'+result.csv);
+  const {buildDashboard}=require('./build-trizentro-organizer-dashboard.cjs');
+  fs.writeFileSync(path.join(dir,'trizentro-intern-dashboard.html'),buildDashboard(JSON.parse(fs.readFileSync(input,'utf8'))));
   console.log('Organizer reports generated: '+result.reports.length);
  }catch(error){console.error(error.message);process.exitCode=1}
 }
