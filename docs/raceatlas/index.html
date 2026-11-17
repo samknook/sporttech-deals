@@ -332,7 +332,7 @@ function eventCard(e){
  const isSaved=saved.includes(e.id),eventUrl=(typeof e.officialEventUrl==='string'&&/^https:\/\//i.test(e.officialEventUrl))?e.officialEventUrl:null;
  const dateStatus=e.dateEvidence==='official'?'✓ Bevestigd op organisatorsite':e.status==='date_pending'?(e.expectedMonth?'◷ Verwachte maand — exacte datum onbekend':'◷ Datum nog onbekend'):e.status==='source'?'Datum controleren bij organisator':'Datum controleren bij organisator';
  const distanceKm=window.RaceAtlasRadius?.enabled?window.RaceAtlasRadius.km(e):null;
- const visualDate=e.date?{day:d.day,label:d.month}:e.expectedMonth?{day:'—',label:d.month}:{day:'?',label:'N.T.B.'};
+ const visualDate=isConfirmedEventDate(e)?{day:d.day,label:d.month}:e.expectedMonth?{day:'—',label:d.month}:{day:'?',label:'N.T.B.'};
  const card=document.createElement('article');card.className='card';card.dataset.raEvent=e.id;
  const visualArt=raceArtwork(e);
  card.innerHTML=
