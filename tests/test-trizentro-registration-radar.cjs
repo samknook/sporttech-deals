@@ -11,6 +11,7 @@ const now=new Date('2026-11-17T08:00:00Z');
 const cases=[
  {name:'known opening and missing race date',race:{start_date:null,registration_opens_at:'2026-11-19T13:00:00Z'},group:'soon'},
  {name:'known opening and unverified race date',race:{start_date:'2027-09-05',date_confidence:'unverified',registration_opens_at:'2026-11-19T13:00:00Z'},group:'soon'},
+ {name:'distant known opening still visible',race:{start_date:null,registration_opens_at:'2027-10-19T13:00:00Z'},group:'later'},
  {name:'no registration facts',race:{start_date:null,registration_opens_at:null,registration_closes_at:null},group:null},
  {name:'past race cannot be promoted',race:{start_date:'2025-01-01',registration_opens_at:'2024-01-01T00:00:00Z'},group:null}
 ];
