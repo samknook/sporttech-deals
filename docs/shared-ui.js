@@ -5,6 +5,7 @@ if(!nav)return;
 const events=document.getElementById('navExplore');
 const isEvents=!!events;
 const path=location.pathname;
+const isEventDetail=/\/events\/wedstrijden\/[^/]+\.html$/.test(path);
 // Base URL comes from this shared asset, so clean routes and project previews work.
 const scriptUrl=document.currentScript?.src||Array.from(document.scripts).find(x=>/\/shared-ui\.js(?:\?|$)/.test(x.src))?.src||location.href;
 // Every destination is site-absolute. Never let <base> or an older
@@ -24,7 +25,7 @@ const isPerformance=/\/performance\/?$/.test(path)||/\/(performance|calculator|t
 const isSeason=(isEvents&&['#mijn-seizoen','#saved'].includes(location.hash))||/\/seizoen\/?$/.test(path);
 const isAccount=/\/account\/?$/.test(path)||location.hash==='#mijn-account';
 const items=[
- {id:'events',nl:'Events',en:'Events',icon:'⌕',url:link(root),active:isEvents&&!isSeason},
+ {id:'events',nl:'Events',en:'Events',icon:'⌕',url:link(root),active:(isEvents||isEventDetail)&&!isSeason},
  {id:'season',nl:'Mijn seizoen',en:'My season',icon:'☆',url:link(seasonRoot),active:isSeason},
  {id:'performance',nl:'Performance',en:'Performance',icon:'⚡',url:link(performanceRoot),active:isPerformance},
  {id:'account',nl:'Mijn account',en:'My account',icon:'♙',url:link(accountRoot),active:isAccount},
