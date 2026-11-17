@@ -33,7 +33,7 @@ function allNodes(parent){return [parent,...(parent.children||[]).flatMap(allNod
 const links=allNodes(host).filter(n=>n.tag==='a');
 assert.ok(links.some(link=>link.href==='/events/#raIntelPanel'),'Dashboard should link to canonical radar');
 render([races[0]],{'ra-7':'planned'},event=>'/events/wedstrijden/'+event.id+'.html',()=>{});
-assert.ok(host.textContent.includes('Tentative Race')&&host.textContent.includes('Datum controleren bij organisator'),
+assert.ok(host.textContent.includes('Tentative Race')&&host.textContent.includes('datum nog te controleren'),
   'Unverified race must be labelled when no verified race exists');
 assert.ok(radar.includes("location.hash==='#raIntelPanel'")&&radar.includes('ui.panel.scrollIntoView'),
   'Radar should scroll into dynamically created section when opened from dashboard');
