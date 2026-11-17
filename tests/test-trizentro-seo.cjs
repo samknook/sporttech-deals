@@ -36,6 +36,15 @@ for(const name of detailFiles){
  assert.ok(page.includes('account-config.js'),'Detail page missing account configuration: '+name);
  assert.ok(page.includes('TriZentroEventSaveId'),'Detail page missing save event identity: '+name);
  assert.ok(page.includes('/events/?ra_alert='),'Detail page missing direct Inschrijfradar signup: '+name);
+ assert.ok(page.includes('href="/events/?event='),'Race detail must open canonical Events calendar: '+name);
+ assert.ok(page.includes('href="/performance/"'),'Race detail must open canonical Performance: '+name);
+ assert.ok(page.includes('href="/seizoen/"'),'Race detail nav must open canonical Season: '+name);
+ assert.ok(page.includes('href="/account/"'),'Race detail nav must open canonical Account: '+name);
+ assert.ok(page.includes('href="/organisatoren/"'),'Race detail nav must open canonical Organizers: '+name);
+ assert.ok(page.includes('href="/organisatoren/?onderwerp='),'Claim event form must use canonical organizer route: '+name);
+ assert.ok(!page.includes('href="../../performance.html"'),'Race detail must not promote legacy Performance URL: '+name);
+ assert.ok(!page.includes('href="../?event='),'Race detail must not link to legacy calendar: '+name);
+
  const ld=[...page.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
  for(const match of ld){
   const item=JSON.parse(match[1]);
@@ -43,6 +52,7 @@ for(const name of detailFiles){
   richResultEvents++;
   assert.match(item.startDate||'',/^\d{4}-\d{2}-\d{2}$/,'Missing startDate in '+name);
   assert.ok(item.description,'Missing structured description in '+name);
+  assert.ok(item.url==='https://trizentro.com/events/wedstrijden/'+name,'SportsEvent schema must use canonical race URL: '+name);
   if(item.location)assert.ok(item.location.address?.addressLocality,'Location address missing for '+name);
  }
  if(ld.length===0)ordinaryEventPages++;
