@@ -3,6 +3,66 @@ const cfg=window.RACEATLAS_ACCOUNT_CONFIG||{};
 const $=id=>document.getElementById(id);
 const msg=$('message'),content=$('content'),guest=$('guest'),races=$('races');
 const format=n=>new Intl.NumberFormat('nl-NL').format(Number(n)||0);
+const metricKeys=['card_views','detail_views','organizer_clicks','registration_clicks'];
+const rate=(part,whole)=>whole>0?new Intl.NumberFormat('nl-NL',{maximumFractionDigits:1}).format(part/whole*100)+'%':'—';
+const selectedEvents=()=>report?.events?.filter(e=>$('eventFilter').value==='all'||e.event_id===$('eventFilter').value)||[];
+const filteredTotals=()=>selectedEvents().reduce((acc,e)=>{for(const key of metricKeys)acc[key]+=Math.max(0,Number(e[key])||0);return acc},{card_views:0,detail_views:0,organizer_clicks:0,registration_clicks:0});
+function renderInsights(){
+ const totals=filteredTotals();
+ $('cards').textContent=format(totals.card_views);$('details').textContent=format(totals.detail_views);
+ $('outbound').textContent=format(totals.organizer_clicks);$('registration').textContent=format(totals.registration_clicks);
+ const checked=new Set(selectedEvents().map(e=>e.event_id));
+ const summary=$('insightSummary'),chart=$('insightChart');
+ summary.replaceChildren();chart.replaceChildren();
+ const p=document.createElement('span');
+ p.textContent='Inschrijfklikken per detailopening: ';
+ const strong=document.createElement('strong');strong.textContent=rate(totals.registration_clicks,totals.detail_views);
+ summary.append(p,strong);
+ if(!checked.size){chart.setAttribute('aria-label','Geen geverifieerde evenementdata beschikbaar');return}
+ const days=Number(report?.days)||30;
+ const bucketsCount=days<=7?7:days<=30?10:13;
+ const now=report?.asOf?new Date(report.asOf):new Date();
+ const today=Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate());
+ const start=today-(days-1)*86400000;
+ const daily=new Map();
+ for(const r of report?.trend||[]){
+  if(!checked.has(r.event_id)||typeof r.day!=='string')continue;
+  const timestamp=Date.parse(r.day+'T00:00:00Z');
+  if(!Number.isFinite(timestamp)||timestamp<start||timestamp>today)continue;
+  daily.set(r.day,(daily.get(r.day)||0)+Math.max(0,Number(r.registration_clicks)||0));
+ }
+ const buckets=Array.from({length:bucketsCount},(_,i)=>({
+  from:Math.floor(i*days/bucketsCount),to:Math.floor((i+1)*days/bucketsCount)-1,value:0
+ }));
+ const formatDay=timestamp=>new Date(timestamp).toLocaleDateString('nl-NL',{day:'numeric',month:'short',timeZone:'UTC'});
+ for(const b of buckets){
+  for(let k=b.from;k<=b.to;k++){
+   const day=new Date(start+k*86400000).toISOString().slice(0,10);
+   b.value+=daily.get(day)||0;
+  }
+ }
+ const max=Math.max(1,...buckets.map(b=>b.value));
+ chart.setAttribute('aria-label','Gemeten inschrijfklikken per periode voor '+($('eventFilter').selectedOptions[0]?.textContent||'alle evenementen'));
+ for(const b of buckets){
+  const label=formatDay(start+b.from*86400000);
+  const ending=formatDay(start+b.to*86400000);
+  const col=document.createElement('div');col.className='insight-bucket';
+  const track=document.createElement('div');track.className='insight-bar-track';
+  const bar=document.createElement('div');bar.className='insight-bar';bar.style.height=(b.value/max*100)+'%';
+  track.append(bar);
+  const x=document.createElement('span');x.textContent=label;
+  col.title=label+(b.to>b.from?' – '+ending:'')+': '+format(b.value)+' inschrijfklikken';
+  col.setAttribute('aria-label',col.title);col.append(track,x);chart.append(col);
+ }
+}
+function populateEventFilter(){
+ const filter=$('eventFilter'),previous=filter.value;
+ filter.replaceChildren();
+ const all=document.createElement('option');all.value='all';all.textContent='Alle geverifieerde evenementen';filter.append(all);
+ for(const e of report?.events||[]){const option=document.createElement('option');option.value=e.event_id;option.textContent=e.event_name||e.event_id;filter.append(option)}
+ filter.value=[...filter.options].some(o=>o.value===previous)?previous:'all';
+ renderInsights();
+}
 let client=null,report=null,activeUser=null;
 const editPanel=$('editPanel'),editForm=$('editForm'),editMessage=$('editMessage');
 const fieldTitles={start_date:'Wedstrijddatum',registration_opens_at:'Inschrijving opent',registration_status:'Inschrijfstatus',official_event_url:'Officiële wedstrijdwebsite',official_registration_url:'Inschrijflink',distance_label:'Afstanden',price_eur:'Prijs',other:'Overige informatie'};
@@ -39,9 +99,7 @@ const safeWebsite=url=>{try{const u=new URL(url);return u.protocol==='https:'&&!
 const csvValue=x=>{let s=String(x??'');if(/^[\s]*[=+@\-]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';};
 function render(data){
  report=data;
- const t=data.totals||{};
- $('cards').textContent=format(t.card_views);$('details').textContent=format(t.detail_views);
- $('outbound').textContent=format(t.organizer_clicks);$('registration').textContent=format(t.registration_clicks);
+ populateEventFilter();
  races.replaceChildren();
  if(!Array.isArray(data.events)||!data.events.length){
   const p=document.createElement('p');
@@ -112,10 +170,11 @@ editForm.addEventListener('submit',async ev=>{
 });
 $('period').addEventListener('change',()=>{void load()});
 $('refresh').addEventListener('click',()=>{void load()});
+$('eventFilter').addEventListener('change',renderInsights);
 $('export').addEventListener('click',()=>{
  if(!report?.events?.length)return;
  const cols=['event_id','event_name','card_views','detail_views','organizer_clicks','registration_clicks'];
- const rows=[cols.join(','),...report.events.map(e=>cols.map(c=>csvValue(e[c])).join(','))];
+ const rows=[cols.join(','),...selectedEvents().map(e=>cols.map(c=>csvValue(e[c])).join(','))];
  const csv='\uFEFF'+rows.join('\r\n')+'\r\n';
  const file=new Blob([csv],{type:'text/csv;charset=utf-8'});
  const url=URL.createObjectURL(file);const a=document.createElement('a');
