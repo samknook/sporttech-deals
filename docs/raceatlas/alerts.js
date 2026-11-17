@@ -108,7 +108,7 @@
   function openDeepLinkedRadar(){
     const params=new URLSearchParams(window.location.search);
     const id=params.get('ra_alert');
-    if(!id||!/^ra-\\d{1,8}$/.test(id))return;
+    if(!id||!/^ra-[0-9]{1,8}$/.test(id))return;
     const event=(window.RACEATLAS_EVENTS||[]).find(item=>item.id===id);
     if(!event)return;
     openDialog(event);
