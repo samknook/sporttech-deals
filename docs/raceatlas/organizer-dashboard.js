@@ -44,8 +44,10 @@ async function load(){
   const {data:session,error:sErr}=await client.auth.getSession();
   if(sErr||!session.session||session.session.user.id!==activeUser)throw Error('session');
   const period=$('period').value;
-  const {data,error}=await client.functions.invoke('trizentro-organizer-dashboard',{method:'GET',headers:{Authorization:'Bearer '+session.session.access_token},url:`https://lpzndnxloykcthbsqcet.supabase.co/functions/v1/trizentro-organizer-dashboard?days=${encodeURIComponent(period)}`});
-  if(error||data?.error)throw Error(data?.error||'unavailable');
+  const response=await fetch(cfg.supabaseUrl+'/functions/v1/trizentro-organizer-dashboard?days='+encodeURIComponent(period),{method:'GET',headers:{apikey:cfg.publishableKey,Authorization:'Bearer '+session.session.access_token,Accept:'application/json'},cache:'no-store'});
+  if(!response.ok)throw Error('HTTP '+response.status);
+  const data=await response.json();
+  if(data?.error)throw Error(data.error);
   render(data);setMessage('Rapportages bijgewerkt. Alleen jouw geverifieerde evenementen zijn zichtbaar.');
  }catch(err){report=null;races.replaceChildren();setMessage('Rapportages konden niet veilig worden opgehaald. Meld je opnieuw aan of probeer later opnieuw.');}
  finally{$('refresh').disabled=false}
