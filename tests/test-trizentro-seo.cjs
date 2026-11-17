@@ -66,6 +66,11 @@ assert.ok(registrationRadar.includes('window.RaceAtlasSaved'),'Radar must reflec
 assert.ok(registrationRadar.includes('raceatlas:season-source-change'),'Radar must refresh after login/logout');
 assert.ok(registrationRadar.includes('RaceAtlasAlerts.openForEvent'),'Radar must link to per-event signup');
 assert.ok(registrationRadar.includes('raIntelPendingList'),'Radar must support saved events with unknown registration dates');
+assert.ok(registrationRadar.includes('pendingExpanded'),'Radar must allow viewing beyond the initial 8 saved races');
+assert.ok(registrationRadar.includes('pendingMore.addEventListener'),'Show-more control must be interactive');
+assert.ok(registrationRadar.includes('candidates.slice(0,8)'),'Radar should keep the initial saved race list concise');
+assert.ok(events.includes('.raIntelList,.raIntelPendingList'),'Saved race cards must share the responsive radar grid');
+
 assert.ok(registrationRadar.includes('window.RACEATLAS_EVENTS'),'Pending event follows must use the shared catalogue');
 assert.ok(registrationRadar.includes('Inschrijfdatum nog niet bevestigd'),'Radar must not imply unknown opening is confirmed');
 
