@@ -54,8 +54,8 @@ a.event{font-weight:750;text-decoration:none}small{color:#82929b}.hidden,[hidden
 </div>
 </main>
 <script src="/raceatlas/account-config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0/dist/umd/supabase.min.js"></script>
 <script>
+
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
 const config=window.RACEATLAS_ACCOUNT_CONFIG||{};
@@ -145,7 +145,20 @@ async function init(){
  $('exportAll').addEventListener('click',()=>data&&exportCsv(selected(),'trizentro-analytics-'+data.periodStart+'-'+data.periodEnd+'.csv'));
  await load();
 }
-void init();
+// Load the same browser client as the account page. If the first CDN is
+// blocked or unavailable, try a second provider before showing an error.
+function loadAuthLibrary(url,fallback){
+ const tag=document.createElement('script');
+ tag.src=url;tag.async=true;
+ tag.onload=()=>{if(window.supabase?.createClient)void init();
+  else if(fallback)loadAuthLibrary(fallback,null);
+  else $('authStatus').textContent='Inlogbibliotheek kon niet worden gestart. Controleer je browserblokkeringen.'};
+ tag.onerror=()=>{if(fallback)loadAuthLibrary(fallback,null);
+  else $('authStatus').textContent='Inlogbibliotheek niet bereikbaar. Probeer een andere browser of schakel scriptblokkering uit.'};
+ document.head.append(tag);
+}
+loadAuthLibrary('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js',
+ 'https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js');
 })();
 </script>
 </body></html>
