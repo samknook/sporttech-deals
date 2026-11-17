@@ -29,12 +29,21 @@ assert.ok(all.includes('Confirmed Race'),'Confirmed race should be the headline'
 assert.ok(!all.includes('Eerstvolgende wedstrijdTentative Race'),'Tentative race must not displace a confirmed race');
 assert.ok(all.includes('1 op wachtlijst'),'Waitlist must be separate');
 assert.ok(all.includes('1 nog te regelen'),'Only planned events count as unregistered');
+assert.ok(all.includes('0 voltooid'),'Dashboard should expose completed count');
+assert.ok(all.includes('Wachtlijst'),'Local season should offer waitlist status');
 function allNodes(parent){return [parent,...(parent.children||[]).flatMap(allNodes)]}
 const links=allNodes(host).filter(n=>n.tag==='a');
 assert.ok(links.some(link=>link.href==='/events/#raIntelPanel'),'Dashboard should link to canonical radar');
 render([races[0]],{'ra-7':'planned'},event=>'/events/wedstrijden/'+event.id+'.html',()=>{});
 assert.ok(host.textContent.includes('Tentative Race')&&host.textContent.includes('datum nog te controleren'),
   'Unverified race must be labelled when no verified race exists');
+ctx.window.RaceAtlasSaved={isCloud:()=>true};
+render(races,{'ra-7':'planned','ra-8':'registered','ra-9':'completed'},event=>'/events/wedstrijden/'+event.id+'.html',()=>{});
+assert.ok(host.textContent.includes('1 voltooid'),'Cloud race status must report completed counts');
+const cloudNodes=allNodes(host);
+const cloudOptions=cloudNodes.filter(n=>n.tag==='option').map(n=>n.value);
+assert.ok(cloudOptions.includes('completed'),'Cloud season should allow completed');
+assert.ok(!cloudOptions.includes('waitlist'),'Cloud season should not offer unsupported waitlist state');
 assert.ok(radar.includes("location.hash==='#raIntelPanel'")&&radar.includes('ui.panel.scrollIntoView'),
   'Radar should scroll into dynamically created section when opened from dashboard');
 console.log('PASS: confirmed race priority, tentative fallback, waitlist, pending counts, radar navigation');
