@@ -26,7 +26,7 @@ const eventSpecificOfficial=url=>{
  }catch{return false}
 };
 for(const e of feed.events||[]){
- if(!ids.has(e.id)&&e.name&&e.date&&eventSpecificOfficial(e.officialEventUrl)){
+ if(!ids.has(e.id)&&e.reviewedByTriZentro===true&&e.name&&e.date&&eventSpecificOfficial(e.officialEventUrl)){
   list.push(e);ids.add(e.id);
  }
 }
