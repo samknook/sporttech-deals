@@ -46,8 +46,10 @@
     try{localStorage.setItem(LOCAL_PREF_KEY,String(value))}catch{}
   };
   function classify(r,now){
-    const race=parseDate((r.start_date||'')+'T23:59:59Z');
-    if(!race||Number.isNaN(race.getTime())||race<now)return null;
+    const race=r.start_date?parseDate(r.start_date+'T23:59:59Z'):null;
+    // The organizer may confirm registration before publishing a final race date.
+    // Preserve verified opening/deadline evidence independently of race-date confidence.
+    if(race&&(!Number.isNaN(race.getTime()))&&race<now)return null;
     const opens=parseDate(r.registration_opens_at);
     const closes=parseDate(r.registration_closes_at);
     const dayInMs=86400000;
@@ -93,7 +95,7 @@
     ui.pending.replaceChildren();
     ui.pending.hidden=true;ui.pendingHead.hidden=true;ui.pendingNote.hidden=true;
     const now=new Date(), saved=savedIds();
-    const classified=records.filter(r=>r.date_confidence==='official').map(r=>({r,kind:classify(r,now)})).filter(x=>x.kind);
+    const classified=records.filter(r=>r.registration_opens_at||r.registration_closes_at).map(r=>({r,kind:classify(r,now)})).filter(x=>x.kind);
     const selected=classified.filter(x=>!ui.check.checked||saved.has(x.r.event_id));
     // Saved races without an upcoming recorded opening still need a way to opt in.
     // The catalogue is the source for event identity only, not unverified registration claims.
@@ -145,7 +147,7 @@
       const item=el('article','raIntelItem');
       const body=el('div','');
       const badge=saved.has(r.event_id)?'★ Mijn seizoen':'Wedstrijdkalender';
-      body.append(el('span','raIntelEyebrow',badge+' · '+kind.label),el('strong','',r.event_name),el('small','', 'Wedstrijd '+eventFmt(r.start_date)));
+      body.append(el('span','raIntelEyebrow',badge+' · '+kind.label),el('strong','',r.event_name),el('small','',r.start_date&&r.date_confidence==='official'?'Wedstrijd '+eventFmt(r.start_date):'Wedstrijddatum nog niet officieel bevestigd'));
       const actions=el('div','raIntelActions');
       const detail=el('button','raIntelButton','Wedstrijddetails');
       detail.type='button';
