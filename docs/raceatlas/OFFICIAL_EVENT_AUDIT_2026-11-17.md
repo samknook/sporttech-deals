@@ -30,3 +30,14 @@
 3. Kalender-ICS maakt geen fictieve datum aan voor wedstrijden zonder officiële datum.
 4. Bekijk alle evenementen zonder officiële HTTPS-pagina en controleer links handmatig; geen bulk-publicatie op basis van zoekresultaten.
 5. Test dat account-gebonden e-mailmeldingen bij overgang van onbekende naar officiële datum echt precies één keer worden afgeleverd.
+
+## Inventarisatie huidig catalogusbestand (17 november 2026)
+- 168 records in de ingebedde `EVENTS`-dataset van `docs/raceatlas/index.html`.
+- 168 hebben een syntactisch geldige HTTPS-`officialEventUrl`; dit is **geen bewijs dat elke link werkt of naar de juiste editie verwijst**.
+- 61 evenementen hebben `dateEvidence: official`; 107 niet.
+- Van die 107 hebben 100 toch een ingevulde `date` en zeven geen exacte `date`.
+- De kaartweergave op deze branch toont alleen bij `dateEvidence: official` het dagnummer en de maand als wedstrijddatum. Onbevestigde datums krijgen `N.T.B.` of uitsluitend een verwachte maand.
+- De dynamische datum- en inschrijfdetectie van de e-mailbackend is nog niet end-to-end gevalideerd; er is geen garantie op automatische e-mail.
+- Evenementpagina's die door `eventPage()` worden aangemaakt, moeten in de daadwerkelijke deploybestemming bestaan; alleen aanwezigheid in de index is onvoldoende.
+
+**Publicatieblokkade:** syntactische URL-aanwezigheid is niet hetzelfde als een geslaagde HTTP-/inhoudscontrole. Controleer alle 168 uitgaande bestemmingen en de detailpagina's voordat de volledige kalender als geverifieerd wordt gepubliceerd.
