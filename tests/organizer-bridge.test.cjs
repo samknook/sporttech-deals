@@ -19,7 +19,7 @@ test('organizer report requests preserve the race context',()=>{
  assert.match(form,/option value="Evenementrapport aanvragen"/);
  assert.match(form,/report=subject==='Evenementrapport aanvragen'/);
  assert.match(form,/contactEvent'\)\.required=claim\|\|report/);
- assert.match(form,/correctio[nN]otes'\)\.required=active/);
+ assert.match(form,/correctionNotes'\)\.required=active/);
 });
 test('report requests are private, verified and do not claim unique users',()=>{
  assert.match(form,/geaggregeerd, geen unieke bezoekers of bevestigde inschrijvingen/);
