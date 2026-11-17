@@ -16,6 +16,17 @@ assert.ok(account.includes('const statusWrites=new Set()'),'Concurrent account s
 assert.ok(account.includes(".select('event_id').maybeSingle()"),'Status update must confirm database row exists');
 assert.ok(account.includes("result.data?.event_id===eventId"),'A zero-row database update must never be considered saved');
 assert.ok(account.includes('ignoreDuplicates:true'),'Saving existing races must preserve their status');
+assert.ok(account.includes("confirmedRace={event_id:id,season_status:result.data.season_status||'interested'}"),
+ 'Cloud save must read the actual stored status instead of assuming interested');
+assert.ok(account.includes('savedApi()?.setCloudStatus?.(id,confirmedRace.season_status)'),
+ 'Saving an existing race must preserve registered/completed in dashboard');
+assert.ok(account.includes("now-lastVisibilityRefresh<15000"),
+ 'Cloud refresh on return must be rate-limited');
+assert.ok(account.includes("document.addEventListener('visibilitychange',refreshVisibleCloudSeason)"),
+ 'Cloud statuses must refresh when user returns to tab');
+assert.ok(account.includes("pending.size||saving||statusWrites.size"),
+ 'Cloud refresh must not overwrite in-flight edits');
+
 assert.ok(account.includes("select.value=cloudEvents.find("),'Failed account status changes must restore saved selection');
 assert.ok(account.includes('savedApi()?.setCloudStatus?.(eventId,statusValue)'),'Confirmed status changes must propagate to dashboard');
 assert.ok(account.includes('return false}'),'Unsuccessful status changes should not be reported as saved');
