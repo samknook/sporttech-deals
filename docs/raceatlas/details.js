@@ -4,7 +4,7 @@ const $=id=>document.getElementById(id);
 const EVENTS=()=>window.RACEATLAS_EVENTS||[];
 const getEvent=id=>EVENTS().find(e=>e.id===id);
 const isValidUrl=u=>{try{const x=new URL(u);return x.protocol==='https:'||x.protocol==='http:'}catch{return false}};
-const formatDate=e=>e.date?new Date(e.date+'T12:00:00').toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):e.expectedMonth?new Date(2027,Number(e.expectedMonth)-1,1).toLocaleDateString('nl-NL',{month:'long',year:'numeric'})+' (verwacht)':'Datum nog onbekend';
+const formatDate=e=>e.date&&e.dateEvidence==='official'?new Date(e.date+'T12:00:00').toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):e.expectedMonth?new Date(Number(e.expectedYear||2027),Number(e.expectedMonth)-1,1).toLocaleDateString('nl-NL',{month:'long',year:'numeric'})+' (verwacht; niet bevestigd)':'Officiële datum nog onbekend';
 const category=e=>e.dateEvidence==='official'?'Bevestigd via organisator':e.date?'Datum vermeld — check bij organisator':e.expectedMonth?'Alleen historische maand bekend':'Datum nog onbekend';
 const el=(tag,text,className)=>{const x=document.createElement(tag);if(text!=null)x.textContent=text;if(className)x.className=className;return x};
 function copyFallback(text){const t=document.createElement('textarea');t.value=text;t.style.position='fixed';t.style.opacity='0';document.body.append(t);t.select();let ok=false;try{ok=document.execCommand('copy')}catch{}t.remove();return ok}
@@ -45,7 +45,7 @@ function detail(e,fromLink=false){
  }
  const highlight=el('div',null,'tz-detail-highlight');
  const summaryEntries=[
-  ['📅',e.date?formatDate(e):(e.expectedMonth?'Verwachte maand: '+formatDate(e):'Datum onbekend')],
+  ['📅',formatDate(e)],
   ['📍',e.place+(e.country?' · '+e.country:'')],
   ['🏁',e.distance||'Afstand nog niet bevestigd']
  ];
