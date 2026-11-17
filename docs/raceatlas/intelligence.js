@@ -191,8 +191,11 @@
         signal:AbortSignal.timeout(9000)
       });
       if(!response.ok)throw Error('HTTP '+response.status);
-      const records=await response.json();
-      if(!Array.isArray(records))throw Error('Invalid response');
+      const fetched=await response.json();
+      if(!Array.isArray(fetched))throw Error('Invalid response');
+      // Do not reintroduce archived/unverified races from stale analytics records.
+      const publicIds=new Set((window.RACEATLAS_EVENTS||[]).map(event=>event.id));
+      const records=fetched.filter(record=>publicIds.has(record.event_id));
       const refresh=()=>render(ui,records);
       ui.check.addEventListener('change',()=>{setSeasonOnly(ui.check.checked);ui.expanded=false;ui.pendingExpanded=false;refresh()});
       ui.more.addEventListener('click',()=>{ui.expanded=!ui.expanded;refresh()});
