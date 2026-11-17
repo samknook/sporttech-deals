@@ -138,6 +138,21 @@ function detail(e,fromLink=false){
   window.location.href=link.toString();
  };
  actions.append(claim);
+ // A report request references the same canonical event and does not expose
+ // private organizer analytics directly to anonymous site visitors.
+ const requestReport=el('button','Vraag evenementenrapport aan','ra-detail-secondary');
+ requestReport.type='button';
+ requestReport.onclick=()=>{
+  const link=new URL('organisatoren.html',location.href);
+  link.hash='contact';
+  link.searchParams.set('onderwerp','Evenementrapport aanvragen');
+  link.searchParams.set('event',e.name);
+  link.searchParams.set('eventId',e.id);
+  const official=e.officialEventUrl||e.registrationInfoUrl||e.source;
+  if(isValidUrl(official))link.searchParams.set('bron',official);
+  window.location.href=link.toString();
+ };
+ actions.append(requestReport);
  const report=el('button','Gegevens corrigeren','ra-detail-secondary');report.onclick=()=>{
  const link=new URL('organisatoren.html',location.href);
  link.hash='contact';
