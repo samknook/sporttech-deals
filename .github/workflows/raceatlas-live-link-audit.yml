@@ -1,0 +1,26 @@
+name: TriZentro published organizer links
+on:
+  pull_request:
+    paths:
+      - 'scripts/check-raceatlas-live-database.py'
+      - '.github/workflows/raceatlas-live-link-audit.yml'
+  workflow_dispatch:
+jobs:
+  audit-live-public-events:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Audit published Supabase race links
+        run: python scripts/check-raceatlas-live-database.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raceatlas-live-link-audit
+          path: raceatlas-live-link-audit.json
+          retention-days: 14

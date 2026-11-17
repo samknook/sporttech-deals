@@ -66,11 +66,21 @@
     emailForm.append(input,submit);
     emailForm.hidden=true;
     emailBox.append(emailTitle,emailText,emailForm,message);
+    const account=window.TriZentroAccount;
+    const accountState=account?.radarState?.()||{signedIn:false,ready:true};
+    const accountMode=accountState.signedIn===true;
+    if(accountMode){
+      emailForm.hidden=true;
+      emailTitle.textContent='Inschrijfradar via jouw account';
+      emailText.textContent=accountState.verified
+        ?'Je ontvangt meldingen op je geverifieerde accountadres. Geen nieuwe e-mailbevestiging nodig.'
+        :'Bevestig eerst je accountadres om meldingen te kunnen inschakelen.';
+    }
 
     const endpoint='https://lpzndnxloykcthbsqcet.supabase.co/functions/v1/trizentro-email-radar';
     fetch(endpoint,{method:'GET',mode:'cors',cache:'no-store'}).then(r=>r.ok?r.json():null).then(data=>{
       if(!emailBox.isConnected)return;
-      if(data&&data.enabled===true){emailForm.hidden=false;submit.disabled=false;emailText.textContent='Ontvang uitsluitend updates voor deze wedstrijd. Je bevestigt je e-mailadres eerst via een e-mail; afmelden kan altijd.'}
+      if(!accountMode&&data&&data.enabled===true){emailForm.hidden=false;submit.disabled=false;emailText.textContent='Ontvang uitsluitend updates voor deze wedstrijd. Je bevestigt je e-mailadres eerst via een e-mail; afmelden kan altijd.'}
     }).catch(()=>{});
     emailForm.addEventListener('submit',async ev=>{
       ev.preventDefault();
@@ -90,12 +100,35 @@
     const calendar=document.createElement('button');calendar.type='button';calendar.textContent='Download agenda-alarmen';
     const save=document.createElement('button');save.type='button';save.textContent='Bewaar voorkeuren';save.className='ra-primary';
     const settings=()=>({date:fields.date.checked,registration:fields.registration.checked,race:fields.race.checked});
+    if(accountMode){
+      calendar.textContent='Download agenda-alarmen';
+      save.textContent='Meldingen via mijn account opslaan';
+      save.disabled=!accountState.verified||!accountState.ready;
+      if(!accountState.ready)message.textContent='Je accountgegevens worden nog geladen. Open Meldingen opnieuw zodra je seizoen is geladen.';
+      else if(!accountState.verified)message.textContent='Je accountadres is nog niet bevestigd.';
+    }
     const dismiss=()=>{
       overlay.remove();
       if(trigger&&typeof trigger.focus==='function'&&trigger.isConnected)trigger.focus();
     };
     close.onclick=dismiss;
-    save.onclick=()=>{prefs[event.id]=settings();savePrefs();dismiss();syncButtons();};
+    save.onclick=async()=>{
+      if(accountMode){
+        if(!accountState.verified||!accountState.ready)return;
+        save.disabled=true;message.textContent='Meldingen aan je account koppelen…';
+        const chosen=settings();
+        const result=await account.saveRadar(event.id,{
+          email_enabled:chosen.date||chosen.registration||chosen.race,
+          date_change:chosen.date,
+          registration_open:chosen.registration,
+          race_reminder:chosen.race
+        });
+        if(result?.ok){dismiss();syncButtons();return}
+        message.textContent='Opslaan bij je account is mislukt. Er zijn geen nieuwe meldingen ingesteld.';
+        save.disabled=false;return;
+      }
+      prefs[event.id]=settings();savePrefs();dismiss();syncButtons();
+    };
     calendar.onclick=()=>downloadIcs(event,settings());
     overlay.onclick=e=>{if(e.target===overlay)dismiss();};
     overlay.addEventListener('keydown',event=>{

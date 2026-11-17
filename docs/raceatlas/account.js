@@ -295,6 +295,45 @@ window.TriZentroAccount={setSeasonStatus:(id,status)=>{
  const normalized=status==='planned'?'interested':status;
  return setSeasonStatus(id,normalized);
 }};
+// The per-event radar shares this verified account and its RLS-scoped Supabase client.
+function radarAccountState(){
+ if(!user)return {signedIn:false,ready:true};
+ return {signedIn:true,ready:!!client,verified:!!user.email_confirmed_at,email:user.email||''};
+}
+async function saveRadarForAccount(eventId,choice){
+ if(!user||!client||!user.email_confirmed_at||alertBusy
+   ||!/^ra-[0-9]{1,8}$/.test(eventId)
+   ||!(window.RACEATLAS_EVENTS||[]).some(e=>e.id===eventId))return {ok:false,error:'account_unavailable'};
+ const owner=user.id,version=authVersion;
+ const enabled=choice?.email_enabled===true;
+ const next={user_id:owner,event_id:eventId,email_enabled:enabled,
+  registration_open:enabled&&choice.registration_open===true,
+  date_change:enabled&&choice.date_change===true,
+  race_reminder:enabled&&choice.race_reminder===true,
+  consented_at:enabled?new Date().toISOString():null,
+  updated_at:new Date().toISOString()};
+ if(enabled&&!next.registration_open&&!next.date_change&&!next.race_reminder)return {ok:false,error:'choose_type'};
+ alertBusy=true;
+ try{
+  // Alert preferences have a composite FK to saved races; create it first.
+  if(!cloudEvents.some(e=>e.event_id===eventId)){
+   const {error:saveError}=await client.from('raceatlas_saved_events')
+    .upsert({user_id:owner,event_id:eventId,season_status:'interested'},{onConflict:'user_id,event_id',ignoreDuplicates:true});
+   if(saveError)throw saveError;
+  }
+  const {error}=await client.from('raceatlas_alert_preferences').upsert(next,{onConflict:'user_id,event_id'});
+  if(error)throw error;
+  if(user?.id!==owner||version!==authVersion)return {ok:false,error:'session_changed'};
+  if(mode==='cloud')await chooseCloud();
+  // For accounts still displaying unsynchronized guest favourites, leave the
+  // local season untouched. The alert is persisted to the authenticated account.
+  window.dispatchEvent(new CustomEvent('raceatlas:radar-preferences-changed',{detail:{eventId}}));
+  return {ok:true};
+ }catch{return {ok:false,error:'save_failed'}}
+ finally{alertBusy=false}
+}
+window.TriZentroAccount.radarState=radarAccountState;
+window.TriZentroAccount.saveRadar=saveRadarForAccount;
 function renderStatusControls(){
  const container=el('div'),heading=el('h3','Mijn wedstrijdstatus');
  container.className='raAccountStatuses';
@@ -497,7 +536,7 @@ function showSignedIn(){
  appendNotice('Ingelogd als '+(user.email||'RaceAtlas-gebruiker')+'.');
  if(mode==='cloud'){
   appendNotice('Je wedstrijdseizoen wordt veilig gesynchroniseerd.');
-  appendNotice('Wil je een e-mail over een inschrijfdatum? Open Meldingen bij de wedstrijd en bevestig je e-mailadres.');
+  appendNotice('Bij een wedstrijd kun je meldingen rechtstreeks aanzetten met je geverifieerde account. Je hoeft je e-mailadres niet opnieuw te bevestigen.');
   content.append(button('Seizoen verversen',chooseCloud));
   renderStatusControls();
 

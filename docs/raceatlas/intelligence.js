@@ -78,8 +78,8 @@
     controls.append(label);
     const status=el('p','raIntelStatus','Brongegevens laden…');status.setAttribute('role','status');
     const list=el('div','raIntelList');
-    const pendingHead=el('h3','raIntelPendingTitle','Volg wedstrijden zonder bekende inschrijfdatum');
-    const pendingNote=el('p','raIntelNote','Voor deze opgeslagen wedstrijden is nog geen officieel inschrijfmoment vastgelegd. Stel alvast een e-mailmelding in; er wordt geen beschikbaarheid beloofd.');
+    const pendingHead=el('h3','raIntelPendingTitle','Volg: officiële datum en inschrijving');
+    const pendingNote=el('p','raIntelNote','Ook zonder bevestigde wedstrijddatum kun je een evenement volgen, mits er een officiële evenementpagina is. Stel een melding in voor ‘Officiële wedstrijddatum bekend’ of voor inschrijfinformatie. E-mail wordt pas verzonden wanneer de meldingsdienst deze wijziging daadwerkelijk ondersteunt.');
     const pending=el('div','raIntelPendingList');
     const pendingMore=el('button','raIntelMore','Toon meer te volgen wedstrijden ↓');
     pendingMore.type='button';pendingMore.hidden=true;
@@ -102,11 +102,17 @@
     const selected=classified.filter(x=>!ui.check.checked||saved.has(x.r.event_id));
     // Saved races without an upcoming recorded opening still need a way to opt in.
     // The catalogue is the source for event identity only, not unverified registration claims.
-    if(ui.check.checked){
+    {
       const knownOpening=new Set(records.filter(r=>r.registration_opens_at||r.registration_closes_at).map(r=>r.event_id));
+      // An official organizer event page is enough to follow an undated race.
+      // Never convert an estimated edition/month into a confirmed date.
       const candidates=(window.RACEATLAS_EVENTS||[])
-        .filter(event=>saved.has(event.id)&&!knownOpening.has(event.id))
-        .sort((a,b)=>String(a.date||'9999-12-31').localeCompare(String(b.date||'9999-12-31')));
+        .filter(event=>/^https:\/\//i.test(event.officialEventUrl||''))
+        .filter(event=>(!ui.check.checked||saved.has(event.id)) &&
+          (event.dateEvidence!=='official'||!knownOpening.has(event.id)))
+        .sort((a,b)=>(saved.has(a.id)?0:1)-(saved.has(b.id)?0:1)||
+          (a.dateEvidence==='official'?1:0)-(b.dateEvidence==='official'?1:0)||
+          String(a.date||'9999-12-31').localeCompare(String(b.date||'9999-12-31')));
       ui.pendingMore.hidden=candidates.length<=8;
       ui.pendingMore.textContent=ui.pendingExpanded?'Toon minder ↑':'Bekijk alle '+candidates.length+' te volgen wedstrijden ↓';
       if(candidates.length){
@@ -114,9 +120,9 @@
         for(const event of (ui.pendingExpanded?candidates:candidates.slice(0,8))){
           const article=el('article','raIntelItem');
           const info=el('div','');
-          info.append(el('strong','',event.name),el('small','','Inschrijfdatum nog niet bevestigd'));
+          info.append(el('strong','',event.name),el('small','',event.dateEvidence==='official'?'Inschrijfdatum nog niet bevestigd':'Officiële wedstrijddatum nog niet bekend'));
           const actions=el('div','raIntelActions');
-          const button=el('button','raIntelButton','🔔 Volg inschrijving');
+          const button=el('button','raIntelButton',event.dateEvidence==='official'?'🔔 Volg inschrijving':'🔔 Meld datum bekend');
           button.type='button';
           button.addEventListener('click',()=>{
             if(window.RaceAtlasAlerts?.openForEvent)window.RaceAtlasAlerts.openForEvent(event.id);

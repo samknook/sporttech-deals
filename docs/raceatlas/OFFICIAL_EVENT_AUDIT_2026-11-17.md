@@ -1,0 +1,79 @@
+# TriZentro — officiële wedstrijdbronnen, controlelijst (17 november 2026)
+
+## Publicatieregels
+- Officiële evenementpagina bestaat: evenement mag in kalender, ook als 2027-datum nog niet officieel bekend is.
+- Zonder 2027-bevestiging: `date: null`, `status: date_pending`, `dateEvidence: unconfirmed`, `expectedYear: 2027`. Een vorige-editiedatum is nooit een bevestigde nieuwe datum.
+- Officiële datum: alleen `dateEvidence: official` wanneer de bron editie en datum ondubbelzinnig noemt.
+- Gegevens en links voor elke wedstrijd toetsen; organisatorenpagina en expliciete registratie niet verwarren.
+- Eigen evenementdetailpagina controleren vóór publicatie. Verwijder of pauzeer wedstrijden zonder controleerbare officiële organisator- of inschrijfpagina.
+- E-mail voor nieuw bevestigde datum is pas operationeel na verificatie van server-side wijzigingsdetectie en verzending.
+
+## Geverifieerde 2027-kandidaten (nog niet automatisch gepubliceerd)
+| Wedstrijd | Datum 2027 | Officiële bron | Actie |
+| --- | --- | --- | --- |
+| Triathlon Epe | 2027-08-22 | https://www.triathlonepe.nl/ | Voeg toe met officiële datum; kwart en halve triatlon; eigen detailpagina maken |
+| Wintertriathlon Enschede (NK) | 2027-03-13 | https://www.triathlonbond.nl/over-ntb/nieuws/nk-en-agk-kalender-2027-grotendeels-bekend/ | Organisator-evenementpagina nog controleren |
+| Duathlon Rotterdam (NK) | 2027-04-03 | idem | Organisator-evenementpagina nog controleren |
+| Duathlon Almere (NK) | 2027-04-18 | idem | Organisator-evenementpagina nog controleren |
+| Duathlon Sittard (NK) | 2027-04-24 | idem | Organisator-evenementpagina nog controleren |
+| Triathlon Stein (NK) | 2027-05-30 | idem | Organisator-evenementpagina nog controleren |
+| Triathlon Amsterdam (AGK) | 2027-06-06 | idem | Organisator-evenementpagina nog controleren |
+| Triathlon Rotterdam (NK) | 2027-06-20 | idem | Organisator-evenementpagina nog controleren |
+| Crosstriathlon Renkum (NK) | 2027-08-28, onder voorbehoud | idem | Datum niet als definitief presenteren |
+| Challenge Almere lange afstand (NK/EK) | 2027-09-11 | idem | Controleer bestaande race/duplicaten |
+
+**Let op:** de NTB-artikelkop en de hoofdtekst vermelden 2027, maar de overzichtssectie in datzelfde artikel heeft verwarrend het onderschrift '2026'. Beoordeel de editie per bron; geef voorwaardelijke datums apart weer.
+
+## Eerstvolgende acceptatiechecks
+1. Standaardfilter 'alleen aankomende' laat officiële, nog ongedateerde toekomstige evenementen zien.
+2. Inschrijfradar toont zulke evenementen en linkt naar 'Officiële wedstrijddatum bekend'.
+3. Kalender-ICS maakt geen fictieve datum aan voor wedstrijden zonder officiële datum.
+4. Bekijk alle evenementen zonder officiële HTTPS-pagina en controleer links handmatig; geen bulk-publicatie op basis van zoekresultaten.
+5. Test dat account-gebonden e-mailmeldingen bij overgang van onbekende naar officiële datum echt precies één keer worden afgeleverd.
+
+## Inventarisatie huidig catalogusbestand (17 november 2026)
+- 168 records in de ingebedde `EVENTS`-dataset van `docs/raceatlas/index.html`.
+- 168 hebben een syntactisch geldige HTTPS-`officialEventUrl`; dit is **geen bewijs dat elke link werkt of naar de juiste editie verwijst**.
+- 61 evenementen hebben `dateEvidence: official`; 107 niet.
+- Van die 107 hebben 100 toch een ingevulde `date` en zeven geen exacte `date`.
+- De kaartweergave op deze branch toont alleen bij `dateEvidence: official` het dagnummer en de maand als wedstrijddatum. Onbevestigde datums krijgen `N.T.B.` of uitsluitend een verwachte maand.
+- De dynamische datum- en inschrijfdetectie van de e-mailbackend is nog niet end-to-end gevalideerd; er is geen garantie op automatische e-mail.
+- Evenementpagina's die door `eventPage()` worden aangemaakt, moeten in de daadwerkelijke deploybestemming bestaan; alleen aanwezigheid in de index is onvoldoende.
+
+**Publicatieblokkade:** syntactische URL-aanwezigheid is niet hetzelfde als een geslaagde HTTP-/inhoudscontrole. Controleer alle 168 uitgaande bestemmingen en de detailpagina's voordat de volledige kalender als geverifieerd wordt gepubliceerd.
+
+## Aanvullende verificatie (17 november 2026)
+- OOG Edam Kermisloop toegevoegd als `ra-434`: https://kermisloopedam.nl/ is door AV Edam als officiële bron bevestigd. De website toont uitsluitend de editie 2026; 2027 is **nog niet bevestigd** en blijft `date: null`.
+- Dijkloop Edam toegevoegd als `ra-435`: AV Edam publiceert 7 februari 2027 expliciet op https://www.avedam.nl/agenda/meeuwen.php. Dit is niet de Kermisloop.
+- De embedded catalogus telt na beide toevoegingen 170 evenementen. Hiervan hebben 108 nog geen als officieel bevestigde datum gemarkeerd, acht hebben geen exacte datum en acht hebben een datum vóór 17 november 2026. Dit zijn datasetstatussen, geen HTTP-linkcontroles.
+- De kalenderkaarten én de detailweergave zijn aangepast zodat niet-officieel bevestigde `date`-velden niet als definitieve datum worden gepresenteerd.
+- **Nog geen livegang:** voor de volledige catalogus is nog geen individuele HTTP- en broninhoudcontrole van alle 170 bestemmingen uitgevoerd; ook detailpagina's en de e-mailketen zijn niet volledig end-to-end getest.
+
+## Extra ontdekte evenementen en geautomatiseerde linkcheck
+- DTS Ouderkerk (30 mei), DTS Haarlemmermeer (18 juli), DTS GP Zandvoort (14 augustus), DTS Bosbaan (25 september) en Triathlon Epe (22 augustus) zijn toegevoegd met bron op officiële organisatiepagina.
+- GO Triathlon Brouwersdam (5 juni), Herkingen (4 september), Zierikzee (25 september) toegevoegd met officiële bron via GO Sport Events. De evenementpagina van Brouwersdam bevestigt ook de 2027 inschrijfopening.
+- Triathlon Veenendaal (28 augustus), Maasmarathon (2 mei) en RUNFORESTRUN Drentsche Aa (27 februari) kregen een officieel bevestigde datum na controle van de eigen organisator.
+- Dublin Marathon organisatorlink specifieker gemaakt; 2027-datum (24 oktober) in officiële informatie bevestigd.
+- De publieke race-index op main bevatte **al 168** evenementen. Een deel van de bestaande regressietests eist 423 en is niet afgestemd op de huidige gecureerde kalender; het testverschil is niet veroorzaakt door het verwijderen van records in deze branch.
+- Eerste GitHub Actions HTTP-audit bij 175 evenementen: **169 bereikbaar, zes aandachtspunten**. Vier van deze zes kregen bij officiële bronzoekopdrachten een pagina terug. HTTP 403/502 of verbreking kan anti-botbeleid of tijdelijke problemen zijn; het is niet automatisch bewijs dat een evenement ongeldig is.
+- Nieuwe GitHub Actions audit wordt opnieuw uitgevoerd na toevoeging van de drie GO-evenementen en linkwijzigingen.
+- Stand branch na aanvullingen: **178 unieke evenementen**; 73 datum als officieel gemarkeerd, 105 niet, acht records zonder exacte datum en acht historische records vóór 17 november 2026. Syntactisch zijn 178 officiële HTTPS-URLs aanwezig.
+- **Release blijft geblokkeerd:** HTTP-bereikbaarheid controleert niet dat de bron inhoudelijk het evenement ondersteunt, dat exacte editie en datum juist zijn of dat de detailpagina en email-automatisering werken. Eerdere regressiesuite faalt ook voor deels verouderde aannames.
+
+## Releasecontrole na laatste wijzigingen
+- **178 records getest op HTTPS-bereikbaarheid via GitHub Actions:** 174 bereikbaar, 4 alleen via crawler/browser nogmaals te toetsen. Probleem-IDs: ra-168 (HTTP 403, officiële Maasmarathonpagina wel vindbaar), ra-201 (RemoteDisconnected, Devil's Trail pagina vindbaar), ra-304 (RemoteDisconnected, RUNFORESTRUN Drentsche Aa pagina vindbaar), ra-421 (HTTP 502, officiële Dublin Marathon 2027 bron via zoekindex vindbaar).
+- WTC Geesteren en AV Suomi hebben nu een door Fietssport respectievelijk Hardlopen.nl gekoppelde evenement-/verenigingspagina in plaats van de eerder onbereikbare URL.
+- **Publieke URL `https://trizentro.com/raceatlas/` toont in recente webindex 434 geselecteerde evenementen**, terwijl de huidige GitHub `main` slechts 168 ingebedde records bevat (plus maximaal enkele auto-events). We hebben nog niet hard kunnen bewijzen welke bron en deploy-pipeline verantwoordelijk is voor dat verschil. Dit is een kritieke data-integratieblokkade: nooit een kleinere branch-dataset over een mogelijk veel grotere publieke dataset heen publiceren.
+- GitHub Actions: de bestaande RaceAtlas-regressiesuite faalt op verschillende assertions die deels nog `>=400` / `423` events verwachten; ook de mobiele browsercheck faalt op een ontbrekende taalkeuzeknop. Dit vergt vergelijking met main en daadwerkelijke gebruikersflows, geen stilzwijgend verlagen van testnormen.
+- Controle 178/178 URL-bereikbaarheid is uitgevoerd; inhoudelijke verificatie per editie/afstand en werkende route naar de individuele detailpagina zijn **niet** 178/178 afgerond. De accountgebonden Inschrijfradar moet end-to-end op e-mailbezorging worden getest.
+- **Geen merge/publicatie totdat de live databasebron is gereconcilieerd en hoofdfunctionaliteit geslaagd is getest.**
+
+## Werkelijke live Supabase-bron gecontroleerd — 17 november 2026
+- Productiedatabase `raceatlas_event_intelligence` had 424 gepubliceerde records vóór de opschoning; 299 zonder `official_event_url`, met soms een algemene kalender als enige bron.
+- De bestaande canonieke IDs ra-372 (Kermisloop Edam), ra-394 (Dijkloop), ra-157 (Epe), ra-237/273/277/301 (DTS) zijn in de database verrijkt met officiële bronnen in plaats van nieuwe dubbele records te maken. Zeven duplicaatrecords ra-434 t/m ra-440 zijn vervolgens uit de statische feature-dataset verwijderd.
+- Drie nieuwe GO Triathlon records ra-441 t/m ra-443 zijn aan de database toegevoegd met officiële datums en evenementpagina's.
+- Ook Zeevangsloop, Kaagloop, Koningsnachtloop Hoorn, Ride for the Roses, Hoornse Wijklopen, Triathlon Heerhugowaard en Hezinger Grens Classic hebben verbeterde bronlinks. Zonder bevestigde 2027-datum blijft de datum niet-officieel.
+- **279 records naar `draft` verplaatst**, niet verwijderd. Ze hadden noch een `official_event_url`, noch `official_registration_url`; 254 hiervan verwezen slechts naar zeven algemene agenda-URLs. De overige 25 missen eveneens een bruikbare individuele bestemming. Geen records of seizoensreferenties definitief verwijderd.
+- **Eindstand productiedatabase**: 427 records totaal, 148 gepubliceerd, 279 in concept, nul gepubliceerde records zonder officiële bestemming. Daarvan hebben 50 gepubliceerd de linkstatus `verified`; de overige 98 hebben deels nog een `candidate`-status of verwijzen naar een officiële specifieke registratiepagina.
+- **Automatische HTTP-controle van 148 gepubliceerde links**: 118 succesvol bereikbaar, 30 met waarschuwingen. Daarvan 29 IRONMAN `HTTP 429` (rate limiting) en 1 Hezinger `403` (later vervangen door specifieke Fietssport-inschrijfpagina). Dit zijn niet automatisch dode links. Content/date verificatie blijft noodzakelijk.
+- **Nog niet bewezen live-webinterface-deploy**: de publiek geïndexeerde pagina gaf 434 events terwijl GitHub `main` 168 statische records had. De werkelijke productiepagina is niet rechtstreeks opgehaald of end-to-end getest; het GitHub PR blijft daarom draft. De accountgebonden radar en mobiele navigatie zijn niet live geaccepteerd.
