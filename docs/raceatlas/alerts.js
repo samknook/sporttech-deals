@@ -49,11 +49,11 @@
       const verification=document.createElement('p');verification.className='ra-notice';verification.textContent='De wedstrijddatum is nog niet officieel bevestigd. Daarom maken we hiervoor geen kalenderherinnering. Een bevestigde openingsdatum voor inschrijving kan wel apart worden toegevoegd.';dialog.append(verification);
     }
     const notice=document.createElement('p');notice.className='ra-notice';
-    notice.textContent='Agenda-herinneringen kun je direct downloaden. E-mailmeldingen worden pas ingeschakeld nadat de verzenddienst is geactiveerd en je je e-mailadres hebt bevestigd. Lokale voorkeuren blijven op dit apparaat.';
+    notice.textContent='Agenda-herinneringen kun je direct downloaden. E-mailmeldingen werken na bevestiging van je e-mailadres. Lokale voorkeuren blijven op dit apparaat.';
     // Email alerts are gated server-side until a verified sending domain and dispatch process exist.
     const emailBox=document.createElement('section');emailBox.className='tz-radar-email';
     const emailTitle=document.createElement('strong');emailTitle.textContent='📧 E-mail Inschrijfradar';
-    const emailText=document.createElement('p');emailText.textContent='Binnenkort: ontvang een melding wanneer de organisator een inschrijfmoment bevestigt. Eerst moet onze e-maildienst geactiveerd worden.';
+    const emailText=document.createElement('p');emailText.textContent='Ontvang een e-mail wanneer belangrijke inschrijfinformatie officieel is bevestigd. De beschikbaarheid van e-mailmeldingen wordt gecontroleerd.';
     const emailForm=document.createElement('form');emailForm.className='tz-radar-email-form';
     const input=document.createElement('input');input.type='email';input.autocomplete='email';input.placeholder='Jouw e-mailadres';input.required=true;input.maxLength=254;input.setAttribute('aria-label','E-mailadres voor wedstrijdmeldingen');
     const submit=document.createElement('button');submit.type='submit';submit.textContent='Aanmelden';submit.disabled=true;
@@ -103,4 +103,20 @@
   css.textContent += '.tz-radar-email{background:#f1f7ed;border:1px solid #cfe3c6;border-radius:12px;padding:15px;margin:15px 0}.tz-radar-email>strong{font-size:16px;color:#214d35}.tz-radar-email>p{margin:7px 0 11px}.tz-radar-email-form{display:flex;gap:8px;flex-wrap:wrap}.tz-radar-email-form[hidden]{display:none!important}.tz-radar-email-form input{flex:1 1 190px;min-width:0;border:1px solid #bfd7bd;border-radius:9px;padding:12px;font-size:14px}.tz-radar-email-form button{background:#c7ff37;border:0;border-radius:9px;font-weight:850;padding:12px 16px;color:#092a1e}.tz-radar-email-form button:disabled{opacity:.5}.tz-radar-email-status{font-weight:750;font-size:12px}.tz-radar-email .tz-radar-email-status:empty{display:none}';
   document.head.append(css);
   window.RaceAtlasAlerts={syncButtons,openForEvent(id){const event=(window.RACEATLAS_EVENTS||[]).find(x=>x.id===id);if(event)openDialog(event)}};
+  // Deep links from each race detail page open the existing event-specific radar.
+  // Guard input so untrusted query strings cannot trigger arbitrary UI actions.
+  function openDeepLinkedRadar(){
+    const params=new URLSearchParams(window.location.search);
+    const id=params.get('ra_alert');
+    if(!id||!/^ra-\\d{1,8}$/.test(id))return;
+    const event=(window.RACEATLAS_EVENTS||[]).find(item=>item.id===id);
+    if(!event)return;
+    openDialog(event);
+    params.delete('ra_alert');
+    const rest=params.toString(),clean=window.location.pathname+(rest?'?'+rest:'')+window.location.hash;
+    window.history.replaceState(window.history.state,'',clean);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',openDeepLinkedRadar,{once:true});
+  else openDeepLinkedRadar();
+
 })();
