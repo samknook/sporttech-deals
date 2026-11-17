@@ -62,6 +62,10 @@ const registrationRadar=fs.readFileSync(base+'raceatlas/intelligence.js','utf8')
 assert.ok(registrationRadar.includes('window.RaceAtlasSaved'),'Radar must reflect cloud-backed saved events');
 assert.ok(registrationRadar.includes('raceatlas:season-source-change'),'Radar must refresh after login/logout');
 assert.ok(registrationRadar.includes('RaceAtlasAlerts.openForEvent'),'Radar must link to per-event signup');
+assert.ok(registrationRadar.includes('raIntelPendingList'),'Radar must support saved events with unknown registration dates');
+assert.ok(registrationRadar.includes('window.RACEATLAS_EVENTS'),'Pending event follows must use the shared catalogue');
+assert.ok(registrationRadar.includes('Inschrijfdatum nog niet bevestigd'),'Radar must not imply unknown opening is confirmed');
+
 assert.ok(!registrationRadar.includes('E-mailmeldingen worden voorbereid'),'Radar must not claim email service is unavailable');
 assert.ok(registrationRadar.includes('new Intl.DateTimeFormat'),'Radar should display officially supplied local opening times');
 const liveCatalog=fs.readFileSync(base+'raceatlas/index.html','utf8');
