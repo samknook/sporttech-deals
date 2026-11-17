@@ -15,6 +15,10 @@ assert.ok(dashboard.includes('Maastricht &lt;test&gt; &amp; Co'),'Escape organiz
 assert.ok(!dashboard.includes('2026-10-05'),'Do not include activity outside period');
 assert.ok(dashboard.includes('trizentro-rapport-ra-423.html'),'Link to private per-event export');
 assert.ok(dashboard.includes('id="filter"'),'Dashboard must allow filtering events');
+assert.ok(dashboard.includes('id="sort"'),'Dashboard should allow sorting metric columns');
+assert.ok(dashboard.includes('data-organizer="3"'),'Rows should expose numeric metrics for sorting');
+assert.ok(dashboard.includes('sort.addEventListener("change",update)'),'Sort control must be functional');
+
 assert.ok(dashboard.includes('id="races"'),'Dashboard must render event table');
 assert.ok(dashboard.includes('Geen unieke bezoekers')||dashboard.includes('geen unieke bezoekers'),'Report must be explicit about unique visitor limitations');
 assert.ok(dashboard.includes('noindex,nofollow'),'Do not index local reporting interface');
