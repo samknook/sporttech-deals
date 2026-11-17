@@ -37,13 +37,16 @@ for(const oldName of detailFiles.slice(0,5)){
  assert.ok(legacy.includes('noindex,follow'),'Legacy race page must be noindex: '+oldName);
 }
 // Every published SportsEvent must have valid startDate; unknown dates stay regular pages.
-let richResultEvents=0,ordinaryEventPages=0;
+let richResultEvents=0,ordinaryEventPages=0,trackedRegistrationPages=0;
 for(const name of detailFiles){
  const page=fs.readFileSync(base+'events/wedstrijden/'+name,'utf8');
  assert.ok(page.includes('event-save.js?v=20261117-cloudseason'),'Detail page must use shared account-aware season: '+name);
  assert.ok(page.includes('account-config.js'),'Detail page missing account configuration: '+name);
  assert.ok(page.includes('TriZentroEventSaveId'),'Detail page missing save event identity: '+name);
  assert.ok(page.includes('/events/?ra_alert='),'Detail page missing direct Inschrijfradar signup: '+name);
+ if(page.includes('data-ra-outbound="registration"'))trackedRegistrationPages++;
+ assert.ok(!page.includes('data-ra-outbound="registration"')||page.includes('Naar inschrijving ↗'),
+  'Tracked signup must have a clearly labeled action: '+name);
  assert.ok(page.includes('href="/events/?event='),'Race detail must open canonical Events calendar: '+name);
  assert.ok(page.includes('href="/performance/"'),'Race detail must open canonical Performance: '+name);
  assert.ok(page.includes('href="/organisatoren/?onderwerp='),'Claim event form must use canonical organizer route: '+name);
@@ -94,5 +97,6 @@ assert.ok(registrationRadar.includes('new Intl.DateTimeFormat'),'Radar should di
 const liveCatalog=fs.readFileSync(base+'raceatlas/index.html','utf8');
 assert.ok(liveCatalog.includes('"registrationDate":"2026-11-19"'),'Maastricht registration date missing from catalog');
 assert.ok(liveCatalog.includes('Algemene inschrijving opent donderdag 19 november 2026 om 14:00'),'Maastricht registration opening time missing');
+assert.ok(trackedRegistrationPages>=5,'Known direct registration links must be tracked separately');
 console.log('Structured events validated: '+richResultEvents+' rich results, '+ordinaryEventPages+' ordinary pages');
 console.log('SEO PASS: canonical brand identity, robots, sitemap and '+detailFiles.length+' race pages');
