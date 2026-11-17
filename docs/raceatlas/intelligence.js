@@ -57,6 +57,7 @@
     const daysToClose=closes?Math.ceil((closes.getTime()-now.getTime())/dayInMs):null;
     if(closes&&closes<now)return {group:'closed',label:'Vermelde deadline verstreken · '+fmt(closes),priority:4};
     if(opens&&opens>now&&daysToOpen<=120)return {group:'soon',label:'Openingsdatum volgens bron · '+fmt(opens),priority:0};
+    if(opens&&opens>now)return {group:'later',label:'Inschrijving opent later volgens bron · '+fmt(opens),priority:3};
     if(opens&&opens<=now&&daysToClose!==null&&daysToClose>=0&&daysToClose<=30)return {group:'deadline',label:'Deadline volgens bron · '+fmt(closes),priority:1};
     if(opens&&opens<=now)return {group:'past',label:'Opening was op '+fmt(opens)+' · beschikbaarheid onbekend',priority:2};
     if(closes&&closes>=now&&daysToClose<=30)return {group:'deadline',label:'Deadline volgens bron · '+fmt(closes),priority:1};
