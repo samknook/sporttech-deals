@@ -10,6 +10,7 @@ jobs:
     permissions:
       contents: read
     steps:
+      - uses: actions/checkout@v4
       - name: Check production endpoints
         shell: bash
         run: |
