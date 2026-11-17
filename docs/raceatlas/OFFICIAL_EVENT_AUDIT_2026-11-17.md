@@ -45,6 +45,6 @@
 ## Aanvullende verificatie (17 november 2026)
 - OOG Edam Kermisloop toegevoegd als `ra-434`: https://kermisloopedam.nl/ is door AV Edam als officiële bron bevestigd. De website toont uitsluitend de editie 2026; 2027 is **nog niet bevestigd** en blijft `date: null`.
 - Dijkloop Edam toegevoegd als `ra-435`: AV Edam publiceert 7 februari 2027 expliciet op https://www.avedam.nl/agenda/meeuwen.php. Dit is niet de Kermisloop.
-- De embedded catalogus telt na beide toevoegingen 170 evenementen. Hiervan hebben 109 nog geen als officieel bevestigde datum gemarkeerd, acht hebben geen exacte datum en acht hebben een datum vóór 17 november 2026. Dit zijn datasetstatussen, geen HTTP-linkcontroles.
+- De embedded catalogus telt na beide toevoegingen 170 evenementen. Hiervan hebben 108 nog geen als officieel bevestigde datum gemarkeerd, acht hebben geen exacte datum en acht hebben een datum vóór 17 november 2026. Dit zijn datasetstatussen, geen HTTP-linkcontroles.
 - De kalenderkaarten én de detailweergave zijn aangepast zodat niet-officieel bevestigde `date`-velden niet als definitieve datum worden gepresenteerd.
 - **Nog geen livegang:** voor de volledige catalogus is nog geen individuele HTTP- en broninhoudcontrole van alle 170 bestemmingen uitgevoerd; ook detailpagina's en de e-mailketen zijn niet volledig end-to-end getest.
