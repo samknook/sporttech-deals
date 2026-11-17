@@ -81,20 +81,22 @@
     const pendingHead=el('h3','raIntelPendingTitle','Volg wedstrijden zonder bekende inschrijfdatum');
     const pendingNote=el('p','raIntelNote','Voor deze opgeslagen wedstrijden is nog geen officieel inschrijfmoment vastgelegd. Stel alvast een e-mailmelding in; er wordt geen beschikbaarheid beloofd.');
     const pending=el('div','raIntelPendingList');
+    const pendingMore=el('button','raIntelMore','Toon meer te volgen wedstrijden ↓');
+    pendingMore.type='button';pendingMore.hidden=true;
     pendingHead.hidden=true;pendingNote.hidden=true;pending.hidden=true;
     const more=el('button','raIntelMore','Bekijk alle inschrijfmomenten ↓');
     more.type='button';more.hidden=true;
     const emailNotice=el('p','raIntelNote tz-radar-email-notice','Ontvang e-mailupdates voor een gekozen wedstrijd na bevestiging van je e-mailadres. Klik bij een wedstrijd op ‘Meldingen’ om je aan te melden. Kalenderherinneringen zijn ook beschikbaar.');
-    panel.append(head,intro,emailNotice,controls,status,list,more,pendingHead,pendingNote,pending);
+    panel.append(head,intro,emailNotice,controls,status,list,more,pendingHead,pendingNote,pending,pendingMore);
     resultsMore.after(panel);
     const jump=document.querySelector('.raRadarJump');
     if(jump)jump.hidden=false;
-    return {panel,check,status,list,more,pendingHead,pendingNote,pending,expanded:false};
+    return {panel,check,status,list,more,pendingHead,pendingNote,pending,pendingMore,expanded:false,pendingExpanded:false};
   }
   function render(ui,records){
     ui.list.replaceChildren();
     ui.pending.replaceChildren();
-    ui.pending.hidden=true;ui.pendingHead.hidden=true;ui.pendingNote.hidden=true;
+    ui.pending.hidden=true;ui.pendingHead.hidden=true;ui.pendingNote.hidden=true;ui.pendingMore.hidden=true;
     const now=new Date(), saved=savedIds();
     const classified=records.filter(r=>r.registration_opens_at||r.registration_closes_at).map(r=>({r,kind:classify(r,now)})).filter(x=>x.kind);
     const selected=classified.filter(x=>!ui.check.checked||saved.has(x.r.event_id));
@@ -104,10 +106,12 @@
       const knownOpening=new Set(records.filter(r=>r.registration_opens_at||r.registration_closes_at).map(r=>r.event_id));
       const candidates=(window.RACEATLAS_EVENTS||[])
         .filter(event=>saved.has(event.id)&&!knownOpening.has(event.id))
-        .slice(0,8);
+        .sort((a,b)=>String(a.date||'9999-12-31').localeCompare(String(b.date||'9999-12-31')));
+      ui.pendingMore.hidden=candidates.length<=8;
+      ui.pendingMore.textContent=ui.pendingExpanded?'Toon minder ↑':'Bekijk alle '+candidates.length+' te volgen wedstrijden ↓';
       if(candidates.length){
         ui.pending.hidden=false;ui.pendingHead.hidden=false;ui.pendingNote.hidden=false;
-        for(const event of candidates){
+        for(const event of (ui.pendingExpanded?candidates:candidates.slice(0,8))){
           const article=el('article','raIntelItem');
           const info=el('div','');
           info.append(el('strong','',event.name),el('small','','Inschrijfdatum nog niet bevestigd'));
@@ -190,8 +194,9 @@
       const records=await response.json();
       if(!Array.isArray(records))throw Error('Invalid response');
       const refresh=()=>render(ui,records);
-      ui.check.addEventListener('change',()=>{setSeasonOnly(ui.check.checked);ui.expanded=false;refresh()});
+      ui.check.addEventListener('change',()=>{setSeasonOnly(ui.check.checked);ui.expanded=false;ui.pendingExpanded=false;refresh()});
       ui.more.addEventListener('click',()=>{ui.expanded=!ui.expanded;refresh()});
+      ui.pendingMore.addEventListener('click',()=>{ui.pendingExpanded=!ui.pendingExpanded;refresh()});
       window.addEventListener('raceatlas:season-source-change',refresh);
       window.addEventListener('raceatlas:saved-change',refresh);
       window.addEventListener('storage',event=>{
