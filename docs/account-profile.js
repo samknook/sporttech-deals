@@ -57,7 +57,11 @@ byId('accountDelete').addEventListener('click',async()=>{
  }catch{feedback('Account verwijderen is mislukt. Je account is behouden.',true)}
  finally{button.disabled=false}
 });
-const show=(logged)=>{loading.hidden=true;guest.hidden=logged;signed.hidden=!logged};
+const show=(logged)=>{
+ loading.hidden=true;guest.hidden=logged;signed.hidden=!logged;
+ const adminPanel=byId('tzAdminAnalytics');
+ if(adminPanel)adminPanel.hidden=!(logged&&user?.app_metadata?.trizentro_admin===true);
+};
 const validBirth=value=>{
  if(!value)return true;
  if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;
