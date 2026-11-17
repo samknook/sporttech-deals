@@ -184,7 +184,7 @@ async function flushPending(){
      if(error)throw error;
     }
     if(version===authVersion&&user?.id===owner){
-     if(active&&!cloudEvents.some(item=>item.event_id===id))cloudEvents.push({event_id:id,season_status:'interested'});
+     if(active&&!cloudEvents.some(item=>item.event_id===id)){cloudEvents.push({event_id:id,season_status:'interested'});savedApi()?.setCloudStatus?.(id,'interested')}
      if(!active){cloudEvents=cloudEvents.filter(item=>item.event_id!==id);alertPrefs.delete(id)}
      showSignedIn();
     }
