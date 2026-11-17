@@ -14,7 +14,12 @@
   const parseDate=(value)=>value?new Date(value):null;
   const fmt=(value)=>{
     const date=parseDate(value);
-    return date&&!Number.isNaN(date.getTime())?date.toLocaleDateString('nl-NL',{day:'numeric',month:'short',year:'numeric',timeZone:'Europe/Amsterdam'}):'Onbekend';
+    if(!date||Number.isNaN(date.getTime()))return 'Onbekend';
+    const day=date.toLocaleDateString('nl-NL',{day:'numeric',month:'short',year:'numeric',timeZone:'Europe/Amsterdam'});
+    // Legacy source dates stored at 00:00 UTC have no confirmed clock time.
+    // Show a time only when a non-midnight timestamp is explicitly provided.
+    const timeKnown=!(date.getUTCHours()===0&&date.getUTCMinutes()===0);
+    return timeKnown?day+' · '+new Intl.DateTimeFormat('nl-NL',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Amsterdam'}).format(date)+' uur':day;
   };
   const eventFmt=value=>{
     if(!/^20\d{2}-\d{2}-\d{2}$/.test(value||''))return 'Onbekend';
