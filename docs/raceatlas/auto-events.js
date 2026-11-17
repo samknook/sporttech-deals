@@ -35,6 +35,9 @@
    if(!row||!/^ra-8\d{7}$/.test(row.id)||byId.has(row.id))continue;
    if(!validDate(row.date)||row.date<today||!isHttps(row.officialEventUrl)||!isHttps(row.source))continue;
    if(!admitted.has(row.sport)||!clean(row.name)||!clean(row.place)||!clean(row.country))continue;
+   // A scraped club calendar can list races of other organizers. Publish
+   // only after a human checks that this really is that event's official page.
+   if(row.reviewedByTriZentro!==true)continue;
    if(row.sourceMethod!=='official_jsonld_event'||row.dateEvidence!=='official')continue;
    // No registration/price claims are derived from structured event metadata.
    const event={
