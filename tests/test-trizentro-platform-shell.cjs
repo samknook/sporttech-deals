@@ -5,7 +5,7 @@ const files=JSON.parse(fs.readFileSync(path.join(__dirname,'../config/trizentro-
 const raceDir=path.join(root,'raceatlas/wedstrijden');
 assert.ok(fs.existsSync(raceDir),'generated race pages missing');
 const eventFiles=fs.readdirSync(raceDir).filter(f=>f.endsWith('.html'));
-assert.ok(eventFiles.length>=300,'event page generation regressed');
+assert.ok(eventFiles.length>=120&&eventFiles.length<300,'Verified-only page generation regressed');
 for(const file of eventFiles)files.push('raceatlas/wedstrijden/'+file);
 for(const rel of files){
  const data=fs.readFileSync(path.join(root,rel),'utf8');
