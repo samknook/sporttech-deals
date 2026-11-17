@@ -22,7 +22,7 @@
       let changed=false;
       const newerAutoDate=Boolean(e.autoEventVerifiedOn) && String(r.last_verified_at||'').slice(0,10)<=e.autoEventVerifiedOn;
       // A link identified as a candidate is not equivalent to verified event facts.
-      if(!newerAutoDate && HTTPS(r.official_event_url) && ['candidate','verified'].includes(r.organizer_link_status)){
+      if(!newerAutoDate && HTTPS(r.official_event_url) && r.organizer_link_status==='verified'){
         if(e.officialEventUrl!==r.official_event_url){e.officialEventUrl=r.official_event_url;changed=true}
         e.organizerLinkStatus=r.organizer_link_status;
       }
