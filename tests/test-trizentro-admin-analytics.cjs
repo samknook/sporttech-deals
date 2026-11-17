@@ -13,5 +13,5 @@ assert.ok(page.includes("trizentro-admin-analytics"),'Admin route must fetch pri
 assert.ok(!/SERVICE_ROLE_KEY|sk_secret_|service_role/.test(page),'Privileged database credential must never appear in public HTML');
 assert.ok(page.includes('data=result;'),'Analytics state only populated after authenticated API returns');
 assert.ok(page.includes('download(name,contents,type)'),'Admin route should export files');
-assert.ok(page.includes('void init()'),'Admin page initialization missing');
+assert.ok(page.includes('loadAuthLibrary(')&&page.includes('void init()'),'Admin page must initialize after CDN load with fallback');
 console.log('PASS: admin analytics authorization UI, no secrets, secure API fetch, export and script syntax');
