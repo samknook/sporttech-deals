@@ -1,0 +1,23 @@
+name: TriZentro organizer access approval
+on:
+  pull_request:
+    paths:
+      - 'docs/raceatlas/organizer-review-admin.*'
+      - 'tests/organizer-access-approval.test.cjs'
+      - '.github/workflows/organizer-access-approval.yml'
+  workflow_dispatch:
+jobs:
+  secure-access:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/organizer-access-approval.test.cjs
+      - name: Reject unauthenticated grant requests
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H 'content-type: application/json' --data '{"action":"grant_access","email":"nobody@example.org","event_id":"ra-1"}' 'https://lpzndnxloykcthbsqcet.supabase.co/functions/v1/trizentro-organizer-review-admin')
+          test "$code" = "401"
