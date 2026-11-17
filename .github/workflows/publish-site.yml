@@ -79,3 +79,17 @@ jobs:
       - name: Deploy website
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Verify live public routes and analytics login page
+        run: |
+          set -euo pipefail
+          for route in events seizoen performance account organisatoren admin/analytics; do
+            echo "Checking /$route/"
+            curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors \
+              --connect-timeout 10 --max-time 30 \
+              "https://trizentro.com/$route/" > /tmp/trizentro-live-route.html
+            test -s /tmp/trizentro-live-route.html
+          done
+          curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors \
+            --connect-timeout 10 --max-time 30 \
+            "https://trizentro.com/admin/analytics/" | grep -q 'trizentro-admin-analytics'
+
