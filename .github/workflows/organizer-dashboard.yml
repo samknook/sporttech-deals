@@ -1,0 +1,24 @@
+name: TriZentro verified organizer dashboard
+on:
+  pull_request:
+    paths:
+      - 'docs/raceatlas/organizer-dashboard.*'
+      - 'docs/raceatlas/organisatoren.html'
+      - 'tests/organizer-dashboard.test.cjs'
+      - '.github/workflows/organizer-dashboard.yml'
+  workflow_dispatch:
+jobs:
+  organizer-dashboard:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/organizer-dashboard.test.cjs
+      - name: Reject anonymous access to private organizer analytics
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" 'https://lpzndnxloykcthbsqcet.supabase.co/functions/v1/trizentro-organizer-dashboard?days=30')
+          test "$code" = "401"
