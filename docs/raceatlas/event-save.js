@@ -54,8 +54,11 @@ button.addEventListener('click',async()=>{
  try{
   if(cloud&&user&&client){
    if(target){
+    // Insert only when absent: never reset 'registered' or 'completed'
+    // when another tab already has this race in the account.
     const {error}=await client.from('raceatlas_saved_events').upsert(
-     {user_id:user.id,event_id:id,season_status:'interested'},{onConflict:'user_id,event_id'});
+     {user_id:user.id,event_id:id,season_status:'interested'},
+     {onConflict:'user_id,event_id',ignoreDuplicates:true});
     if(error)throw error;
    }else{
     const {error}=await client.from('raceatlas_saved_events').delete().eq('user_id',user.id).eq('event_id',id);
