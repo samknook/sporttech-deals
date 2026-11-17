@@ -63,6 +63,10 @@
     observeCards();
     const modal=document.getElementById?.('raceatlasDetails');
     if(modal?.dataset?.raEvent)detailView(modal.dataset.raEvent);
+    // Canonical individual race pages have no modal; record their page load
+    // once using the event ID already embedded by the page generator.
+    const raceId=window.TriZentroEventSaveId;
+    if(CARD_ID.test(raceId)&&document.visibilityState!=='hidden')detailView(raceId);
   }
   window.RaceAtlasTracking={track,enabled,siteView,detailView,observeCards};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
