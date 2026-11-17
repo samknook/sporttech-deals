@@ -19,6 +19,7 @@ wrapper.hidden=true;
 let client=null,user=null,mode='local',saving=false;
 const pending=new Map();
 const statusWrites=new Set();
+let lastVisibilityRefresh=0;
 let authVersion=0;
 let cloudEvents=[];
 let alertPrefs=new Map();
@@ -177,15 +178,26 @@ async function flushPending(){
    // Remove before sending so another click can enqueue a newer desired state.
    pending.delete(id);
    try{
+    let confirmedRace=null;
     if(active){
      const {error}=await client.from('raceatlas_saved_events').upsert({user_id:owner,event_id:id,season_status:'interested'},{onConflict:'user_id,event_id',ignoreDuplicates:true});
      if(error)throw error;
+     // An existing cloud race may be 'registered' or 'completed' on
+     // another device. A conflict-safe insert alone does not tell us its state.
+     const result=await client.from('raceatlas_saved_events').select('event_id,season_status')
+      .eq('user_id',owner).eq('event_id',id).maybeSingle();
+     if(result.error||result.data?.event_id!==id)throw result.error||new Error('Saved event not confirmed');
+     confirmedRace={event_id:id,season_status:result.data.season_status||'interested'};
     }else{
      const {error}=await client.from('raceatlas_saved_events').delete().eq('user_id',owner).eq('event_id',id);
      if(error)throw error;
     }
     if(version===authVersion&&user?.id===owner){
-     if(active&&!cloudEvents.some(item=>item.event_id===id)){cloudEvents.push({event_id:id,season_status:'interested'});savedApi()?.setCloudStatus?.(id,'interested')}
+     if(active&&confirmedRace){
+      cloudEvents=cloudEvents.filter(item=>item.event_id!==id);
+      cloudEvents.push(confirmedRace);
+      savedApi()?.setCloudStatus?.(id,confirmedRace.season_status);
+     }
      if(!active){cloudEvents=cloudEvents.filter(item=>item.event_id!==id);alertPrefs.delete(id)}
      showSignedIn();
     }
@@ -200,6 +212,17 @@ async function flushPending(){
   }
  }finally{saving=false}
 }
+// Returning from another tab is a common way cloud statuses change.
+// Only refresh idle sessions; do not discard queued or in-flight edits.
+function refreshVisibleCloudSeason(){
+ if(document.hidden||!user||mode!=='cloud'||saving||pending.size||statusWrites.size)return;
+ const now=Date.now();
+ if(now-lastVisibilityRefresh<15000)return;
+ lastVisibilityRefresh=now;
+ void chooseCloud();
+}
+window.addEventListener('focus',refreshVisibleCloudSeason);
+document.addEventListener('visibilitychange',refreshVisibleCloudSeason);
 window.addEventListener('beforeunload',event=>{
  if(mode==='cloud'&&(saving||pending.size)){
   event.preventDefault();event.returnValue='';
