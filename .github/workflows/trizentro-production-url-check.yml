@@ -1,0 +1,34 @@
+name: TriZentro production URL smoke check
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/trizentro-production-url-check.yml'
+  workflow_dispatch:
+jobs:
+  verify-public-routes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check production endpoints
+        shell: bash
+        run: |
+          set +e
+          for u in \
+            'https://trizentro.com/' \
+            'https://trizentro.com/events/' \
+            'https://trizentro.com/organisatoren/' \
+            'https://trizentro.com/raceatlas/' \
+            'https://trizentro.com/raceatlas/organizer-dashboard.html' \
+            'https://trizentro.com/raceatlas/organizer-dashboard.js' \
+            'https://trizentro.com/raceatlas/organizer-review-admin.html' \
+            'https://trizentro.com/raceatlas/organisatoren.html' \
+            'https://samknook.github.io/sporttech-deals/raceatlas/organizer-dashboard.html'; do
+            echo "CHECK $u"
+            curl -sSL --max-time 18 -o /tmp/trizentro-response -w 'STATUS=%{http_code} URL=%{url_effective} BYTES=%{size_download} TYPE=%{content_type}\n' "$u"
+            echo "TITLE: $(grep -o -i -m1 '<title>[^<]*' /tmp/trizentro-response | head -1 | cut -c1-150)"
+            echo "MARKERS: $(grep -o -i -m1 'Organisatordashboard\|organizer-dashboard.js\|RaceAtlas\|404: Not Found' /tmp/trizentro-response | head -1)"
+          done
+      - name: Verify new dashboard served through public custom domain
+        run: |
+          curl -fsSL --max-time 20 'https://trizentro.com/raceatlas/organizer-dashboard.html' | grep -q 'organizer-dashboard.js'
