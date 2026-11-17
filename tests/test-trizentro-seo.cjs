@@ -32,6 +32,9 @@ for(const oldName of detailFiles.slice(0,5)){
 let richResultEvents=0,ordinaryEventPages=0;
 for(const name of detailFiles){
  const page=fs.readFileSync(base+'events/wedstrijden/'+name,'utf8');
+ assert.ok(page.includes('event-save.js?v=20261117-cloudseason'),'Detail page must use shared account-aware season: '+name);
+ assert.ok(page.includes('account-config.js'),'Detail page missing account configuration: '+name);
+ assert.ok(page.includes('TriZentroEventSaveId'),'Detail page missing save event identity: '+name);
  const ld=[...page.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
  for(const match of ld){
   const item=JSON.parse(match[1]);
@@ -46,5 +49,9 @@ for(const name of detailFiles){
 }
 assert.ok(richResultEvents>0,'No structured dated events');
 assert.ok(ordinaryEventPages>0,'Unknown-date pages should omit Event structured data');
+const eventSave=fs.readFileSync(base+'raceatlas/event-save.js','utf8');
+assert.ok(eventSave.includes("raceatlas_saved_events"),'Account detail save must use the shared season table');
+assert.ok(eventSave.includes("raceatlas-saved-v2"),'Guest detail save must keep legacy local season support');
+assert.ok(eventSave.includes("client.auth.getUser()"),'Detail save must resolve authenticated user');
 console.log('Structured events validated: '+richResultEvents+' rich results, '+ordinaryEventPages+' ordinary pages');
 console.log('SEO PASS: canonical brand identity, robots, sitemap and '+detailFiles.length+' race pages');
