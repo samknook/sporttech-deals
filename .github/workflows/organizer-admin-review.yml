@@ -1,0 +1,24 @@
+name: TriZentro organizer admin review
+on:
+  pull_request:
+    paths:
+      - 'docs/raceatlas/organizer-review-admin.*'
+      - 'docs/raceatlas/organisatoren.html'
+      - 'tests/organizer-admin-review.test.cjs'
+      - '.github/workflows/organizer-admin-review.yml'
+  workflow_dispatch:
+jobs:
+  admin-review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/organizer-admin-review.test.cjs
+      - name: Anonymous users cannot access organizer admin data
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" 'https://lpzndnxloykcthbsqcet.supabase.co/functions/v1/trizentro-organizer-review-admin')
+          test "$code" = "401"
