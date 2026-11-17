@@ -15,7 +15,23 @@ for(const match of html.matchAll(/<script src="((?:official-sources|organizer-fi
 const feed=JSON.parse(fs.readFileSync(path.join(dir,'auto-events.json'),'utf8'));
 const updates=new Map((feed.updates||[]).map(e=>[e.id,e]));
 for(const e of list){const u=updates.get(e.id);if(u&&u.date&&u.officialEventUrl&&u.source){e.date=u.date;e.dateEvidence='official';e.officialEventUrl=u.officialEventUrl;e.source=u.source}}
-const ids=new Set(list.map(e=>e.id));for(const e of feed.events||[]){if(!ids.has(e.id)&&e.name&&e.date&&e.officialEventUrl){list.push(e);ids.add(e.id)}}
+const ids=new Set(list.map(e=>e.id));
+const eventSpecificOfficial=url=>{
+ try{
+  const u=new URL(url);
+  if(u.protocol!=='https:'||u.username||u.password)return false;
+  if(u.hostname==='www.ironman.com'&&/^\/races\/?$/.test(u.pathname))return false;
+  if(/\/news\/|championship-calendar|\/evenementen\/?$/.test(u.pathname))return false;
+  return true;
+ }catch{return false}
+};
+for(const e of feed.events||[]){
+ if(!ids.has(e.id)&&e.name&&e.date&&eventSpecificOfficial(e.officialEventUrl)){
+  list.push(e);ids.add(e.id);
+ }
+}
+for(const e of list)if(!eventSpecificOfficial(e.officialEventUrl))
+ throw Error('Race lacks a specific official event or registration link: '+e.id);
 const safe=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const slug=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,75)||'wedstrijd';
 const filename=e=>slug(e.name)+'-'+e.id+'.html';
@@ -24,7 +40,9 @@ const date=e=>e.date&&/^\d{4}-\d{2}-\d{2}$/.test(e.date)?new Date(e.date+'T12:00
 const customSettings=JSON.parse(fs.readFileSync(path.join(__dirname,'../.github/trizentro-domain.json'),'utf8'));
 const customActive=customSettings.enabled===true&&customSettings.verifiedByOwner===true&&process.env.TRIZENTRO_DOMAIN_CONFIRMED==='true';
 const base=(customActive?'https://trizentro.com':'https://samknook.github.io/sporttech-deals').replace(/\/+$/,'');
-const output=path.join(dir,'wedstrijden');fs.mkdirSync(output,{recursive:true});
+const output=path.join(dir,'wedstrijden');
+// Remove previously generated pages: rejected events must not survive at old URLs.
+fs.rmSync(output,{recursive:true,force:true});fs.mkdirSync(output,{recursive:true});
 const style=':root{font-family:Inter,system-ui,sans-serif;color:#102432;background:#f5f8fa}*{box-sizing:border-box}body{margin:0}a{color:inherit}header{background:#071925;color:#fff}header .inner{max-width:1080px;margin:auto;display:flex;justify-content:space-between;align-items:center;padding:14px 20px;gap:12px}nav{display:flex;gap:16px}header a{font-size:13px;text-decoration:none;font-weight:800}header img{width:52px;height:39px}main{max-width:1000px;margin:auto;padding:25px 20px 80px}.back{font-size:13px;color:#486778;text-decoration:none}h1{font-size:clamp(28px,5vw,49px);line-height:1.12;letter-spacing:-.045em;margin:13px 0}.sub{color:#577184}.hero{background:#071925;color:#fff;border-radius:16px;overflow:hidden;margin:24px 0}.hero img{display:block;width:100%;height:245px;object-fit:cover}.hero div{padding:20px}.hero strong{font-size:21px}.hero p{font-size:12px;color:#cddfe4}.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.fact{background:#fff;border:1px solid #dbe5ea;border-radius:12px;padding:15px;display:flex;flex-direction:column;gap:7px}.fact span{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#63818b;font-weight:800}.fact strong{font-size:14px;line-height:1.4;overflow-wrap:anywhere}.actions{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0}.actions>*{padding:14px 18px;border-radius:10px;background:white;color:#153f34;border:1px solid #d6e2dc;min-height:49px;font-size:14px;font-weight:850;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer}.actions .primary{background:#c7ff37;border-color:#c7ff37;color:#0b2619}.actions .tz-event-radar-link{background:#edf8e2;border-color:#b9dca6;color:#153f34}.actions .tz-event-radar-link:hover{background:#dff3cb;border-color:#a5cc8f}.note{padding:16px;background:#fff;border:1px solid #dbe5ea;border-radius:12px;color:#5b7280;font-size:13px;line-height:1.65}.source{font-size:13px}.source a{color:#116146;font-weight:800}.foot{padding-top:20px;border-top:1px solid #dce6e9;margin-top:30px;color:#667e88;font-size:12px}@media(max-width:700px){.facts{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.fact{padding:11px}.fact strong{font-size:12px}.hero img{height:160px}.actions{display:grid;grid-template-columns:1fr 1fr}.actions .primary{grid-column:1/-1}nav{gap:9px}main{padding:22px 15px 80px}}';
 const routeExamples={
  'ra-9':{
