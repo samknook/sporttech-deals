@@ -15,7 +15,7 @@ assert.ok(report.reports[0].html.includes('Maastricht &lt;Test&gt; &amp; Friends
 assert.ok(!report.reports[0].html.includes('2026-10-01'),'Out-of-range data must be omitted');
 assert.ok(report.reports[0].html.includes('Geen unieke bezoekers'),'Reports should disclose aggregation');
 assert.ok(report.reports[0].html.includes('Een klik is geen bevestigde inschrijving'),'No unsupported conversion claims');
-assert.ok(report.csv.includes('3,0%"')||report.csv.includes('"30,0%"'),'CSV should contain a separately labeled action ratio');
+assert.ok(report.csv.includes('"30.0%"'),'CSV should contain an indicative action ratio (not actual registrations)');
 assert.throws(()=>render({...input,periodStart:'wrong'}),/periodStart/);
 assert.throws(()=>render({...input,periodStart:'2026-12-01'}),/periodStart/);
 console.log('PASS: organizer report generation, CSV totals, HTML escaping, period boundaries, metric caveats');
