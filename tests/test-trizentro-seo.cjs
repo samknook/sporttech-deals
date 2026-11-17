@@ -57,7 +57,10 @@ assert.ok(eventSave.includes("client.auth.getUser()"),'Detail save must resolve 
 const radar=fs.readFileSync(base+'raceatlas/alerts.js','utf8');
 assert.ok(radar.includes("params.get('ra_alert')"),'Radar deep-link handling missing');
 assert.ok(radar.includes('/^ra-[0-9]{1,8}$/'),'Radar must validate linked event IDs');
-assert.ok(radar.includes('dialog.append(h,p,form,notice,emailBox,actions)'),'Radar signup should be shown after instructions');
+assert.ok(radar.includes('dialog.append(form,notice,emailBox,actions)'),'Radar signup should be shown after instructions');
+assert.ok(radar.includes("event.key==='Escape'"),'Radar should close with Escape');
+assert.ok(radar.includes('aria-labelledby'),'Radar dialog must expose its heading to screen readers');
+assert.ok(radar.includes('getClientRects().length>0'),'Radar keyboard focus trap must ignore hidden controls');
 const registrationRadar=fs.readFileSync(base+'raceatlas/intelligence.js','utf8');
 assert.ok(registrationRadar.includes('window.RaceAtlasSaved'),'Radar must reflect cloud-backed saved events');
 assert.ok(registrationRadar.includes('raceatlas:season-source-change'),'Radar must refresh after login/logout');
