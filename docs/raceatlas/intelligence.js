@@ -75,20 +75,52 @@
     controls.append(label);
     const status=el('p','raIntelStatus','Brongegevens laden…');status.setAttribute('role','status');
     const list=el('div','raIntelList');
+    const pendingHead=el('h3','raIntelPendingTitle','Volg wedstrijden zonder bekende inschrijfdatum');
+    const pendingNote=el('p','raIntelNote','Voor deze opgeslagen wedstrijden is nog geen officieel inschrijfmoment vastgelegd. Stel alvast een e-mailmelding in; er wordt geen beschikbaarheid beloofd.');
+    const pending=el('div','raIntelPendingList');
+    pendingHead.hidden=true;pendingNote.hidden=true;pending.hidden=true;
     const more=el('button','raIntelMore','Bekijk alle inschrijfmomenten ↓');
     more.type='button';more.hidden=true;
     const emailNotice=el('p','raIntelNote tz-radar-email-notice','Ontvang e-mailupdates voor een gekozen wedstrijd na bevestiging van je e-mailadres. Klik bij een wedstrijd op ‘Meldingen’ om je aan te melden. Kalenderherinneringen zijn ook beschikbaar.');
-    panel.append(head,intro,emailNotice,controls,status,list,more);
+    panel.append(head,intro,emailNotice,controls,status,list,more,pendingHead,pendingNote,pending);
     resultsMore.after(panel);
     const jump=document.querySelector('.raRadarJump');
     if(jump)jump.hidden=false;
-    return {panel,check,status,list,more,expanded:false};
+    return {panel,check,status,list,more,pendingHead,pendingNote,pending,expanded:false};
   }
   function render(ui,records){
     ui.list.replaceChildren();
+    ui.pending.replaceChildren();
+    ui.pending.hidden=true;ui.pendingHead.hidden=true;ui.pendingNote.hidden=true;
     const now=new Date(), saved=savedIds();
     const classified=records.filter(r=>r.date_confidence==='official').map(r=>({r,kind:classify(r,now)})).filter(x=>x.kind);
     const selected=classified.filter(x=>!ui.check.checked||saved.has(x.r.event_id));
+    // Saved races without an upcoming recorded opening still need a way to opt in.
+    // The catalogue is the source for event identity only, not unverified registration claims.
+    if(ui.check.checked){
+      const knownOpening=new Set(records.filter(r=>r.registration_opens_at||r.registration_closes_at).map(r=>r.event_id));
+      const candidates=(window.RACEATLAS_EVENTS||[])
+        .filter(event=>saved.has(event.id)&&!knownOpening.has(event.id))
+        .slice(0,8);
+      if(candidates.length){
+        ui.pending.hidden=false;ui.pendingHead.hidden=false;ui.pendingNote.hidden=false;
+        for(const event of candidates){
+          const article=el('article','raIntelItem');
+          const info=el('div','');
+          info.append(el('strong','',event.name),el('small','','Inschrijfdatum nog niet bevestigd'));
+          const actions=el('div','raIntelActions');
+          const button=el('button','raIntelButton','🔔 Volg inschrijving');
+          button.type='button';
+          button.addEventListener('click',()=>{
+            if(window.RaceAtlasAlerts?.openForEvent)window.RaceAtlasAlerts.openForEvent(event.id);
+            else location.href='/events/?ra_alert='+encodeURIComponent(event.id);
+          });
+          actions.append(button);
+          article.append(info,actions);
+          ui.pending.append(article);
+        }
+      }
+    }
     const ordered=selected.sort((a,b)=>{
       const savedA=saved.has(a.r.event_id)?0:1;
       const savedB=saved.has(b.r.event_id)?0:1;
@@ -105,7 +137,7 @@
       :classified.length+' inschrijfmomenten om te volgen';
     if(!ordered.length){
       ui.list.append(el('p','raIntelEmpty',ui.check.checked
-        ?'Geen bekende aankomende inschrijfdatums bij jouw opgeslagen races. Bewaar een wedstrijd om deze hier te volgen.'
+        ?'Voor jouw opgeslagen wedstrijden zijn momenteel geen aankomende inschrijfmomenten bevestigd. Je kunt hieronder wedstrijden volgen zodra er nieuwe informatie komt.'
         :'Momenteel geen inschrijfdatums in beeld. Controleer altijd de organisator voor de actuele stand.'));
       return;
     }
