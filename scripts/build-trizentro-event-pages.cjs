@@ -135,7 +135,7 @@ for(const e of list){
  '<main><a class="back" href="../">← Alle evenementen</a><h1>'+safe(e.name)+'</h1><p class="sub">'+safe([e.place,e.country,e.distance].filter(Boolean).join(' · '))+'</p>',
  '<section class="hero">'+image+(e.major?'':illustration)+'<div class="event-date"><strong>'+safe(date(e))+'</strong><p>'+safe(status)+'</p></div></section>',
  '<section class="facts" aria-label="Wedstrijdinformatie">'+facts+'</section>',
- '<div class="actions">'+cta+'<button id="saveRace" type="button" aria-pressed="false">☆ Bewaar in mijn seizoen</button><a href="../?event='+encodeURIComponent(e.id)+'">Open in wedstrijdkalender</a><a href="../../performance.html">Bereid je voor ↗</a></div>',
+ '<div class="actions">'+cta+'<a class="tz-event-radar-link" href="/events/?ra_alert='+encodeURIComponent(e.id)+'">🔔 Ontvang inschrijfmelding</a><button id="saveRace" type="button" aria-pressed="false">☆ Bewaar in mijn seizoen</button><a href="../?event='+encodeURIComponent(e.id)+'">Open in wedstrijdkalender</a><a href="../../performance.html">Bereid je voor ↗</a></div>',
  courseAndWeather(e,official),
  '<section class="prep-card event-claim" aria-labelledby="eventClaimHeading"><h2 id="eventClaimHeading">Organiseer je dit evenement?</h2><p>Vraag beheer aan om wedstrijddetails, inschrijfinformatie of het parcours door te geven. TriZentro controleert je aanvraag.</p><a href="'+safe(claimUrl)+'">Claim je evenement ↗</a></section>',
  '<p class="note">TriZentro verzamelt beschikbare wedstrijdinformatie. Datums, prijzen en inschrijfstatussen kunnen veranderen. Controleer de actuele informatie altijd bij de organisator.</p>',
