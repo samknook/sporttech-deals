@@ -6,12 +6,12 @@
 <h2 id="orgReportingTitle" style="margin-top:0">Inzicht in de zichtbaarheid van jouw evenement</h2>
 <p>Bij TriZentro kunnen we een rapportage per wedstrijd samenstellen met kaartweergaven, openingen van de wedstrijdpagina en gemeten klikken naar de officiële website of inschrijflink. We laten ook de dagelijkse ontwikkeling zien wanneer die gegevens beschikbaar zijn.</p>
 <p style="font-size:13px;color:#486358"><strong>Goed om te weten:</strong> dit zijn geaggregeerde interacties, geen unieke bezoekers of bevestigde inschrijvingen. We delen geen persoonlijke bezoekersgegevens. Cijfers zijn afhankelijk van beschikbare metingen.</p>
-<a href="#contact" style="display:inline-block;font-weight:750;color:#174c36">Vraag een evenementenrapport aan →</a>
+<a href="#contact" id="orgReportShortcut" style="display:inline-block;font-weight:750;color:#174c36">Vraag een evenementenrapport aan →</a>
 </section>
 <section id="contact" class="orgContactSection"><div class="tag">Contact</div><h2>Stel ons een vraag.</h2><p>Wil je meer weten over TriZentro, een samenwerking bespreken of gegevens laten corrigeren? Laat hieronder weten waarover je contact zoekt. Je kunt ook rechtstreeks mailen naar <a href="mailto:trizentro.team@gmail.com">trizentro.team@gmail.com</a>.</p>
 <div class="panel"><form id="contactForm" action="https://formsubmit.co/ajax/trizentro.team@gmail.com" method="POST">
 <div class="field"><label for="contactName">Naam / organisatie *</label><input id="contactName" required maxlength="120" autocomplete="organization" placeholder="Naam organisatie"></div>
-<div class="field"><label for="contactEmail">Zakelijk e-mailadres *</label><input id="contactEmail" type="email" required maxlength="180" autocomplete="email" placeholder="naam@organisatie.nl"></div><div class="field"><label for="contactSubject">Onderwerp *</label><select id="contactSubject" required><option value="">Kies een onderwerp</option><option>Algemene vraag</option><option>Evenementgegevens aanpassen</option><option value="Claim je evenement">Claim je evenement</option><option>Samenwerken</option><option>Extra zichtbaarheid / promotie</option><option>Anders</option></select></div>
+<div class="field"><label for="contactEmail">Zakelijk e-mailadres *</label><input id="contactEmail" type="email" required maxlength="180" autocomplete="email" placeholder="naam@organisatie.nl"></div><div class="field"><label for="contactSubject">Onderwerp *</label><select id="contactSubject" required><option value="">Kies een onderwerp</option><option>Algemene vraag</option><option>Evenementgegevens aanpassen</option><option value="Claim je evenement">Claim je evenement</option><option value="Evenementrapport aanvragen">Evenementrapport aanvragen</option><option>Samenwerken</option><option>Extra zichtbaarheid / promotie</option><option>Anders</option></select></div>
 <div class="field wide"><label for="contactEvent">Naam evenement / website (optioneel)</label><input id="contactEvent" maxlength="250" placeholder="Bijv. Stadsloop, https://..."></div>
 <fieldset id="correctionFields" class="wide orgCorrection" hidden><legend id="correctionLegend">Gegevens van je wijziging</legend>
 <p id="correctionHelp" class="muted">Vul alleen de onderdelen in die wijzigen. Lege velden worden niet geïnterpreteerd als een nieuwe datum of prijs. We publiceren wijzigingen pas na controle.</p>
@@ -48,18 +48,19 @@ function updateCorrectionFields(){
  const subject=$('contactSubject').value;
  const claim=subject==='Claim je evenement';
  const correction=subject==='Evenementgegevens aanpassen';
- const active=claim||correction;
+ const report=subject==='Evenementrapport aanvragen';
+ const active=claim||correction||report;
  const root=$('correctionFields');root.hidden=!active;
  for(const field of root.querySelectorAll('[data-correction-only]'))field.hidden=!correction;
  $('correctionField').required=correction;
- $('correctionSource').required=active;
+ $('correctionSource').required=claim||correction;
  $('correctionNotes').required=active;
- $('contactEvent').required=claim;
- $('correctionLegend').textContent=claim?'Gegevens van je aanvraag':'Gegevens van je wijziging';
- $('correctionHelp').textContent=claim?'Gebruik je zakelijke e-mailadres en beschrijf je rol. TriZentro verifieert je relatie met het evenement via de officiële organisatie voordat een aanvraag wordt goedgekeurd.':'Vul alleen de onderdelen in die wijzigen. Lege velden worden niet geïnterpreteerd als een nieuwe datum of prijs. We publiceren wijzigingen pas na controle.';
- $('correctionSourceLabel').textContent=claim?'Officiële evenementwebsite *':'Officiële bronlink voor deze wijziging *';
- $('correctionNotesLabel').textContent=claim?'Wat is je rol bij het evenement? *':'Wat is gewijzigd? *';
- $('correctionNotes').placeholder=claim?'Bijvoorbeeld: ik coördineer de inschrijvingen voor dit evenement.':'Bijvoorbeeld: de inschrijving voor 21,1 km is gesloten; 10 km is nog beschikbaar.';
+ $('contactEvent').required=claim||report;
+ $('correctionLegend').textContent=report?'Vraag een rapportage voor jouw evenement aan':claim?'Gegevens van je aanvraag':'Gegevens van je wijziging';
+ $('correctionHelp').textContent=report?'Vermeld je rol en evenement. Een rapport wordt pas na controle van je relatie met de organisator gedeeld. De cijfers zijn geaggregeerd, geen unieke bezoekers of bevestigde inschrijvingen.':claim?'Gebruik je zakelijke e-mailadres en beschrijf je rol. TriZentro verifieert je relatie met het evenement via de officiële organisatie voordat een aanvraag wordt goedgekeurd.':'Vul alleen de onderdelen in die wijzigen. Lege velden worden niet geïnterpreteerd als een nieuwe datum of prijs. We publiceren wijzigingen pas na controle.';
+ $('correctionSourceLabel').textContent=report?'Officiële evenementwebsite (optioneel)':claim?'Officiële evenementwebsite *':'Officiële bronlink voor deze wijziging *';
+ $('correctionNotesLabel').textContent=report||claim?'Wat is je rol bij het evenement? *':'Wat is gewijzigd? *';
+ $('correctionNotes').placeholder=report||claim?'Bijvoorbeeld: ik coördineer de inschrijvingen voor dit evenement.':'Bijvoorbeeld: de inschrijving voor 21,1 km is gesloten; 10 km is nog beschikbaar.';
  $('contactMessage').required=!active;
  $('contactMessage').placeholder=active?'Optioneel: extra toelichting voor het TriZentro-team':'Waar kunnen we je mee helpen?';
 }
@@ -69,13 +70,17 @@ document.getElementById('orgClaimShortcut')?.addEventListener('click',()=>{
  $('contactSubject').value='Claim je evenement';
  updateCorrectionFields();
 });
+document.getElementById('orgReportShortcut')?.addEventListener('click',()=>{
+ $('contactSubject').value='Evenementrapport aanvragen';
+ updateCorrectionFields();
+});
 
 
 
 function correctionText(){
  if($('correctionFields').hidden)return '';
  const g=id=>$(id).value.trim();
- if($('contactSubject').value==='Claim je evenement'){
+ if(['Claim je evenement','Evenementrapport aanvragen'].includes($('contactSubject').value)){
   return '\n\nTriZentro evenement-ID: '+(g('correctionEventId')||'Niet opgegeven')+
    '\nOfficiële evenementwebsite: '+g('correctionSource')+
    '\nRol bij het evenement: '+g('correctionNotes');
@@ -104,7 +109,7 @@ $('contactForm').addEventListener('submit',async e=>{
     const response=await fetch(CONTACT_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(formData)});
     const data=await response.json();
     if(response.ok&&formSubmitResult(data)){
-      status.className='muted wide orgSendSuccess';status.textContent=$('contactSubject').value==='Claim je evenement'?'Je aanvraag is geaccepteerd door de formulierdienst. TriZentro controleert je relatie met het evenement.':$('correctionFields').hidden?'De formulierdienst heeft je bericht geaccepteerd. Bedankt! We nemen contact op als er meer informatie nodig is.':'De formulierdienst heeft je correctieverzoek geaccepteerd. TriZentro controleert de bron vóór eventuele aanpassing; de kalender is nog niet gewijzigd.';
+      status.className='muted wide orgSendSuccess';status.textContent=$('contactSubject').value==='Evenementrapport aanvragen'?'Je rapportaanvraag is geaccepteerd door de formulierdienst. TriZentro controleert je relatie met het evenement en de beschikbaarheid van de cijfers.':$('contactSubject').value==='Claim je evenement'?'Je aanvraag is geaccepteerd door de formulierdienst. TriZentro controleert je relatie met het evenement.':$('correctionFields').hidden?'De formulierdienst heeft je bericht geaccepteerd. Bedankt! We nemen contact op als er meer informatie nodig is.':'De formulierdienst heeft je correctieverzoek geaccepteerd. TriZentro controleert de bron vóór eventuele aanpassing; de kalender is nog niet gewijzigd.';
       form.reset();updateCorrectionFields();
     }else if(isPendingActivation(data)){
       status.className='muted wide orgSendError';status.textContent='De formulierdienst wacht nog op een eenmalige activatie door TriZentro. Je bericht is nog niet bevestigd als afgeleverd. Gebruik voorlopig de knop Kopieer bericht of mail rechtstreeks.';
