@@ -22,10 +22,16 @@
   };
   const https=value=>{try{return new URL(value).protocol==='https:'}catch{return false}};
   const dateKey=value=>value?String(value).slice(0,10):'';
+  // Use the same account-aware season as the Events catalogue.
+  // When signed in, locally saved guest races must not replace cloud races.
   const savedIds=()=>{
-    try {
+    const shared=window.RaceAtlasSaved;
+    if(shared&&typeof shared.get==='function'){
+      try{return new Set(shared.get().filter(id=>/^ra-[0-9]{1,8}$/.test(id)))}catch{}
+    }
+    try{
       const items=JSON.parse(localStorage.getItem(SEASON_KEY)||'[]');
-      return new Set(Array.isArray(items)?items.filter(x=>/^ra-\d{1,8}$/.test(x)):[]);
+      return new Set(Array.isArray(items)?items.filter(id=>/^ra-[0-9]{1,8}$/.test(id)):[]);
     }catch{return new Set()}
   };
   const seasonOnly=()=>{
@@ -66,7 +72,7 @@
     const list=el('div','raIntelList');
     const more=el('button','raIntelMore','Bekijk alle inschrijfmomenten ↓');
     more.type='button';more.hidden=true;
-    const emailNotice=el('p','raIntelNote tz-radar-email-notice','📧 E-mailmeldingen worden voorbereid. Kalenderherinneringen en lokale meldingsvoorkeuren werken al. Open bij een wedstrijd de knop Meldingen om je voorkeuren te beheren.');
+    const emailNotice=el('p','raIntelNote tz-radar-email-notice','Ontvang e-mailupdates voor een gekozen wedstrijd na bevestiging van je e-mailadres. Klik bij een wedstrijd op ‘Meldingen’ om je aan te melden. Kalenderherinneringen zijn ook beschikbaar.');
     panel.append(head,intro,emailNotice,controls,status,list,more);
     resultsMore.after(panel);
     const jump=document.querySelector('.raRadarJump');
@@ -116,6 +122,13 @@
         }
       });
       actions.append(detail);
+      const alert=el('button','raIntelButton','🔔 Meldingen instellen');
+      alert.type='button';
+      alert.addEventListener('click',()=>{
+        if(window.RaceAtlasAlerts?.openForEvent)window.RaceAtlasAlerts.openForEvent(r.event_id);
+        else location.href='/events/?ra_alert='+encodeURIComponent(r.event_id);
+      });
+      actions.append(alert);
       const source=r.verification_source_url||r.official_event_url;
       if(https(source)){
         const a=el('a','raIntelSource','Controleer bron ↗');
@@ -139,6 +152,8 @@
       const refresh=()=>render(ui,records);
       ui.check.addEventListener('change',()=>{setSeasonOnly(ui.check.checked);ui.expanded=false;refresh()});
       ui.more.addEventListener('click',()=>{ui.expanded=!ui.expanded;refresh()});
+      window.addEventListener('raceatlas:season-source-change',refresh);
+      window.addEventListener('raceatlas:saved-change',refresh);
       window.addEventListener('storage',event=>{
         if(event.key===SEASON_KEY||event.key===LOCAL_PREF_KEY){
           if(event.key===LOCAL_PREF_KEY)ui.check.checked=seasonOnly();
