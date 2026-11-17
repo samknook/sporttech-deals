@@ -96,6 +96,8 @@ function markLegacy(html,canonical){
 // Event detail pages also live below Events, with the same data and save
 // actions as the generated legacy pages.
 const cleanDetailsDir=path.join(base,'events/wedstrijden');
+// Recreate the destination to remove obsolete event details from the artifact.
+fs.rmSync(cleanDetailsDir,{recursive:true,force:true});
 fs.mkdirSync(cleanDetailsDir,{recursive:true});
 let detailCount=0;
 for(const filename of fs.readdirSync(eventsDir)){
@@ -141,7 +143,7 @@ const sitemap='<?xml version="1.0" encoding="UTF-8"?>\n'+
  '</changefreq><priority>'+u.priority+'</priority></url>').join('\n')+
  '\n</urlset>\n';
 fs.writeFileSync(path.join(base,'sitemap.xml'),sitemap);
-fs.writeFileSync(path.join(base,'robots.txt'),'User-agent: *\nAllow: /\nSitemap: https://trizentro.com/sitemap.xml\n');
+fs.writeFileSync(path.join(base,'robots.txt'),'User-agent: *\nAllow: /\nDisallow: /admin/\nSitemap: https://trizentro.com/sitemap.xml\n');
 console.log('Published '+urls.length+' canonical URLs in sitemap.xml');
 console.log('Published '+detailCount+' consistent Events detail URLs');
 // Redirect only the three legacy entry URLs. Query parameters and fragments
