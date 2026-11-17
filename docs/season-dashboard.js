@@ -48,7 +48,7 @@ function render(items,states,pageFor,setRegistration){
  registration.append(e('strong',pending+' '+text('nog te regelen','to arrange'),'tz-dashboard-value'),
   e('p',registered+' '+text('ingeschreven','registered')+' · '+waitlist+' '+text('op wachtlijst','waitlisted')+'. '+text('Dit zijn jouw eigen notities, geen bevestigingen van organisatoren.','These are your notes, not organizer confirmations.')));
  const radarLink=e('a',text('Bekijk Inschrijfradar →','View registration radar →'),'tz-dashboard-text-link');
- radarLink.href='/seizoen/#raIntelPanel';registration.append(radarLink);
+ radarLink.href='/events/#raIntelPanel';registration.append(radarLink);
  if(next){
   const label=e('label',text('Mijn status voor volgende wedstrijd','My status for next race'),'tz-dashboard-form');
   const select=e('select');select.setAttribute('aria-label',label.textContent);
