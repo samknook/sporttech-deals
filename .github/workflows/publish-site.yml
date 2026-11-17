@@ -10,6 +10,7 @@ on:
       - 'scripts/build-trizentro-organizer-dashboard.cjs'
       - 'tests/test-trizentro-organizer-report.cjs'
       - 'tests/test-trizentro-organizer-dashboard.cjs'
+      - 'tests/test-trizentro-admin-analytics.cjs'
       - 'scripts/prepare-trizentro-domain.cjs'
       - 'config/trizentro-public-pages.json'
       - '.github/trizentro-domain.json'
@@ -58,6 +59,8 @@ jobs:
           node tests/test-trizentro-status-writes.cjs
           node tests/test-trizentro-organizer-report.cjs
           node tests/test-trizentro-organizer-dashboard.cjs
+          node tests/test-trizentro-admin-analytics.cjs
+          test -s docs/admin/analytics/index.html
           test -s docs/index.html
           test -s docs/events/index.html
           test -s docs/performance/index.html
