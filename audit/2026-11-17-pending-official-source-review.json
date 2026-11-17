@@ -1,0 +1,1625 @@
+{
+  "title": "TriZentro public source-quality audit",
+  "auditedOn": "2026-11-17",
+  "originalEvents": 434,
+  "publicEvents": 168,
+  "withheldPendingOfficialSource": 266,
+  "policy": "Only events with a concrete HTTPS organizer event page or event-specific registration listing are eligible. Historical source pages are retained for future manual research; withheld does not mean cancelled.",
+  "withheldByFormerListingHost": {
+    "fietssport.nl": 137,
+    "triathlonbond.nl": 8,
+    "all-sportevents.eu": 1,
+    "triathlonplan.nl": 37,
+    "hardlopen.nl": 31,
+    "hardloopkalendernederland.nl": 12,
+    "running.life": 1,
+    "kermisloopedam.nl": 1,
+    "middelie.nl": 1,
+    "lianbart.nl": 1,
+    "loopgroephoorn.nl": 1,
+    "wijkenlopen.nl": 3,
+    "runphy.nl": 26,
+    "hoorn.nl": 1,
+    "vandervoortgroep.nl": 1,
+    "avedam.nl": 3,
+    "europe.triathlon.org": 1
+  },
+  "withheld": [
+    {
+      "id": "ra-31",
+      "name": "ATB Toertocht Uden",
+      "previousSource": "https://www.fietssport.nl/clubs/111008/toer-en-trimvereniging-uden",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-34",
+      "name": "Beemd en bergtoer Gravel Holten",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-35",
+      "name": "Beemd en bergtoer MTB Holten",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-36",
+      "name": "Goed Begintocht MTB",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-37",
+      "name": "Bike Basement MTB Tocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-38",
+      "name": "CarProf Wils Nieuwjaarstocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-39",
+      "name": "Helden van Hemelrijk Graveleditie",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-40",
+      "name": "Nieuwjaarsveldrit",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-41",
+      "name": "Veldtoertocht Asten",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-42",
+      "name": "B+B Veldtoertocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-43",
+      "name": "Hel van Rhenoy",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-44",
+      "name": "Droadnaegeltocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-45",
+      "name": "Gérard Kocken MTB Tocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-46",
+      "name": "Toffe Wintertocht SVDO Tourbuffels",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-47",
+      "name": "Winter Bike Challenge MTB",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-48",
+      "name": "Winter Bike Challenge Gravel",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-49",
+      "name": "Airco Service Slotman Wintermarathon MTB",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-50",
+      "name": "Airco Service Slotman Wintermarathon Gravel",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-51",
+      "name": "Wintereditie Hollands Venetië Tocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-52",
+      "name": "Bike-Totaal Winterswijk Graveltocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-53",
+      "name": "Bike-Totaal Winterswijk MTB Tocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-54",
+      "name": "Kaaitjestocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-55",
+      "name": "Wintergraveltocht TC Hulst",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-56",
+      "name": "Gooische Strade Bianche XVI",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-57",
+      "name": "Jistrumer Coulissentocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-58",
+      "name": "Veluws Mooiste Graveltocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-59",
+      "name": "Veluws Mooiste MTB Tocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-60",
+      "name": "Eshuis Accountants Holterberg ATB Tocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-61",
+      "name": "The Whoopers Gravel Toertocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-62",
+      "name": "The Whoopers KMP MTB Tocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-63",
+      "name": "Winter MTB-toertocht Bikefun Liessel",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-64",
+      "name": "Nightride 't Muurtje",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-65",
+      "name": "Veldrit TFC Surhuisterveen",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-66",
+      "name": "Ontwakingstocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-67",
+      "name": "Lek en Lingetocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-68",
+      "name": "Acht van Burgum",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-69",
+      "name": "Bultentocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-70",
+      "name": "Friesche Vlaanderentocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-71",
+      "name": "Toerklassieker Veenendaal-Veenendaal",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-72",
+      "name": "BRM300 Lemmer Noordkaap",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-73",
+      "name": "Ronde van Sudwest Fryslân",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-74",
+      "name": "Woudentocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-75",
+      "name": "Princenhoftocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-76",
+      "name": "Elfmerenfietstocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-77",
+      "name": "Rijn- en Lingetocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-78",
+      "name": "Gemeententocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-79",
+      "name": "Lauwersmeer- en Waddentocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-80",
+      "name": "Tempo Cabrio Klimklassieker",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-81",
+      "name": "4 Windstrekentoertocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-82",
+      "name": "Gooi- en Vechtstreektocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-83",
+      "name": "Pieter Weening Classic",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-84",
+      "name": "Hel van de Heuvelrug",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-85",
+      "name": "Gildetocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-86",
+      "name": "Grebbetourtocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-87",
+      "name": "BETT BOSS Gravel",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-88",
+      "name": "BETT BOSS MTB",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-89",
+      "name": "Cycling Challenge Hoogland Gravelride",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-90",
+      "name": "Cycling Challenge Hoogland Toertocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-91",
+      "name": "Veluwse Herfsttocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-92",
+      "name": "BRM200 Bunnik Populaire Pannenkoeken",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-93",
+      "name": "Princenhof Gravelride",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-94",
+      "name": "Gooische Strade Bianche XVII",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-95",
+      "name": "44e Princenhoftocht Wijnjewoude",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-96",
+      "name": "HomeSports",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-97",
+      "name": "BRM400 Bunnik Waterloo",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-98",
+      "name": "Fiets4daagse Wolvega",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-99",
+      "name": "Lauwersland Fietsvierdaagse",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-100",
+      "name": "Fiets4Daagse Appelscha",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-101",
+      "name": "BETT BOSS Gravel biketocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-102",
+      "name": "BETT BOSS MTB biketocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-103",
+      "name": "Meint Beukema Classic",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-104",
+      "name": "25e 4 Windstrekentoertocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-105",
+      "name": "Verge Gravel TwickelToer",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-106",
+      "name": "Verge MTB TwickelToer",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-107",
+      "name": "Slangenbeek Tweewielers Paastoertocht",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-108",
+      "name": "Holterberg Graveltoer",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-109",
+      "name": "Holterbergtoer",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-110",
+      "name": "Erwin Nijboer Ride 4 Alzheimer",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-111",
+      "name": "Broekhuis Hel van Twente",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-112",
+      "name": "Broekhuis Hel van Twente graveltocht",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-113",
+      "name": "Erbens Vechtdaltoer",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-114",
+      "name": "Erbens Vechtdaltoer Gravel",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-115",
+      "name": "Weizentocht",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-116",
+      "name": "Theo de Rooij Classic",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-117",
+      "name": "Theo de Rooij Classic Gravel",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-118",
+      "name": "Theo de Rooij Classic MTB",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-119",
+      "name": "Sprakeltoer Gravel",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-120",
+      "name": "Sprakeltoer race",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-121",
+      "name": "5HVLN Toertocht Gravelbike",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-122",
+      "name": "5HVLN Toertocht Mountainbike",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-123",
+      "name": "5HVLN Toertocht Racefiets",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-124",
+      "name": "De Hanzekoers",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-125",
+      "name": "Fiets4daagse Markelo",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-126",
+      "name": "BRM600 Boekelo Sauerland",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-127",
+      "name": "Gravel Valley Nijverdal",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-128",
+      "name": "Zomerfestival Wielrentocht Powered by Fietz",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-129",
+      "name": "Euregio Fiets-4-daagse Denekamp",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-130",
+      "name": "Grens Heuvelen Classic",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-131",
+      "name": "Hollands Venetië Tocht",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-132",
+      "name": "Lonneker Molentocht",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-133",
+      "name": "Lonneker Molentocht Gravel",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-134",
+      "name": "Kobra Grenslandgraveltocht",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-135",
+      "name": "KOBRA Grenslandmarathon",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-136",
+      "name": "Vasser Heuvelen Classic Gravel",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-137",
+      "name": "Ter Steege Graveltocht",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-138",
+      "name": "Ter Steege MTB Tocht",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-139",
+      "name": "Ruiten Drie Bospaden & Burgers GRAVEL",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-140",
+      "name": "Ruiten Drie Bospaden & Burgers MTB",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-141",
+      "name": "Spek & Wos Gravelrit",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-142",
+      "name": "Helletocht",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-143",
+      "name": "TBB Totaal Boterkoektocht Gravel",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-144",
+      "name": "TBB Totaal Boterkoektocht MTB",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-145",
+      "name": "Op en um n Bölt Gravel",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-146",
+      "name": "Op en um n Bölt MTB",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-147",
+      "name": "ATB kersttoertocht Markelo",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-148",
+      "name": "Gravel kersttoertocht Markelo",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-149",
+      "name": "BRM200 Boekelo Tecklenburg",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-overijssel",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-151",
+      "name": "NK Duathlon Standaard",
+      "previousSource": "https://www.triathlonbond.nl/over-ntb/nieuws/nk-en-agk-kalender-2027-grotendeels-bekend/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-152",
+      "name": "NK Duathlon Midden",
+      "previousSource": "https://www.triathlonbond.nl/over-ntb/nieuws/nk-en-agk-kalender-2027-grotendeels-bekend/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-153",
+      "name": "NK Duathlon Sprint",
+      "previousSource": "https://www.triathlonbond.nl/over-ntb/nieuws/nk-en-agk-kalender-2027-grotendeels-bekend/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-155",
+      "name": "AGK Triatlon Standaard",
+      "previousSource": "https://www.triathlonbond.nl/over-ntb/nieuws/nk-en-agk-kalender-2027-grotendeels-bekend/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-156",
+      "name": "NK Triatlon Standaard",
+      "previousSource": "https://www.triathlonbond.nl/over-ntb/nieuws/nk-en-agk-kalender-2027-grotendeels-bekend/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-157",
+      "name": "NK Triatlon Midden",
+      "previousSource": "https://www.triathlonbond.nl/over-ntb/nieuws/nk-en-agk-kalender-2027-grotendeels-bekend/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-158",
+      "name": "NK Crosstriathlon (onder voorbehoud)",
+      "previousSource": "https://www.triathlonbond.nl/over-ntb/nieuws/nk-en-agk-kalender-2027-grotendeels-bekend/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-159",
+      "name": "NK Triatlon Lange Afstand",
+      "previousSource": "https://www.triathlonbond.nl/over-ntb/nieuws/nk-en-agk-kalender-2027-grotendeels-bekend/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-173",
+      "name": "Great Bruges Marathon",
+      "previousSource": "https://all-sportevents.eu/en/sport/running/country/belgium/discipline/marathon",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-188",
+      "name": "TOS Winter Veldtourtocht MTB",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-189",
+      "name": "HRTC DOK MTB Napoleontocht",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-190",
+      "name": "ATB-tocht de Wekkers",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-191",
+      "name": "Gravel-tocht de Wekkers",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-192",
+      "name": "Kerstcross Ursem",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-197",
+      "name": "ATB tocht memorial Jo Boerekamp",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-198",
+      "name": "Gravel tocht memorial Jo Boerekamp",
+      "previousSource": "https://www.fietssport.nl/toertochten",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-199",
+      "name": "Duathlon de Malonne",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-204",
+      "name": "Cross Duathlon De Peel",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-205",
+      "name": "Crossduatlon Westrozebeke",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-207",
+      "name": "Winter Triathlon Leeuwarden",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-208",
+      "name": "Crossduatlon Meetria",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-209",
+      "name": "Cross Duathlon Nederrijkswald",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-211",
+      "name": "GVAV Cross Run Bike Run Norg",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-212",
+      "name": "Cross Triathlon Lichtenvoorde",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-214",
+      "name": "RBR & TT Rotterdam",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-215",
+      "name": "Zwemloop Leiden",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-217",
+      "name": "Wezenberg Triathlon IJsselmuiden",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-219",
+      "name": "RBR & TT Almere",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-221",
+      "name": "Run Bike Run Oldenzaal",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-223",
+      "name": "Moves4Fun Triathlon Tynaarlo",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-228",
+      "name": "TRI Almere",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-229",
+      "name": "Triathlon de Seneffe",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-235",
+      "name": "The Championship Šamorín",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-237",
+      "name": "DTS Ouderkerk",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-238",
+      "name": "Fit Forward Triatlon",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-239",
+      "name": "Hondsrug Cross Triathlon",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-245",
+      "name": "TRI Amsterdam",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-246",
+      "name": "Stadstriathlon Weert",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-247",
+      "name": "Triatlon de Breede",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-249",
+      "name": "Triathlon Terheijden",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-250",
+      "name": "Sweere Jeugd Triathlon Oud Gastel",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-251",
+      "name": "Midzomer Triathlon Leidschendam",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-253",
+      "name": "TRI Rotterdam zaterdag",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-254",
+      "name": "TRI Rotterdam zondag",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-262",
+      "name": "Triathlon Wijchen",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-267",
+      "name": "Rivierenland Triathlon",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-273",
+      "name": "DTS HLMRMEER",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-277",
+      "name": "DTS Grand Prix Zandvoort",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-283",
+      "name": "Run Bike Run Borne",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-285",
+      "name": "Triatlon de Gelreman",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-290",
+      "name": "WeesperNieuws Extra Triatlon",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-291",
+      "name": "5150 Erkner",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-301",
+      "name": "DTS Bosbaan",
+      "previousSource": "https://triathlonplan.nl/wedstrijdkalender/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-303",
+      "name": "Engbergenloop",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-305",
+      "name": "Pre-Run Zandvoort Circuit Run",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-306",
+      "name": "Trailrun Terschelling",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-308",
+      "name": "Moore DRV Lansingerland Run",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-309",
+      "name": "Knipecrossloop",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-310",
+      "name": "RunX Halve Marathon van Haren",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-312",
+      "name": "Rondje Zwolle Marathon",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-313",
+      "name": "Keukenwarenhuis 20 van Alphen",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-314",
+      "name": "Halve van Oostvoorne",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-315",
+      "name": "Lenteloop Eerbeek",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-317",
+      "name": "LOWA Vuurtorentrail zaterdag",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-318",
+      "name": "Zonheuvel NightTrail",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-319",
+      "name": "LOWA Vuurtorentrail zondag",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-320",
+      "name": "WoolderEslopen",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-321",
+      "name": "Kloetloop",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-322",
+      "name": "Dark Sky Trail Lauwersmeer",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-323",
+      "name": "Marathon Alblasserwaard 750",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-324",
+      "name": "Road2Rotterdam 35 km",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-325",
+      "name": "DoeDoeRunRun",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-326",
+      "name": "de10vanAssen",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-328",
+      "name": "Halve van Hengelo",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-329",
+      "name": "De Wielenloop",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-331",
+      "name": "Braassemloop",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-333",
+      "name": "Bouw Logistics Halve van Nijkerk",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-334",
+      "name": "KiKa Hilversum City Run",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-335",
+      "name": "IJsselloop",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-336",
+      "name": "Beekse Trailrun Montferland",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-337",
+      "name": "Run & Roast Utrecht",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-338",
+      "name": "Vuurtorenloop",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-339",
+      "name": "Alkmaar City Run by Night",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-340",
+      "name": "TT Run Assen",
+      "previousSource": "https://www.hardlopen.nl/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-346",
+      "name": "Snertloop 't Veld",
+      "previousSource": "https://www.hardloopkalendernederland.nl/noordholland/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-347",
+      "name": "Kerstmannenrun Schoorl",
+      "previousSource": "https://www.hardloopkalendernederland.nl/noordholland/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-348",
+      "name": "Bosloop Boscross Bostrail",
+      "previousSource": "https://www.hardloopkalendernederland.nl/noordholland/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-349",
+      "name": "Strand- en Duinloop Castricum",
+      "previousSource": "https://www.hardloopkalendernederland.nl/noordholland/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-350",
+      "name": "Wijckloop Trail",
+      "previousSource": "https://www.hardloopkalendernederland.nl/noordholland/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-351",
+      "name": "TexelTrail",
+      "previousSource": "https://www.hardloopkalendernederland.nl/noordholland/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-352",
+      "name": "Twiskemolenloop",
+      "previousSource": "https://www.hardloopkalendernederland.nl/noordholland/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-353",
+      "name": "Twiskemolenloop",
+      "previousSource": "https://www.hardloopkalendernederland.nl/noordholland/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-354",
+      "name": "Lentemarathon Amstelveen",
+      "previousSource": "https://www.hardloopkalendernederland.nl/noordholland/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-356",
+      "name": "BRM200 Alkmaar WC Experience",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-357",
+      "name": "Schoorlse Brute Bikechallenge",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-358",
+      "name": "Voorjaarstocht Amsterdam",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-359",
+      "name": "Groenendaaltocht",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-360",
+      "name": "Joop Floor Gooische Meentetocht",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-362",
+      "name": "Gerrit Oomkens Duinentocht",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-363",
+      "name": "Ster van Huizen",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-364",
+      "name": "BRM300 Alkmaar Alkmaar Epic",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-365",
+      "name": "Triathlon Anna Paulowna",
+      "previousSource": "https://running.life/triathlonkalender/nederland/noord-holland/schagen",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-366",
+      "name": "BRM600 Amsterdam Rondje Nederland",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-367",
+      "name": "Nazomertocht",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-368",
+      "name": "Ride for the Roses",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-369",
+      "name": "Sluitingstocht Amsterdam",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-370",
+      "name": "BRM200 Amsterdam Rondje Utrecht",
+      "previousSource": "https://www.fietssport.nl/ontdek/fietsen-in-noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-372",
+      "name": "Kermisloop Edam",
+      "previousSource": "https://kermisloopedam.nl/informatie/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-373",
+      "name": "Zeevangsloop",
+      "previousSource": "https://middelie.nl/agenda/zeevangsloop-hercules-26/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-374",
+      "name": "Markstad Run",
+      "previousSource": "https://www.lianbart.nl/links/evenementen/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-375",
+      "name": "Dijk tot Damloop",
+      "previousSource": "https://www.hardloopkalendernederland.nl/noordholland/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-376",
+      "name": "Eilandspolderloop",
+      "previousSource": "https://www.hardloopkalendernederland.nl/noordholland/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-377",
+      "name": "Koningsnachtloop Hoorn",
+      "previousSource": "https://www.loopgroephoorn.nl/koningsnachtloop/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-378",
+      "name": "Hoornse Wijkloop Risdam-Zuid",
+      "previousSource": "https://wijkenlopen.nl/locaties/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-379",
+      "name": "Hoornse Wijkloop Zwaag/Blokker",
+      "previousSource": "https://wijkenlopen.nl/locaties/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-380",
+      "name": "Hoornse Wijkloop Hoorn-Noord",
+      "previousSource": "https://wijkenlopen.nl/locaties/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-381",
+      "name": "Schagen City Run",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-382",
+      "name": "Dijkenloop Hoorn",
+      "previousSource": "https://www.hoorn.nl/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-384",
+      "name": "Paaspolderloop",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-385",
+      "name": "Kloetloop Grootebroek",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-386",
+      "name": "10 Engelse Mijl Edam",
+      "previousSource": "https://www.hardloopkalendernederland.nl/noordholland/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-387",
+      "name": "Noordkop Duincross",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-389",
+      "name": "Triathlon Heerhugowaard",
+      "previousSource": "https://vandervoortgroep.nl/triatlon/van-der-voort-triathlon-circuit/",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-392",
+      "name": "St. George Cross",
+      "previousSource": "https://www.avedam.nl/agenda/meeuwen.php",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-393",
+      "name": "Kaagloop",
+      "previousSource": "https://www.avedam.nl/agenda/meeuwen.php",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-394",
+      "name": "Dijkloop",
+      "previousSource": "https://www.avedam.nl/agenda/meeuwen.php",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-395",
+      "name": "Uithoorns Mooiste De Loop",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-396",
+      "name": "Pierewaai Trail Winter",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-397",
+      "name": "Parnassia Groep Run",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-398",
+      "name": "Spiegelplasloop",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-399",
+      "name": "Lions Heuvelloop",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-400",
+      "name": "Stoomtramloop",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-401",
+      "name": "Brijderloop",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-402",
+      "name": "Halve van Den Helder",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-403",
+      "name": "Cruyff Legacy 14K",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-404",
+      "name": "Krinkels Pim Mulierloop",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-405",
+      "name": "Sportpark 21 Run",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-406",
+      "name": "PCC Maalwater Run",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-407",
+      "name": "Hogebergloop",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-408",
+      "name": "Rondehoeploop",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-410",
+      "name": "Bijlmerrun",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-411",
+      "name": "Zaanbocht Run",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-412",
+      "name": "De Vissenloop",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-413",
+      "name": "Amsterdam UMC Run",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-414",
+      "name": "Grachtenloop Haarlem",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-415",
+      "name": "Vechtloop Weesp",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-416",
+      "name": "Amsterdam Pride Run",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-417",
+      "name": "Halve van Haarlem",
+      "previousSource": "https://runphy.nl/events/provinces/noord-holland",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    },
+    {
+      "id": "ra-428",
+      "name": "Europe Triathlon Duathlon Championships Cáceres 2027",
+      "previousSource": "https://europe.triathlon.org/news/europe-triathlon-announces-2027-championship-calendar",
+      "reason": "official_event_or_signup_url_not_yet_evidenced"
+    }
+  ]
+}
