@@ -226,7 +226,7 @@ async function chooseCloud(){
   alertPrefs=prefs;
   marketingPref=marketing;marketingReady=true;
   cloudEvents=cloud;
-  savedApi().useCloud(cloud.map(e=>e.event_id));
+  savedApi().useCloud(cloud.map(e=>e.event_id),Object.fromEntries(cloud.map(e=>[e.event_id,e.season_status])));
   mode='cloud';setStatus('Cloudseizoen geladen. Nieuwe wijzigingen synchroniseren automatisch.');showSignedIn();
  }catch{if(owner===user?.id&&version===authVersion)setStatus('Cloudseizoen ophalen mislukt. Je lokale gegevens zijn behouden.')}
 }
@@ -243,18 +243,25 @@ async function importLocal(){
  }catch{if(owner===user?.id&&version===authVersion)setStatus('Importeren is mislukt. Je lokale favorieten zijn niet verwijderd.')}
 }
 async function setSeasonStatus(eventId,statusValue){
- if(!user||mode!=='cloud'||!['interested','registered','completed'].includes(statusValue))return;
+ if(!user||mode!=='cloud'||!['interested','registered','completed'].includes(statusValue))return false;
  const currentUser=user.id,version=authVersion;
  let error;
  try{
   const result=await client.from('raceatlas_saved_events').update({season_status:statusValue,updated_at:new Date().toISOString()}).eq('user_id',currentUser).eq('event_id',eventId);
   error=result.error;
  }catch{error=new Error('Netwerkfout')}
- if(error){if(currentUser===user?.id&&version===authVersion)setStatus('Status opslaan is mislukt. Probeer het opnieuw.');return}
- if(currentUser!==user?.id||version!==authVersion)return;
+ if(error){if(currentUser===user?.id&&version===authVersion)setStatus('Status opslaan is mislukt. Probeer het opnieuw.');return false}
+ if(currentUser!==user?.id||version!==authVersion)return false;
  cloudEvents=cloudEvents.map(item=>item.event_id===eventId?{...item,season_status:statusValue}:item);
+ savedApi()?.setCloudStatus?.(eventId,statusValue);
  showSignedIn();setStatus('Wedstrijdstatus opgeslagen.');
+ return true;
 }
+// Dashboard and account settings use one authenticated source of truth.
+window.TriZentroAccount={setSeasonStatus:(id,status)=>{
+ const normalized=status==='planned'?'interested':status;
+ return setSeasonStatus(id,normalized);
+}};
 function renderStatusControls(){
  const container=el('div'),heading=el('h3','Mijn wedstrijdstatus');
  container.className='raAccountStatuses';
