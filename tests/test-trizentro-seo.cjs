@@ -13,6 +13,9 @@ assert.ok(robots.includes('Sitemap: https://trizentro.com/sitemap.xml'),'Incorre
 assert.ok(!robots.includes('samknook.github.io'),'Old domain must not be promoted');
 assert.ok(!sitemap.includes('samknook.github.io'),'Old sitemap URL found');
 assert.ok(!sitemap.includes('/raceatlas/wedstrijden/'),'Old race detail URLs found');
+const sharedNav=fs.readFileSync(base+'shared-ui.js','utf8');
+for(const canonical of ["routePath('events/')","routePath('seizoen/')","routePath('account/')","routePath('performance/')","routePath('organisatoren/')"])
+ assert.ok(sharedNav.includes(canonical),'Shared nav must use central canonical route '+canonical);
 const detailFiles=fs.readdirSync(base+'events/wedstrijden').filter(n=>n.endsWith('.html'));
 assert.ok(detailFiles.length>=400,'Some races missing from canonical index');
 for(const name of detailFiles)assert.ok(sitemap.includes('<loc>https://trizentro.com/events/wedstrijden/'+name+'</loc>'),'Sitemap missing '+name);
@@ -38,9 +41,6 @@ for(const name of detailFiles){
  assert.ok(page.includes('/events/?ra_alert='),'Detail page missing direct Inschrijfradar signup: '+name);
  assert.ok(page.includes('href="/events/?event='),'Race detail must open canonical Events calendar: '+name);
  assert.ok(page.includes('href="/performance/"'),'Race detail must open canonical Performance: '+name);
- assert.ok(page.includes('href="/seizoen/"'),'Race detail nav must open canonical Season: '+name);
- assert.ok(page.includes('href="/account/"'),'Race detail nav must open canonical Account: '+name);
- assert.ok(page.includes('href="/organisatoren/"'),'Race detail nav must open canonical Organizers: '+name);
  assert.ok(page.includes('href="/organisatoren/?onderwerp='),'Claim event form must use canonical organizer route: '+name);
  assert.ok(!page.includes('href="../../performance.html"'),'Race detail must not promote legacy Performance URL: '+name);
  assert.ok(!page.includes('href="../?event='),'Race detail must not link to legacy calendar: '+name);
