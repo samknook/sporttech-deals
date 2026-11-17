@@ -48,3 +48,14 @@
 - De embedded catalogus telt na beide toevoegingen 170 evenementen. Hiervan hebben 108 nog geen als officieel bevestigde datum gemarkeerd, acht hebben geen exacte datum en acht hebben een datum vóór 17 november 2026. Dit zijn datasetstatussen, geen HTTP-linkcontroles.
 - De kalenderkaarten én de detailweergave zijn aangepast zodat niet-officieel bevestigde `date`-velden niet als definitieve datum worden gepresenteerd.
 - **Nog geen livegang:** voor de volledige catalogus is nog geen individuele HTTP- en broninhoudcontrole van alle 170 bestemmingen uitgevoerd; ook detailpagina's en de e-mailketen zijn niet volledig end-to-end getest.
+
+## Extra ontdekte evenementen en geautomatiseerde linkcheck
+- DTS Ouderkerk (30 mei), DTS Haarlemmermeer (18 juli), DTS GP Zandvoort (14 augustus), DTS Bosbaan (25 september) en Triathlon Epe (22 augustus) zijn toegevoegd met bron op officiële organisatiepagina.
+- GO Triathlon Brouwersdam (5 juni), Herkingen (4 september), Zierikzee (25 september) toegevoegd met officiële bron via GO Sport Events. De evenementpagina van Brouwersdam bevestigt ook de 2027 inschrijfopening.
+- Triathlon Veenendaal (28 augustus), Maasmarathon (2 mei) en RUNFORESTRUN Drentsche Aa (27 februari) kregen een officieel bevestigde datum na controle van de eigen organisator.
+- Dublin Marathon organisatorlink specifieker gemaakt; 2027-datum (24 oktober) in officiële informatie bevestigd.
+- De publieke race-index op main bevatte **al 168** evenementen. Een deel van de bestaande regressietests eist 423 en is niet afgestemd op de huidige gecureerde kalender; het testverschil is niet veroorzaakt door het verwijderen van records in deze branch.
+- Eerste GitHub Actions HTTP-audit bij 175 evenementen: **169 bereikbaar, zes aandachtspunten**. Vier van deze zes kregen bij officiële bronzoekopdrachten een pagina terug. HTTP 403/502 of verbreking kan anti-botbeleid of tijdelijke problemen zijn; het is niet automatisch bewijs dat een evenement ongeldig is.
+- Nieuwe GitHub Actions audit wordt opnieuw uitgevoerd na toevoeging van de drie GO-evenementen en linkwijzigingen.
+- Stand branch na aanvullingen: **178 unieke evenementen**; 73 datum als officieel gemarkeerd, 105 niet, acht records zonder exacte datum en acht historische records vóór 17 november 2026. Syntactisch zijn 178 officiële HTTPS-URLs aanwezig.
+- **Release blijft geblokkeerd:** HTTP-bereikbaarheid controleert niet dat de bron inhoudelijk het evenement ondersteunt, dat exacte editie en datum juist zijn of dat de detailpagina en email-automatisering werken. Eerdere regressiesuite faalt ook voor deels verouderde aannames.
