@@ -1,0 +1,35 @@
+name: Verify restored winter races on TriZentro production
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/trizentro-winter-live-check.yml'
+  workflow_dispatch:
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Inspect canonical live routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          for url in \
+            'https://trizentro.com/events/' \
+            'https://trizentro.com/events/wedstrijden/kerstmannenrun-schoorl-ra-347.html' \
+            'https://trizentro.com/events/wedstrijden/kerstcross-opmeer-ra-445.html' \
+            'https://trizentro.com/events/wedstrijden/snertloop-t-veld-ra-346.html'; do
+            echo "CHECK $url"
+            status=$(curl -L --max-time 20 -s -w '%{http_code}' -o /tmp/tri-page "$url")
+            echo "HTTP $status, bytes $(wc -c </tmp/tri-page)"
+            if [ "$status" != 200 ]; then
+              exit 1
+            fi
+            if [[ "$url" == *kerstmannenrun* ]]; then
+              grep -qi 'Kerstmannenrun Schoorl' /tmp/tri-page
+              grep -q 'kerstmannenrun.nl' /tmp/tri-page
+            fi
+          done
+          curl -fsSL --max-time 20 'https://trizentro.com/raceatlas/organizer-sync.js' | grep -q 'publishedRace'
+          curl -fsSL --max-time 20 'https://trizentro.com/events/' | grep -q 'Kerstmannenrun Schoorl'
+          echo "VERIFIED: winter races live and catalog sync updated"
