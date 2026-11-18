@@ -96,7 +96,7 @@
         }
         if(r.last_verified_at){
           const checked=fmtDate(r.last_verified_at);
-          if(DATE(checked)&&!newerAutoDate){e.sourceCheckedOn=checked;changed=true}
+          if(DATE(checked)&&!newerAutoDate&&e.sourceCheckedOn!==checked){e.sourceCheckedOn=checked;changed=true}
         }
         if(!newerAutoDate && HTTPS(r.verification_source_url) && ['organizer','unclassified'].includes(r.source_category) && r.organizer_link_status==='verified'){
           e.source=r.verification_source_url;
