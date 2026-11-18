@@ -1,0 +1,27 @@
+name: RaceAtlas missing official events regression
+on:
+  pull_request:
+    paths:
+      - 'docs/raceatlas/index.html'
+      - 'docs/raceatlas/organizer-sync.js'
+      - 'docs/raceatlas/details.js'
+      - 'tests/raceatlas-missing-races.test.cjs'
+      - '.github/workflows/raceatlas-missing-races.yml'
+  workflow_dispatch:
+jobs:
+  verify-restored-races:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/raceatlas-missing-races.test.cjs
+      - name: Build official public race pages
+        run: |
+          TRIZENTRO_DOMAIN_CONFIRMED=true node scripts/build-trizentro-event-pages.cjs
+          node scripts/build-trizentro-platform-shell.cjs
+          test -f docs/events/wedstrijden/kerstmannenrun-schoorl-ra-347.html
+          test -f docs/events/wedstrijden/kerstcross-opmeer-ra-445.html
