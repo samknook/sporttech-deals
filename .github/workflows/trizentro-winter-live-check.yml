@@ -30,6 +30,8 @@ jobs:
               grep -q 'kerstmannenrun.nl' /tmp/tri-page
             fi
           done
-          curl -fsSL --max-time 20 'https://trizentro.com/raceatlas/organizer-sync.js' | grep -q 'publishedRace'
-          curl -fsSL --max-time 20 'https://trizentro.com/events/' | grep -q 'Kerstmannenrun Schoorl'
+          curl -fsSL --max-time 20 -o /tmp/tri-sync 'https://trizentro.com/raceatlas/organizer-sync.js'
+          grep -q 'publishedRace' /tmp/tri-sync
+          curl -fsSL --max-time 20 -o /tmp/tri-events 'https://trizentro.com/events/'
+          grep -q 'Kerstmannenrun Schoorl' /tmp/tri-events
           echo "VERIFIED: winter races live and catalog sync updated"
