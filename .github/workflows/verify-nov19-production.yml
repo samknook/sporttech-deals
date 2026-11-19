@@ -1,0 +1,33 @@
+name: Verify new 2027 races on TriZentro live
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/verify-nov19-production.yml'
+  workflow_dispatch:
+jobs:
+  verify-new-races:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check published event pages and official links
+        shell: bash
+        run: |
+          set -euo pipefail
+          for item in \
+            'triathlon-nieuwkoop-ra-236.html|Triathlon Nieuwkoop' \
+            'vissenrun-ijmuiden-2027-ra-448.html|VissenRun IJmuiden' \
+            'duin-strandloop-katwijk-2027-ra-451.html|Duin/strandloop Katwijk' \
+            'sinterklaasloop-katwijk-2026-ra-454.html|Sinterklaasloop Katwijk'; do
+              file="${item%%|*}"
+              expected="${item#*|}"
+              url="https://trizentro.com/events/wedstrijden/$file"
+              status=$(curl -LsS --max-time 20 -o /tmp/tri-race -w '%{http_code}' "$url")
+              printf '%s %s\n' "$status" "$url"
+              test "$status" = 200
+              grep -Fq "$expected" /tmp/tri-race
+          done
+          curl -fsSL --max-time 25 -o /tmp/tri-catalog 'https://trizentro.com/events/'
+          grep -Fq 'VissenRun IJmuiden 2027' /tmp/tri-catalog
+          grep -Fq 'Triathlon Nieuwkoop' /tmp/tri-catalog
+          echo "All newly added official race pages are visible on production"
