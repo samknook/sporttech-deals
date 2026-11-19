@@ -1,0 +1,25 @@
+name: TriZentro officially verified race additions
+on:
+  pull_request:
+    paths:
+      - 'docs/raceatlas/index.html'
+      - 'tests/official-races-nov19.test.cjs'
+      - '.github/workflows/official-races-nov19.yml'
+  workflow_dispatch:
+jobs:
+  race-additions:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/official-races-nov19.test.cjs
+      - name: Build race-specific event pages
+        run: |
+          TRIZENTRO_DOMAIN_CONFIRMED=true node scripts/build-trizentro-event-pages.cjs
+          node scripts/build-trizentro-platform-shell.cjs
+          test -f docs/events/wedstrijden/triathlon-nieuwkoop-ra-236.html
+          test -f docs/events/wedstrijden/vissenrun-ijmuiden-2027-ra-448.html
