@@ -11,6 +11,7 @@ test('anonymous client tracker compiles, uses only coarse acquisition fields',()
  new vm.Script(track,{filename:'tracking.js'});
  assert.match(track,/utm_source/);assert.match(track,/utm_campaign/);
  assert.match(track,/kind==='site_view'\?\{eventId,kind,\.\.\.conversionSource\(\)\}/);
+ assert.match(track,/kind==='season_save'\|\|kind==='radar_intent'\|\|kind==='detail_view'/);
  assert.doesNotMatch(track,/localStorage|document\.cookie|userAgent|clientId|visitorId/);
  assert.match(track,/sessionStorage\.setItem\(ATTRIBUTION_KEY/);
  assert.match(track,/30\*60\*1000/);

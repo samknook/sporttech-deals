@@ -32,15 +32,15 @@ Deno.serve(async req=>{
    const {data:conversions,error:conversionError}=await db.from("trizentro_conversion_daily")
      .select("day,event_id,kind,channel,campaign,actions").gte("day",start).order("day",{ascending:false}).limit(2000);
    if(conversionError)throw conversionError;
-   const actionByChannel=new Map<string,{saves:number,radarIntents:number}>();
-   const actionByCampaign=new Map<string,{saves:number,radarIntents:number}>();
+   const actionByChannel=new Map<string,{opens:number,saves:number,radarIntents:number}>();
+   const actionByCampaign=new Map<string,{opens:number,saves:number,radarIntents:number}>();
    for(const x of conversions||[]){
     const n=Math.max(0,Number(x.actions)||0);
-    const field:"saves"|"radarIntents"=x.kind==="season_save"?"saves":"radarIntents";
-    if(!actionByChannel.has(x.channel))actionByChannel.set(x.channel,{saves:0,radarIntents:0});
+    const field:"opens"|"saves"|"radarIntents"=x.kind==="event_open"?"opens":x.kind==="season_save"?"saves":"radarIntents";
+    if(!actionByChannel.has(x.channel))actionByChannel.set(x.channel,{opens:0,saves:0,radarIntents:0});
     actionByChannel.get(x.channel)![field]+=n;
     if(x.campaign!=="none"){
-     if(!actionByCampaign.has(x.campaign))actionByCampaign.set(x.campaign,{saves:0,radarIntents:0});
+     if(!actionByCampaign.has(x.campaign))actionByCampaign.set(x.campaign,{opens:0,saves:0,radarIntents:0});
      actionByCampaign.get(x.campaign)![field]+=n;
     }
    }
@@ -56,8 +56,9 @@ Deno.serve(async req=>{
     total:(counts||[]).reduce((n,x)=>n+Math.max(0,Number(x.pageviews)||0),0),
     channels:[...byChannel.entries()].map(([channel,pageviews])=>({channel,pageviews})).sort((a,b)=>b.pageviews-a.pageviews),
     campaigns:[...byCampaign.entries()].map(([campaign,pageviews])=>({campaign,pageviews})).sort((a,b)=>b.pageviews-a.pageviews).slice(0,30),
-    conversionMetric:"save_actions_and_radar_entry_clicks_not_unique_users_or_confirmed_subscriptions",
+    conversionMetric:"event_detail_opens_save_actions_and_radar_entry_clicks_not_unique_users_or_confirmed_subscriptions",
     conversions:{
+     opens:[...actionByChannel.values()].reduce((n,x)=>n+x.opens,0),
      saves:[...actionByChannel.values()].reduce((n,x)=>n+x.saves,0),
      radarIntents:[...actionByChannel.values()].reduce((n,x)=>n+x.radarIntents,0),
      channels:[...actionByChannel.entries()].map(([channel,actions])=>({channel,...actions})),

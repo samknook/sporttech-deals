@@ -47,9 +47,9 @@ test('admin reporting restricts access and labels conversion totals accurately',
  const ui=read('docs/raceatlas/organizer-review-admin.js');
  const page=read('docs/raceatlas/organizer-review-admin.html');
  assert.ok(edge.indexOf('trizentro_admin!==true')<edge.indexOf('trizentro_conversion_daily'));
- assert.match(edge,/save_actions_and_radar_entry_clicks_not_unique_users_or_confirmed_subscriptions/);
+ assert.match(edge,/event_detail_opens_save_actions_and_radar_entry_clicks_not_unique_users_or_confirmed_subscriptions/);
  new vm.Script(ui);
- assert.match(ui,/acquisitionSaves/);assert.match(ui,/acquisitionRadar/);
+ assert.match(ui,/acquisitionOpens/);assert.match(ui,/acquisitionSaves/);assert.match(ui,/acquisitionRadar/);
  assert.match(page,/geen unieke sporters of bevestigde e-mailaanmeldingen/);
 });
 test('all new race pages, save and radar CTAs, and sitemap are generated',()=>{

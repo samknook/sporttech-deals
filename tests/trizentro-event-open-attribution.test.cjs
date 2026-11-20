@@ -1,0 +1,30 @@
+'use strict';
+const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const root=path.resolve(__dirname,'..'),load=p=>fs.readFileSync(path.join(root,p),'utf8');
+test('attributed event opens travel through anonymous browser source labels',()=>{
+ const track=load('docs/raceatlas/tracking.js'),edge=load('supabase/functions/raceatlas-track-outbound/index.ts');
+ new vm.Script(track);
+ assert.match(track,/kind==='season_save'\|\|kind==='radar_intent'\|\|kind==='detail_view'/);
+ assert.match(track,/conversionSource\(\)/);
+ assert.match(edge,/kind==="detail_view"/);
+ assert.match(edge,/p_kind:"event_open"/);
+ assert.match(edge,/raceatlas_record_outbound_click/);
+ assert.doesNotMatch(edge,/JSON\.stringify\(\{.*userId/);
+});
+test('admin funnel reports three distinct actions per campaign under verified admin access',()=>{
+ const edge=load('supabase/functions/trizentro-organizer-review-admin/index.ts');
+ const ui=load('docs/raceatlas/organizer-review-admin.js');
+ const html=load('docs/raceatlas/organizer-review-admin.html');
+ new vm.Script(ui);
+ assert.ok(edge.indexOf('trizentro_admin!==true')>=0);
+ assert.ok(edge.indexOf('trizentro_admin!==true')<edge.indexOf('trizentro_conversion_daily'));
+ assert.match(edge,/const field:"opens"\|"saves"\|"radarIntents"/);
+ assert.match(edge,/opens:\[\.\.\.actionByChannel.values\(\)\]/);
+ assert.match(edge,/save_actions_and_radar_entry_clicks_not_unique_users_or_confirmed_subscriptions/);
+ assert.match(ui,/campaignStats/);
+ assert.match(ui,/metrics.opens/);
+ assert.match(ui,/metrics.saves/);
+ assert.match(ui,/metrics.radarIntents/);
+ assert.match(html,/id="acquisitionOpens"/);
+ assert.match(html,/bevestigde e-mailaanmeldingen/);
+});
