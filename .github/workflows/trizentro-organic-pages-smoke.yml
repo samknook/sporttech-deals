@@ -1,0 +1,27 @@
+name: TriZentro organic pages production check
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/trizentro-organic-pages-smoke.yml'
+  workflow_dispatch:
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Verify six new public SEO routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          for slug in hardloopwedstrijden-2027 hardloopwedstrijden-noord-holland-2027 hardloopwedstrijden-zuid-holland-2027 triatlons-2027 gravel-evenementen-2027 wielertochten-2027; do
+            url="https://trizentro.com/ontdek/$slug/"
+            status=$(curl -L --max-time 20 -s -o /tmp/trizentro-seo -w '%{http_code}' "$url")
+            echo "$slug HTTP $status"
+            test "$status" = 200
+            grep -q 'rel="canonical"' /tmp/trizentro-seo
+            grep -q 'Officiële organisator' /tmp/trizentro-seo
+          done
+          curl -fsSL -o /tmp/trizentro-sitemap https://trizentro.com/sitemap.xml
+          grep -q 'https://trizentro.com/ontdek/hardloopwedstrijden-2027/' /tmp/trizentro-sitemap
+          echo 'Six organic landing pages verified on real website'
