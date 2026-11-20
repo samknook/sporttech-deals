@@ -61,12 +61,13 @@ async function loadAcquisition(){
   const channels=$('acquisitionChannels'),campaigns=$('acquisitionCampaigns');
   channels.replaceChildren();campaigns.replaceChildren();
   $('acquisitionTotal').textContent=new Intl.NumberFormat('nl-NL').format(data.total||0);
+  $('acquisitionOpens').textContent=new Intl.NumberFormat('nl-NL').format(data.conversions?.opens||0);
   $('acquisitionSaves').textContent=new Intl.NumberFormat('nl-NL').format(data.conversions?.saves||0);
   $('acquisitionRadar').textContent=new Intl.NumberFormat('nl-NL').format(data.conversions?.radarIntents||0);
   const conversionRows=$('acquisitionConversions');conversionRows.replaceChildren();
   for(const row of data.conversions?.channels||[]){
    const item=el('div',undefined,'bar');item.style.padding='8px 0';
-   const label=el('span',(channelLabels[row.channel]||row.channel)+': '+new Intl.NumberFormat('nl-NL').format(row.saves||0)+' bewaard · '+new Intl.NumberFormat('nl-NL').format(row.radarIntents||0)+' radar geopend');
+   const label=el('span',(channelLabels[row.channel]||row.channel)+': '+new Intl.NumberFormat('nl-NL').format(row.opens||0)+' geopend · '+new Intl.NumberFormat('nl-NL').format(row.saves||0)+' bewaard · '+new Intl.NumberFormat('nl-NL').format(row.radarIntents||0)+' radar geopend');
    item.append(label);conversionRows.append(item);
   }
   if(!conversionRows.childNodes.length)conversionRows.append(el('p','Nog geen geregistreerde acties.','hint'));
@@ -80,7 +81,17 @@ async function loadAcquisition(){
    }
   };
   renderRows(channels,data.channels||[],item=>channelLabels[item.channel]||item.channel);
-  renderRows(campaigns,data.campaigns||[],item=>item.campaign);
+  const campaignStats=new Map((data.conversions?.campaigns||[]).map(x=>[x.campaign,x]));
+  const allCampaigns=new Map((data.campaigns||[]).map(x=>[x.campaign,x.pageviews||0]));
+  for(const [name] of campaignStats)if(!allCampaigns.has(name))allCampaigns.set(name,0);
+  if(!allCampaigns.size)campaigns.append(el('p','Nog geen campagnes gemeten.','hint'));
+  for(const [name,pageviews] of allCampaigns){
+   const metrics=campaignStats.get(name)||{opens:0,saves:0,radarIntents:0};
+   const row=el('div',undefined,'bar');row.style.borderBottom='1px solid #e4ebe4';row.style.padding='9px 0';
+   const label=el('span',name);label.style.fontWeight='750';
+   const numbers=el('span',new Intl.NumberFormat('nl-NL').format(pageviews)+' weergaven · '+new Intl.NumberFormat('nl-NL').format(metrics.opens||0)+' wedstrijdopeningen · '+new Intl.NumberFormat('nl-NL').format(metrics.saves||0)+' bewaard · '+new Intl.NumberFormat('nl-NL').format(metrics.radarIntents||0)+' radar-openingen','hint');
+   row.append(label,numbers);campaigns.append(row);
+  }
   $('acquisitionStatus').textContent='Bijgewerkt. Geaggregeerde paginaweergaven, geen unieke bezoekers.';
  }catch(err){$('acquisitionStatus').textContent=err.message==='access_denied'?'Alleen beheerders kunnen deze cijfers zien.':'Bereik kon niet worden opgehaald.'}
  finally{button.disabled=false}
