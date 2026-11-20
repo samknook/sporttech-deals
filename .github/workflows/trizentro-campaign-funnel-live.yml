@@ -1,0 +1,28 @@
+name: TriZentro campaign funnel live verification
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/trizentro-campaign-funnel-live.yml'
+  workflow_dispatch:
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Confirm real site serves attribution and admin funnel assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL --max-time 25 -o /tmp/track https://trizentro.com/raceatlas/tracking.js
+          grep -q 'kind===.season_save.' /tmp/track
+          grep -q 'kind===.detail_view.' /tmp/track
+          grep -q 'utm_campaign' /tmp/track
+          curl -fsSL --max-time 25 -o /tmp/admin https://trizentro.com/raceatlas/organizer-review-admin.html
+          grep -q 'acquisitionOpens' /tmp/admin
+          grep -q 'acquisitionSaves' /tmp/admin
+          grep -q 'acquisitionRadar' /tmp/admin
+          curl -fsSL --max-time 25 -o /tmp/adminjs https://trizentro.com/raceatlas/organizer-review-admin.js
+          grep -q 'campaignStats' /tmp/adminjs
+          grep -q 'metrics.opens' /tmp/adminjs
+          echo 'Production campaign funnel assets verified'
