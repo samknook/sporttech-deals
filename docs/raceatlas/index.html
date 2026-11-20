@@ -435,8 +435,9 @@ function restoreSearchFromUrl(){
  for(const id of SHARE_FIELDS){
   const input=$(id),value=params.get('ra_'+id);
   if(value===null||value.length>150)continue;
-  if(input.tagName==='SELECT'&&!Array.from(input.options).some(o=>o.value===value))continue;
-  input.value=id==='sport'&&value==='Wielrennen'?'Fietsen':value;
+  const normalized=id==='sport'&&value==='Wielrennen'?'Fietsen':value;
+  if(input.tagName==='SELECT'&&!Array.from(input.options).some(o=>o.value===normalized))continue;
+  input.value=normalized;
  }
  for(const id of ['future','onlyVerified']){
   const value=params.get('ra_'+id);
