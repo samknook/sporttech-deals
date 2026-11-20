@@ -1,0 +1,29 @@
+name: RBR Almere 2027 production smoke
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/rbr-almere-production-smoke.yml'
+  workflow_dispatch:
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Validate RBR Almere event and saved season route on production
+        shell: bash
+        run: |
+          set -euo pipefail
+          url='https://trizentro.com/events/wedstrijden/rbr-almere-2027-ra-219.html'
+          status=$(curl -sSL --max-time 25 -o /tmp/rbr-almere -w '%{http_code}' "$url")
+          echo "RBR Almere event: HTTP $status"
+          test "$status" = 200
+          grep -q 'RBR Almere 2027' /tmp/rbr-almere
+          grep -q 'id="saveRace"' /tmp/rbr-almere
+          grep -q 'TriZentroEventSaveId="ra-219"' /tmp/rbr-almere
+          grep -q 'rbr-almere.nl/wedstrijdinformatie/' /tmp/rbr-almere
+          curl -fsSL --max-time 25 -o /tmp/calendar 'https://trizentro.com/events/'
+          grep -q 'RBR Almere 2027' /tmp/calendar
+          curl -fsSL --max-time 25 -o /tmp/sitemap 'https://trizentro.com/sitemap.xml'
+          grep -q 'rbr-almere-2027-ra-219.html' /tmp/sitemap
+          echo 'RBR Almere 2027 confirmed live in calendar, own page, sitemap and save action'
