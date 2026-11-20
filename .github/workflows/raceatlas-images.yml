@@ -8,17 +8,12 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
-  pages: write
-  id-token: write
 concurrency:
   group: raceatlas-images
   cancel-in-progress: false
 jobs:
   install-and-publish:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: https://samknook.github.io/sporttech-deals/raceatlas/
     steps:
       - uses: actions/checkout@v4
         with:
@@ -73,11 +68,3 @@ jobs:
             git commit -m "Publish validated RaceAtlas event images"
             git push
           fi
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-      - name: Upload site
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: docs
-      - name: Deploy RaceAtlas and full website
-        uses: actions/deploy-pages@v4
