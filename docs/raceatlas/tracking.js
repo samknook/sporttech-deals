@@ -62,7 +62,7 @@
   }
   function track(eventId,kind){
     if(!enabled()||!valid(eventId,kind))return false;
-    const payload=JSON.stringify(kind==='site_view'?{eventId,kind,...conversionSource()}:(kind==='season_save'||kind==='radar_intent')?{eventId,kind,...conversionSource()}:{eventId,kind});
+    const payload=JSON.stringify(kind==='site_view'?{eventId,kind,...conversionSource()}:(kind==='season_save'||kind==='radar_intent'||kind==='detail_view')?{eventId,kind,...conversionSource()}:{eventId,kind});
     try{
       if(navigator.sendBeacon){
         const blob=new Blob([payload],{type:'text/plain;charset=UTF-8'});
