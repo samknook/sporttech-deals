@@ -1,0 +1,27 @@
+name: TriZentro live cycling filter verification
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/trizentro-cycling-live-smoke.yml'
+  workflow_dispatch:
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Verify both cycling labels and preselected 2027 gravel links
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL --max-time 25 -o /tmp/tri-events 'https://trizentro.com/events/?ra_sport=Fietsen&ra_year=2027'
+          grep -q 'Fietsen en wielrennen' /tmp/tri-events
+          grep -q "sport==='Fietsen'?(e.sport==='Fietsen'||e.sport==='Wielrennen')" /tmp/tri-events
+          curl -fsSL --max-time 25 -o /tmp/tri-gravel 'https://trizentro.com/ontdek/gravel-evenementen-2027/'
+          grep -q 'ra_sport=Fietsen' /tmp/tri-gravel
+          grep -q 'ra_distanceCategory=gravel' /tmp/tri-gravel
+          curl -fsSL --max-time 25 -o /tmp/tri-bike 'https://trizentro.com/ontdek/wielertochten-2027/'
+          grep -q 'ra_sport=Fietsen' /tmp/tri-bike
+          curl -fsSL --max-time 25 -o /tmp/tri-sitemap 'https://trizentro.com/sitemap.xml'
+          grep -q '/ontdek/wielertochten-2027/' /tmp/tri-sitemap
+          echo 'Live cycling and gravel discovery routes verified'
