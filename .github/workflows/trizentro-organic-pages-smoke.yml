@@ -24,4 +24,7 @@ jobs:
           done
           curl -fsSL -o /tmp/trizentro-sitemap https://trizentro.com/sitemap.xml
           grep -q 'https://trizentro.com/ontdek/hardloopwedstrijden-2027/' /tmp/trizentro-sitemap
-          echo 'Six organic landing pages verified on real website'
+          curl -fsSL -o /tmp/trizentro-race https://trizentro.com/events/wedstrijden/kerstmannenrun-schoorl-ra-347.html
+          grep -q 'Deel via WhatsApp' /tmp/trizentro-race
+          grep -q 'https://wa.me/?text=' /tmp/trizentro-race
+          echo 'Six organic landing pages and direct WhatsApp sharing verified on real website'
