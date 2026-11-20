@@ -1,0 +1,19 @@
+name: RBR Almere 2027 discovery and saved season
+on:
+  pull_request:
+    paths:
+      - 'docs/raceatlas/index.html'
+      - 'tests/rbr-almere-2027.test.cjs'
+      - '.github/workflows/rbr-almere-2027.yml'
+  workflow_dispatch:
+jobs:
+  race-and-season:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/rbr-almere-2027.test.cjs

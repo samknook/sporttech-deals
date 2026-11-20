@@ -1,0 +1,37 @@
+'use strict';
+const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process');
+const root=path.resolve(__dirname,'..');
+const source=fs.readFileSync(path.join(root,'docs/raceatlas/index.html'),'utf8');
+const st=source.indexOf('const EVENTS=')+'const EVENTS='.length,ed=source.indexOf('];',st)+1;
+const events=JSON.parse(source.slice(st,ed));
+test('RBR Almere 2027 is verified, unique and searchable as duatlon',()=>{
+ const matches=events.filter(x=>x.id==='ra-219');
+ assert.equal(matches.length,1);
+ const e=matches[0];
+ assert.equal(e.date,'2027-04-18');
+ assert.equal(e.dateEvidence,'official');
+ assert.equal(e.sport,'Triatlon');
+ assert.match(e.discipline,/Duatlon/);
+ assert.match(e.distance,/5-28-5/);
+ assert.match(e.distance,/10-56-10/);
+ assert.equal(e.region,'Flevoland');
+ assert.match(e.officialEventUrl,/^https:\/\/rbr-almere\.nl\/wedstrijdinformatie\/$/);
+ assert.match(e.routeUrl,/rbr-almere\.nl\/wedstrijdinformatie\/parcours\/$/);
+ assert.ok(!e.registrationUrl,'Do not invent direct registration availability');
+});
+test('generated individual race page can be saved and links to organiser',()=>{
+ cp.execFileSync(process.execPath,[path.join(root,'scripts/build-trizentro-event-pages.cjs')],{cwd:root,encoding:'utf8',env:{...process.env,TRIZENTRO_DOMAIN_CONFIRMED:'true'}});
+ cp.execFileSync(process.execPath,[path.join(root,'scripts/build-trizentro-seo-hubs.cjs')],{cwd:root,encoding:'utf8'});
+ cp.execFileSync(process.execPath,[path.join(root,'scripts/build-trizentro-platform-shell.cjs')],{cwd:root,encoding:'utf8'});
+ const file=path.join(root,'docs/events/wedstrijden/rbr-almere-2027-ra-219.html');
+ const html=fs.readFileSync(file,'utf8');
+ assert.match(html,/RBR Almere 2027/);
+ assert.match(html,/id="saveRace"/);
+ assert.match(html,/TriZentroEventSaveId="ra-219"/);
+ assert.match(html,/\/raceatlas\/event-save\.js|\.\.\/event-save\.js/);
+ assert.match(html,/https:\/\/rbr-almere\.nl\/wedstrijdinformatie\//);
+ const index=fs.readFileSync(path.join(root,'docs/events/index.html'),'utf8');
+ assert.match(index,/RBR Almere 2027/);
+ const sitemap=fs.readFileSync(path.join(root,'docs/sitemap.xml'),'utf8');
+ assert.match(sitemap,/rbr-almere-2027-ra-219\.html/);
+});
