@@ -1,0 +1,19 @@
+name: TriZentro winter and discovery growth checks
+on:
+  pull_request:
+    paths:
+      - 'scripts/build-trizentro-seo-hubs.cjs'
+      - 'tests/trizentro-winter-hubs.test.cjs'
+      - '.github/workflows/trizentro-winter-hubs.yml'
+  workflow_dispatch:
+jobs:
+  winter-hubs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/trizentro-winter-hubs.test.cjs
