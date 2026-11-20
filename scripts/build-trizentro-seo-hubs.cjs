@@ -45,7 +45,7 @@ for(const c of configs){
  '<main><p class="eyebrow">Wedstrijdkalender · 2027</p><h1>'+esc(c.title)+'</h1><p class="lead">'+esc(c.intro)+'</p><p><a href="/events/">Alle sporten, plaatsen en filters bekijken</a></p>'+
  '<h2>Wedstrijden met bevestigde datum ('+matches.length+')</h2><ul class="races">'+cards+'</ul>'+
  '<p class="note">TriZentro is onafhankelijk. Een officiële datum is geen garantie dat inschrijving open is. Controleer prijs, starttijd, afstand en beschikbaarheid altijd bij de organisatie. Deze pagina toont wedstrijden die in de TriZentro-kalender staan.</p>'+
- '<h2>Ontdek meer wedstrijdkalenders</h2><p class="other">'+links+'</p><p><a href="/events/">Zoek verder in alle evenementen</a></p></main></body></html>';
+ '<h2>Ontdek meer wedstrijdkalenders</h2><p class="other">'+links+'</p><p><a href="/events/">Zoek verder in alle evenementen</a></p></main><script src="/raceatlas/tracking.js" defer></script></body></html>';
  const output=path.join(dir,c.slug);fs.mkdirSync(output,{recursive:true});
  fs.writeFileSync(path.join(output,'index.html'),document);
  pages.push({slug:c.slug,title:c.title,count:matches.length});
