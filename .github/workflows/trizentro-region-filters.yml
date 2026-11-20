@@ -1,0 +1,21 @@
+name: TriZentro regional filters and discovery
+on:
+  pull_request:
+    paths:
+      - 'docs/raceatlas/index.html'
+      - 'docs/raceatlas/i18n.js'
+      - 'scripts/build-trizentro-seo-hubs.cjs'
+      - 'tests/trizentro-region-filters.test.cjs'
+      - '.github/workflows/trizentro-region-filters.yml'
+  workflow_dispatch:
+jobs:
+  regional-discovery:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/trizentro-region-filters.test.cjs
