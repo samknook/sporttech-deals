@@ -1,0 +1,20 @@
+name: TriZentro cycling and gravel discovery regression
+on:
+  pull_request:
+    paths:
+      - 'docs/raceatlas/index.html'
+      - 'scripts/build-trizentro-seo-hubs.cjs'
+      - 'tests/trizentro-cycling-filter.test.cjs'
+      - '.github/workflows/trizentro-cycling-filter.yml'
+  workflow_dispatch:
+jobs:
+  cycling:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/trizentro-cycling-filter.test.cjs
