@@ -1,0 +1,21 @@
+name: TriZentro organic discovery landing pages
+on:
+  pull_request:
+    paths:
+      - 'scripts/build-trizentro-seo-hubs.cjs'
+      - 'scripts/build-trizentro-platform-shell.cjs'
+      - '.github/workflows/deploy-trizentro-pages.yml'
+      - 'tests/trizentro-seo-hubs.test.cjs'
+      - '.github/workflows/seo-hubs-check.yml'
+  workflow_dispatch:
+jobs:
+  generate-and-check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/trizentro-seo-hubs.test.cjs

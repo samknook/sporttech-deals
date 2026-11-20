@@ -44,6 +44,9 @@ for(const rel of pages){
 }
 // Clean public destinations. Each is built from the same source as its legacy
 // address, rather than maintaining independent copies of page content.
+// Index curated, substantial category landing pages generated from verified 2027 races.
+const seoManifest=path.join(base,'ontdek/manifest.json');
+const seoPages=fs.existsSync(seoManifest)?JSON.parse(fs.readFileSync(seoManifest,'utf8')):[];
 const routes=[
  {source:'raceatlas/index.html',destination:'events/index.html',base:'../raceatlas/',canonical:'events/'},
  {source:'raceatlas/index.html',destination:'seizoen/index.html',base:'../raceatlas/',canonical:'seizoen/'},
@@ -84,6 +87,10 @@ for(const route of routes){
   html=html.replace(/<\/head>/i,'<meta property="og:image" content="https://trizentro.com/social/trizentro-live-instagram.png"><meta name="twitter:card" content="summary_large_image"><script type="application/ld+json">'+JSON.stringify(identity)+'</script></head>');
  }
 
+ if(route.canonical==='events/'&&seoPages.length){
+  const discovery='<section aria-labelledby="tzSeoDiscover" style="padding:25px 22px;margin:26px 0;background:#f1f7ee;color:#153528;border-radius:15px"><h2 id="tzSeoDiscover">Ontdek wedstrijden per sport en regio</h2><p>Bekijk geselecteerde wedstrijdkalenders met bevestigde datums en officiële links.</p><div style="display:flex;gap:12px;flex-wrap:wrap">'+seoPages.map(x=>'<a style="display:inline-block;padding:9px 13px;border-radius:8px;background:#fff;color:#145e38;font-weight:700;text-decoration:none" href="/ontdek/'+x.slug+'/">'+x.title+'</a>').join('')+'</div></section>';
+  html=html.replace(/<\/main>/i,discovery+'</main>');
+ }
  fs.writeFileSync(target,html);
 }
 // Legacy URLs are for backwards compatibility, not for Google indexing.
@@ -125,6 +132,11 @@ const urls=[
  {pathname:'/performance/',priority:'0.9',frequency:'weekly'},
  {pathname:'/organisatoren/',priority:'0.5',frequency:'monthly'}
 ];
+for(const page of seoPages){
+ if(!/^[a-z0-9-]+$/.test(page.slug))continue;
+ if(fs.existsSync(path.join(base,'ontdek',page.slug,'index.html')))
+  urls.push({pathname:'/ontdek/'+page.slug+'/',priority:'0.8',frequency:'weekly'});
+}
 const publicTools=[
  'triathlon-calculator.html','race-planner.html','triatlon-afstanden.html',
  'first-70-3-race-week-checklist.html','70-3-readiness-check.html',
