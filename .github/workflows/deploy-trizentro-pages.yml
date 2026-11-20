@@ -6,6 +6,7 @@ on:
       - 'docs/**'
       - 'scripts/build-trizentro-event-pages.cjs'
       - 'scripts/build-trizentro-platform-shell.cjs'
+      - 'scripts/build-trizentro-seo-hubs.cjs'
       - '.github/trizentro-domain.json'
       - '.github/workflows/deploy-trizentro-pages.yml'
   pull_request:
@@ -14,6 +15,7 @@ on:
       - '.github/trizentro-domain.json'
       - 'scripts/build-trizentro-event-pages.cjs'
       - 'scripts/build-trizentro-platform-shell.cjs'
+      - 'scripts/build-trizentro-seo-hubs.cjs'
   workflow_dispatch:
 permissions:
   contents: read
@@ -34,12 +36,18 @@ jobs:
         env:
           TRIZENTRO_DOMAIN_CONFIRMED: 'true'
         run: node scripts/build-trizentro-event-pages.cjs
+      - name: Build official sport and regional search landing pages
+        run: node scripts/build-trizentro-seo-hubs.cjs
       - name: Build integrated Events, Organizers and Season routes
         run: node scripts/build-trizentro-platform-shell.cjs
       - name: Validate complete release
         run: |
           test -f docs/index.html
           test -f docs/events/index.html
+          test -f docs/ontdek/hardloopwedstrijden-2027/index.html
+          test -f docs/ontdek/gravel-evenementen-2027/index.html
+          grep -q '/ontdek/hardloopwedstrijden-2027/' docs/sitemap.xml
+          grep -q '/ontdek/gravel-evenementen-2027/' docs/sitemap.xml
           test -f docs/organisatoren/index.html
           test -f docs/raceatlas/organizer-dashboard.html
           test -f docs/raceatlas/organizer-dashboard.js
