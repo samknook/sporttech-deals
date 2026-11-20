@@ -1,0 +1,19 @@
+name: TriZentro race-sharing release
+on:
+  pull_request:
+    paths:
+      - 'scripts/build-trizentro-event-pages.cjs'
+      - 'docs/raceatlas/details.js'
+      - 'tests/event-whatsapp-sharing.test.cjs'
+      - '.github/workflows/event-whatsapp-sharing.yml'
+jobs:
+  race-sharing:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/event-whatsapp-sharing.test.cjs
