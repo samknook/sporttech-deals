@@ -16,5 +16,5 @@ test('Generated canonical race pages share the correct race URL',()=>{
  assert.ok(url);
  const message=new URL(url.replace(/&amp;/g,'&')).searchParams.get('text');
  assert.match(message,/Kerstmannenrun Schoorl/);
- assert.match(message,/https:\/\/trizentro\.com\/raceatlas\/wedstrijden\/kerstmannenrun-schoorl-ra-347\.html/);
+ assert.match(message,/https:\/\/trizentro\.com\/events\/wedstrijden\/kerstmannenrun-schoorl-ra-347\.html/);
 });
