@@ -1,0 +1,28 @@
+name: TriZentro related races production check
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/trizentro-related-races-production.yml'
+  workflow_dispatch:
+jobs:
+  verify-live-recommendations:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Verify related race recommendations work on production
+        shell: bash
+        run: |
+          set -euo pipefail
+          for slug in kerstmannenrun-schoorl-ra-347 gravel-one-fifty-2027-ra-455 triathlon-nieuwkoop-ra-236; do
+            url="https://trizentro.com/events/wedstrijden/$slug.html"
+            status=$(curl -sSL --max-time 25 -o /tmp/tri-event -w '%{http_code}' "$url")
+            echo "$slug HTTP $status"
+            test "$status" = "200"
+            grep -q 'Ook interessant voor jou' /tmp/tri-event
+            grep -q 'class="related-race"' /tmp/tri-event
+            grep -q '/events/wedstrijden/' /tmp/tri-event
+          done
+          curl -fsSL --max-time 25 -o /tmp/tri-calendar https://trizentro.com/events/
+          grep -q 'TRIZENTRO' /tmp/tri-calendar
+          echo 'Verified: related official races appear on live detail pages'
