@@ -6,7 +6,7 @@
 const ALLOWED_ORIGINS = new Set(["https://samknook.github.io","https://trizentro.com","https://www.trizentro.com"]);
 const PROJECT_URL = Deno.env.get("SUPABASE_URL") || "https://lpzndnxloykcthbsqcet.supabase.co";
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
-const allowedKinds = new Set(["organizer","registration","source","promotion","site_view","card_view","detail_view"]);
+const allowedKinds = new Set(["organizer","registration","source","promotion","site_view","card_view","detail_view","season_save","radar_intent"]);
 const CORS = {
   "Access-Control-Allow-Methods":"POST, OPTIONS",
   "Access-Control-Allow-Headers":"content-type",
@@ -50,6 +50,20 @@ Deno.serve(async (request:Request):Promise<Response>=>{
  if(!allowedKinds.has(kind)||!((eventId==="ra-site"&&kind==="site_view")||(/^ra-[0-9]{1,8}$/.test(eventId)&&kind!=="site_view")))return respond(400,{ok:false},origin);
  if(!SERVICE_KEY)return respond(503,{ok:false},origin);
  try{
+  if(kind==="season_save"||kind==="radar_intent"){
+   // Counts an actual save action or opening the radar flow — NOT an email
+   // confirmation, unique visitor, or verified registration.
+   const allowedChannels=new Set(["instagram","facebook","whatsapp","google","bing","search_other","social_other","email","referral","direct","campaign_other"]);
+   const channel=typeof data.channel==="string"&&allowedChannels.has(data.channel)?data.channel:"direct";
+   const campaign=typeof data.campaign==="string"&&/^[a-z0-9_-]{1,48}$/.test(data.campaign)?data.campaign:"none";
+   const conversion=await fetch(PROJECT_URL+"/rest/v1/rpc/trizentro_record_conversion",{
+    method:"POST",
+    headers:{"Content-Type":"application/json",apikey:SERVICE_KEY,Authorization:"Bearer "+SERVICE_KEY},
+    body:JSON.stringify({p_event_id:eventId,p_kind:kind,p_channel:channel,p_campaign:campaign}),
+    signal:AbortSignal.timeout(4000)
+   });
+   return conversion.ok?respond(202,{ok:true},origin):respond(503,{ok:false},origin);
+  }
   const result=await fetch(PROJECT_URL+"/rest/v1/rpc/raceatlas_record_outbound_click",{
    method:"POST",
    headers:{"Content-Type":"application/json",apikey:SERVICE_KEY,Authorization:"Bearer "+SERVICE_KEY},
