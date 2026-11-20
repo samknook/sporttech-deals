@@ -23,7 +23,7 @@ const configs=[
 ];
 const validOfficial=e=>{try{const u=new URL(e.officialEventUrl);return u.protocol==='https:'&&!u.username&&!u.password}catch{return false}};
 const eligible=all.filter(e=>/^ra-\d{1,8}$/.test(e.id||'')&&e.dateEvidence==='official'&&/^202[67]-\d{2}-\d{2}$/.test(e.date||'')&&validOfficial(e));
-const matchesFor=(e,c)=>e.date?.startsWith(String(c.year||2027)+'-')&&(!c.year||e.date>='2026-11-20')&&e.sport===c.sport&&(!c.region||String(e.region||'').toLowerCase().includes(c.region))&&(!c.gravel||/gravel/i.test((e.discipline||'')+' '+(e.name||'')));
+const matchesFor=(e,c)=>e.date?.startsWith(String(c.year||2027)+'-')&&(!c.year||e.date>='2026-11-20')&&(c.sport==='Wielrennen'?['Wielrennen','Fietsen'].includes(e.sport):e.sport===c.sport)&&(!c.region||(c.region==='noord-holland'&&e.region==='Waterland & West-Friesland')||String(e.region||'').toLowerCase().includes(c.region))&&(!c.gravel||/gravel/i.test((e.discipline||'')+' '+(e.name||'')));
 const availableConfigs=configs.filter(c=>eligible.filter(e=>matchesFor(e,c)).length>=3);
 const dir=path.join(root,'ontdek');
 fs.rmSync(dir,{recursive:true,force:true});fs.mkdirSync(dir,{recursive:true});
@@ -32,7 +32,7 @@ for(const c of availableConfigs){
  const matches=eligible.filter(e=>matchesFor(e,c)).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,32);
  if(matches.length<3)continue;
  const canonical='https://trizentro.com/ontdek/'+c.slug+'/';
- const calendarFilters=new URLSearchParams({ra_sport:c.sport,ra_year:String(c.year||2027),ra_onlyVerified:'1'});
+ const calendarFilters=new URLSearchParams({ra_sport:c.sport==='Wielrennen'?'Fietsen':c.sport,ra_year:String(c.year||2027),ra_onlyVerified:'1'});
  if(c.region)calendarFilters.set('ra_region',c.region.split('-').map(part=>part.charAt(0).toUpperCase()+part.slice(1)).join('-'));
  if(c.gravel)calendarFilters.set('ra_distanceCategory','gravel');
  const calendarUrl='/events/?'+calendarFilters.toString();
