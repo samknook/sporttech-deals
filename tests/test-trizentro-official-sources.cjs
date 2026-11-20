@@ -21,8 +21,14 @@ for(const event of events){
  assert.ok(!/championship-calendar/.test(event.officialEventUrl),
   'A generic championship announcement is not an event page: '+event.id);
 }
-for(const id of ['ra-28','ra-150','ra-161','ra-163','ra-236','ra-252','ra-264','ra-284','ra-304','ra-311','ra-316','ra-327','ra-330','ra-332','ra-429']){
- assert.ok(ids.has(id),'Official source found during research must be retained: '+id);
+// Keep confirmed, official-link entries published, but never reintroduce
+// draft events whose individual official registration/event page is missing.
+for(const id of ['ra-28','ra-236','ra-429']){
+ assert.ok(ids.has(id),'Verified published event disappeared: '+id);
+}
+for(const id of ['ra-150','ra-161','ra-163','ra-252','ra-264','ra-284','ra-304','ra-311','ra-316','ra-327','ra-330','ra-332']){
+ assert.ok(!ids.has(id),'Unverified draft wrongly restored to public calendar: '+id);
+ assert.ok(archive.events.some(event=>event.id===id),'Original unverified event must remain in the research archive: '+id);
 }
 for(const event of events){
  assert.ok(!/\/toertochten\/?$|\/evenementen\/?$/.test(new URL(event.officialEventUrl).pathname)

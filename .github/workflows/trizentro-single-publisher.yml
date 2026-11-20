@@ -1,0 +1,24 @@
+name: TriZentro single live release publisher verification
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/deploy-trizentro-pages.yml'
+      - '.github/workflows/publish-site.yml'
+      - '.github/workflows/deploy-trizentro.yml'
+      - '.github/workflows/publish.yml'
+      - 'tests/test-trizentro-official-sources.cjs'
+      - 'tests/trizentro-single-publisher.test.cjs'
+      - '.github/workflows/trizentro-single-publisher.yml'
+  workflow_dispatch:
+jobs:
+  publisher-check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/trizentro-single-publisher.test.cjs
+      - run: node tests/test-trizentro-official-sources.cjs

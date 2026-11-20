@@ -78,6 +78,25 @@ jobs:
       - name: Publish official domain
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Verify latest retention and campaign release pages on live domain
+        run: |
+          set -euo pipefail
+          for race in rbr-rotterdam-2027-ra-214 hydro-run-bike-run-nijkerk-2027-ra-206 hydro-run-bike-run-nunspeet-2027-ra-459; do
+            for attempt in $(seq 1 8); do
+              code=$(curl -sSL --max-time 20 -o /tmp/tri-event -w '%{http_code}' "https://trizentro.com/events/wedstrijden/$race.html") || code=000
+              if [ "$code" = 200 ] && grep -q 'id="saveRace"' /tmp/tri-event && grep -q 'data-ra-radar=' /tmp/tri-event; then break; fi
+              sleep 5
+            done
+            test "$code" = 200
+            grep -q 'id="saveRace"' /tmp/tri-event
+            grep -q 'data-ra-radar=' /tmp/tri-event
+          done
+          curl -fsSL --retry 5 --retry-delay 5 --max-time 25 -o /tmp/tri-tracking https://trizentro.com/raceatlas/tracking.js
+          grep -q 'radar_intent' /tmp/tri-tracking
+          curl -fsSL --retry 5 --retry-delay 5 --max-time 25 -o /tmp/tri-admin https://trizentro.com/raceatlas/organizer-review-admin.html
+          grep -q 'acquisitionOpens' /tmp/tri-admin
+          grep -q 'acquisitionSaves' /tmp/tri-admin
+          echo 'Verified latest release features on trizentro.com'
       - name: Verify new pages served by custom domain
         run: |
           for attempt in $(seq 1 12); do

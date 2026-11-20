@@ -7,17 +7,12 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
-  pages: write
-  id-token: write
 concurrency:
   group: raceatlas-final-cover-optimization
   cancel-in-progress: false
 jobs:
   optimize:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: https://samknook.github.io/sporttech-deals/raceatlas/
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -61,8 +56,3 @@ jobs:
             git commit -m "Optimize 13 remaining RaceAtlas major covers as WebP"
             git push
           fi
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v4
-        with:
-          path: docs
-      - uses: actions/deploy-pages@v4
