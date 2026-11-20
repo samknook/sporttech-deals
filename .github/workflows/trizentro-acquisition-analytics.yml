@@ -1,0 +1,22 @@
+name: TriZentro acquisition analytics
+on:
+  pull_request:
+    paths:
+      - 'docs/raceatlas/tracking.js'
+      - 'docs/raceatlas/organizer-review-admin.*'
+      - 'scripts/build-trizentro-seo-hubs.cjs'
+      - 'supabase/functions/raceatlas-track-outbound/index.ts'
+      - 'supabase/functions/trizentro-organizer-review-admin/index.ts'
+      - 'tests/trizentro-acquisition-analytics.test.cjs'
+      - '.github/workflows/trizentro-acquisition-analytics.yml'
+jobs:
+  privacy-and-attribution:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/trizentro-acquisition-analytics.test.cjs
