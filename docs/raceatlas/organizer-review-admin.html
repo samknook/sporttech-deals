@@ -20,6 +20,14 @@ button:disabled{opacity:.55;cursor:wait}.primary{background:#154b32;color:white}
 <section class="panel"><p id="status" role="status" aria-live="polite">Beheerdersrechten controleren…</p>
 <div id="denied" hidden><p>Deze pagina is alleen voor bevoegde TriZentro-beheerders. Gebruik eerst een bevestigd TriZentro-account en vraag zo nodig toegang aan bij het team.</p><a href="organisatoren.html">Terug naar organisatoren</a></div>
 <div id="app" hidden>
+<section aria-labelledby="acquisitionTitle">
+<h2 id="acquisitionTitle">Bereik en herkomst van bezoekers</h2>
+<p class="hint">Paginaweergaven per kanaal in de afgelopen 30 dagen. Geen unieke bezoekers, geen cookies en geen persoonsgegevens. Tellingen beginnen na activering van deze meting.</p>
+<div class="bar"><button id="acquisitionRefresh" type="button">Ververs bereik</button><strong id="acquisitionTotal">—</strong><span class="hint">gemeten paginaweergaven</span></div>
+<div id="acquisitionChannels" aria-live="polite"></div>
+<h3>Campagnes</h3><div id="acquisitionCampaigns"></div>
+<p id="acquisitionStatus" class="hint" role="status"></p>
+</section><hr style="border:none;border-top:1px solid #dce9de;margin:26px 0">
 <section aria-labelledby="grantTitle"><h2 id="grantTitle">Organisator toegang geven</h2>
 <p class="hint">Controleer de aanvraag via het officiële organisatoradres en verifieer dat dit e-mailadres bij het juiste TriZentro-account hoort. Pas daarna kun je de organisator toegang geven tot de cijfers en wijzigingsvoorstellen van één evenement.</p>
 <form id="grantForm" class="bar">
