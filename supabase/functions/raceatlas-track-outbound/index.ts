@@ -88,6 +88,21 @@ Deno.serve(async (request:Request):Promise<Response>=>{
     });
    }catch{}
   }
+  if(kind==="detail_view"){
+   // Funnel step: page/modal opened, not a unique visitor.
+   // Keep legacy detail counter intact even if coarse attribution fails.
+   const allowedChannels=new Set(["instagram","facebook","whatsapp","google","bing","search_other","social_other","email","referral","direct","campaign_other"]);
+   const channel=typeof data.channel==="string"&&allowedChannels.has(data.channel)?data.channel:"direct";
+   const campaign=typeof data.campaign==="string"&&/^[a-z0-9_-]{1,48}$/.test(data.campaign)?data.campaign:"none";
+   try{
+    await fetch(PROJECT_URL+"/rest/v1/rpc/trizentro_record_conversion",{
+     method:"POST",
+     headers:{"Content-Type":"application/json",apikey:SERVICE_KEY,Authorization:"Bearer "+SERVICE_KEY},
+     body:JSON.stringify({p_event_id:eventId,p_kind:"event_open",p_channel:channel,p_campaign:campaign}),
+     signal:AbortSignal.timeout(3500)
+    });
+   }catch{}
+  }
   // Unique daily estimates apply to views only; outbound clicks remain simple counts.
   if(kind==="site_view"||kind==="card_view"||kind==="detail_view"){
    try{
