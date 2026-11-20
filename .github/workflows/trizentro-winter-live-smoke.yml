@@ -1,0 +1,30 @@
+name: TriZentro live winter discovery verification
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/trizentro-winter-live-smoke.yml'
+  workflow_dispatch:
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Verify winter discovery and sitemap on actual production site
+        shell: bash
+        run: |
+          set -euo pipefail
+          for url in 'https://trizentro.com/ontdek/winterlopen-2026/' 'https://trizentro.com/events/' 'https://trizentro.com/events/wedstrijden/kerstmannenrun-schoorl-ra-347.html'; do
+            code=$(curl -fsSL --max-time 25 -o /tmp/trizentro-response -w '%{http_code}' "$url")
+            echo "$url: $code"
+            test "$code" = '200'
+          done
+          curl -fsSL --max-time 25 -o /tmp/winter 'https://trizentro.com/ontdek/winterlopen-2026/'
+          grep -q 'Kerstmannenrun Schoorl' /tmp/winter
+          grep -q 'Deel via WhatsApp' /tmp/winter
+          grep -q 'https://trizentro.com/ontdek/winterlopen-2026/' /tmp/winter
+          curl -fsSL --max-time 25 -o /tmp/events 'https://trizentro.com/events/'
+          grep -q '/ontdek/winterlopen-2026/' /tmp/events
+          curl -fsSL --max-time 25 -o /tmp/sitemap 'https://trizentro.com/sitemap.xml'
+          grep -q '<loc>https://trizentro.com/ontdek/winterlopen-2026/</loc>' /tmp/sitemap
+          echo 'New winter calendar live, internally linked, shareable, and included in sitemap'
