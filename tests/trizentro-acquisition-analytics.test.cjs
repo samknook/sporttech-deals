@@ -10,8 +10,10 @@ const seo=fs.readFileSync(path.join(root,'scripts/build-trizentro-seo-hubs.cjs')
 test('anonymous client tracker compiles, uses only coarse acquisition fields',()=>{
  new vm.Script(track,{filename:'tracking.js'});
  assert.match(track,/utm_source/);assert.match(track,/utm_campaign/);
- assert.match(track,/kind==='site_view'\?\{eventId,kind,\.\.\.acquisition\(\)\}/);
- assert.doesNotMatch(track,/localStorage|sessionStorage|document\.cookie|userAgent|clientId|visitorId/);
+ assert.match(track,/kind==='site_view'\?\{eventId,kind,\.\.\.conversionSource\(\)\}/);
+ assert.doesNotMatch(track,/localStorage|document\.cookie|userAgent|clientId|visitorId/);
+ assert.match(track,/sessionStorage\.setItem\(ATTRIBUTION_KEY/);
+ assert.match(track,/30\*60\*1000/);
 });
 test('site-view collector uses service-only aggregate RPC and preserves existing view tracking',()=>{
  assert.match(collect,/kind==="site_view"/);
