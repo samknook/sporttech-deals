@@ -13,7 +13,7 @@ const strings={
 'Zoek een evenement':'Find an event','Zoek op wedstrijd, plaats of afstand':'Search by event, location or distance','Sport':'Sport',
 'Alle sporten':'All sports','Maand':'Month','Alle maanden':'All months','Sorteren':'Sort by','Datum: eerstvolgende':'Date: soonest first','Naam: A-Z':'Name: A-Z','Afstand: dichtbij eerst':'Distance: nearest first',
 '⚙ Meer filters':'⚙ More filters','Land, jaar, afstand en inschrijving':'Country, year, distance and registration',
-'Land':'Country','Alle landen':'All countries','Jaar':'Year','Alle jaren':'All years',
+'Land':'Country','Alle landen':'All countries','Regio':'Region','Alle regio’s':'All regions','Jaar':'Year','Alle jaren':'All years',
 'Afstand / racevorm':'Distance / event type','Alle afstanden':'All distances',
 '5 km of korter':'5 km or shorter','Halve marathon':'Half marathon','Marathon / langer':'Marathon / longer',
 '70.3 / middenafstand':'70.3 / middle distance','Hele triatlon':'Full-distance triathlon',
