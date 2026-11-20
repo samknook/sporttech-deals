@@ -5,7 +5,7 @@
 (() => {
   'use strict';
   const ENDPOINT='https://lpzndnxloykcthbsqcet.supabase.co/functions/v1/raceatlas-track-outbound';
-  const KINDS=new Set(['registration','organizer','source','promotion','site_view','card_view','detail_view']);
+  const KINDS=new Set(['registration','organizer','source','promotion','site_view','card_view','detail_view','season_save','radar_intent']);
   const CARD_ID=/^ra-\d{1,8}$/;
   const seenCards=new Set();
   let siteRecorded=false;
@@ -43,9 +43,26 @@
     }catch{}
     return {channel:CHANNELS.has(channel)?channel:'direct',campaign};
   }
+  // Keep only an anonymous source label in this browser tab during navigation.
+  // No user ID, IP, session token or referrer URL is stored or transmitted.
+  const ATTRIBUTION_KEY='trizentro:source-tab-v1';
+  function conversionSource(){
+    const current=acquisition();
+    try{
+      const hasTag=new URLSearchParams(location.search).has('utm_source');
+      if(hasTag&&current.channel!=='direct'){
+        sessionStorage.setItem(ATTRIBUTION_KEY,JSON.stringify({...current,at:Date.now()}));
+        return current;
+      }
+      const saved=JSON.parse(sessionStorage.getItem(ATTRIBUTION_KEY)||'null');
+      if(saved&&Date.now()-saved.at<30*60*1000&&CHANNELS.has(saved.channel)&&/^[a-z0-9_-]{1,48}$/.test(saved.campaign))return {channel:saved.channel,campaign:saved.campaign};
+      sessionStorage.removeItem(ATTRIBUTION_KEY);
+    }catch{}
+    return current;
+  }
   function track(eventId,kind){
     if(!enabled()||!valid(eventId,kind))return false;
-    const payload=JSON.stringify(kind==='site_view'?{eventId,kind,...acquisition()}:{eventId,kind});
+    const payload=JSON.stringify(kind==='site_view'?{eventId,kind,...acquisition()}:(kind==='season_save'||kind==='radar_intent')?{eventId,kind,...conversionSource()}:{eventId,kind});
     try{
       if(navigator.sendBeacon){
         const blob=new Blob([payload],{type:'text/plain;charset=UTF-8'});
@@ -83,6 +100,8 @@
   document.addEventListener('click',event=>{
     const anchor=event.target?.closest?.('a[data-ra-outbound]');
     if(anchor)track(anchor.dataset.raEvent,anchor.dataset.raOutbound);
+    const radar=event.target?.closest?.('a[data-ra-radar]');
+    if(radar&&CARD_ID.test(radar.dataset.raRadar))track(radar.dataset.raRadar,'radar_intent');
   },{capture:true});
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState!=='hidden')siteView()});
   function start(){
