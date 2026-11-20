@@ -52,10 +52,34 @@ function render(rows){
   list.append(article);
  }
 }
+const channelLabels={instagram:'Instagram',facebook:'Facebook',whatsapp:'WhatsApp',google:'Google',bing:'Bing',search_other:'Andere zoekmachines',social_other:'Andere sociale media',email:'E-mail',referral:'Verwijzende websites',direct:'Direct / onbekend',campaign_other:'Overige campagnes'};
+async function loadAcquisition(){
+ if(!client||!userId)return;
+ const button=$('acquisitionRefresh');button.disabled=true;$('acquisitionStatus').textContent='Bereik ophalen…';
+ try{
+  const data=await api('GET',{view:'acquisition'});
+  const channels=$('acquisitionChannels'),campaigns=$('acquisitionCampaigns');
+  channels.replaceChildren();campaigns.replaceChildren();
+  $('acquisitionTotal').textContent=new Intl.NumberFormat('nl-NL').format(data.total||0);
+  const renderRows=(node,rows,labelFn)=>{
+   if(!rows.length){node.append(el('p','Nog geen meetgegevens beschikbaar.','hint'));return}
+   for(const item of rows){
+    const row=el('div',undefined,'bar');row.style.borderBottom='1px solid #e4ebe4';row.style.padding='9px 0';
+    const heading=el('span',labelFn(item));heading.style.flex='1';
+    const total=el('strong',new Intl.NumberFormat('nl-NL').format(item.pageviews||0));
+    row.append(heading,total);node.append(row);
+   }
+  };
+  renderRows(channels,data.channels||[],item=>channelLabels[item.channel]||item.channel);
+  renderRows(campaigns,data.campaigns||[],item=>item.campaign);
+  $('acquisitionStatus').textContent='Bijgewerkt. Geaggregeerde paginaweergaven, geen unieke bezoekers.';
+ }catch(err){$('acquisitionStatus').textContent=err.message==='access_denied'?'Alleen beheerders kunnen deze cijfers zien.':'Bereik kon niet worden opgehaald.'}
+ finally{button.disabled=false}
+}
 async function load(){
  if(!client||!userId||busy)return;
  $('refresh').disabled=true;status.textContent='Verzoeken ophalen…';
- try{const data=await api('GET',{status:$('filter').value});render(Array.isArray(data.requests)?data.requests:[]);status.textContent='Beheercentrum geladen.';app.hidden=false;denied.hidden=true}
+ try{const data=await api('GET',{status:$('filter').value});render(Array.isArray(data.requests)?data.requests:[]);status.textContent='Beheercentrum geladen.';app.hidden=false;denied.hidden=true;void loadAcquisition()}
  catch(err){list.replaceChildren();status.textContent=err.message==='access_denied'?'Geen toegang tot het beheercentrum.':'Beheercentrum kon niet worden geladen.';if(err.message==='access_denied'){app.hidden=true;denied.hidden=false}}
  finally{$('refresh').disabled=false}
 }
@@ -82,6 +106,7 @@ $('grantForm').addEventListener('submit',async event=>{
  }catch(err){result.textContent=err.message==='access_denied'?'Geen beheerrechten.':'Toegang niet toegekend. Controleer het accountadres, de e-mailbevestiging en de officiële evenementstatus.'}
  finally{busy=false;button.disabled=false}
 });
+$('acquisitionRefresh').addEventListener('click',()=>{void loadAcquisition()});
 $('filter').addEventListener('change',()=>{void load()});
 $('refresh').addEventListener('click',()=>{void load()});
 void init();
