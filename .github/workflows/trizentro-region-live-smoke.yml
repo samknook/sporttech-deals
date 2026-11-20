@@ -1,0 +1,26 @@
+name: TriZentro regional discovery production smoke
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/trizentro-region-live-smoke.yml'
+  workflow_dispatch:
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check region filter and SEO deep links on production
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL --max-time 25 -o /tmp/events 'https://trizentro.com/events/?ra_sport=Hardlopen&ra_region=Noord-Holland&ra_year=2027'
+          grep -q 'id="region"' /tmp/events
+          grep -q "region=\$('region').value" /tmp/events
+          grep -q 'Waterland & West-Friesland' /tmp/events
+          curl -fsSL --max-time 25 -o /tmp/hub https://trizentro.com/ontdek/hardloopwedstrijden-noord-holland-2027/
+          grep -q 'ra_region=Noord-Holland' /tmp/hub
+          grep -q 'ra_year=2027' /tmp/hub
+          curl -fsSL --max-time 25 -o /tmp/gravel https://trizentro.com/ontdek/gravel-evenementen-2027/
+          grep -q 'ra_distanceCategory=gravel' /tmp/gravel
+          echo 'Live regional race filters and Google discovery routes verified'
