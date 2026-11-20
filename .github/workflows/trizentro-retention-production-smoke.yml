@@ -1,0 +1,38 @@
+name: TriZentro retention and local races production smoke
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/trizentro-retention-production-smoke.yml'
+  workflow_dispatch:
+jobs:
+  verify-production:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Verify local race pages, save UX and private metrics are deployed
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in hydro-run-bike-run-nijkerk-2027-ra-206 hydro-run-bike-run-zeewolde-2027-ra-210 rbr-rotterdam-2027-ra-214 hydro-run-bike-run-nunspeet-2027-ra-459; do
+            url="https://trizentro.com/events/wedstrijden/$name.html"
+            code=$(curl --max-time 25 -sSL -o /tmp/tri-event -w '%{http_code}' "$url")
+            echo "$name HTTP $code"
+            test "$code" = 200
+            grep -q 'id="saveRace"' /tmp/tri-event
+            grep -q 'data-ra-radar="ra-' /tmp/tri-event
+            grep -q 'Stel inschrijfmelding in' /tmp/tri-event
+          done
+          curl -fsSL --max-time 25 -o /tmp/tri-events 'https://trizentro.com/events/'
+          grep -q 'RBR Rotterdam 2027' /tmp/tri-events
+          grep -q 'Hydro Run Bike Run Nijkerk 2027' /tmp/tri-events
+          curl -fsSL --max-time 25 -o /tmp/tri-save 'https://trizentro.com/raceatlas/event-save.js'
+          grep -q 'Bekijk mijn seizoen' /tmp/tri-save
+          grep -q "'season_save'" /tmp/tri-save
+          curl -fsSL --max-time 25 -o /tmp/tri-track 'https://trizentro.com/raceatlas/tracking.js'
+          grep -q 'radar_intent' /tmp/tri-track
+          curl -fsSL --max-time 25 -o /tmp/tri-admin 'https://trizentro.com/raceatlas/organizer-review-admin.html'
+          grep -q 'acquisitionConversions' /tmp/tri-admin
+          curl -fsSL --max-time 25 -o /tmp/tri-sitemap 'https://trizentro.com/sitemap.xml'
+          grep -q 'rbr-rotterdam-2027-ra-214.html' /tmp/tri-sitemap
+          echo 'Production retention, verified local races and campaign metrics assets available'
