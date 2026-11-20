@@ -1,0 +1,25 @@
+name: TriZentro live gravel race smoke
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/live-gravel-smoke-nov20.yml'
+  workflow_dispatch:
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check new canonical event pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          for key in gravel-one-fifty-2027-ra-455 marly-grav-race-2027-ra-458 mergelheuvelland-2-daagse-2027-ra-457 graveller-gravel-weekend-2027-ra-456 beemd-en-bergtoer-gravel-holten-2027-ra-34; do
+            url="https://trizentro.com/events/wedstrijden/$key.html"
+            code=$(curl --max-time 20 -sSL -o /tmp/race-result -w '%{http_code}' "$url")
+            echo "$key $code"
+            test "$code" = 200
+          done
+          curl -fsSL -o /tmp/calendar 'https://trizentro.com/events/'
+          grep -q 'Gravel One Fifty 2027' /tmp/calendar
+          echo 'Verified current production catalog and race detail pages'
