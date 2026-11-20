@@ -11,6 +11,7 @@ note.className='event-save-note';
 note.setAttribute('role','status');
 note.style.cssText='font-size:12px;line-height:1.5;color:#647384;margin:8px 0 0';
 button.insertAdjacentElement('afterend',note);
+const next=document.createElement('a');next.href='/seizoen/';next.textContent='Bekijk mijn seizoen →';next.className='event-save-next';next.style.cssText='display:none;margin:8px 0 14px;font-size:14px;font-weight:800;color:#115c3b';note.insertAdjacentElement('afterend',next);
 function localRead(){
  try{const data=JSON.parse(localStorage.getItem(store)||'[]');return Array.isArray(data)?data.filter(x=>typeof x==='string'&&/^ra-\d{1,8}$/.test(x)):[]}
  catch{return []}
@@ -24,6 +25,7 @@ function render(message){
  button.disabled=busy;
  button.setAttribute('aria-pressed',String(saved));
  button.textContent=busy?'Moment…':saved?'✓ Bewaard in mijn seizoen':'☆ Bewaar in mijn seizoen';
+ next.style.display=!busy&&saved?'inline-block':'none';
  note.textContent=message|| (cloud?'Je seizoen wordt met je account gesynchroniseerd.':'Opgeslagen op dit apparaat. Log in om je seizoen op andere apparaten te zien.');
 }
 async function refresh(){
@@ -66,6 +68,7 @@ button.addEventListener('click',async()=>{
    }
   }else localWrite(target);
   saved=target;busy=false;render(target?'Wedstrijd opgeslagen.':'Wedstrijd verwijderd uit je seizoen.');
+  if(target)window.RaceAtlasTracking?.track(id,'season_save');
  }catch(error){
   busy=false;render('Opslaan mislukt. Je seizoen is niet gewijzigd. Probeer opnieuw.');
  }

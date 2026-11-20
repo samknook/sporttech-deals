@@ -61,6 +61,15 @@ async function loadAcquisition(){
   const channels=$('acquisitionChannels'),campaigns=$('acquisitionCampaigns');
   channels.replaceChildren();campaigns.replaceChildren();
   $('acquisitionTotal').textContent=new Intl.NumberFormat('nl-NL').format(data.total||0);
+  $('acquisitionSaves').textContent=new Intl.NumberFormat('nl-NL').format(data.conversions?.saves||0);
+  $('acquisitionRadar').textContent=new Intl.NumberFormat('nl-NL').format(data.conversions?.radarIntents||0);
+  const conversionRows=$('acquisitionConversions');conversionRows.replaceChildren();
+  for(const row of data.conversions?.channels||[]){
+   const item=el('div',undefined,'bar');item.style.padding='8px 0';
+   const label=el('span',(channelLabels[row.channel]||row.channel)+': '+new Intl.NumberFormat('nl-NL').format(row.saves||0)+' bewaard · '+new Intl.NumberFormat('nl-NL').format(row.radarIntents||0)+' radar geopend');
+   item.append(label);conversionRows.append(item);
+  }
+  if(!conversionRows.childNodes.length)conversionRows.append(el('p','Nog geen geregistreerde acties.','hint'));
   const renderRows=(node,rows,labelFn)=>{
    if(!rows.length){node.append(el('p','Nog geen meetgegevens beschikbaar.','hint'));return}
    for(const item of rows){
