@@ -1,0 +1,25 @@
+name: TriZentro acquisition tracking production smoke
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/trizentro-acquisition-production-smoke.yml'
+  workflow_dispatch:
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Confirm tracking on real domain and campaign destination
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL --max-time 25 -o /tmp/tri-track 'https://trizentro.com/raceatlas/tracking.js'
+          grep -q 'utm_source' /tmp/tri-track
+          grep -q 'acquisition' /tmp/tri-track
+          curl -fsSL --max-time 25 -o /tmp/tri-hub 'https://trizentro.com/ontdek/hardloopwedstrijden-2027/?utm_source=instagram&utm_medium=social&utm_campaign=hardlopen_nov21'
+          grep -q '/raceatlas/tracking.js' /tmp/tri-hub
+          grep -q 'Officiële organisator' /tmp/tri-hub
+          curl -fsSL --max-time 25 -o /tmp/tri-admin 'https://trizentro.com/raceatlas/organizer-review-admin.html'
+          grep -q 'acquisitionChannels' /tmp/tri-admin
+          echo 'Live campaign URL, anonymous tracking and private admin reporting verified'
