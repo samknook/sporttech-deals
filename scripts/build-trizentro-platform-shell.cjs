@@ -44,6 +44,9 @@ for(const rel of pages){
 }
 // Clean public destinations. Each is built from the same source as its legacy
 // address, rather than maintaining independent copies of page content.
+// Index curated, substantial category landing pages generated from verified 2027 races.
+const seoManifest=path.join(base,'ontdek/manifest.json');
+const seoPages=fs.existsSync(seoManifest)?JSON.parse(fs.readFileSync(seoManifest,'utf8')):[];
 const routes=[
  {source:'raceatlas/index.html',destination:'events/index.html',base:'../raceatlas/',canonical:'events/'},
  {source:'raceatlas/index.html',destination:'seizoen/index.html',base:'../raceatlas/',canonical:'seizoen/'},
@@ -129,9 +132,6 @@ const urls=[
  {pathname:'/performance/',priority:'0.9',frequency:'weekly'},
  {pathname:'/organisatoren/',priority:'0.5',frequency:'monthly'}
 ];
-// Index curated, substantial category landing pages generated from verified 2027 races.
-const seoManifest=path.join(base,'ontdek/manifest.json');
-const seoPages=fs.existsSync(seoManifest)?JSON.parse(fs.readFileSync(seoManifest,'utf8')):[];
 for(const page of seoPages){
  if(!/^[a-z0-9-]+$/.test(page.slug))continue;
  if(fs.existsSync(path.join(base,'ontdek',page.slug,'index.html')))
