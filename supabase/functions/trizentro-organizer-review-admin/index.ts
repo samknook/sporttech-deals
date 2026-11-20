@@ -36,7 +36,7 @@ Deno.serve(async req=>{
    const actionByCampaign=new Map<string,{saves:number,radarIntents:number}>();
    for(const x of conversions||[]){
     const n=Math.max(0,Number(x.actions)||0);
-    const field=x.kind==="season_save"?"saves":"radarIntents";
+    const field:"saves"|"radarIntents"=x.kind==="season_save"?"saves":"radarIntents";
     if(!actionByChannel.has(x.channel))actionByChannel.set(x.channel,{saves:0,radarIntents:0});
     actionByChannel.get(x.channel)![field]+=n;
     if(x.campaign!=="none"){
