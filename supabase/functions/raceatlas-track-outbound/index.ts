@@ -57,6 +57,23 @@ Deno.serve(async (request:Request):Promise<Response>=>{
    signal:AbortSignal.timeout(4000)
   });
   if(!result.ok)return respond(503,{ok:false},origin);
+  if(kind==="site_view"){
+   // Optional coarse source aggregation. A view still succeeds when acquisition
+   // telemetry fails; no visitor data or raw referring URL is persisted.
+   const allowedChannels=new Set(["instagram","facebook","whatsapp","google","bing","search_other","social_other","email","referral","direct","campaign_other"]);
+   const rawChannel=typeof data.channel==="string"?data.channel:"direct";
+   const rawCampaign=typeof data.campaign==="string"?data.campaign:"none";
+   const channel=allowedChannels.has(rawChannel)?rawChannel:"direct";
+   const campaign=/^[a-z0-9_-]{1,48}$/.test(rawCampaign)?rawCampaign:"none";
+   try{
+    await fetch(PROJECT_URL+"/rest/v1/rpc/trizentro_record_acquisition",{
+     method:"POST",
+     headers:{"Content-Type":"application/json",apikey:SERVICE_KEY,Authorization:"Bearer "+SERVICE_KEY},
+     body:JSON.stringify({p_channel:channel,p_campaign:campaign}),
+     signal:AbortSignal.timeout(3500)
+    });
+   }catch{}
+  }
   // Unique daily estimates apply to views only; outbound clicks remain simple counts.
   if(kind==="site_view"||kind==="card_view"||kind==="detail_view"){
    try{
