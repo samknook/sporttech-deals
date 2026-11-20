@@ -16,9 +16,36 @@
   function valid(eventId,kind){
     return KINDS.has(kind)&&((eventId==='ra-site'&&kind==='site_view')||(CARD_ID.test(eventId)&&kind!=='site_view'));
   }
+  // Store only broad sources. Never transmit a full referrer, query string,
+  // IP address, device fingerprint or visitor identifier.
+  const CHANNELS=new Set(['instagram','facebook','whatsapp','google','bing','search_other','social_other','email','referral','direct','campaign_other']);
+  function acquisition(){
+    let channel='direct',campaign='none';
+    try{
+      const params=new URLSearchParams(location.search);
+      const tagged=(params.get('utm_source')||'').toLowerCase().trim();
+      const sourceMap={ig:'instagram',instagram:'instagram',fb:'facebook',facebook:'facebook',wa:'whatsapp',whatsapp:'whatsapp',google:'google',bing:'bing',newsletter:'email',email:'email'};
+      if(sourceMap[tagged])channel=sourceMap[tagged];
+      else if(tagged)channel='campaign_other';
+      else if(document.referrer){
+        const host=new URL(document.referrer).hostname.toLowerCase();
+        if(/(^|\\.)instagram\\.com$|(^|\\.)l\\.instagram\\.com$/.test(host))channel='instagram';
+        else if(/(^|\\.)facebook\\.com$|(^|\\.)l\\.facebook\\.com$/.test(host))channel='facebook';
+        else if(/(^|\\.)wa\\.me$|(^|\\.)whatsapp\\.com$/.test(host))channel='whatsapp';
+        else if(/(^|\\.)google\\.[a-z.]+$/.test(host))channel='google';
+        else if(/(^|\\.)bing\\.com$/.test(host))channel='bing';
+        else if(/(^|\\.)(duckduckgo\\.com|ecosia\\.org|qwant\\.com)$/.test(host))channel='search_other';
+        else if(/(^|\\.)(tiktok\\.com|linkedin\\.com|pinterest\\.com|threads\\.net)$/.test(host))channel='social_other';
+        else if(!['trizentro.com','www.trizentro.com','samknook.github.io'].includes(host))channel='referral';
+      }
+      const taggedCampaign=(params.get('utm_campaign')||'').toLowerCase();
+      if(/^[a-z0-9_-]{1,48}$/.test(taggedCampaign))campaign=taggedCampaign;
+    }catch{}
+    return {channel:CHANNELS.has(channel)?channel:'direct',campaign};
+  }
   function track(eventId,kind){
     if(!enabled()||!valid(eventId,kind))return false;
-    const payload=JSON.stringify({eventId,kind});
+    const payload=JSON.stringify(kind==='site_view'?{eventId,kind,...acquisition()}:{eventId,kind});
     try{
       if(navigator.sendBeacon){
         const blob=new Blob([payload],{type:'text/plain;charset=UTF-8'});
