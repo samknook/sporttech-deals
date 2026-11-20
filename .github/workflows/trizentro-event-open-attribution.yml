@@ -1,0 +1,24 @@
+name: TriZentro attributed campaign conversion funnel
+on:
+  pull_request:
+    paths:
+      - 'docs/raceatlas/tracking.js'
+      - 'docs/raceatlas/organizer-review-admin.*'
+      - 'supabase/functions/raceatlas-track-outbound/index.ts'
+      - 'supabase/functions/trizentro-organizer-review-admin/index.ts'
+      - 'tests/trizentro-event-open-attribution.test.cjs'
+      - 'tests/trizentro-acquisition-analytics.test.cjs'
+      - 'tests/trizentro-retention-local.test.cjs'
+      - '.github/workflows/trizentro-event-open-attribution.yml'
+  workflow_dispatch:
+jobs:
+  campaign-funnel:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/trizentro-event-open-attribution.test.cjs tests/trizentro-acquisition-analytics.test.cjs tests/trizentro-retention-local.test.cjs
