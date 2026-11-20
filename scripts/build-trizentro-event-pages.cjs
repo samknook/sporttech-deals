@@ -43,7 +43,7 @@ const base=(customActive?'https://trizentro.com':'https://samknook.github.io/spo
 const output=path.join(dir,'wedstrijden');
 // Remove previously generated pages: rejected events must not survive at old URLs.
 fs.rmSync(output,{recursive:true,force:true});fs.mkdirSync(output,{recursive:true});
-const style=':root{font-family:Inter,system-ui,sans-serif;color:#102432;background:#f5f8fa}*{box-sizing:border-box}body{margin:0}a{color:inherit}header{background:#071925;color:#fff}header .inner{max-width:1080px;margin:auto;display:flex;justify-content:space-between;align-items:center;padding:14px 20px;gap:12px}nav{display:flex;gap:16px}header a{font-size:13px;text-decoration:none;font-weight:800}header img{width:52px;height:39px}main{max-width:1000px;margin:auto;padding:25px 20px 80px}.back{font-size:13px;color:#486778;text-decoration:none}h1{font-size:clamp(28px,5vw,49px);line-height:1.12;letter-spacing:-.045em;margin:13px 0}.sub{color:#577184}.hero{background:#071925;color:#fff;border-radius:16px;overflow:hidden;margin:24px 0}.hero img{display:block;width:100%;height:245px;object-fit:cover}.hero div{padding:20px}.hero strong{font-size:21px}.hero p{font-size:12px;color:#cddfe4}.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.fact{background:#fff;border:1px solid #dbe5ea;border-radius:12px;padding:15px;display:flex;flex-direction:column;gap:7px}.fact span{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#63818b;font-weight:800}.fact strong{font-size:14px;line-height:1.4;overflow-wrap:anywhere}.actions{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0}.actions>*{padding:14px 18px;border-radius:10px;background:white;color:#153f34;border:1px solid #d6e2dc;min-height:49px;font-size:14px;font-weight:850;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer}.actions .primary{background:#c7ff37;border-color:#c7ff37;color:#0b2619}.actions .tz-event-radar-link{background:#edf8e2;border-color:#b9dca6;color:#153f34}.actions .tz-event-radar-link:hover{background:#dff3cb;border-color:#a5cc8f}.note{padding:16px;background:#fff;border:1px solid #dbe5ea;border-radius:12px;color:#5b7280;font-size:13px;line-height:1.65}.source{font-size:13px}.source a{color:#116146;font-weight:800}.foot{padding-top:20px;border-top:1px solid #dce6e9;margin-top:30px;color:#667e88;font-size:12px}@media(max-width:700px){.facts{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.fact{padding:11px}.fact strong{font-size:12px}.hero img{height:160px}.actions{display:grid;grid-template-columns:1fr 1fr}.actions .primary{grid-column:1/-1}nav{gap:9px}main{padding:22px 15px 80px}}';
+const style=':root{font-family:Inter,system-ui,sans-serif;color:#102432;background:#f5f8fa}*{box-sizing:border-box}body{margin:0}a{color:inherit}header{background:#071925;color:#fff}header .inner{max-width:1080px;margin:auto;display:flex;justify-content:space-between;align-items:center;padding:14px 20px;gap:12px}nav{display:flex;gap:16px}header a{font-size:13px;text-decoration:none;font-weight:800}header img{width:52px;height:39px}main{max-width:1000px;margin:auto;padding:25px 20px 80px}.back{font-size:13px;color:#486778;text-decoration:none}h1{font-size:clamp(28px,5vw,49px);line-height:1.12;letter-spacing:-.045em;margin:13px 0}.sub{color:#577184}.hero{background:#071925;color:#fff;border-radius:16px;overflow:hidden;margin:24px 0}.hero img{display:block;width:100%;height:245px;object-fit:cover}.hero div{padding:20px}.hero strong{font-size:21px}.hero p{font-size:12px;color:#cddfe4}.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.fact{background:#fff;border:1px solid #dbe5ea;border-radius:12px;padding:15px;display:flex;flex-direction:column;gap:7px}.fact span{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#63818b;font-weight:800}.fact strong{font-size:14px;line-height:1.4;overflow-wrap:anywhere}.actions{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0}.actions>*{padding:14px 18px;border-radius:10px;background:white;color:#153f34;border:1px solid #d6e2dc;min-height:49px;font-size:14px;font-weight:850;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer}.actions .primary{background:#c7ff37;border-color:#c7ff37;color:#0b2619}.actions .tz-event-radar-link{background:#edf8e2;border-color:#b9dca6;color:#153f34}.actions .tz-event-radar-link:hover{background:#dff3cb;border-color:#a5cc8f}.note{padding:16px;background:#fff;border:1px solid #dbe5ea;border-radius:12px;color:#5b7280;font-size:13px;line-height:1.65}.source{font-size:13px}.source a{color:#116146;font-weight:800}.related{padding:22px 0;margin-top:26px;border-top:1px solid #dce6e9}.related h2{font-size:23px;margin:4px 0 8px}.related>p{color:#587184;font-size:14px;line-height:1.55}.related-list{list-style:none;margin:18px 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.related-race{padding:18px;background:white;border:1px solid #dbe5ea;border-radius:13px;min-width:0}.related-race a{color:#115c3b;font-weight:850;text-decoration:none;line-height:1.4}.related-race a:hover{text-decoration:underline}.related-race p{font-size:13px;color:#537184;line-height:1.55}.related-race small{color:#627786;font-size:12px}.related-more{display:inline-block;margin-top:8px;color:#115c3b;font-weight:800}.foot{padding-top:20px;border-top:1px solid #dce6e9;margin-top:30px;color:#667e88;font-size:12px}@media(max-width:700px){.facts{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.fact{padding:11px}.fact strong{font-size:12px}.hero img{height:160px}.actions{display:grid;grid-template-columns:1fr 1fr}.actions .primary{grid-column:1/-1}.related-list{grid-template-columns:1fr}nav{gap:9px}main{padding:22px 15px 80px}}';
 const routeExamples={
  'ra-9':{
   url:'https://www.amstel.nl/toerversie?lang=nl',
@@ -107,6 +107,37 @@ function courseAndWeather(event,official){
   (route?.conditions?'<p>'+safe(route.conditions)+'</p>':'')+
   '<div class="prep-links">'+link(weatherUrl,'Lokaal weerbericht')+'</div></section></div>';
 }
+// Link to already-generated event pages only: known official HTTPS source,
+// confirmed date, and the same sport. Prefer local races and nearby dates.
+const normalizedSport=e=>{
+ const value=String(e.sport||'')+' '+String(e.discipline||'');
+ if(/triat|duat|zwemloop|multisport/i.test(value))return 'multisport';
+ if(/fiets|wiel|gravel|mtb|mountainbike|cycl/i.test(value))return 'cycling';
+ if(/hardlop|trail|run|marathon|cross/i.test(value))return 'running';
+ return 'other';
+};
+const today=new Date().toISOString().slice(0,10);
+const eligibleRelated=list.filter(x=>/^ra-\d{1,8}$/.test(x.id||'')&&x.dateEvidence==='official'&&/^20\d{2}-\d{2}-\d{2}$/.test(x.date||'')&&x.date>=today&&eventSpecificOfficial(x.officialEventUrl));
+function relatedRaces(event){
+ const sport=normalizedSport(event);
+ if(sport==='other')return '';
+ const targetDate=/^20\d{2}-\d{2}-\d{2}$/.test(event.date||'')?event.date:today;
+ const targetTime=Date.parse(targetDate+'T00:00:00Z');
+ const same=(a,b)=>String(a||'').trim().toLowerCase()===String(b||'').trim().toLowerCase();
+ const candidates=eligibleRelated.filter(x=>x.id!==event.id&&normalizedSport(x)===sport)
+ .map(x=>{
+  const days=Math.abs(Date.parse(x.date+'T00:00:00Z')-targetTime)/86400000;
+  const city=same(x.place,event.place)&&x.place;
+  const region=same(x.region,event.region)&&x.region;
+  const country=same(x.country,event.country)&&x.country;
+  const score=(city?90:0)+(region?55:0)+(country?10:0)+(x.date.slice(0,4)===targetDate.slice(0,4)?15:0)-Math.min(days/7,50);
+  return {event:x,score,days};
+ }).sort((a,b)=>b.score-a.score||a.days-b.days||a.event.date.localeCompare(b.event.date)||a.event.id.localeCompare(b.event.id))
+ .slice(0,3);
+ if(!candidates.length)return '';
+ const cards=candidates.map(({event:x})=>'<li class="related-race"><a href="/events/wedstrijden/'+safe(filename(x))+'">'+safe(x.name)+'</a><p>'+safe(date(x))+' · '+safe(x.place||x.region||x.country||'')+'</p><small>'+safe(x.distance||x.discipline||x.sport||'')+'</small></li>').join('');
+ return '<section class="related" aria-labelledby="relatedRacesHeading"><h2 id="relatedRacesHeading">Ook interessant voor jou</h2><p>Andere wedstrijden in dezelfde sport, geselecteerd op locatie en wedstrijddatum.</p><ul class="related-list">'+cards+'</ul><a class="related-more" href="/events/">Bekijk alle evenementen ↗</a></section>';
+}
 let total=0;
 for(const e of list){
  if(!/^ra-\d{1,8}$/.test(e.id)||!e.name)continue;
@@ -160,6 +191,7 @@ for(const e of list){
  '<section class="facts" aria-label="Wedstrijdinformatie">'+facts+'</section>',
  '<div class="actions">'+cta+registrationCta+'<a href="https://wa.me/?text='+encodeURIComponent('Bekijk '+e.name+' op TriZentro: '+url)+'" target="_blank" rel="noopener noreferrer" aria-label="Deel '+safe(e.name)+' via WhatsApp">Deel via WhatsApp ↗</a><a class="tz-event-radar-link" href="/events/?ra_alert='+encodeURIComponent(e.id)+'">🔔 Ontvang inschrijfmelding</a><button id="saveRace" type="button" aria-pressed="false">☆ Bewaar in mijn seizoen</button><a href="/events/?event='+encodeURIComponent(e.id)+'">Open in wedstrijdkalender</a><a href="/performance/">Bereid je voor ↗</a></div>',
  courseAndWeather(e,official),
+ relatedRaces(e),
  '<section class="prep-card event-claim" aria-labelledby="eventClaimHeading"><h2 id="eventClaimHeading">Organiseer je dit evenement?</h2><p>Vraag beheer aan om wedstrijddetails, inschrijfinformatie of het parcours door te geven. TriZentro controleert je aanvraag.</p><a href="'+safe(claimUrl)+'">Claim je evenement ↗</a></section>',
  '<p class="note">TriZentro verzamelt beschikbare wedstrijdinformatie. Datums, prijzen en inschrijfstatussen kunnen veranderen. Controleer de actuele informatie altijd bij de organisator.</p>',
  official?'<p class="source">Bron: <a href="'+safe(official)+'" target="_blank" rel="noopener noreferrer">Organisator ↗</a></p>':'',
