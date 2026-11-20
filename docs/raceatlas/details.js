@@ -123,6 +123,7 @@ function detail(e,fromLink=false){
  const notify=el('button','🔔 Meldingen instellen','ra-detail-secondary');notify.onclick=()=>{closeDialog();if(window.RaceAtlasAlerts?.openForEvent)window.RaceAtlasAlerts.openForEvent(e.id);};actions.append(notify);
  const permalink=el('a','Open wedstrijdpagina ↗','ra-detail-secondary tz-detail-official');permalink.href=eventLink(e);permalink.setAttribute('aria-label','Open afzonderlijke pagina voor '+e.name);actions.append(permalink);
  const share=el('button','Deel evenement','ra-detail-secondary');share.onclick=async()=>{const u=eventLink(e);if(navigator.share){try{await navigator.share({title:e.name,url:u});return}catch{}}share.textContent=await copy(u)?'Link gekopieerd ✓':'Kopiëren niet gelukt';};actions.append(share);
+ const whatsapp=el('a','Deel via WhatsApp ↗','ra-detail-secondary');whatsapp.href='https://wa.me/?text='+encodeURIComponent('Bekijk '+e.name+' op TriZentro: '+eventLink(e));whatsapp.target='_blank';whatsapp.rel='noopener noreferrer';whatsapp.setAttribute('aria-label','Deel '+e.name+' via WhatsApp');actions.append(whatsapp);
  // Organizers can claim an existing race directly, preserving its canonical ID.
  // A claim is a review request, never automatic control of the event record.
  const claim=el('button','Ik organiseer dit evenement','ra-detail-secondary');
