@@ -32,7 +32,7 @@
         if(/(^|\.)instagram\.com$|(^|\.)l\.instagram\.com$/.test(host))channel='instagram';
         else if(/(^|\.)facebook\.com$|(^|\.)l\.facebook\.com$/.test(host))channel='facebook';
         else if(/(^|\.)wa\.me$|(^|\.)whatsapp\.com$/.test(host))channel='whatsapp';
-        else if(/(^|\.)google\.[a-z.]+$/.test(host))channel='google';
+        else if(/(^|\.)google\.[a-z]{2,3}(?:\.[a-z]{2})?$/.test(host))channel='google';
         else if(/(^|\.)bing\.com$/.test(host))channel='bing';
         else if(/(^|\.)(duckduckgo\.com|ecosia\.org|qwant\.com)$/.test(host))channel='search_other';
         else if(/(^|\.)(tiktok\.com|linkedin\.com|pinterest\.com|threads\.net)$/.test(host))channel='social_other';
@@ -49,14 +49,21 @@
   function conversionSource(){
     const current=acquisition();
     try{
-      const hasTag=new URLSearchParams(location.search).has('utm_source');
-      if(hasTag&&current.channel!=='direct'){
+      const tagged=new URLSearchParams(location.search).has('utm_source');
+      const raw=sessionStorage.getItem(ATTRIBUTION_KEY);
+      const saved=raw?JSON.parse(raw):null;
+      const recent=!!(saved&&Number.isFinite(saved.at)&&Date.now()>=saved.at&&Date.now()-saved.at<30*60*1000&&CHANNELS.has(saved.channel)&&/^[a-z0-9_-]{1,48}$/.test(saved.campaign));
+      // Explicit campaigns take precedence; otherwise keep the original
+      // non-direct landing source through internal navigation in this tab.
+      if(tagged&&current.channel!=='direct'){
         sessionStorage.setItem(ATTRIBUTION_KEY,JSON.stringify({...current,at:Date.now()}));
         return current;
       }
-      const saved=JSON.parse(sessionStorage.getItem(ATTRIBUTION_KEY)||'null');
-      if(saved&&Date.now()-saved.at<30*60*1000&&CHANNELS.has(saved.channel)&&/^[a-z0-9_-]{1,48}$/.test(saved.campaign))return {channel:saved.channel,campaign:saved.campaign};
+      if(recent)return {channel:saved.channel,campaign:saved.campaign};
       sessionStorage.removeItem(ATTRIBUTION_KEY);
+      if(current.channel!=='direct'){
+        sessionStorage.setItem(ATTRIBUTION_KEY,JSON.stringify({...current,at:Date.now()}));
+      }
     }catch{}
     return current;
   }
