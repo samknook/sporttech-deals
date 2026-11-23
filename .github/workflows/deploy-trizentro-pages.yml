@@ -4,6 +4,9 @@ on:
     branches: [main]
     paths:
       - 'docs/**'
+      - 'tests/test-trizentro-official-sources.cjs'
+      - 'tests/test-trizentro-event-save.cjs'
+      - 'tests/test-trizentro-registration-radar.cjs'
       - 'scripts/build-trizentro-event-pages.cjs'
       - 'scripts/build-trizentro-platform-shell.cjs'
       - 'scripts/build-trizentro-seo-hubs.cjs'
@@ -40,6 +43,11 @@ jobs:
         run: node scripts/build-trizentro-seo-hubs.cjs
       - name: Build integrated Events, Organizers and Season routes
         run: node scripts/build-trizentro-platform-shell.cjs
+      - name: Verify official event sources and retention regressions
+        run: |
+          node tests/test-trizentro-official-sources.cjs
+          node tests/test-trizentro-event-save.cjs
+          node tests/test-trizentro-registration-radar.cjs
       - name: Validate complete release
         run: |
           test -f docs/index.html
