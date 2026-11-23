@@ -8,6 +8,7 @@ on:
       - 'tests/test-trizentro-event-save.cjs'
       - 'tests/test-trizentro-registration-radar.cjs'
       - 'tests/test-trizentro-referrer-attribution.cjs'
+      - 'tests/test-trizentro-legacy-canonical.cjs'
       - 'scripts/build-trizentro-event-pages.cjs'
       - 'scripts/build-trizentro-platform-shell.cjs'
       - 'scripts/build-trizentro-seo-hubs.cjs'
@@ -50,6 +51,7 @@ jobs:
           node tests/test-trizentro-event-save.cjs
           node tests/test-trizentro-registration-radar.cjs
           node --test tests/test-trizentro-referrer-attribution.cjs
+          node --test tests/test-trizentro-legacy-canonical.cjs
       - name: Validate complete release
         run: |
           test -f docs/index.html
