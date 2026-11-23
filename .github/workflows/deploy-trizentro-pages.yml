@@ -111,6 +111,22 @@ jobs:
           grep -q 'acquisitionOpens' /tmp/tri-admin
           grep -q 'acquisitionSaves' /tmp/tri-admin
           echo 'Verified latest release features on trizentro.com'
+      - name: Verify race sharing is live on the custom domain
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 12); do
+            js=$(curl -fsSL --max-time 20 "https://trizentro.com/raceatlas/event-share.js?release=${{ github.sha }}" || true)
+            page=$(curl -fsSL --max-time 20 "https://trizentro.com/events/wedstrijden/garmin-zevenheuvelenloop-2027-ra-433.html?release=${{ github.sha }}" || true)
+            if printf '%s' "$js" | grep -q 'shareRaceStatus' &&
+               printf '%s' "$page" | grep -q 'id="shareRace"' &&
+               printf '%s' "$page" | grep -q 'event-share.js'; then
+              echo 'Race sharing is live at trizentro.com'
+              exit 0
+            fi
+            sleep 5
+          done
+          echo 'Race sharing not visible on production URLs'
+          exit 1
       - name: Verify new pages served by custom domain
         run: |
           for attempt in $(seq 1 12); do
