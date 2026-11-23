@@ -29,13 +29,13 @@
       else if(tagged)channel='campaign_other';
       else if(document.referrer){
         const host=new URL(document.referrer).hostname.toLowerCase();
-        if(/(^|\\.)instagram\\.com$|(^|\\.)l\\.instagram\\.com$/.test(host))channel='instagram';
-        else if(/(^|\\.)facebook\\.com$|(^|\\.)l\\.facebook\\.com$/.test(host))channel='facebook';
-        else if(/(^|\\.)wa\\.me$|(^|\\.)whatsapp\\.com$/.test(host))channel='whatsapp';
-        else if(/(^|\\.)google\\.[a-z.]+$/.test(host))channel='google';
-        else if(/(^|\\.)bing\\.com$/.test(host))channel='bing';
-        else if(/(^|\\.)(duckduckgo\\.com|ecosia\\.org|qwant\\.com)$/.test(host))channel='search_other';
-        else if(/(^|\\.)(tiktok\\.com|linkedin\\.com|pinterest\\.com|threads\\.net)$/.test(host))channel='social_other';
+        if(/(^|\.)instagram\.com$|(^|\.)l\.instagram\.com$/.test(host))channel='instagram';
+        else if(/(^|\.)facebook\.com$|(^|\.)l\.facebook\.com$/.test(host))channel='facebook';
+        else if(/(^|\.)wa\.me$|(^|\.)whatsapp\.com$/.test(host))channel='whatsapp';
+        else if(/(^|\.)google\.[a-z.]+$/.test(host))channel='google';
+        else if(/(^|\.)bing\.com$/.test(host))channel='bing';
+        else if(/(^|\.)(duckduckgo\.com|ecosia\.org|qwant\.com)$/.test(host))channel='search_other';
+        else if(/(^|\.)(tiktok\.com|linkedin\.com|pinterest\.com|threads\.net)$/.test(host))channel='social_other';
         else if(!['trizentro.com','www.trizentro.com','samknook.github.io'].includes(host))channel='referral';
       }
       const taggedCampaign=(params.get('utm_campaign')||'').toLowerCase();
