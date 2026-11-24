@@ -11,6 +11,7 @@ on:
       - 'tests/test-trizentro-direct-registration-cards.cjs'
       - 'tests/test-trizentro-registration-status-cards.cjs'
       - 'tests/test-trizentro-organizer-daily-csv.cjs'
+      - 'tests/test-trizentro-organizer-comparison.cjs'
       - 'tests/test-trizentro-event-save.cjs'
       - 'tests/test-trizentro-registration-radar.cjs'
       - 'tests/test-trizentro-referrer-attribution.cjs'
@@ -68,6 +69,7 @@ jobs:
             tests/test-trizentro-direct-registration-cards.cjs \
             tests/test-trizentro-registration-status-cards.cjs \
             tests/test-trizentro-organizer-daily-csv.cjs \
+            tests/test-trizentro-organizer-comparison.cjs \
             tests/test-trizentro-event-save.cjs \
             tests/test-trizentro-registration-radar.cjs \
             tests/test-trizentro-referrer-attribution.cjs \
@@ -110,6 +112,7 @@ jobs:
           test -f docs/raceatlas/organizer-dashboard.html
           test -f docs/raceatlas/organizer-dashboard.js
           grep -q 'id="exportDaily"' docs/raceatlas/organizer-dashboard.html
+          grep -q 'id="comparisonRows"' docs/raceatlas/organizer-dashboard.html
           test -f docs/raceatlas/organizer-review-admin.html
           test -f docs/raceatlas/organizer-review-admin.js
           test -f docs/events/wedstrijden/garmin-zevenheuvelenloop-2027-ra-433.html
@@ -159,6 +162,8 @@ jobs:
           grep -q 'id="exportDaily"' /tmp/tri-organizer
           curl -fsSL --retry 5 --retry-delay 5 --max-time 25 -o /tmp/tri-organizer-js https://trizentro.com/raceatlas/organizer-dashboard.js
           grep -q 'function dailyCsvRows' /tmp/tri-organizer-js
+          grep -q 'function rankedOrganizerEvents' /tmp/tri-organizer-js
+          grep -q 'id="comparisonRows"' /tmp/tri-organizer
           echo 'Verified latest release features on trizentro.com'
       - name: Verify latest calendar filters and registration statuses on production
         shell: bash
