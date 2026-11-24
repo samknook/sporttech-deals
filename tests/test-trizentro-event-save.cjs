@@ -6,7 +6,7 @@ async function scenario({signedIn=false,exists=false}={}){
  const operations=[],listeners={},storage=new Map();
  let stored=exists?{event_id:'ra-42',season_status:'registered'}:null;
  const button={disabled:false,textContent:'',setAttribute(){},insertAdjacentElement(){},addEventListener(type,handler){listeners[type]=handler}};
- const note={className:'',style:{},setAttribute(){},textContent:''};
+ const note={className:'',style:{},setAttribute(){},insertAdjacentElement(){},textContent:''};
  const user=signedIn?{id:'user-123'}:null;
  const chain={
    select(){return this},eq(){return this},
