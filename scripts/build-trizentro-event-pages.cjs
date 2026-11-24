@@ -206,7 +206,7 @@ for(const e of list){
 }
 const sitemapPath=path.join(root,'sitemap.xml');
 let sitemap=fs.readFileSync(sitemapPath,'utf8');
-const links=list.filter(e=>/^ra-\d{1,8}$/.test(e.id)&&e.name).map(e=>'  <url><loc>'+safe(base+'/raceatlas/wedstrijden/'+filename(e))+'</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>').join('\n');
+const links=list.filter(e=>/^ra-\d{1,8}$/.test(e.id)&&e.name).map(e=>'  <url><loc>'+safe('https://trizentro.com/events/wedstrijden/'+filename(e))+'</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>').join('\n');
 sitemap=sitemap.replace('</urlset>',links+'\n</urlset>');
 fs.writeFileSync(sitemapPath,sitemap);
 console.log('Generated '+total+' crawlable TriZentro race pages');
