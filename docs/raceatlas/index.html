@@ -66,7 +66,7 @@ header,.hero{background:#0c1925}.nav{max-width:1320px;padding-top:17px;padding-b
 @media(max-width:750px){.cards.listMode .card{grid-template-columns:66px minmax(0,1fr);gap:5px 13px}.cards.listMode .cardActions{grid-column:2;grid-row:auto;justify-content:flex-start;padding-top:6px}.cards.listMode .cardTop{grid-row:1/5}.cards.listMode .card .meta{font-size:11px}.cards.listMode .card .ra-alert-btn{font-size:11px}}
 @media(max-width:420px){.resultTools{align-items:stretch}.viewSwitch{margin-left:auto}.headerlist h2{font-size:24px}.cards.listMode .card{padding:12px}.cards.listMode .card .source{font-size:10px}}
 
-.registerLink{display:inline-flex;align-items:center;padding:10px 12px;border-radius:9px;background:#c6ff46;color:#19301e;font-size:12px;font-weight:850;text-decoration:none}.registerLink:hover{background:#b2ea3d}.raCardActions .ra-direct-registration{background:#173f32;color:#fff;border:1px solid #173f32}.raCardActions .ra-direct-registration:hover{background:#285d47}.cards.listMode .cardActions{flex-wrap:wrap;gap:7px}.cards.listMode .cardActions .registerLink{font-size:11px}.source{font-weight:750}
+.registerLink{display:inline-flex;align-items:center;padding:10px 12px;border-radius:9px;background:#c6ff46;color:#19301e;font-size:12px;font-weight:850;text-decoration:none}.registerLink:hover{background:#b2ea3d}.raCardActions .ra-direct-registration{background:#173f32;color:#fff;border:1px solid #173f32}.raCardActions .ra-direct-registration:hover{background:#285d47}.raRegistrationStatus{font-size:12px;font-weight:750}.raRegistrationStatus--closed{color:#9f2929}.raRegistrationStatus--pending{color:#7b5b18}.raRegistrationStatus--open{color:#166f41}.raRegistrationStatus--link{color:#376b57}.cards.listMode .cardActions{flex-wrap:wrap;gap:7px}.cards.listMode .cardActions .registerLink{font-size:11px}.source{font-weight:750}
 .savedSummary{border-radius:12px;padding:14px 18px;background:#e8f2e5;color:#27563d;font-size:13px;font-weight:700;margin:8px 0 18px}.field select{font-size:13px}
 /* RaceAtlas v4: editorial search-first navigation */
 .heroStats{display:none}.heroin{min-height:260px;display:block;padding-top:42px;padding-bottom:69px}
@@ -319,6 +319,16 @@ window.TriZentroSeason={
 };
 function eventPage(e){const css=document.querySelector('link[href*="shared-ui.css"]');const base=css?new URL('.',css.href):new URL('../',location.href);return new URL('events/wedstrijden/'+eventSlug(e)+'-'+e.id+'.html',base).pathname}
 function eventSlug(e){return String(e.name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,75)||'wedstrijd'}
+function registrationCardStatus(e){
+ const status=String(e.registrationStatus||'').toLowerCase();
+ if(status==='sold_out')return {label:'Uitverkocht volgens bron',className:'closed'};
+ if(status==='closed')return {label:'Inschrijving gesloten volgens bron',className:'closed'};
+ if(status==='not_open'||status==='upcoming')return {label:'Inschrijving opent later',className:'pending'};
+ if(status==='mixed')return {label:'Beschikbaarheid verschilt per afstand',className:'pending'};
+ if(status==='open')return {label:'Inschrijving open volgens bron',className:'open'};
+ if(e.registrationUrl)return {label:'Directe inschrijflink beschikbaar',className:'link'};
+ return null;
+}
 function eventCard(e){
  const d=getDate(e),sportClass=e.sport==='Fietsen'?'bike':e.sport==='Triatlon'?'tri':'';
  const duo=/duat(h)?lon|run[ -]?bike[ -]?run|\brbr\b|wintertria/i.test([e.name,e.discipline].join(' '));
@@ -331,6 +341,7 @@ function eventCard(e){
  const illustration=e.major?'':'<div class="raIllustrationText"><span>'+safe(discipline)+'</span><strong>'+safe(e.distance||'Afstand onbekend')+'</strong><span>'+safe(e.place||'Plaats onbekend')+'</span></div>';
  const isSaved=saved.includes(e.id),eventUrl=(typeof e.officialEventUrl==='string'&&/^https:\/\//i.test(e.officialEventUrl))?e.officialEventUrl:null;
  const registrationUrl=(typeof e.registrationUrl==='string'&&/^https:\/\/[^\s"'<>]+$/i.test(e.registrationUrl))?e.registrationUrl:null;
+ const registrationState=registrationCardStatus(e);
  const dateStatus=e.dateEvidence==='official'?'✓ Bevestigd op organisatorsite':e.status==='date_pending'?(e.expectedMonth?'◷ Verwachte maand — exacte datum onbekend':'◷ Datum nog onbekend'):e.status==='source'?'Datum controleren bij organisator':'Datum controleren bij organisator';
  const distanceKm=window.RaceAtlasRadius?.enabled?window.RaceAtlasRadius.km(e):null;
  const visualDate=isConfirmedEventDate(e)?{day:d.day,label:d.month}:e.expectedMonth?{day:'—',label:d.month}:{day:'?',label:'N.T.B.'};
@@ -346,6 +357,7 @@ function eventCard(e){
  (distanceKm!==null?'<div class="raCardInfo">📏 '+distanceKm+' km hemelsbreed</div>':'')+
  (e.priceStatus==='conflicting'?'<div class="raCardInfo raPriceWarning">⚠ Prijs onduidelijk — zie details</div>':'')+
  '<div class="raCardInfo '+(e.dateEvidence==='official'?'confirmed':'')+'">'+safe(dateStatus)+'</div>'+
+ (registrationState?'<div class="raCardInfo raRegistrationStatus raRegistrationStatus--'+safe(registrationState.className)+'">'+safe(registrationState.label)+'</div>':'')+
  '</div><div class="raCardActions">'+
  '<a class="ra-detail-btn" href="'+safe(eventPage(e))+'">Details</a>'+
  '<button type="button" class="ra-alert-btn" data-ra-alert="'+safe(e.id)+'">🔔 Meldingen</button>'+
