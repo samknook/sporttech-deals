@@ -10,6 +10,7 @@ on:
       - 'tests/test-trizentro-quick-registration-filter.cjs'
       - 'tests/test-trizentro-direct-registration-cards.cjs'
       - 'tests/test-trizentro-registration-status-cards.cjs'
+      - 'tests/test-trizentro-organizer-daily-csv.cjs'
       - 'tests/test-trizentro-event-save.cjs'
       - 'tests/test-trizentro-registration-radar.cjs'
       - 'tests/test-trizentro-referrer-attribution.cjs'
@@ -66,6 +67,7 @@ jobs:
             tests/test-trizentro-quick-registration-filter.cjs \
             tests/test-trizentro-direct-registration-cards.cjs \
             tests/test-trizentro-registration-status-cards.cjs \
+            tests/test-trizentro-organizer-daily-csv.cjs \
             tests/test-trizentro-event-save.cjs \
             tests/test-trizentro-registration-radar.cjs \
             tests/test-trizentro-referrer-attribution.cjs \
@@ -107,6 +109,7 @@ jobs:
           test -f docs/organisatoren/index.html
           test -f docs/raceatlas/organizer-dashboard.html
           test -f docs/raceatlas/organizer-dashboard.js
+          grep -q 'id="exportDaily"' docs/raceatlas/organizer-dashboard.html
           test -f docs/raceatlas/organizer-review-admin.html
           test -f docs/raceatlas/organizer-review-admin.js
           test -f docs/events/wedstrijden/garmin-zevenheuvelenloop-2027-ra-433.html
@@ -152,6 +155,10 @@ jobs:
           curl -fsSL --retry 5 --retry-delay 5 --max-time 25 -o /tmp/tri-admin https://trizentro.com/raceatlas/organizer-review-admin.html
           grep -q 'acquisitionOpens' /tmp/tri-admin
           grep -q 'acquisitionSaves' /tmp/tri-admin
+          curl -fsSL --retry 5 --retry-delay 5 --max-time 25 -o /tmp/tri-organizer https://trizentro.com/raceatlas/organizer-dashboard.html
+          grep -q 'id="exportDaily"' /tmp/tri-organizer
+          curl -fsSL --retry 5 --retry-delay 5 --max-time 25 -o /tmp/tri-organizer-js https://trizentro.com/raceatlas/organizer-dashboard.js
+          grep -q 'function dailyCsvRows' /tmp/tri-organizer-js
           echo 'Verified latest release features on trizentro.com'
       - name: Verify latest calendar filters and registration statuses on production
         shell: bash
