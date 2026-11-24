@@ -55,6 +55,29 @@ function renderInsights(){
   col.setAttribute('aria-label',col.title);col.append(track,x);chart.append(col);
  }
 }
+function rankedOrganizerEvents(events,metric){
+ const key=metricKeys.includes(metric)?metric:'registration_clicks';
+ const count=e=>{const n=Number(e[key]);return Number.isFinite(n)&&n>0?n:0};
+ return [...events].sort((a,b)=>count(b)-count(a)||String(a.event_name||a.event_id||'').localeCompare(String(b.event_name||b.event_id||''),'nl'));
+}
+function renderComparison(){
+ const body=$('comparisonRows');body.replaceChildren();
+ const events=rankedOrganizerEvents(Array.isArray(report?.events)?report.events:[],$('comparisonSort').value);
+ if(!events.length){
+  const tr=document.createElement('tr'),td=document.createElement('td');
+  td.colSpan=5;td.className='empty-comparison';td.textContent='Nog geen geverifieerde evenementgegevens beschikbaar.';
+  tr.append(td);body.append(tr);return;
+ }
+ for(const event of events){
+  const tr=document.createElement('tr'),name=document.createElement('th');name.scope='row';
+  name.textContent=event.event_name||event.event_id;tr.append(name);
+  for(const key of metricKeys){
+   const td=document.createElement('td'),n=Number(event[key]);
+   td.textContent=format(Number.isFinite(n)&&n>0?n:0);tr.append(td);
+  }
+  body.append(tr);
+ }
+}
 function populateEventFilter(){
  const filter=$('eventFilter'),previous=filter.value;
  filter.replaceChildren();
@@ -124,6 +147,7 @@ function dailyCsvRows(data,events){
 function render(data){
  report=data;
  populateEventFilter();
+ renderComparison();
  races.replaceChildren();
  if(!Array.isArray(data.events)||!data.events.length){
   const p=document.createElement('p');
@@ -196,6 +220,7 @@ editForm.addEventListener('submit',async ev=>{
 $('period').addEventListener('change',()=>{void load()});
 $('refresh').addEventListener('click',()=>{void load()});
 $('eventFilter').addEventListener('change',renderInsights);
+$('comparisonSort').addEventListener('change',renderComparison);
 $('exportDaily').addEventListener('click',()=>{
  if(!report?.events?.length||!Array.isArray(report.trend)||!report.trend.length)return;
  const rows=dailyCsvRows(report,selectedEvents());
