@@ -97,6 +97,30 @@ async function openEdit(e){
 const setMessage=s=>{msg.textContent=s};
 const safeWebsite=url=>{try{const u=new URL(url);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null}catch{return null}};
 const csvValue=x=>{let s=String(x??'');if(/^[\s]*[=+@\-]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';};
+function dailyCsvRows(data,events){
+ const allowed=new Map(events.map(e=>[e.event_id,e.event_name||e.event_id]));
+ const days=[7,30,90].includes(Number(data?.days))?Number(data.days):30;
+ const stamp=Date.parse(String(data?.asOf||new Date().toISOString()).slice(0,10)+'T00:00:00Z');
+ const last=Number.isFinite(stamp)?stamp:Date.now();
+ const end=Date.UTC(new Date(last).getUTCFullYear(),new Date(last).getUTCMonth(),new Date(last).getUTCDate());
+ const first=end-(days-1)*86400000;
+ const values=new Map();
+ for(const r of data?.trend||[]){
+  if(!allowed.has(r.event_id)||!/^20\d{2}-\d{2}-\d{2}$/.test(r.day||''))continue;
+  const date=Date.parse(r.day+'T00:00:00Z');
+  if(!Number.isFinite(date)||date<first||date>end)continue;
+  const count=Number(r.registration_clicks);
+  if(!Number.isFinite(count)||count<0)continue;
+  const key=r.day+'|'+r.event_id;
+  values.set(key,(values.get(key)||0)+count);
+ }
+ const rows=[['Datum','Evenement-ID','Evenement','Gemeten inschrijfklikken']];
+ for(const key of [...values.keys()].sort()){
+  const split=key.indexOf('|'),day=key.slice(0,split),id=key.slice(split+1);
+  rows.push([day,id,allowed.get(id),values.get(key)]);
+ }
+ return rows.map(row=>row.map(csvValue).join(','));
+}
 function render(data){
  report=data;
  populateEventFilter();
@@ -104,9 +128,10 @@ function render(data){
  if(!Array.isArray(data.events)||!data.events.length){
   const p=document.createElement('p');
   p.textContent='Er zijn nog geen geverifieerde evenementen gekoppeld. Claim je evenement via de organisatorenpagina; TriZentro controleert je aanvraag.';
-  races.append(p);$('export').disabled=true;return;
+  races.append(p);$('export').disabled=true;$('exportDaily').disabled=true;return;
  }
  $('export').disabled=false;
+ $('exportDaily').disabled=!Array.isArray(data.trend)||!data.trend.length;
  for(const e of data.events){
   const section=document.createElement('section');section.className='race';
   const title=document.createElement('h3');title.textContent=e.event_name||e.event_id;
@@ -128,7 +153,7 @@ function render(data){
 }
 async function load(){
  if(!client||!activeUser)return;
- $('refresh').disabled=true;$('export').disabled=true;setMessage('Rapportages ophalen…');
+ $('refresh').disabled=true;$('export').disabled=true;$('exportDaily').disabled=true;setMessage('Rapportages ophalen…');
  try{
   const {data:session,error:sErr}=await client.auth.getSession();
   if(sErr||!session.session||session.session.user.id!==activeUser)throw Error('session');
@@ -138,7 +163,7 @@ async function load(){
   const data=await response.json();
   if(data?.error)throw Error(data.error);
   render(data);setMessage('Rapportages bijgewerkt. Alleen jouw geverifieerde evenementen zijn zichtbaar.');
- }catch(err){report=null;races.replaceChildren();setMessage('Rapportages konden niet veilig worden opgehaald. Meld je opnieuw aan of probeer later opnieuw.');}
+ }catch(err){report=null;races.replaceChildren();$('export').disabled=true;$('exportDaily').disabled=true;setMessage('Rapportages konden niet veilig worden opgehaald. Meld je opnieuw aan of probeer later opnieuw.');}
  finally{$('refresh').disabled=false}
 }
 async function init(){
@@ -171,6 +196,16 @@ editForm.addEventListener('submit',async ev=>{
 $('period').addEventListener('change',()=>{void load()});
 $('refresh').addEventListener('click',()=>{void load()});
 $('eventFilter').addEventListener('change',renderInsights);
+$('exportDaily').addEventListener('click',()=>{
+ if(!report?.events?.length||!Array.isArray(report.trend)||!report.trend.length)return;
+ const rows=dailyCsvRows(report,selectedEvents());
+ if(rows.length<=1)return;
+ const csv='\uFEFF'+rows.join('\r\n')+'\r\n';
+ const file=new Blob([csv],{type:'text/csv;charset=utf-8'});
+ const url=URL.createObjectURL(file),a=document.createElement('a');
+ a.href=url;a.download='trizentro-inschrijfklikken-per-dag-'+$('period').value+'-dagen.csv';a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
 $('export').addEventListener('click',()=>{
  if(!report?.events?.length)return;
  const cols=['event_id','event_name','card_views','detail_views','organizer_clicks','registration_clicks'];
