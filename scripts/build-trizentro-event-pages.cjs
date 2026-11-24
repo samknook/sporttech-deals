@@ -150,6 +150,7 @@ for(const e of list){
  const facts=fields.map(x=>'<div class="fact"><span>'+safe(x[0])+'</span><strong>'+safe(x[1])+'</strong></div>').join('');
  const hasLicensedImage=e.major&&e.imageRights==='licensed'&&valid(e.imageUrl);
  const generatedImagePath=e.major&&e.imageRights==='generated'&&/^images\/featured\/ra-\d+\.(?:webp|jpe?g|png)$/.test(e.imageUrl||'')&&fs.existsSync(path.join(dir,e.imageUrl))?'../../raceatlas/'+e.imageUrl:null;
+ const socialImage=generatedImagePath?'https://trizentro.com/raceatlas/'+e.imageUrl:(hasLicensedImage?e.imageUrl:null);
  const image=hasLicensedImage?'<figure class="event-photo"><img src="'+safe(e.imageUrl)+'" alt="Locatiefoto bij '+safe(e.name)+'; geen opname van de wedstrijd" loading="lazy" onerror="this.parentElement.remove()"><figcaption>Foto: '+safe(e.imageCredit||'Wikimedia Commons')+' · <a target="_blank" rel="noopener noreferrer" href="'+safe(e.imageSourceUrl||'https://commons.wikimedia.org/')+'">Bron en licentie ↗</a></figcaption></figure>':
   generatedImagePath?'<img src="'+safe(generatedImagePath)+'" alt="AI-sfeerbeeld voor '+safe(e.name)+'; geen officiële foto" loading="lazy" onerror="this.remove()">':'';
  const sport=[e.sport,e.discipline].filter(Boolean).filter((value,index,items)=>items.findIndex(item=>String(item).toLowerCase()===String(value).toLowerCase())===index).join(' · ')||'Sportevenement';
@@ -184,7 +185,7 @@ for(const e of list){
  const structuredData=json?'<script type="application/ld+json">'+JSON.stringify(json).replace(/</g,'\\u003c')+'</script>':'';
  const document=['<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#071925">',
  '<title>'+safe(e.name)+' | TriZentro</title><meta name="description" content="'+safe(desc)+'">',
- '<link rel="canonical" href="'+safe(url)+'"><meta property="og:site_name" content="TriZentro"><meta property="og:title" content="'+safe(e.name)+' | TriZentro"><meta property="og:description" content="'+safe(desc)+'"><meta property="og:url" content="'+safe(url)+'">',
+ '<link rel="canonical" href="'+safe(url)+'"><meta property="og:site_name" content="TriZentro"><meta property="og:title" content="'+safe(e.name)+' | TriZentro"><meta property="og:description" content="'+safe(desc)+'"><meta property="og:url" content="'+safe(url)+'">'+(socialImage?'<meta property="og:image" content="'+safe(socialImage)+'"><meta name="twitter:card" content="summary_large_image">':'<meta name="twitter:card" content="summary">'),
  structuredData+'<style>'+style+'</style><link rel="stylesheet" href="../event-details.css"><link rel="stylesheet" href="../../shared-ui.css?v=20261113-unified"></head>',
  '<body><header class="tz-site-header"><nav class="tz-site-nav" aria-label="Hoofdnavigatie"><a class="tz-site-brand" href="/events/" aria-label="TriZentro"><img class="tz-logo-image" src="../../trizentro-mark.svg" alt="TriZentro"></a><div class="tz-site-links"><a href="/events/">Events</a><a href="/seizoen/">Mijn seizoen</a><a href="/performance/">Performance</a><a href="/account/">Mijn account</a><a href="/organisatoren/">Voor organisatoren</a></div></nav></header>',
  '<main><a class="back" href="/events/">← Alle evenementen</a><h1>'+safe(e.name)+'</h1><p class="sub">'+safe([e.place,e.country,e.distance].filter(Boolean).join(' · '))+'</p>',
