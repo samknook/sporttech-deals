@@ -11,6 +11,7 @@ on:
       - 'tests/test-trizentro-legacy-canonical.cjs'
       - 'tests/test-trizentro-event-share.cjs'
       - 'tests/test-trizentro-major-race-images.cjs'
+      - 'tests/test-trizentro-seo.cjs'
       - 'scripts/build-trizentro-event-pages.cjs'
       - 'scripts/build-trizentro-platform-shell.cjs'
       - 'scripts/build-trizentro-seo-hubs.cjs'
@@ -56,6 +57,7 @@ jobs:
           node --test tests/test-trizentro-legacy-canonical.cjs
           node --test tests/test-trizentro-event-share.cjs
           node --test tests/test-trizentro-major-race-images.cjs
+          node tests/test-trizentro-seo.cjs
       - name: Validate complete release
         run: |
           test -f docs/index.html
