@@ -5,6 +5,7 @@ on:
     paths:
       - 'docs/**'
       - 'tests/test-trizentro-official-sources.cjs'
+      - 'tests/test-trizentro-rbr-registration.cjs'
       - 'tests/test-trizentro-event-save.cjs'
       - 'tests/test-trizentro-registration-radar.cjs'
       - 'tests/test-trizentro-referrer-attribution.cjs'
@@ -56,6 +57,7 @@ jobs:
           failed=0
           for test_file in \
             tests/test-trizentro-official-sources.cjs \
+            tests/test-trizentro-rbr-registration.cjs \
             tests/test-trizentro-event-save.cjs \
             tests/test-trizentro-registration-radar.cjs \
             tests/test-trizentro-referrer-attribution.cjs \
