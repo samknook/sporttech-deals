@@ -151,6 +151,24 @@ jobs:
           grep -q 'acquisitionOpens' /tmp/tri-admin
           grep -q 'acquisitionSaves' /tmp/tri-admin
           echo 'Verified latest release features on trizentro.com'
+      - name: Verify latest calendar filters and registration statuses on production
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 12); do
+            if curl -fsSL --max-time 25 "https://trizentro.com/events/?release=${{ github.sha }}" -o /tmp/tri-calendar &&
+               grep -Fq 'data-quick="registration"' /tmp/tri-calendar &&
+               grep -Fq 'ra-direct-registration' /tmp/tri-calendar &&
+               grep -Fq 'function registrationCardStatus(e)' /tmp/tri-calendar &&
+               grep -Fq 'Inschrijving gesloten volgens bron' /tmp/tri-calendar &&
+               grep -Fq 'Directe inschrijflink beschikbaar' /tmp/tri-calendar; then
+              echo 'Latest registration filter, direct links and honest status labels live'
+              exit 0
+            fi
+            sleep 5
+          done
+          echo 'Calendar release markers were not found on trizentro.com'
+          exit 1
       - name: Verify official RBR registrations are live
         shell: bash
         run: |
