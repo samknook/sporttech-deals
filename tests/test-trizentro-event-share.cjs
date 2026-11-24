@@ -5,12 +5,15 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
 const source=fs.readFileSync('docs/raceatlas/event-share.js','utf8');
-const builder=fs.readFileSync('scripts/build-trizentro-event-pages.cjs','utf8');
+const path=require('node:path');
 
-test('all generated race detail pages include native share and accessible copy status',()=>{
-  assert.match(builder,/id="shareRace"/);
-  assert.match(builder,/id="shareRaceStatus" role="status" aria-live="polite"/);
-  assert.match(builder,/event-share\.js/);
+test('the published build artifact includes a working, accessible share action',()=>{
+  const race=path.join('docs','events','wedstrijden','garmin-zevenheuvelenloop-2027-ra-433.html');
+  assert.ok(fs.existsSync(race),'Canonical race detail page must be built first');
+  const html=fs.readFileSync(race,'utf8');
+  assert.ok(html.includes('id="shareRace"'),'Share button missing from built race page');
+  assert.ok(/id="shareRaceStatus"[^>]*role="status"[^>]*aria-live="polite"/.test(html),'Accessible share status missing');
+  assert.ok(html.includes('event-share.js'),'Share script missing from published page');
 });
 
 function scenario({share,writeText}={}){
