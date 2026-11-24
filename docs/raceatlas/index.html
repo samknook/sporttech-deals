@@ -330,6 +330,7 @@ function eventCard(e){
   .join(' · ')||'Sportevenement';
  const illustration=e.major?'':'<div class="raIllustrationText"><span>'+safe(discipline)+'</span><strong>'+safe(e.distance||'Afstand onbekend')+'</strong><span>'+safe(e.place||'Plaats onbekend')+'</span></div>';
  const isSaved=saved.includes(e.id),eventUrl=(typeof e.officialEventUrl==='string'&&/^https:\/\//i.test(e.officialEventUrl))?e.officialEventUrl:null;
+ const registrationUrl=(typeof e.registrationUrl==='string'&&/^https:\/\/[^\s"'<>]+$/i.test(e.registrationUrl))?e.registrationUrl:null;
  const dateStatus=e.dateEvidence==='official'?'✓ Bevestigd op organisatorsite':e.status==='date_pending'?(e.expectedMonth?'◷ Verwachte maand — exacte datum onbekend':'◷ Datum nog onbekend'):e.status==='source'?'Datum controleren bij organisator':'Datum controleren bij organisator';
  const distanceKm=window.RaceAtlasRadius?.enabled?window.RaceAtlasRadius.km(e):null;
  const visualDate=isConfirmedEventDate(e)?{day:d.day,label:d.month}:e.expectedMonth?{day:'—',label:d.month}:{day:'?',label:'N.T.B.'};
@@ -350,7 +351,8 @@ function eventCard(e){
  '<button type="button" class="ra-alert-btn" data-ra-alert="'+safe(e.id)+'">🔔 Meldingen</button>'+
  '<button type="button" class="tz-race-share" aria-label="Deel '+safe(e.name)+'" data-tz-share="'+safe(e.id)+'">↗ Deel</button>'+
  '<button class="save '+(isSaved?'selected':'')+'" type="button" aria-label="'+(isSaved?'Verwijder uit mijn seizoen':'Bewaar in mijn seizoen')+'">'+(isSaved?'✓ Bewaard':'+ Bewaar')+'</button>'+
- (eventUrl?'<a class="registerLink" href="'+safe(eventUrl)+'" data-ra-event="'+safe(e.id)+'" data-ra-outbound="organizer" rel="noopener noreferrer" target="_blank">Officiële website ↗</a>':'')+'</div>';
+ (registrationUrl?'<a class="registerLink ra-direct-registration" href="'+safe(registrationUrl)+'" data-ra-event="'+safe(e.id)+'" data-ra-outbound="registration" rel="noopener noreferrer" target="_blank">Naar inschrijving ↗</a>':'')+
+ (eventUrl&&eventUrl!==registrationUrl?'<a class="registerLink" href="'+safe(eventUrl)+'" data-ra-event="'+safe(e.id)+'" data-ra-outbound="organizer" rel="noopener noreferrer" target="_blank">Officiële website ↗</a>':'')+'</div>';
  if(visualArt){
   const visual=card.querySelector('.raCardVisual');
   visual.style.backgroundImage='url("'+visualArt+'")';
