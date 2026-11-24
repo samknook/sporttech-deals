@@ -6,6 +6,7 @@ on:
       - 'docs/**'
       - 'tests/test-trizentro-official-sources.cjs'
       - 'tests/test-trizentro-rbr-registration.cjs'
+      - 'tests/test-trizentro-egmond-registration.cjs'
       - 'tests/test-trizentro-quick-registration-filter.cjs'
       - 'tests/test-trizentro-direct-registration-cards.cjs'
       - 'tests/test-trizentro-registration-status-cards.cjs'
@@ -61,6 +62,7 @@ jobs:
           for test_file in \
             tests/test-trizentro-official-sources.cjs \
             tests/test-trizentro-rbr-registration.cjs \
+            tests/test-trizentro-egmond-registration.cjs \
             tests/test-trizentro-quick-registration-filter.cjs \
             tests/test-trizentro-direct-registration-cards.cjs \
             tests/test-trizentro-registration-status-cards.cjs \
@@ -161,7 +163,8 @@ jobs:
                grep -Fq 'ra-direct-registration' /tmp/tri-calendar &&
                grep -Fq 'function registrationCardStatus(e)' /tmp/tri-calendar &&
                grep -Fq 'Inschrijving gesloten volgens bron' /tmp/tri-calendar &&
-               grep -Fq 'Directe inschrijflink beschikbaar' /tmp/tri-calendar; then
+               grep -Fq 'Directe inschrijflink beschikbaar' /tmp/tri-calendar &&
+               grep -Fq 'atleta.cc/e/nhIVGRx4Tk9h' /tmp/tri-calendar; then
               echo 'Latest registration filter, direct links and honest status labels live'
               exit 0
             fi
