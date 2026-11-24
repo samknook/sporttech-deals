@@ -22,13 +22,13 @@
 <main><div class="tag">TriZentro / voor organisatoren</div><h1>Jouw evenement.<br>Jouw inzichten.</h1><p class="lead">Bekijk de geaggregeerde belangstelling voor jouw geverifieerde evenementen. Alleen accounts die door TriZentro aan een organisatie zijn gekoppeld, krijgen rapportages te zien.</p>
 <section class="panel" aria-label="Accountstatus"><p id="message" role="status" aria-live="polite">Accountstatus controleren…</p>
 <div id="guest" hidden><p>Log eerst in met je TriZentro-account via <a href="../raceatlas/">Events</a> en open daarna dit dashboard opnieuw.</p><a class="button" href="organisatoren.html?onderwerp=Claim%20je%20evenement#contact">Claim je evenement</a></div>
-<div id="content" hidden><div class="actions"><label for="period">Periode:</label><select id="period"><option value="7">Laatste 7 dagen</option><option value="30" selected>Laatste 30 dagen</option><option value="90">Laatste 90 dagen</option></select><button id="refresh" type="button">Vernieuwen</button><button id="export" type="button" disabled>Download CSV-rapport</button></div>
+<div id="content" hidden><div class="actions"><label for="period">Periode:</label><select id="period"><option value="7">Laatste 7 dagen</option><option value="30" selected>Laatste 30 dagen</option><option value="90">Laatste 90 dagen</option></select><button id="refresh" type="button">Vernieuwen</button><button id="export" type="button" disabled>Download CSV-rapport</button><button id="exportDaily" type="button" disabled>Download dagrapport (CSV)</button></div>
 <div class="metrics"><div class="metric"><strong id="cards">0</strong><span>Kaartweergaven</span></div><div class="metric"><strong id="details">0</strong><span>Geopende details</span></div><div class="metric"><strong id="outbound">0</strong><span>Websiteklikken</span></div><div class="metric"><strong id="registration">0</strong><span>Inschrijfklikken</span></div></div>
 <section class="insight-panel" aria-labelledby="insightTitle">
 <div class="insight-header"><h2 id="insightTitle">Ontwikkeling en interesse</h2><label for="eventFilter">Wedstrijd <select id="eventFilter"><option value="all">Alle geverifieerde evenementen</option></select></label></div>
 <p id="insightSummary" class="insight-summary">Selecteer een wedstrijd om de ontwikkeling te bekijken.</p>
 <div id="insightChart" class="insight-bars" role="img" aria-label="Dagelijkse gemeten inschrijfklikken"></div>
-<p class="insight-note">De grafiek toont gemeten inschrijfklikken per dag of periode. De verhouding tussen klikken en detailopeningen is <strong>geen conversieratio naar inschrijvingen</strong>. Eén bezoeker kan meerdere keren klikken.</p>
+<p class="insight-note">De grafiek toont gemeten inschrijfklikken per dag of periode. Het dagrapport bevat uitsluitend geaggregeerde gemeten inschrijfklikken en volgt de gekozen wedstrijd en periode. De verhouding tussen klikken en detailopeningen is <strong>geen conversieratio naar inschrijvingen</strong>. Eén bezoeker kan meerdere keren klikken.</p>
 </section>
 <div id="races" aria-live="polite"></div>
 <section id="editPanel" class="race" hidden aria-labelledby="editTitle">
