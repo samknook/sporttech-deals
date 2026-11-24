@@ -26,3 +26,10 @@ test('generated major race images resolve to their real extension and public dir
 test('events with no available cover retain a meaningful sport illustration',()=>{
   assert.match(builder,/!hasLicensedImage&&!generatedImagePath\?illustration/);
 });
+
+test('sharing metadata uses only existing race covers',()=>{
+  assert.match(builder,/socialImage=generatedImagePath\?/);
+  assert.match(builder,/property="og:image"/);
+  assert.match(builder,/summary_large_image/);
+  assert.match(builder,/twitter:card/);
+});
