@@ -145,6 +145,24 @@ jobs:
           grep -q 'acquisitionOpens' /tmp/tri-admin
           grep -q 'acquisitionSaves' /tmp/tri-admin
           echo 'Verified latest release features on trizentro.com'
+      - name: Verify official RBR registrations are live
+        shell: bash
+        run: |
+          set -euo pipefail
+          for entry in 'rbr-almere-2027-ra-219.html:rbr--tt-almere-20271786603370440' 'rbr-rotterdam-2027-ra-214.html:rbr-rotterdam-20271786625155223'; do
+            file="${entry%%:*}"
+            registration="${entry#*:}"
+            found=0
+            for attempt in $(seq 1 10); do
+              if curl -fsSL --max-time 20 "https://trizentro.com/events/wedstrijden/$file?release=${{ github.sha }}" -o /tmp/tri-rbr &&
+                 grep -q "$registration" /tmp/tri-rbr; then
+                found=1
+                break
+              fi
+              sleep 5
+            done
+            test "$found" -eq 1 || { echo "::error::Official registration not live for $file"; exit 1; }
+          done
       - name: Verify race sharing is live on the custom domain
         run: |
           set -euo pipefail
