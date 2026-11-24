@@ -120,6 +120,29 @@ async function openEdit(e){
 const setMessage=s=>{msg.textContent=s};
 const safeWebsite=url=>{try{const u=new URL(url);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null}catch{return null}};
 const csvValue=x=>{let s=String(x??'');if(/^[\s]*[=+@\-]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';};
+function organizerSummaryText(data,events){
+ const days=[7,30,90].includes(Number(data?.days))?Number(data.days):30;
+ const selected=Array.isArray(events)?events:[];
+ const totals=selected.reduce((acc,e)=>{
+  for(const key of metricKeys){
+   const n=Number(e[key]);
+   if(Number.isFinite(n)&&n>0)acc[key]+=n;
+  }
+  return acc;
+ },{card_views:0,detail_views:0,organizer_clicks:0,registration_clicks:0});
+ const title=selected.length===1?String(selected[0].event_name||selected[0].event_id||'Evenement'):'Overzicht van '+selected.length+' geverifieerde evenementen';
+ const asOf=/^20\d{2}-\d{2}-\d{2}/.test(String(data?.asOf||''))?String(data.asOf).slice(0,10):'';
+ return [
+  'TriZentro – gemeten belangstelling',
+  title,
+  'Periode: laatste '+days+' dagen'+(asOf?' (peildatum '+asOf+')':''),
+  'Kaartweergaven: '+format(totals.card_views),
+  'Detailopeningen: '+format(totals.detail_views),
+  'Websiteklikken: '+format(totals.organizer_clicks),
+  'Inschrijfklikken: '+format(totals.registration_clicks),
+  'Let op: dit zijn gemeten interacties, geen unieke bezoekers en geen bevestigde inschrijvingen.'
+ ].join('\n');
+}
 function dailyCsvRows(data,events){
  const allowed=new Map(events.map(e=>[e.event_id,e.event_name||e.event_id]));
  const days=[7,30,90].includes(Number(data?.days))?Number(data.days):30;
@@ -152,9 +175,10 @@ function render(data){
  if(!Array.isArray(data.events)||!data.events.length){
   const p=document.createElement('p');
   p.textContent='Er zijn nog geen geverifieerde evenementen gekoppeld. Claim je evenement via de organisatorenpagina; TriZentro controleert je aanvraag.';
-  races.append(p);$('export').disabled=true;$('exportDaily').disabled=true;return;
+  races.append(p);$('export').disabled=true;$('exportDaily').disabled=true;$('copySummary').disabled=true;return;
  }
  $('export').disabled=false;
+ $('copySummary').disabled=false;
  $('exportDaily').disabled=!Array.isArray(data.trend)||!data.trend.length;
  for(const e of data.events){
   const section=document.createElement('section');section.className='race';
@@ -177,7 +201,7 @@ function render(data){
 }
 async function load(){
  if(!client||!activeUser)return;
- $('refresh').disabled=true;$('export').disabled=true;$('exportDaily').disabled=true;setMessage('Rapportages ophalen…');
+ $('refresh').disabled=true;$('export').disabled=true;$('exportDaily').disabled=true;$('copySummary').disabled=true;$('copySummaryStatus').textContent='';setMessage('Rapportages ophalen…');
  try{
   const {data:session,error:sErr}=await client.auth.getSession();
   if(sErr||!session.session||session.session.user.id!==activeUser)throw Error('session');
@@ -187,7 +211,7 @@ async function load(){
   const data=await response.json();
   if(data?.error)throw Error(data.error);
   render(data);setMessage('Rapportages bijgewerkt. Alleen jouw geverifieerde evenementen zijn zichtbaar.');
- }catch(err){report=null;races.replaceChildren();$('export').disabled=true;$('exportDaily').disabled=true;setMessage('Rapportages konden niet veilig worden opgehaald. Meld je opnieuw aan of probeer later opnieuw.');}
+ }catch(err){report=null;races.replaceChildren();$('export').disabled=true;$('exportDaily').disabled=true;$('copySummary').disabled=true;setMessage('Rapportages konden niet veilig worden opgehaald. Meld je opnieuw aan of probeer later opnieuw.');}
  finally{$('refresh').disabled=false}
 }
 async function init(){
@@ -221,6 +245,18 @@ $('period').addEventListener('change',()=>{void load()});
 $('refresh').addEventListener('click',()=>{void load()});
 $('eventFilter').addEventListener('change',renderInsights);
 $('comparisonSort').addEventListener('change',renderComparison);
+$('copySummary').addEventListener('click',async()=>{
+ const status=$('copySummaryStatus');
+ if(!report?.events?.length)return;
+ const summary=organizerSummaryText(report,selectedEvents());
+ try{
+  if(!navigator.clipboard?.writeText)throw Error('clipboard_unavailable');
+  await navigator.clipboard.writeText(summary);
+  status.textContent='Rapportsamenvatting gekopieerd. Deel deze alleen met de bedoelde ontvangers.';
+ }catch{
+  status.textContent='Automatisch kopiëren is niet beschikbaar. Download het CSV-rapport of probeer een beveiligde browser.';
+ }
+});
 $('exportDaily').addEventListener('click',()=>{
  if(!report?.events?.length||!Array.isArray(report.trend)||!report.trend.length)return;
  const rows=dailyCsvRows(report,selectedEvents());
