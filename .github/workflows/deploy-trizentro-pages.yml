@@ -80,6 +80,8 @@ jobs:
             echo '~~~'
             echo "Failures: $failed"
           } >> "$GITHUB_STEP_SUMMARY"
+          echo '--- TriZentro checks summary ---'
+          cat /tmp/trizentro-checks.txt
           if [ "$failed" -ne 0 ]; then
             echo "::error::$failed release checks failed; production deploy blocked."
             exit 1
