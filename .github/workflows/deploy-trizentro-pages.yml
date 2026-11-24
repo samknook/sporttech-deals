@@ -12,6 +12,7 @@ on:
       - 'tests/test-trizentro-registration-status-cards.cjs'
       - 'tests/test-trizentro-organizer-daily-csv.cjs'
       - 'tests/test-trizentro-organizer-comparison.cjs'
+      - 'tests/test-trizentro-organizer-summary.cjs'
       - 'tests/test-trizentro-event-save.cjs'
       - 'tests/test-trizentro-registration-radar.cjs'
       - 'tests/test-trizentro-referrer-attribution.cjs'
@@ -70,6 +71,7 @@ jobs:
             tests/test-trizentro-registration-status-cards.cjs \
             tests/test-trizentro-organizer-daily-csv.cjs \
             tests/test-trizentro-organizer-comparison.cjs \
+            tests/test-trizentro-organizer-summary.cjs \
             tests/test-trizentro-event-save.cjs \
             tests/test-trizentro-registration-radar.cjs \
             tests/test-trizentro-referrer-attribution.cjs \
@@ -113,6 +115,7 @@ jobs:
           test -f docs/raceatlas/organizer-dashboard.js
           grep -q 'id="exportDaily"' docs/raceatlas/organizer-dashboard.html
           grep -q 'id="comparisonRows"' docs/raceatlas/organizer-dashboard.html
+          grep -q 'id="copySummary"' docs/raceatlas/organizer-dashboard.html
           test -f docs/raceatlas/organizer-review-admin.html
           test -f docs/raceatlas/organizer-review-admin.js
           test -f docs/events/wedstrijden/garmin-zevenheuvelenloop-2027-ra-433.html
@@ -164,6 +167,8 @@ jobs:
           grep -q 'function dailyCsvRows' /tmp/tri-organizer-js
           grep -q 'function rankedOrganizerEvents' /tmp/tri-organizer-js
           grep -q 'id="comparisonRows"' /tmp/tri-organizer
+          grep -q 'id="copySummary"' /tmp/tri-organizer
+          grep -q 'function organizerSummaryText' /tmp/tri-organizer-js
           echo 'Verified latest release features on trizentro.com'
       - name: Verify latest calendar filters and registration statuses on production
         shell: bash
