@@ -14,7 +14,7 @@
 .insight-bar-track{width:100%;height:124px;display:flex;align-items:end;background:#f0f6ed;border-radius:5px 5px 0 0;overflow:hidden}
 .insight-bar{width:100%;min-height:0;background:#276e49;border-radius:4px 4px 0 0}
 .insight-bucket span{font-size:10px;color:#526657;white-space:nowrap}
-.insight-note{font-size:12px;color:#607166;line-height:1.55}
+.insight-note{font-size:12px;color:#607166;line-height:1.55}.comparison-scroll{overflow-x:auto;margin-top:16px}.comparison-table{width:100%;border-collapse:collapse;min-width:630px;font-size:13px}.comparison-table th,.comparison-table td{padding:12px 10px;border-bottom:1px solid #e0ece2;text-align:right;white-space:nowrap}.comparison-table th:first-child,.comparison-table td:first-child{text-align:left;white-space:normal;min-width:180px}.comparison-table th{font-size:12px;color:#4e6a57;background:#f0f7ee}.comparison-table tbody tr:first-child{background:#f5fbf2}.comparison-table .empty-comparison{text-align:left;color:#607166}
 @media(max-width:700px){.insight-bucket{flex-basis:25px;min-width:25px}.insight-bucket span{font-size:9px}}.edit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.edit-grid label{display:block;font-weight:700;font-size:13px;margin-bottom:6px}.edit-grid input,.edit-grid textarea,.edit-grid select{width:100%;font:inherit;padding:11px;border:1px solid #abcab7;border-radius:9px;min-width:0}.edit-grid .full{grid-column:1/-1}.request-list{margin:14px 0;padding-left:22px}.request-list li{margin:10px 0;line-height:1.45;font-size:13px}@media(max-width:700px){.edit-grid{grid-template-columns:1fr}}@media(max-width:700px){main{padding:26px 14px 70px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.panel,.race{padding:17px}}
 </style></head>
 <body class="tz-performance">
@@ -29,6 +29,11 @@
 <p id="insightSummary" class="insight-summary">Selecteer een wedstrijd om de ontwikkeling te bekijken.</p>
 <div id="insightChart" class="insight-bars" role="img" aria-label="Dagelijkse gemeten inschrijfklikken"></div>
 <p class="insight-note">De grafiek toont gemeten inschrijfklikken per dag of periode. Het dagrapport bevat uitsluitend geaggregeerde gemeten inschrijfklikken en volgt de gekozen wedstrijd en periode. De verhouding tussen klikken en detailopeningen is <strong>geen conversieratio naar inschrijvingen</strong>. Eén bezoeker kan meerdere keren klikken.</p>
+</section>
+<section class="insight-panel" aria-labelledby="comparisonTitle">
+<div class="insight-header"><h2 id="comparisonTitle">Vergelijk je evenementen</h2><label for="comparisonSort">Rangschikken op <select id="comparisonSort"><option value="registration_clicks">Inschrijfklikken</option><option value="detail_views">Detailopeningen</option><option value="card_views">Kaartweergaven</option><option value="organizer_clicks">Websiteklikken</option></select></label></div>
+<p class="insight-note">Vergelijk alleen de evenementen die aan jouw geverifieerde organisatorenaccount zijn gekoppeld. De gekozen rapportageperiode geldt voor alle rijen. Cijfers zijn interacties, geen unieke bezoekers of bevestigde inschrijvingen.</p>
+<div class="comparison-scroll"><table class="comparison-table"><thead><tr><th scope="col">Evenement</th><th scope="col">Kaartweergaven</th><th scope="col">Details</th><th scope="col">Websiteklikken</th><th scope="col">Inschrijfklikken</th></tr></thead><tbody id="comparisonRows"></tbody></table></div>
 </section>
 <div id="races" aria-live="polite"></div>
 <section id="editPanel" class="race" hidden aria-labelledby="editTitle">
