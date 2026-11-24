@@ -8,6 +8,7 @@ on:
       - 'tests/test-trizentro-rbr-registration.cjs'
       - 'tests/test-trizentro-quick-registration-filter.cjs'
       - 'tests/test-trizentro-direct-registration-cards.cjs'
+      - 'tests/test-trizentro-registration-status-cards.cjs'
       - 'tests/test-trizentro-event-save.cjs'
       - 'tests/test-trizentro-registration-radar.cjs'
       - 'tests/test-trizentro-referrer-attribution.cjs'
@@ -62,6 +63,7 @@ jobs:
             tests/test-trizentro-rbr-registration.cjs \
             tests/test-trizentro-quick-registration-filter.cjs \
             tests/test-trizentro-direct-registration-cards.cjs \
+            tests/test-trizentro-registration-status-cards.cjs \
             tests/test-trizentro-event-save.cjs \
             tests/test-trizentro-registration-radar.cjs \
             tests/test-trizentro-referrer-attribution.cjs \
