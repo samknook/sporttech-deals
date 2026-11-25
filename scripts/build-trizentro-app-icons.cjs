@@ -3,7 +3,7 @@
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),zlib=require('node:zlib');
 const root=path.resolve(__dirname,'../docs');
-const mark=fs.readFileSync(path.join(root,'trizentro-mark.svg'),'utf8');
+const mark=fs.readFileSync(path.join(root,'trizentro-app-mark.svg'),'utf8');
 const shapes=[...mark.matchAll(/<path fill="(#[0-9a-f]{6})" fill-rule="evenodd" d="([^"]+)"/gi)].map(m=>{
  const polygons=m[2].trim().split(/Z/i).filter(x=>x.trim()).map(part=>{
   if(!/^\s*M[\d\s.-]+$/i.test(part))throw Error('Unsupported brand path; review icon renderer');
@@ -20,7 +20,7 @@ function icon(size){
  const scale=2,n=size*scale,pixels=Buffer.alloc(n*n*3),bg=[7,25,37];
  for(let i=0;i<pixels.length;i+=3){pixels[i]=bg[0];pixels[i+1]=bg[1];pixels[i+2]=bg[2]}
  // Keep all of the mark within the central maskable-icon safe area.
- const factor=n*.68/208,ox=(n-208*factor)/2,oy=(n-138*factor)/2;
+ const factor=n*.76/256,ox=(n-256*factor)/2,oy=(n-256*factor)/2;
  for(const shape of shapes){
   const edges=shape.polygons.flatMap(poly=>poly.map((p,i)=>{const q=poly[(i+1)%poly.length];return [ox+p[0]*factor,oy+p[1]*factor,ox+q[0]*factor,oy+q[1]*factor]}));
   for(let y=0;y<n;y++){
@@ -41,5 +41,5 @@ function icon(size){
  return Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),chunk('IHDR',header),chunk('IDAT',zlib.deflateSync(rows)),chunk('IEND',Buffer.alloc(0))]);
 }
 const out=path.join(root,'app-icons');fs.mkdirSync(out,{recursive:true});
-for(const size of [180,192,512])fs.writeFileSync(path.join(out,'icon-'+size+'.png'),icon(size));
-console.log('Generated TriZentro app icons: 180, 192 and 512 px');
+for(const size of [180,192,512,1024])fs.writeFileSync(path.join(out,'icon-'+size+'.png'),icon(size));
+console.log('Generated TriZentro app icons: 180, 192, 512 and 1024 px');
