@@ -9,7 +9,7 @@ const path=require('node:path');
 const http=require('node:http');
 const {chromium}=require('playwright');
 const ROOT=path.resolve(__dirname,'../docs');
-const mime={'.html':'text/html; charset=utf-8','.js':'application/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.json':'application/json'};
+const mime={'.html':'text/html; charset=utf-8','.js':'application/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.json':'application/json','.webmanifest':'application/manifest+json'};
 const server=http.createServer((request,response)=>{
  let pathname;
  try{pathname=decodeURIComponent(new URL(request.url,'http://localhost').pathname)}catch{response.writeHead(400);response.end();return}
@@ -98,7 +98,23 @@ async function test(){
   assert.equal(await page.locator('.race-secondary [data-ra-outbound="organizer"]').isVisible(),true);
   assert.equal(await page.locator('#shareRaceStatus').getAttribute('role'),'status');
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+2),'Detail page should not overflow horizontally');
-  console.log('PASS: mobile discovery, filters, save, season and focused race-detail actions');
+  // App metadata and service worker operate on the real built site.
+  await page.goto(base+'/events/',{waitUntil:'domcontentloaded'});
+  assert.equal(await page.locator('link[rel="manifest"]').getAttribute('href'),'/manifest.webmanifest');
+  const manifestResponse=await context.request.get(base+'/manifest.webmanifest');
+  assert.equal(manifestResponse.status(),200);
+  assert.equal((await manifestResponse.json()).display,'standalone');
+  await page.waitForFunction(()=>!!navigator.serviceWorker.controller,{},{timeout:15000});
+  const cached=await page.evaluate(async()=>{const c=await caches.open('trizentro-offline-v1');return (await c.keys()).map(r=>new URL(r.url).pathname).sort()});
+  assert.deepEqual(cached,['/app-icons/icon-192.png','/app-offline.html']);
+  await context.setOffline(true);
+  try{
+   await page.goto(base+'/events/?offline-check=1',{waitUntil:'domcontentloaded'});
+   assert.match(await page.locator('h1').innerText(),/Even geen verbinding/);
+  }finally{await context.setOffline(false)}
+  await page.goto(base+'/events/',{waitUntil:'domcontentloaded'});
+  await page.locator('#cards .card').first().waitFor({state:'visible'});
+  console.log('PASS: mobile discovery, race detail, season and installable app offline fallback');
  }catch(err){
   try{await page.screenshot({path:'mobile-smoke-failure.png',fullPage:true})}catch{}
   throw err;
