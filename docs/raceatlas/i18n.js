@@ -3,6 +3,10 @@
 'use strict';
 const KEY='raceatlas-language-v1';
 const strings={
+'Wielerkalender 2027':'Cycling calendar 2027','Triatlonkalender 2027':'Triathlon calendar 2027','Ontdek wielertochten ↗':'Explore cycling events ↗','Bekijk jouw volgende triatlon ↗':'Find your next triathlon ↗','Regionale kalenders':'Regional calendars',
+
+'Ontdek wedstrijden':'Discover races','Wielrennen':'Cycling','Ontdek meer wedstrijden':'Discover more races','Ontdek jouw volgende uitdaging':'Find your next challenge','Hardloopkalender 2027':'Running calendar 2027','Bekijk alle afstanden ↗':'Explore all distances ↗','Regio':'Region','Vind wedstrijden dichtbij ↗':'Find races nearby ↗','Ontdek lokale startlijnen ↗':'Discover local races ↗',
+
 'Ontdek':'Discover','Voor organisatoren':'For organizers','Mijn seizoen':'My season',
 'Jouw wedstrijdkalender':'YOUR RACE CALENDAR','Vind jouw volgende':'Find your next',
 'uitdaging.':'challenge.','Vind jouw volgende uitdaging.':'Find your next challenge.',

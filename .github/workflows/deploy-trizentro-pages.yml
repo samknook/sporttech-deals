@@ -192,6 +192,8 @@ jobs:
                grep -Fq 'function updateFilterOverview()' /tmp/tri-calendar &&
                grep -Fq 'class="raCardMore"' /tmp/tri-calendar &&
                grep -Fq 'visual-polish.css' /tmp/tri-calendar &&
+               grep -Fq 'class="tzHeroActions"' /tmp/tri-calendar &&
+               grep -Fq 'class="tzDiscoveryGrid"' /tmp/tri-calendar &&
                grep -Fq 'ra-direct-registration' /tmp/tri-calendar &&
                grep -Fq 'function registrationCardStatus(e)' /tmp/tri-calendar &&
                grep -Fq 'Inschrijving gesloten volgens bron' /tmp/tri-calendar &&
