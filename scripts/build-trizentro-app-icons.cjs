@@ -41,5 +41,6 @@ function icon(size){
  return Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),chunk('IHDR',header),chunk('IDAT',zlib.deflateSync(rows)),chunk('IEND',Buffer.alloc(0))]);
 }
 const out=path.join(root,'app-icons');fs.mkdirSync(out,{recursive:true});
-for(const size of [180,192,512,1024])fs.writeFileSync(path.join(out,'icon-'+size+'.png'),icon(size));
+const sizes=process.argv.includes('--android')?[48,72,96,144,192,180,512,1024]:[180,192,512,1024];
+for(const size of sizes)fs.writeFileSync(path.join(out,'icon-'+size+'.png'),icon(size));
 console.log('Generated TriZentro app icons: 180, 192, 512 and 1024 px');
