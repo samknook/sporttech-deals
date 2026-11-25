@@ -33,6 +33,10 @@ try{
  await card.locator('button.save[aria-pressed="true"]').waitFor();
  await page.locator('[data-tab="season"]').click();
  assert.match(await page.locator('#races').innerText(),/RBR Almere 2027/);
+ assert.equal(await page.locator('#seasonCount').innerText(),'1 bewaarde wedstrijd');
+ assert.equal(await page.locator('#shareSeason').isVisible(),true);
+ assert.equal(await page.locator('#nextRace').isVisible(),true);
+ assert.match(await page.locator('#nextRaceName').innerText(),/RBR Almere 2027/);
  await page.reload();
  await page.locator('article').first().waitFor();
  await page.locator('[data-tab="season"]').click();
