@@ -76,7 +76,19 @@ async function test(){
   assert.match(await page.locator('#savedSummary').innerText(),/[1-9] wedstrijden opgeslagen/);
   assert.equal(await page.locator('#raShareSeason').isVisible(),true);
   assert.equal(await page.locator('#raSeasonBackup').isVisible(),true);
-  console.log('PASS: mobile event discovery, no-results reset, filter feedback, card actions and saved season');
+  // Check real detail page layout, disclosure and direct registration without visiting the organizer.
+  await page.goto(base+'/events/wedstrijden/rbr-almere-2027-ra-219.html',{waitUntil:'domcontentloaded'});
+  await page.locator('.race-action-panel').waitFor({state:'visible'});
+  assert.equal(await page.locator('.race-primary-actions [data-ra-outbound="registration"]').isVisible(),true);
+  assert.equal(await page.locator('#saveRace').isVisible(),true);
+  assert.equal(await page.locator('.race-primary-actions [data-ra-radar]').isVisible(),true);
+  assert.equal(await page.locator('#shareRace').isVisible(),false);
+  await page.locator('.race-secondary summary').click();
+  assert.equal(await page.locator('#shareRace').isVisible(),true);
+  assert.equal(await page.locator('.race-secondary [data-ra-outbound="organizer"]').isVisible(),true);
+  assert.equal(await page.locator('#shareRaceStatus').getAttribute('role'),'status');
+  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+2),'Detail page should not overflow horizontally');
+  console.log('PASS: mobile discovery, filters, save, season and focused race-detail actions');
  }catch(err){
   try{await page.screenshot({path:'mobile-smoke-failure.png',fullPage:true})}catch{}
   throw err;

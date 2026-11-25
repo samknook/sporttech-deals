@@ -39,3 +39,42 @@
 @media (max-width: 700px) {
   .event-prep { grid-template-columns: 1fr; }
 }
+
+/* Detail-page decision layout: keep photography and actionable information side by side. */
+body.tz-race-detail main{max-width:1120px;padding-top:30px}
+body.tz-race-detail h1{font-size:clamp(29px,4.4vw,49px);line-height:1.13;color:#102b32;overflow-wrap:anywhere}
+body.tz-race-detail .sub{color:#496573;line-height:1.6}
+body.tz-race-detail .race-intro{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:18px;align-items:start;margin:23px 0}
+body.tz-race-detail .hero.tz-race-hero{min-height:0!important;margin:0!important;border-radius:18px;background:#0b2635!important}
+body.tz-race-detail .hero.tz-race-hero::before,body.tz-race-detail .hero.tz-race-hero::after{display:none!important}
+body.tz-race-detail .hero.tz-race-hero img{height:245px;object-fit:cover}
+body.tz-race-detail .hero.tz-race-hero .event-illustration{min-height:245px}
+body.tz-race-detail .hero.tz-race-hero .event-date{padding:19px 20px}
+body.tz-race-detail .event-date p{margin:7px 0 0;font-size:13px}
+body.tz-race-detail .race-action-panel{min-width:0;background:white;border:1px solid #dce6e5;border-radius:18px;padding:22px;box-shadow:0 5px 22px #102d3210}
+body.tz-race-detail .race-action-panel h2{font-size:22px;letter-spacing:-.035em;line-height:1.2;margin:0 0 10px;color:#102b32}
+body.tz-race-detail .race-registration-note{font-size:13px;line-height:1.6;color:#496573;margin:0 0 14px}
+body.tz-race-detail .race-primary-actions{display:grid;grid-template-columns:1fr;gap:9px;margin:0}
+body.tz-race-detail .race-primary-actions>*{min-width:0}
+body.tz-race-detail .race-primary-actions .primary{background:#c7ff37;color:#10271f;border-color:#b8df64}
+body.tz-race-detail .race-save-wrap{display:block;padding:0;border:0;background:transparent}
+body.tz-race-detail #saveRace{width:100%;min-height:49px;padding:12px 16px;border-radius:10px;border:1px solid #c5d7d3;background:white;color:#153f34;font:inherit;font-weight:850;cursor:pointer}
+body.tz-race-detail #saveRace[aria-pressed="true"]{background:#e7f6e4;border-color:#b6dcc0;color:#215c3e}
+body.tz-race-detail .race-secondary{margin-top:14px;border-top:1px solid #e3ecea}
+body.tz-race-detail .race-secondary summary{display:list-item;min-height:44px;padding:13px 0;cursor:pointer;font-size:13px;font-weight:800;color:#385a57}
+body.tz-race-detail .race-secondary .actions{display:flex;gap:8px;margin:0}
+body.tz-race-detail .race-secondary .actions>*{background:#f6faf8;border:1px solid #dce6e5;font-size:12px;min-height:44px;padding:10px 12px}
+body.tz-race-detail .event-share-status:not(:empty){margin:12px 0 0}
+body.tz-race-detail .fact{border-radius:13px;border-color:#dce6e5;padding:16px}
+body.tz-race-detail .fact span{color:#496573}
+body.tz-race-detail .fact strong{font-size:14px}
+body.tz-race-detail .race-action-panel :is(a,button,summary):focus-visible{outline:3px solid #72aa35;outline-offset:3px}
+@media(max-width:700px){
+ body.tz-race-detail main{padding:22px 14px 86px}
+ body.tz-race-detail .race-intro{grid-template-columns:1fr;gap:12px;margin:18px 0}
+ body.tz-race-detail .hero.tz-race-hero img{height:172px}
+ body.tz-race-detail .hero.tz-race-hero .event-illustration{min-height:160px}
+ body.tz-race-detail .race-action-panel{padding:16px}
+ body.tz-race-detail .race-action-panel h2{font-size:20px}
+ body.tz-race-detail .fact{padding:12px}
+}

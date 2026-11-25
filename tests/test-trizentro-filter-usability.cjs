@@ -12,7 +12,9 @@ test('advanced options disclose active count and clear action is contextual',()=
  assert.match(html,/id="reset"[^>]*hidden/);
 });
 test('reset restores the expected upcoming event default',()=>{
- assert.match(html,/\$\('reset'\)\.onclick=\(\)=>\{[^\n]*\$\('future'\)\.checked=true/);
+ assert.match(html,/function resetDiscoveryFilters\(\)\{[^\n]*\$\('future'\)\.checked=true/);
+ assert.ok(html.includes("$('reset').onclick=resetDiscoveryFilters"));
+ assert.ok(html.includes("else resetDiscoveryFilters()"));
  assert.match(html,/if\(!\$\('future'\)\.checked\)chips\.push/);
  assert.doesNotMatch(html,/if\(\$\('future'\)\.checked\)chips\.push/);
 });

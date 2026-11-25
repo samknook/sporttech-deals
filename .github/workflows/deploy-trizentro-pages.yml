@@ -216,7 +216,9 @@ jobs:
             found=0
             for attempt in $(seq 1 10); do
               if curl -fsSL --max-time 20 "https://trizentro.com/events/wedstrijden/$file?release=${{ github.sha }}" -o /tmp/tri-rbr &&
-                 grep -q "$registration" /tmp/tri-rbr; then
+                 grep -q "$registration" /tmp/tri-rbr &&
+                 grep -q 'class="race-action-panel"' /tmp/tri-rbr &&
+                 grep -q 'class="race-secondary"' /tmp/tri-rbr; then
                 found=1
                 break
               fi
