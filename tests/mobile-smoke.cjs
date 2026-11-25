@@ -37,6 +37,20 @@ async function test(){
   assert.equal(await page.locator('.tz-menu-toggle').isVisible(),true,'Unified mobile navigation should be visible');
   assert.equal(await page.locator('.tz-mobile-destinations [data-tz-destination="season"]').isVisible(),true,'Season navigation should be visible');
   assert.ok((await page.locator('#cards .card').count())>0,'Discovery must show available races');
+  // The primary discovery CTA and sports shortcuts should be genuinely usable.
+  await page.locator('.tzHeroDiscover').click();
+  assert.equal(await page.locator('#q').evaluate(el=>el===document.activeElement),true);
+  await page.locator('[data-tz-hero-sport="Hardlopen"]').click();
+  assert.equal(await page.locator('#sport').inputValue(),'Hardlopen');
+  assert.ok((await page.locator('#cards .card').count())>0);
+  await page.locator('#reset').click();
+  assert.equal(await page.locator('#sport').inputValue(),'');
+  for(const slug of ['hardloopwedstrijden-2027','wielertochten-2027','triatlons-2027']){
+   const a=page.locator('.tzDiscoveryGrid a[href="/ontdek/'+slug+'/"]');
+   assert.equal(await a.count(),1);
+   const response=await context.request.get(base+'/ontdek/'+slug+'/');
+   assert.equal(response.status(),200,'Discovery landing page must exist: '+slug);
+  }
   // Search and filter feedback. The empty-state recovery should reset upcoming events.
   await page.locator('#q').fill('zz-no-race-ever-999999');
   await page.locator('#cards .empty').waitFor({state:'visible'});
