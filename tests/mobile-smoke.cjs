@@ -43,6 +43,7 @@ async function test(){
   assert.equal(await page.locator('.tzHeroSportIcons i').count(),3);
   assert.equal(await page.locator('.hero [data-tz-sport]').count(),0);
   assert.equal(await page.locator('.toolbar .tzSportFilter button').count(),4);
+  assert.equal(await page.locator('#sport').isVisible(),false,'Do not show a duplicate native sport dropdown');
   await page.locator('#advanced > summary').click();
   await page.locator('#year').selectOption('2027');
   await page.locator('[data-tz-sport="Hardlopen"]').click();
