@@ -1,0 +1,168 @@
+/* TriZentro visual polish, November 2026.
+   Shared with the current events UI, loaded after Sport Edition and Brand.
+   Intentionally narrow selectors to preserve tools, cloud save and organizer pages. */
+:root{
+ --tz-polish-ink:#102b32;
+ --tz-polish-muted:#567076;
+ --tz-polish-border:#dce6e5;
+ --tz-polish-bg:#f4f7f5;
+ --tz-polish-lime:#c7ff46;
+ --tz-polish-focus:#79bc27;
+}
+html{scroll-padding-top:86px}
+body{background:var(--tz-polish-bg)!important}
+#explore .toolbar{
+ border-radius:22px!important;
+ border-color:var(--tz-polish-border)!important;
+ box-shadow:0 14px 42px rgba(12,43,47,.10)!important;
+}
+#explore .primaryFilters .field input,
+#explore .primaryFilters .field select{
+ min-height:48px!important;
+ border-color:#ceddd9!important;
+ background:#fff!important;
+}
+#explore .primaryFilters .field input:focus-visible,
+#explore .primaryFilters .field select:focus-visible{
+ outline:3px solid #b5ed7b!important;outline-offset:1px;
+}
+#explore .quick .pill{
+ min-height:42px;
+ font-weight:750;
+ transition:border-color .15s ease,background-color .15s ease,box-shadow .15s ease;
+}
+#explore .quick .pill.on{box-shadow:0 3px 9px #0c2b3429}
+#explore .headerlist{margin-top:31px!important}
+#explore .headerlist h2{letter-spacing:-.045em}
+#explore #results{line-height:1.6}
+#explore .raActiveFilters{gap:7px;margin-bottom:14px}
+#explore .raFilterChip{background:#eef7ed;color:#245338;border:1px solid #c8dfca;border-radius:999px;font-weight:700;padding:7px 11px}
+#explore .raAdvancedCount{background:#ddf5d7;color:#205d38}
+#explore .cards{gap:20px!important;align-items:stretch}
+#explore .card,#savedCards .card{
+ border-radius:20px!important;
+ border:1px solid var(--tz-polish-border)!important;
+ box-shadow:0 5px 22px rgba(15,45,55,.065)!important;
+}
+#explore .card:hover,#savedCards .card:hover{
+ box-shadow:0 14px 32px rgba(15,45,55,.14)!important;
+}
+#explore .raCardVisual,#savedCards .raCardVisual{
+ height:172px;min-height:172px;
+ background-position:center;
+ overflow:hidden;
+}
+#explore .raCardVisual::after,#savedCards .raCardVisual::after{
+ background:linear-gradient(180deg,#071e2710 30%,#071e274c 100%);
+}
+#explore .raDateBadge,#savedCards .raDateBadge{
+ border:1px solid #eff3ef;
+ border-radius:12px;
+ box-shadow:0 5px 17px rgba(9,30,34,.24);
+}
+#explore .raFeatureBadge,#savedCards .raFeatureBadge{letter-spacing:.015em}
+#explore .raCardBody,#savedCards .raCardBody{
+ padding:20px 19px 15px;
+ gap:10px;
+}
+#explore .raCardBody .eventname,#savedCards .raCardBody .eventname{
+ font-size:clamp(19px,1.7vw,22px)!important;
+ font-weight:850!important;
+ letter-spacing:-.035em;
+ line-height:1.22;
+}
+#explore .raCardBody .eventname a,#savedCards .raCardBody .eventname a{
+ text-decoration:none;text-underline-offset:3px;
+}
+#explore .raCardBody .eventname a:hover,#savedCards .raCardBody .eventname a:hover{text-decoration:underline}
+#explore .raCardLocation,#savedCards .raCardLocation{font-size:12px;color:var(--tz-polish-muted);line-height:1.5}
+#explore .raCardTags,#savedCards .raCardTags{gap:7px}
+#explore .raCardTags span,#savedCards .raCardTags span{font-size:11px;padding:7px 10px}
+#explore .raCardInfo,#savedCards .raCardInfo{font-size:12px;line-height:1.5}
+#explore .raCardActions,#savedCards .raCardActions{
+ display:grid!important;
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:9px!important;
+ align-items:stretch!important;
+ padding:13px 18px 4px!important;
+ margin:0!important;
+ border-top:1px solid #eef2f0!important;
+}
+#explore .raCardActions .ra-card-save,#savedCards .raCardActions .ra-card-save{
+ background:var(--tz-polish-lime)!important;
+ color:#173629!important;
+ border:1px solid #b0dd55!important;
+ font-weight:900!important;
+}
+#explore .raCardActions .ra-card-save.selected,#savedCards .raCardActions .ra-card-save.selected{
+ background:#e7f6e4!important;color:#215c3e!important;border-color:#b6dcc0!important;
+}
+#explore .raCardActions .ra-detail-btn,#savedCards .raCardActions .ra-detail-btn{
+ background:#fff!important;
+ border:1px solid #cbdcda!important;
+ color:var(--tz-polish-ink)!important;
+}
+#explore .raCardActions .ra-card-save,#explore .raCardActions .ra-detail-btn,
+#savedCards .raCardActions .ra-card-save,#savedCards .raCardActions .ra-detail-btn{
+ min-height:48px!important;
+ width:100%;
+ font-size:12px!important;
+ border-radius:11px!important;
+}
+#explore .raCardActions .ra-direct-registration,#savedCards .raCardActions .ra-direct-registration{
+ grid-column:1/-1;
+ margin:0!important;
+ min-height:46px!important;
+ font-size:12px!important;
+ border-radius:11px!important;
+ background:#123b30!important;
+ border-color:#123b30!important;
+ color:#fff!important;
+}
+#explore .raCardMore,#savedCards .raCardMore{padding:5px 18px 14px}
+#explore .raCardMore summary,#savedCards .raCardMore summary{
+ min-height:43px;
+ font-size:12px;
+ color:#42665a;
+ font-weight:750;
+}
+#explore .raCardMoreActions,#savedCards .raCardMoreActions{padding:4px 0 7px;gap:8px}
+#explore .raCardMoreActions button,#explore .raCardMoreActions a,
+#savedCards .raCardMoreActions button,#savedCards .raCardMoreActions a{
+ border:1px solid #d1dedc;
+ border-radius:9px;
+ background:#f8fbfa;
+ color:#204b42;
+ text-decoration:none;
+ padding:9px 12px;
+ min-height:44px!important;
+ font-size:12px;
+ font-weight:750;
+}
+#explore .raSeasonPreview{margin-top:46px}
+#explore .raPreviewPanel{border-radius:20px;box-shadow:0 6px 22px #0d2d3812}
+#explore .raOrganizerPromo{border-radius:20px}
+#explore .card:focus-within,#savedCards .card:focus-within{
+ outline:2px solid #a0d356;outline-offset:2px;
+}
+@media(max-width:800px){
+ #explore .cards{gap:15px!important}
+ #explore .raCardVisual,#savedCards .raCardVisual{height:160px;min-height:160px}
+ #explore .raCardBody,#savedCards .raCardBody{padding:16px 15px 12px}
+ #explore .raCardActions,#savedCards .raCardActions{padding:12px 14px 3px!important}
+ #explore .raCardMore,#savedCards .raCardMore{padding:3px 14px 12px}
+ #explore .raCardBody .eventname,#savedCards .raCardBody .eventname{font-size:20px!important}
+}
+@media(max-width:600px){
+ #explore .toolbar{border-radius:17px!important}
+ #explore .headerlist{margin-top:24px!important}
+ #explore .cards{gap:13px!important}
+ #explore .card,#savedCards .card{border-radius:16px!important}
+ #explore .raCardActions .ra-card-save,#explore .raCardActions .ra-detail-btn,
+ #savedCards .raCardActions .ra-card-save,#savedCards .raCardActions .ra-detail-btn{min-height:48px!important}
+ #explore .raCardMore summary,#savedCards .raCardMore summary{min-height:44px}
+}
+@media(prefers-reduced-motion:reduce){
+ #explore .card,#savedCards .card,#explore .quick .pill{transition:none!important}
+ #explore .card:hover,#savedCards .card:hover{transform:none!important}
+}
