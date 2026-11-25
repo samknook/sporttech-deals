@@ -8,7 +8,7 @@ const start=html.indexOf('function eventCard(e){');
 const end=html.indexOf('function renderCards(',start);
 assert.ok(start>=0&&end>start,'Calendar event card renderer missing');
 const card=html.slice(start,end);
-const primary=card.slice(card.indexOf("'<div class=\"raCardActions\""),card.indexOf("'<div class=\"raCardMoreActions\""));
+const primary=card.slice(card.indexOf('raCardActions'),card.indexOf('raCardMoreActions'));
 test('cards present save and details before optional registration action',()=>{
  assert.ok(primary.includes('ra-card-save'));
  assert.ok(primary.includes('aria-pressed='));
