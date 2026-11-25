@@ -29,6 +29,14 @@ try{
  await page.locator('#search').fill('RBR Almere');
  const card=page.locator('article').filter({hasText:'RBR Almere 2027'});
  await card.waitFor();
+ await card.getByRole('button',{name:'Bekijk wedstrijd'}).click();
+ await page.locator('#raceDetail[open]').waitFor();
+ assert.match(await page.locator('#detailName').innerText(),/RBR Almere 2027/);
+ assert.match(await page.locator('#detailPlace').innerText(),/Almere/);
+ assert.equal(await page.locator('#detailRegistration').isVisible(),true);
+ assert.equal(await page.locator('#detailRadar').isVisible(),true);
+ await page.locator('#detailClose').click();
+ assert.equal(await page.locator('#raceDetail').isVisible(),false);
  await card.locator('button.save').click();
  await card.locator('button.save[aria-pressed="true"]').waitFor();
  await page.locator('[data-tab="season"]').click();

@@ -6,7 +6,7 @@ import {selectRaces,toggleRace,validateCatalogue,raceCountdown,seasonShareText} 
 const $=id=>document.getElementById(id),key='trizentro.native.saved.v1';
 const catalogueKey='trizentro.native.catalogue.v1',feed='https://trizentro.com/app-catalogue.json';
 const state={events:[],saved:[],query:'',sport:'',tab:'discover',limit:24,asOf:'',generatedAt:'',busy:false,refreshing:false};
-const msg=s=>$('status').textContent=s;
+const msg=s=>{$('status').textContent=s;if($('raceDetail').open)$('detailStatus').textContent=s};
 function button(label,fn,className=''){const b=document.createElement('button');b.type='button';b.textContent=label;b.className=className;b.addEventListener('click',fn);return b}
 function node(tag,content,cls=''){const el=document.createElement(tag);el.textContent=content;if(cls)el.className=cls;return el}
 async function open(url){try{await Browser.open({url})}catch{msg('Openen mislukt. Controleer je internetverbinding.')}}
@@ -14,9 +14,29 @@ async function save(id){
  if(state.busy)return;
  state.busy=true;
  const next=toggleRace(state.saved,id);
- try{await Preferences.set({key,value:JSON.stringify(next)});state.saved=next;render();msg(next.includes(id)?'Wedstrijd bewaard op dit apparaat.':'Wedstrijd verwijderd.')}
+ try{await Preferences.set({key,value:JSON.stringify(next)});state.saved=next;render();syncDetailSave();msg(next.includes(id)?'Wedstrijd bewaard op dit apparaat.':'Wedstrijd verwijderd.')}
  catch{msg('Opslaan mislukt. Probeer opnieuw.')}
  finally{state.busy=false}
+}
+let activeRace=null;
+function syncDetailSave(){
+ if(!activeRace)return;
+ const saved=state.saved.includes(activeRace.id);
+ $('detailSave').textContent=saved?'✓ Bewaard in mijn seizoen':'+ Bewaar in mijn seizoen';
+ $('detailSave').setAttribute('aria-pressed',String(saved));
+}
+function showRace(e){
+ activeRace=e;
+ $('detailSport').textContent=e.sport;
+ $('detailName').textContent=e.name;
+ $('detailDate').textContent=e.date?new Intl.DateTimeFormat('nl-NL',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(e.date+'T00:00:00Z')):'Datum nog niet bevestigd';
+ $('detailPlace').textContent=[e.place,e.country].filter(Boolean).join(', ')||'Locatie nog niet bekend';
+ $('detailDistance').textContent=e.distance||'Afstand nog niet bekend';
+ $('detailSnapshot').textContent='Kalenderexport van '+state.asOf+'. Controleer actuele gegevens en inschrijving bij de organisator.';
+ $('detailStatus').textContent='';
+ syncDetailSave();
+ $('raceDetail').showModal();
+ $('detailClose').focus();
 }
 function card(e){
  const a=document.createElement('article');
@@ -25,7 +45,7 @@ function card(e){
  const actions=document.createElement('div');actions.className='actions';
  const saved=state.saved.includes(e.id),b=button(saved?'✓ Bewaard':'+ Bewaar',()=>save(e.id),'save');
  b.setAttribute('aria-pressed',String(saved));
- actions.append(b,button('Wedstrijddetails ↗',()=>open(e.detail)),button('Deel wedstrijd ↗',async()=>{
+ actions.append(b,button('Bekijk wedstrijd',()=>showRace(e)),button('Deel wedstrijd ↗',async()=>{
  try{await Share.share({title:e.name,text:'Bekijk deze wedstrijd op TriZentro',url:e.detail})}catch{msg('Delen niet voltooid.')}
  },'share'));
  a.append(actions);return a;
@@ -87,6 +107,13 @@ async function init(){
   $('more').onclick=()=>{state.limit+=24;render()};
   $('openSite').onclick=()=>open('https://trizentro.com/events/');
   $('refresh').onclick=refreshCatalogue;
+  $('detailClose').onclick=()=>$('raceDetail').close();
+  $('raceDetail').addEventListener('close',()=>{activeRace=null});
+  $('detailSave').onclick=()=>{if(activeRace)save(activeRace.id)};
+  $('detailRegistration').onclick=()=>{if(activeRace)open(activeRace.detail)};
+  $('detailOrganizer').onclick=()=>{if(activeRace)open(activeRace.official)};
+  $('detailRadar').onclick=()=>{if(activeRace)open('https://trizentro.com/events/?ra_alert='+encodeURIComponent(activeRace.id))};
+
   $('shareSeason').onclick=async()=>{const text=seasonShareText(state.events,state.saved);if(!text)return;try{await Share.share({title:'Mijn wedstrijdseizoen',text})}catch{msg('Delen niet voltooid.')}};
   render();
  }catch{msg('De app kon niet worden geladen. Start TriZentro opnieuw.')}
