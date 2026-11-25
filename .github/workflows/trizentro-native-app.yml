@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   web-build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: mobile
@@ -53,7 +53,7 @@ jobs:
           path: mobile/www
   android-debug:
     needs: web-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: mobile
