@@ -35,7 +35,13 @@ try{
  assert.match(await page.locator('#detailPlace').innerText(),/Almere/);
  assert.equal(await page.locator('#detailRegistration').isVisible(),true);
  assert.equal(await page.locator('#detailRadar').isVisible(),true);
+ await page.locator('#detailWatch').click();
+ await page.locator('#detailWatch[aria-pressed="true"]').waitFor();
  await page.locator('#detailClose').click();
+ await page.locator('[data-tab="radar"]').click();
+ assert.match(await page.locator('#races').innerText(),/RBR Almere 2027/);
+ assert.match(await page.locator('#radarInfo').innerText(),/geen pushmeldingen/);
+ await page.locator('[data-tab="discover"]').click();
  assert.equal(await page.locator('#raceDetail').isVisible(),false);
  await card.locator('button.save').click();
  await card.locator('button.save[aria-pressed="true"]').waitFor();
@@ -47,6 +53,8 @@ try{
  assert.match(await page.locator('#nextRaceName').innerText(),/RBR Almere 2027/);
  await page.reload();
  await page.locator('article').first().waitFor();
+ await page.locator('[data-tab="radar"]').click();
+ assert.match(await page.locator('#races').innerText(),/RBR Almere 2027/);
  await page.locator('[data-tab="season"]').click();
  assert.match(await page.locator('#races').innerText(),/RBR Almere 2027/);
  await page.locator('#refresh').click();

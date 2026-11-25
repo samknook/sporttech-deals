@@ -28,3 +28,11 @@ export function seasonShareText(events,saved){
  lines.push('Ontdek jouw volgende startlijn: https://trizentro.com/events/');
  return lines.join('\n');
 }
+
+export function radarStatus(e){
+ const labels={mixed:'Beschikbaarheid verschilt per afstand',sold_out:'Uitverkocht volgens bron',link_available:'Directe inschrijflink beschikbaar',closed:'Inschrijving gesloten volgens bron',upcoming:'Inschrijving opent later',not_open:'Inschrijving opent later',open:'Inschrijving open volgens bron',on_site:'Controleer bij organisator',check:'Controleer bij organisator',window:'Inschrijfperiode bekend',unknown:'Inschrijfstatus onbekend'};
+ return labels[e.registrationStatus]||labels.unknown;
+}
+export function radarRaces(events,watched){
+ return selectRaces(events,{savedOnly:true,saved:watched}).sort((a,b)=>(a.registrationDate||'9999').localeCompare(b.registrationDate||'9999'));
+}
