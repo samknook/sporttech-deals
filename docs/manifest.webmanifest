@@ -1,0 +1,40 @@
+{
+  "id": "/events/",
+  "name": "TriZentro — Wedstrijdkalender",
+  "short_name": "TriZentro",
+  "description": "Ontdek wedstrijden en plan jouw sportieve seizoen.",
+  "lang": "nl",
+  "start_url": "/events/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#071925",
+  "theme_color": "#071925",
+  "icons": [
+    {
+      "src": "/app-icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/app-icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Mijn seizoen",
+      "url": "/seizoen/"
+    },
+    {
+      "name": "Wedstrijden",
+      "url": "/events/"
+    },
+    {
+      "name": "Performance",
+      "url": "/performance/"
+    }
+  ]
+}
