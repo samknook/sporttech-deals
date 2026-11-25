@@ -166,3 +166,41 @@ body{background:var(--tz-polish-bg)!important}
  #explore .card,#savedCards .card,#explore .quick .pill{transition:none!important}
  #explore .card:hover,#savedCards .card:hover{transform:none!important}
 }
+
+/* Discovery hero: clear starting point and a direct path into each sport. */
+.hero .tzHeroActions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px;align-items:stretch}
+.hero .tzHeroActions .tzHeroDiscover,.hero .tzHeroActions #raHeroAccount{
+ display:inline-flex!important;align-items:center;justify-content:center;gap:12px;
+ min-height:49px!important;padding:12px 19px!important;margin:0!important;
+ width:auto!important;max-width:none!important;border-radius:10px!important;
+ font-size:14px!important;font-weight:850!important;line-height:1.25;text-decoration:none
+}
+.hero .tzHeroActions .tzHeroDiscover{background:#c7ff37;color:#10271f;border:1px solid #c7ff37;box-shadow:0 5px 20px #0002}
+.hero .tzHeroActions #raHeroAccount{background:#142f3c!important;color:#fff!important;border:1px solid #8aa9af!important}
+.hero .tzHeroSports{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.hero .tzHeroSports a{display:inline-flex;align-items:center;gap:12px;min-height:42px;padding:8px 13px;border:1px solid #ffffff44;border-radius:8px;background:#10293799;color:#fff;font-size:13px;font-weight:750;text-decoration:none}
+.hero .tzHeroSports a:hover,.hero .tzHeroSports a:focus-visible{border-color:#c7ff37;color:#c7ff37}
+.hero .tzHeroSports a span{color:#b9e95b}
+.hero .tzHeroDiscover:hover{background:#d8ff76}
+#savedPage .sectionHeading{align-items:flex-start;gap:18px;flex-wrap:wrap;margin:30px 0 15px}
+#savedPage .sectionHeading h2{font-size:clamp(25px,3vw,34px);letter-spacing:-.045em;color:#102b32}
+#savedPage .sectionHeading p{color:#526d72;line-height:1.5}
+#savedPage .savedActions{gap:8px}
+#savedPage .savedActions .miniBtn{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+#savedPage #raShareSeason{background:#c7ff37!important;border-color:#b8df64!important;color:#173529!important;font-weight:850!important}
+#savedPage .tzSeasonOverview #savedSummary{font-size:14px;line-height:1.5;padding:16px 19px;background:#e6f1e7;color:#214b37;border:1px solid #cfe2d2;border-radius:13px}
+#savedPage :is(.raSeasonGoals,.raMonthPlanner,.raRegistrationWatch,.raSeasonHealth,.raRecommendations){
+ background:white;border:1px solid #dce6e5;border-radius:18px;padding:22px;box-shadow:0 5px 20px #102d3210
+}
+#savedPage :is(.raSeasonGoals,.raMonthPlanner,.raRegistrationWatch,.raSeasonHealth,.raRecommendations) h3{color:#14332f;font-size:21px;letter-spacing:-.035em;line-height:1.25}
+#savedPage .tz-season-shortcuts{gap:8px}
+#savedPage .tz-season-shortcuts a{min-height:44px;display:inline-flex;align-items:center}
+@media(max-width:600px){
+ .hero .tzHeroActions{display:grid;grid-template-columns:1fr;margin-top:17px}
+ .hero .tzHeroActions .tzHeroDiscover,.hero .tzHeroActions #raHeroAccount{width:100%!important}
+ .hero .tzHeroSports{gap:6px;margin-top:12px}
+ .hero .tzHeroSports a{min-height:44px;padding:9px 10px;font-size:12px;gap:5px}
+ #savedPage .savedActions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%}
+ #savedPage #raShareSeason{grid-column:1/-1}
+ #savedPage :is(.raSeasonGoals,.raMonthPlanner,.raRegistrationWatch,.raSeasonHealth,.raRecommendations){padding:16px;border-radius:15px}
+}
