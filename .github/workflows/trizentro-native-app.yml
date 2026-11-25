@@ -12,6 +12,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: trizentro-native-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   web-build:
     runs-on: ubuntu-latest
@@ -26,6 +29,16 @@ jobs:
       - run: npm install --no-audit --no-fund
       - run: npm test
       - run: npm run build
+      - name: Install pinned browser test runner
+        run: npm install --no-save --no-audit --no-fund playwright@1.56.1
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Verify native app interface in mobile browser
+        run: node test-ui.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trizentro-native-preview
+          path: mobile/trizentro-native-preview.png
       - name: Generate Android project
         run: npx cap add android
       - name: Validate packaged web bundle
