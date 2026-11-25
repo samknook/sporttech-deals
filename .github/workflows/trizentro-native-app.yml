@@ -55,9 +55,9 @@ jobs:
           java-version: '21'
       - run: npm install --no-audit --no-fund
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-      - name: Install Android SDK 36
-        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+        uses: android-actions/setup-android@v4.0.3
+        with:
+          packages: 'platform-tools platforms;android-36 build-tools;36.0.0'
       - run: npm run android:init
       - name: Apply TriZentro launcher icons
         run: node brand-android.mjs
