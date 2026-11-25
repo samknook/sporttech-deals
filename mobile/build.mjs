@@ -1,0 +1,15 @@
+import {readFile,mkdir,writeFile,copyFile} from 'node:fs/promises';
+import {build} from 'esbuild';
+import {publicRace} from './model.mjs';
+const src=await readFile(new URL('../docs/raceatlas/index.html',import.meta.url),'utf8');
+const marker='const EVENTS=',i=src.indexOf(marker),j=src.indexOf(';\n',i);
+if(i<0||j<0)throw Error('Missing event catalogue');
+const events=JSON.parse(src.slice(i+marker.length,j)).map(publicRace).filter(Boolean);
+if(!events.length)throw Error('No public races to bundle');
+await mkdir('www',{recursive:true});
+await writeFile('www/catalogue.json',JSON.stringify({asOf:new Date().toISOString().slice(0,10),events}));
+await copyFile('index.html','www/index.html');
+await copyFile('style.css','www/style.css');
+await copyFile('../docs/trizentro-app-mark.svg','www/logo.svg');
+await build({entryPoints:['main.mjs'],bundle:true,format:'esm',platform:'browser',target:['es2022'],outfile:'www/main.js'});
+console.log('Built mobile app with '+events.length+' public races');
