@@ -5,6 +5,7 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const base=path.resolve(__dirname,'../docs');
 require('./build-trizentro-app-icons.cjs');
+require('./build-trizentro-offline-season.cjs');
 const pages=JSON.parse(fs.readFileSync(path.join(__dirname,'../config/trizentro-public-pages.json'),'utf8')).pages;
 const eventsDir=path.join(base,'raceatlas/wedstrijden');
 if(fs.existsSync(eventsDir))for(const filename of fs.readdirSync(eventsDir)){if(filename.endsWith('.html'))pages.push('raceatlas/wedstrijden/'+filename)}
