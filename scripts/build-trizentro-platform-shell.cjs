@@ -148,7 +148,7 @@ const publicTools=[
  'triathlon-calculator.html','race-planner.html','triatlon-afstanden.html',
  'first-70-3-race-week-checklist.html','70-3-readiness-check.html',
  '70-3-eindtijd-calculator.html','race-day-timeline.html',
- 'race-fuel-planner.html','pace-calculator.html','goal-feasibility.html'
+ 'race-fuel-planner.html','pace-calculator.html','goal-feasibility.html','race-dashboard.html'
 ];
 for(const p of publicTools){
  const file=path.join(base,p);
