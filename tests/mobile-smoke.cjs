@@ -12,6 +12,7 @@ const ROOT=path.resolve(__dirname,'../docs');
 const mime={'.html':'text/html; charset=utf-8','.js':'application/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.json':'application/json','.webmanifest':'application/manifest+json'};
 const server=http.createServer((request,response)=>{
  let pathname;
+ if(request.url.includes('offline-check=1')){request.socket.destroy();return}
  try{pathname=decodeURIComponent(new URL(request.url,'http://localhost').pathname)}catch{response.writeHead(400);response.end();return}
  const filename=path.resolve(ROOT,'.'+(pathname==='/'?'/index.html':pathname));
  if(!filename.startsWith(ROOT+path.sep)){response.writeHead(403);response.end();return}
@@ -107,11 +108,10 @@ async function test(){
   await page.waitForFunction(()=>!!navigator.serviceWorker.controller,{},{timeout:15000});
   const cached=await page.evaluate(async()=>{const c=await caches.open('trizentro-offline-v1');return (await c.keys()).map(r=>new URL(r.url).pathname).sort()});
   assert.deepEqual(cached,['/app-icons/icon-192.png','/app-offline.html']);
-  await context.setOffline(true);
-  try{
-   await page.goto(base+'/events/?offline-check=1',{waitUntil:'domcontentloaded'});
-   assert.match(await page.locator('h1').innerText(),/Even geen verbinding/);
-  }finally{await context.setOffline(false)}
+  // A real server-side connection failure reaches the worker's fetch, unlike
+  // Chromium's page-only offline emulation which may not affect a worker.
+  await page.goto(base+'/events/?offline-check=1',{waitUntil:'domcontentloaded'});
+  assert.match(await page.locator('h1').innerText(),/Even geen verbinding/);
   await page.goto(base+'/events/',{waitUntil:'domcontentloaded'});
   await page.locator('#cards .card').first().waitFor({state:'visible'});
   console.log('PASS: mobile discovery, race detail, season and installable app offline fallback');
