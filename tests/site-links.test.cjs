@@ -19,9 +19,9 @@ test('local HTML links resolve to existing docs files',()=>{
  }
  assert.deepEqual(missing,[],'broken local page links');
 });
-test('race week guide is linked to homepage, Readiness Check and sitemap',()=>{
+test('race week guide is linked to Performance, Readiness Check and sitemap',()=>{
  const guide=fs.readFileSync(path.join(docs,'first-70-3-race-week-checklist.html'),'utf8');
- const home=fs.readFileSync(path.join(docs,'index.html'),'utf8');
+ const home=fs.readFileSync(path.join(docs,'performance.html'),'utf8');
  const readiness=fs.readFileSync(path.join(docs,'70-3-readiness-check.html'),'utf8');
  const sitemap=fs.readFileSync(path.join(docs,'sitemap.xml'),'utf8');
  assert.match(guide,/<title>First 70\.3 Race Week Checklist/);

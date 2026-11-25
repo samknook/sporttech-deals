@@ -29,9 +29,9 @@ test('invalid statuses and list lengths rejected',()=>{
  assert.throws(()=>app.summarize([]));
  assert.throws(()=>app.summarize(Array.from({length:12},(_,i)=>record('absolutely',i))));
 });
-test('readiness check linked from homepage and catalog with no data submission',()=>{
+test('readiness check linked from Performance and catalog with no data submission',()=>{
  const html=fs.readFileSync(path.join(docs,'70-3-readiness-check.html'),'utf8');
- const home=fs.readFileSync(path.join(docs,'index.html'),'utf8');
+ const home=fs.readFileSync(path.join(docs,'performance.html'),'utf8');
  const products=fs.readFileSync(path.join(docs,'products.html'),'utf8');
  assert.match(html,/src="readiness-core.js"/);
  assert.match(html,/id="questions"/);

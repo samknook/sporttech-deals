@@ -150,7 +150,19 @@ const publicTools=[
  '70-3-eindtijd-calculator.html','race-day-timeline.html',
  'race-fuel-planner.html','pace-calculator.html','goal-feasibility.html'
 ];
-for(const p of publicTools)if(fs.existsSync(path.join(base,p)))urls.push({pathname:'/'+p,priority:'0.7',frequency:'monthly'});
+for(const p of publicTools){
+ const file=path.join(base,p);
+ if(!fs.existsSync(file))continue;
+ let html=fs.readFileSync(file,'utf8');
+ // Only index public tools; leave explicit noindex pages untouched.
+ if(/<meta\b[^>]*name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html))continue;
+ const canonical='https://trizentro.com/'+p;
+ html=html.replace(/<link\b[^>]*rel=["']canonical["'][^>]*>/gi,'');
+ html=html.replace(/<meta\b[^>]*property=["']og:url["'][^>]*>/gi,'');
+ html=html.replace(/<\/head>/i,'<link rel="canonical" href="'+canonical+'"><meta property="og:url" content="'+canonical+'"></head>');
+ fs.writeFileSync(file,html);
+ urls.push({pathname:'/'+p,priority:'0.7',frequency:'monthly'});
+}
 for(const filename of fs.readdirSync(cleanDetailsDir))if(filename.endsWith('.html'))
  urls.push({pathname:'/events/wedstrijden/'+filename,priority:'0.7',frequency:'weekly'});
 const escapeXml=value=>value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
