@@ -18,6 +18,7 @@ on:
       - 'tests/test-trizentro-filter-usability.cjs'
       - 'tests/test-trizentro-race-card-ux.cjs'
       - 'tests/test-trizentro-visual-polish.cjs'
+      - 'tests/test-trizentro-pwa.cjs'
       - 'tests/test-trizentro-registration-radar.cjs'
       - 'tests/test-trizentro-referrer-attribution.cjs'
       - 'tests/test-trizentro-legacy-canonical.cjs'
@@ -26,6 +27,7 @@ on:
       - 'tests/test-trizentro-seo.cjs'
       - 'scripts/build-trizentro-event-pages.cjs'
       - 'scripts/build-trizentro-platform-shell.cjs'
+      - 'scripts/build-trizentro-app-icons.cjs'
       - 'scripts/build-trizentro-seo-hubs.cjs'
       - '.github/trizentro-domain.json'
       - '.github/workflows/deploy-trizentro-pages.yml'
@@ -37,6 +39,7 @@ on:
       - '.github/trizentro-domain.json'
       - 'scripts/build-trizentro-event-pages.cjs'
       - 'scripts/build-trizentro-platform-shell.cjs'
+      - 'scripts/build-trizentro-app-icons.cjs'
       - 'scripts/build-trizentro-seo-hubs.cjs'
   workflow_dispatch:
 permissions:
@@ -83,6 +86,7 @@ jobs:
             tests/test-trizentro-filter-usability.cjs \
             tests/test-trizentro-race-card-ux.cjs \
             tests/test-trizentro-visual-polish.cjs \
+            tests/test-trizentro-pwa.cjs \
             tests/test-trizentro-registration-radar.cjs \
             tests/test-trizentro-referrer-attribution.cjs \
             tests/test-trizentro-legacy-canonical.cjs \
