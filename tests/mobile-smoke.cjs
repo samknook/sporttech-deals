@@ -34,8 +34,8 @@ async function test(){
  try{
   await page.goto(base+'/events/',{waitUntil:'domcontentloaded'});
   await page.locator('#cards .card').first().waitFor({state:'visible',timeout:15000});
-  assert.equal(await page.locator('#raMobileExplore').isVisible(),true,'Mobile discovery navigation should be visible');
-  assert.equal(await page.locator('#raMobileSaved').isVisible(),true,'Mobile season navigation should be visible');
+  assert.equal(await page.locator('.tz-menu-toggle').isVisible(),true,'Unified mobile navigation should be visible');
+  assert.equal(await page.locator('.tz-mobile-destinations [data-tz-destination="season"]').isVisible(),true,'Season navigation should be visible');
   assert.ok((await page.locator('#cards .card').count())>0,'Discovery must show available races');
   // Search and filter feedback. The empty-state recovery should reset upcoming events.
   await page.locator('#q').fill('zz-no-race-ever-999999');
@@ -58,7 +58,7 @@ async function test(){
   assert.equal(await card.locator('.tz-race-share').isVisible(),true);
   // Saving a race is immediate and can be managed without an account.
   await card.locator('.ra-card-save').click();
-  await page.locator('#raMobileSaved').click();
+  await page.locator('.tz-mobile-destinations [data-tz-destination="season"]').click();
   assert.match(await page.locator('#savedSummary').innerText(),/[1-9] wedstrijden opgeslagen/);
   assert.equal(await page.locator('#raShareSeason').isVisible(),true);
   assert.equal(await page.locator('#raSeasonBackup').isVisible(),true);
