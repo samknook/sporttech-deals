@@ -40,11 +40,21 @@ async function test(){
   // The primary discovery CTA and sports shortcuts should be genuinely usable.
   await page.locator('.tzHeroDiscover').click();
   assert.equal(await page.locator('#q').evaluate(el=>el===document.activeElement),true);
-  await page.locator('[data-tz-hero-sport="Hardlopen"]').click();
+  assert.equal(await page.locator('.tzHeroSportIcons i').count(),3);
+  assert.equal(await page.locator('.hero [data-tz-sport]').count(),0);
+  assert.equal(await page.locator('.toolbar .tzSportFilter button').count(),4);
+  assert.equal(await page.locator('#sport').isVisible(),false,'Do not show a duplicate native sport dropdown');
+  await page.locator('#advanced > summary').click();
+  await page.locator('#year').selectOption('2027');
+  await page.locator('[data-tz-sport="Hardlopen"]').click();
   assert.equal(await page.locator('#sport').inputValue(),'Hardlopen');
+  assert.equal(await page.locator('[data-tz-sport="Hardlopen"]').getAttribute('aria-pressed'),'true');
+  assert.equal(await page.locator('#year').inputValue(),'2027','Sport selection preserves other filters');
   assert.ok((await page.locator('#cards .card').count())>0);
   await page.locator('#reset').click();
   assert.equal(await page.locator('#sport').inputValue(),'');
+  assert.equal(await page.locator('[data-tz-sport=""]').getAttribute('aria-pressed'),'true');
+  await page.locator('#advanced > summary').click();
   for(const slug of ['hardloopwedstrijden-2027','wielertochten-2027','triatlons-2027']){
    const a=page.locator('.tzDiscoveryGrid a[href="/ontdek/'+slug+'/"]');
    assert.equal(await a.count(),1);
