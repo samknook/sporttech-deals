@@ -1,0 +1,62 @@
+name: TriZentro native app prototype
+on:
+  pull_request:
+    paths:
+      - 'mobile/**'
+      - 'docs/raceatlas/index.html'
+      - 'docs/trizentro-app-mark.svg'
+      - '.github/workflows/trizentro-native-app.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  web-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: npm test
+      - run: npm run build
+      - name: Generate Android project
+        run: npx cap add android
+      - name: Validate packaged web bundle
+        run: |
+          test -f www/main.js
+          test -f android/app/src/main/assets/public/catalogue.json
+          test -f android/app/src/main/assets/public/logo.svg
+          test -f android/app/src/main/AndroidManifest.xml
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trizentro-mobile-web-preview
+          path: mobile/www
+  android-debug:
+    if: github.event_name == 'workflow_dispatch'
+    needs: web-build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: npm install --no-audit --no-fund
+      - run: npm run android:init
+      - name: Build Android debug APK
+        working-directory: mobile/android
+        run: ./gradlew assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trizentro-android-debug
+          path: mobile/android/app/build/outputs/apk/debug/*.apk
