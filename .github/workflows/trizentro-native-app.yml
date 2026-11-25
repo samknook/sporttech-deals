@@ -5,6 +5,9 @@ on:
       - 'mobile/**'
       - 'docs/raceatlas/index.html'
       - 'docs/trizentro-app-mark.svg'
+      - 'scripts/build-trizentro-app-icons.cjs'
+      - 'scripts/build-trizentro-event-pages.cjs'
+      - 'scripts/trizentro-mobile-catalogue.cjs'
       - '.github/workflows/trizentro-native-app.yml'
   workflow_dispatch:
 permissions:
@@ -74,3 +77,35 @@ jobs:
           name: trizentro-android-debug
           if-no-files-found: error
           path: mobile/android/app/build/outputs/apk/debug/*.apk
+
+  ios-simulator:
+    needs: web-build
+    runs-on: macos-26
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: xcodebuild -version
+      - run: npm install --no-audit --no-fund
+      - run: npm run ios:init
+      - name: Apply TriZentro iOS icon and privacy manifest
+        run: node brand-ios.mjs
+      - name: Build unsigned iOS simulator app
+        run: |
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath ios-build CODE_SIGNING_ALLOWED=NO build
+      - name: Verify app bundle
+        run: |
+          app=ios-build/Build/Products/Debug-iphonesimulator/App.app
+          test -d "$app"
+          test -f "$app/PrivacyInfo.xcprivacy"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Info.plist" | grep -Fx com.trizentro.app
+          ditto -c -k --keepParent "$app" TriZentro-iOS-simulator.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trizentro-ios-simulator
+          path: mobile/TriZentro-iOS-simulator.zip
+          if-no-files-found: error
