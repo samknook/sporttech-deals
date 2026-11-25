@@ -26,6 +26,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Build canonical event pages
+        env:
+          TRIZENTRO_DOMAIN_CONFIRMED: 'true'
+        run: node scripts/build-trizentro-event-pages.cjs
+      - name: Build discovery pages
+        run: node scripts/build-trizentro-seo-hubs.cjs
+      - name: Build unified public routes
+        run: node scripts/build-trizentro-platform-shell.cjs
       - name: Install pinned Playwright runner
         run: npm install --no-save --no-audit --no-fund playwright@1.56.1
       - name: Install Chromium
