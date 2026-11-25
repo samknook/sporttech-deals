@@ -106,12 +106,14 @@ async function test(){
   assert.equal(manifestResponse.status(),200);
   assert.equal((await manifestResponse.json()).display,'standalone');
   await page.waitForFunction(()=>!!navigator.serviceWorker.controller,{},{timeout:15000});
-  const cached=await page.evaluate(async()=>{const c=await caches.open('trizentro-offline-v1');return (await c.keys()).map(r=>new URL(r.url).pathname).sort()});
+  const cached=await page.evaluate(async()=>{const name=(await caches.keys()).find(k=>k.startsWith('trizentro-offline-'));if(!name)throw Error('Offline cache missing');const c=await caches.open(name);return (await c.keys()).map(r=>new URL(r.url).pathname).sort()});
   assert.deepEqual(cached,['/app-icons/icon-192.png','/app-offline.html']);
   // A real server-side connection failure reaches the worker's fetch, unlike
   // Chromium's page-only offline emulation which may not affect a worker.
+  await page.evaluate(()=>localStorage.setItem('raceatlas-saved-v2',JSON.stringify(['ra-219'])));
   await page.goto(base+'/events/?offline-check=1',{waitUntil:'domcontentloaded'});
   assert.match(await page.locator('h1').innerText(),/Even geen verbinding/);
+  assert.match(await page.locator('#offline-saved').innerText(),/RBR Almere 2027/);
   await page.goto(base+'/events/',{waitUntil:'domcontentloaded'});
   await page.locator('#cards .card').first().waitFor({state:'visible'});
   console.log('PASS: mobile discovery, race detail, season and installable app offline fallback');
