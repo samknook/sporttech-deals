@@ -28,6 +28,7 @@ on:
       - 'scripts/build-trizentro-event-pages.cjs'
       - 'scripts/build-trizentro-platform-shell.cjs'
       - 'scripts/build-trizentro-app-icons.cjs'
+      - 'scripts/build-trizentro-offline-season.cjs'
       - 'scripts/build-trizentro-seo-hubs.cjs'
       - '.github/trizentro-domain.json'
       - '.github/workflows/deploy-trizentro-pages.yml'
@@ -40,6 +41,7 @@ on:
       - 'scripts/build-trizentro-event-pages.cjs'
       - 'scripts/build-trizentro-platform-shell.cjs'
       - 'scripts/build-trizentro-app-icons.cjs'
+      - 'scripts/build-trizentro-offline-season.cjs'
       - 'scripts/build-trizentro-seo-hubs.cjs'
   workflow_dispatch:
 permissions:
