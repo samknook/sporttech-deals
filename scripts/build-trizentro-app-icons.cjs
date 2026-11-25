@@ -20,7 +20,7 @@ function icon(size){
  const scale=2,n=size*scale,pixels=Buffer.alloc(n*n*3),bg=[7,25,37];
  for(let i=0;i<pixels.length;i+=3){pixels[i]=bg[0];pixels[i+1]=bg[1];pixels[i+2]=bg[2]}
  // Keep all of the mark within the central maskable-icon safe area.
- const factor=n*.76/256,ox=(n-256*factor)/2,oy=(n-256*factor)/2;
+ const factor=n*.94/320,ox=(n-320*factor)/2,oy=(n-320*factor)/2;
  for(const shape of shapes){
   const edges=shape.polygons.flatMap(poly=>poly.map((p,i)=>{const q=poly[(i+1)%poly.length];return [ox+p[0]*factor,oy+p[1]*factor,ox+q[0]*factor,oy+q[1]*factor]}));
   for(let y=0;y<n;y++){
