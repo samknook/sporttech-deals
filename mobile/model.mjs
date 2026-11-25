@@ -19,13 +19,20 @@ export function raceCountdown(events,saved,today=localToday()){
  const days=Math.round((Date.parse(next.date)-Date.parse(today))/86400000);
  return {race:next,days};
 }
+export function sharedTriZentroUrl(url, campaign) {
+ const link = new URL(url);
+ link.searchParams.set('utm_source', 'trizentro_app');
+ link.searchParams.set('utm_medium', 'share');
+ link.searchParams.set('utm_campaign', campaign);
+ return link.href;
+}
 export function seasonShareText(events,saved){
  const list=selectRaces(events,{savedOnly:true,saved});
  if(!list.length)return '';
  const lines=['Mijn wedstrijdseizoen op TriZentro 🏁'];
- for(const race of list.slice(0,8))lines.push(race.name+' — '+(race.date||'Datum nog niet bevestigd')+' · '+race.place,race.detail);
+ for(const race of list.slice(0,8))lines.push(race.name+' — '+(race.date||'Datum nog niet bevestigd')+' · '+race.place,sharedTriZentroUrl(race.detail,'app_season_share'));
  if(list.length>8)lines.push('En nog '+(list.length-8)+' andere wedstrijden.');
- lines.push('Ontdek jouw volgende startlijn: https://trizentro.com/events/');
+ lines.push('Ontdek jouw volgende startlijn: '+sharedTriZentroUrl('https://trizentro.com/events/','app_season_share'));
  return lines.join('\n');
 }
 

@@ -1,4 +1,4 @@
-import test from 'node:test';import assert from 'node:assert/strict';import {publicRace,selectRaces,toggleRace,makeCatalogue,validateCatalogue,raceCountdown,seasonShareText,radarStatus,radarRaces} from './model.mjs';
+import test from 'node:test';import assert from 'node:assert/strict';import {publicRace,selectRaces,toggleRace,makeCatalogue,validateCatalogue,raceCountdown,seasonShareText,sharedTriZentroUrl,radarStatus,radarRaces} from './model.mjs';
 const raw={id:'ra-219',name:'RBR Almere 2027',place:'Almere',country:'Nederland',sport:'Triatlon',officialEventUrl:'https://rbr-almere.nl/',date:'2027-04-18',dateEvidence:'official'};
 test('public data only, correct canonical route',()=>{const e=publicRace({...raw,registrationUrl:'https://example.com',email:'private@example.com'});assert.equal(e.detail,'https://trizentro.com/events/wedstrijden/rbr-almere-2027-ra-219.html');assert.equal(e.date,'2027-04-18');assert.equal(e.email,undefined);assert.equal(e.registrationUrl,undefined);assert.equal(publicRace({...raw,officialEventUrl:'http://example.com'}),null);assert.equal(publicRace({...raw,dateEvidence:'unknown'}).date,null)});
 test('filters, local season, and past dates',()=>{const a=publicRace(raw),b=publicRace({...raw,id:'ra-3',name:'Hardloopwedstrijd',sport:'Hardlopen',date:'2026-01-01'});assert.deepEqual(selectRaces([a,b],{today:'2026-11-25',query:'almere',sport:'Triatlon'}),[a]);assert.deepEqual(selectRaces([a,b],{savedOnly:true,saved:['ra-3'],today:'2026-11-25'}),[b]);assert.deepEqual(toggleRace([],a.id),[a.id]);assert.deepEqual(toggleRace([a.id],a.id),[])});
@@ -18,3 +18,16 @@ test('versioned public feed rejects malformed or foreign detail URLs and duplica
  test('season countdown ignores past or unconfirmed races and share preserves official details',()=>{const a=publicRace(raw),past={...a,id:'ra-1',date:'2026-01-01'},unknown={...a,id:'ra-2',date:null};assert.equal(raceCountdown([past,unknown,a],['ra-1','ra-2',a.id],'2027-04-17').days,1);assert.equal(raceCountdown([a],[a.id],'2027-04-18').days,0);assert.equal(raceCountdown([past,unknown],['ra-1','ra-2'],'2027-04-17'),null);assert.match(seasonShareText([a],[a.id]),/RBR Almere 2027/);assert.ok(seasonShareText([a],[a.id]).includes(a.detail));assert.equal(seasonShareText([a],[]),'')});
 
 test('radar retains public status and rejects malformed dates, supports older snapshots',()=>{const e=publicRace({...raw,registrationStatus:'link_available',registrationDate:'2027-02-01',sourceCheckedOn:'2026-11-25'});assert.equal(radarStatus(e),'Directe inschrijflink beschikbaar');assert.equal(e.registrationDate,'2027-02-01');assert.equal(publicRace({...raw,registrationDate:'2027-02-30'}).registrationDate,null);assert.equal(radarStatus({}),'Inschrijfstatus onbekend');assert.deepEqual(radarRaces([e],[e.id]),[e]);assert.deepEqual(radarRaces([e],[]),[]);assert.equal(validateCatalogue(makeCatalogue([raw])).events[0].registrationStatus,'unknown')});
+
+test('shared race and season links identify the campaign without altering the destination', () => {
+ const race = publicRace(raw);
+ const singleLink = new URL(sharedTriZentroUrl(race.detail, 'app_race_share'));
+ assert.equal(singleLink.pathname, new URL(race.detail).pathname);
+ assert.equal(singleLink.searchParams.get('utm_source'), 'trizentro_app');
+ assert.equal(singleLink.searchParams.get('utm_medium'), 'share');
+ assert.equal(singleLink.searchParams.get('utm_campaign'), 'app_race_share');
+
+ const seasonLinks = seasonShareText([race], [race.id]).match(/https:\/\/[^\s]+/g).map(url => new URL(url));
+ assert.deepEqual(seasonLinks.map(url => url.pathname), [singleLink.pathname, '/events/']);
+ assert.ok(seasonLinks.every(url => url.searchParams.get('utm_campaign') === 'app_season_share'));
+});

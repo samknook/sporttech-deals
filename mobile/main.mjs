@@ -2,7 +2,7 @@ import {Capacitor,CapacitorHttp} from '@capacitor/core';
 import {Preferences} from '@capacitor/preferences';
 import {Browser} from '@capacitor/browser';
 import {Share} from '@capacitor/share';
-import {selectRaces,toggleRace,validateCatalogue,raceCountdown,seasonShareText,radarStatus,radarRaces} from './model.mjs';
+import {selectRaces,toggleRace,validateCatalogue,raceCountdown,seasonShareText,sharedTriZentroUrl,radarStatus,radarRaces} from './model.mjs';
 const $=id=>document.getElementById(id),key='trizentro.native.saved.v1';
 const radarKey='trizentro.native.radar.v1';
 const catalogueKey='trizentro.native.catalogue.v1',feed='https://trizentro.com/app-catalogue.json';
@@ -62,7 +62,7 @@ function card(e){
  const saved=state.saved.includes(e.id),b=button(saved?'✓ Bewaard':'+ Bewaar',()=>save(e.id),'save');
  b.setAttribute('aria-pressed',String(saved));
  actions.append(b,button('Bekijk wedstrijd',()=>showRace(e)),button('Deel wedstrijd ↗',async()=>{
- try{await Share.share({title:e.name,text:'Bekijk deze wedstrijd op TriZentro',url:e.detail})}catch{msg('Delen niet voltooid.')}
+ try{await Share.share({title:e.name,text:'Bekijk deze wedstrijd op TriZentro',url:sharedTriZentroUrl(e.detail,'app_race_share')})}catch{msg('Delen niet voltooid.')}
  },'share'));
  a.append(actions);return a;
 }

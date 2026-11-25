@@ -76,7 +76,18 @@ jobs:
         run: node brand-android.mjs
       - name: Build Android debug APK
         working-directory: mobile/android
-        run: ./gradlew assembleDebug --no-daemon --stacktrace
+        shell: bash
+        run: |
+          set -o pipefail
+          for attempt in 1 2 3; do
+            if ./gradlew assembleDebug --no-daemon --stacktrace 2>&1 | tee "$RUNNER_TEMP/trizentro-gradle.log"; then
+              exit 0
+            fi
+            if [[ "$attempt" -eq 3 ]] || ! grep -Fq 'Received status code 429' "$RUNNER_TEMP/trizentro-gradle.log"; then
+              exit 1
+            fi
+            sleep "$((30 * attempt))"
+          done
       - name: Verify APK identity and signature
         run: |
           apk=android/app/build/outputs/apk/debug/app-debug.apk

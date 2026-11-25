@@ -56,3 +56,14 @@ Deze rapportage is bewust niet publiek en niet gekoppeld aan het uitgeschakelde 
 - Verifieer daarna dat dagtotalen stijgen met een SQL-query. Een succesvolle GitHub commit is **geen** bewijs van ontvangst door de backend.
 
 **Let op:** er is geen cookieconsent-banner toegevoegd omdat deze meetaanpak geen trackingcookies gebruikt; laat de juridische privacy- en cookie-eisen voor de uiteindelijke lancering beoordelen.
+
+
+## Gedeelde links uit de TriZentro-app
+
+De app voegt bij het delen van een wedstrijd of seizoen dezelfde bron `trizentro_app`
+en de campagnes `app_race_share` en `app_season_share` toe aan openbare TriZentro-links.
+In de websiteacquisitie valt deze bron onder overige campagnes. Gebruik de campagnenamen
+om detailopeningen, opgeslagen wedstrijden en kliks naar de Inschrijfradar per deelactie
+te volgen. De links bevatten geen account- of apparaat-ID. De rapportage meet alleen
+acties op de website na het openen van de link. Deelacties in de app en voltooide
+inschrijvingen worden hiermee niet geteld.
