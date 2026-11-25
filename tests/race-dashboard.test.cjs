@@ -71,10 +71,12 @@ test('every sitemap URL has a matching docs file',()=>{
  assert.ok(urls.length>=8);
  for(const url of urls){
   const u=new URL(url);
-  assert.equal(u.hostname,'samknook.github.io');
-  assert.ok(u.pathname.startsWith('/sporttech-deals/'));
-  const rel=u.pathname.slice('/sporttech-deals/'.length);
-  assert.ok(fs.existsSync(path.join(docs,rel||'index.html')),'Missing file for '+url);
+  assert.equal(u.origin,'https://trizentro.com');
+  assert.ok(!u.pathname.startsWith('/raceatlas/'),'Legacy URL must not be indexed: '+url);
+  const rel=decodeURIComponent(u.pathname).replace(/^\/+/, '');
+  const target=path.resolve(docs,rel.endsWith('/')||!rel?path.join(rel,'index.html'):rel);
+  assert.ok(target.startsWith(docs+path.sep),'Sitemap URL escapes docs: '+url);
+  assert.ok(fs.existsSync(target)&&fs.statSync(target).isFile(),'Missing file for '+url);
  }
  assert.equal(new Set(urls).size,urls.length,'duplicate sitemap URLs');
 });

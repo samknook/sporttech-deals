@@ -11,9 +11,10 @@ test('local HTML links resolve to existing docs files',()=>{
   for(const match of html.matchAll(/\bhref\s*=\s*["']([^"']+)["']/g)){
    const href=match[1].trim();
    if(!href||href.startsWith('#')||/^(https?:|mailto:|tel:|javascript:|data:)/i.test(href))continue;
-   const plain=href.split(/[?#]/)[0];
+   const plain=href.split(/[?#]/)[0].replace(/^\/+/, '');
    const dest=plain===''?'index.html':plain.endsWith('/')?path.join(plain,'index.html'):plain;
-   if(!fs.existsSync(path.resolve(docs,dest)))missing.push(name+': '+href);
+   const target=path.resolve(docs,dest);
+   if(!target.startsWith(docs+path.sep)||!fs.existsSync(target)||!fs.statSync(target).isFile())missing.push(name+': '+href);
   }
  }
  assert.deepEqual(missing,[],'broken local page links');
