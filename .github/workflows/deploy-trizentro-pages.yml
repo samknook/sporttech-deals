@@ -193,6 +193,8 @@ jobs:
                grep -Fq 'class="raCardMore"' /tmp/tri-calendar &&
                grep -Fq 'visual-polish.css' /tmp/tri-calendar &&
                grep -Fq 'class="tzHeroActions"' /tmp/tri-calendar &&
+               grep -Fq 'class="raSportLine tzHeroSportIcons"' /tmp/tri-calendar &&
+               grep -Fq 'class="tzSportFilter"' /tmp/tri-calendar &&
                grep -Fq 'class="tzDiscoveryGrid"' /tmp/tri-calendar &&
                grep -Fq 'ra-direct-registration' /tmp/tri-calendar &&
                grep -Fq 'function registrationCardStatus(e)' /tmp/tri-calendar &&
