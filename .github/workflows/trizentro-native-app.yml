@@ -36,7 +36,6 @@ jobs:
           name: trizentro-mobile-web-preview
           path: mobile/www
   android-debug:
-    if: github.event_name == 'workflow_dispatch'
     needs: web-build
     runs-on: ubuntu-latest
     defaults:
@@ -52,11 +51,24 @@ jobs:
           distribution: temurin
           java-version: '21'
       - run: npm install --no-audit --no-fund
+      - name: Install Android SDK 36
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
       - run: npm run android:init
+      - name: Apply TriZentro launcher icons
+        run: node brand-android.mjs
       - name: Build Android debug APK
         working-directory: mobile/android
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
+      - name: Verify APK identity and signature
+        run: |
+          apk=android/app/build/outputs/apk/debug/app-debug.apk
+          test -s "$apk"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$apk" | tee /tmp/trizentro-apk-info.txt
+          grep -Fq "package: name='com.trizentro.app'" /tmp/trizentro-apk-info.txt
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose "$apk"
+          sha256sum "$apk"
       - uses: actions/upload-artifact@v4
         with:
           name: trizentro-android-debug
+          if-no-files-found: error
           path: mobile/android/app/build/outputs/apk/debug/*.apk
