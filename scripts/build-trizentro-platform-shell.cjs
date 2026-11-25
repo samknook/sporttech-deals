@@ -4,6 +4,7 @@
 // Retains existing tools, data, forms, Events state, and noindex flags.
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const base=path.resolve(__dirname,'../docs');
+require('./build-trizentro-app-icons.cjs');
 const pages=JSON.parse(fs.readFileSync(path.join(__dirname,'../config/trizentro-public-pages.json'),'utf8')).pages;
 const eventsDir=path.join(base,'raceatlas/wedstrijden');
 if(fs.existsSync(eventsDir))for(const filename of fs.readdirSync(eventsDir)){if(filename.endsWith('.html'))pages.push('raceatlas/wedstrijden/'+filename)}
@@ -90,6 +91,11 @@ for(const route of routes){
  if(route.canonical==='events/'&&seoPages.length){
   const discovery='<section aria-labelledby="tzSeoDiscover" style="padding:25px 22px;margin:26px 0;background:#f1f7ee;color:#153528;border-radius:15px"><h2 id="tzSeoDiscover">Ontdek wedstrijden per sport en regio</h2><p>Bekijk geselecteerde wedstrijdkalenders met bevestigde datums en officiële links.</p><div style="display:flex;gap:12px;flex-wrap:wrap">'+seoPages.map(x=>'<a style="display:inline-block;padding:9px 13px;border-radius:8px;background:#fff;color:#145e38;font-weight:700;text-decoration:none" href="/ontdek/'+x.slug+'/">'+x.title+'</a>').join('')+'</div></section>';
   html=html.replace(/<\/main>/i,discovery+'</main>');
+ }
+ if(['events/','seizoen/','performance/'].includes(route.canonical)){
+  const appHead='<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/app-icons/icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes">';
+  html=html.replace(/<\/head>/i,appHead+'</head>');
+  html=html.replace(/<\/body>/i,'<script src="/trizentro-app.js?v='+versionFor('trizentro-app.js')+'" defer></script></body>');
  }
  fs.writeFileSync(target,html);
 }
