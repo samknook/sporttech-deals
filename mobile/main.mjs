@@ -2,7 +2,7 @@ import {Capacitor,CapacitorHttp} from '@capacitor/core';
 import {Preferences} from '@capacitor/preferences';
 import {Browser} from '@capacitor/browser';
 import {Share} from '@capacitor/share';
-import {selectRaces,toggleRace,validateCatalogue} from './model.mjs';
+import {selectRaces,toggleRace,validateCatalogue,raceCountdown,seasonShareText} from './model.mjs';
 const $=id=>document.getElementById(id),key='trizentro.native.saved.v1';
 const catalogueKey='trizentro.native.catalogue.v1',feed='https://trizentro.com/app-catalogue.json';
 const state={events:[],saved:[],query:'',sport:'',tab:'discover',limit:24,asOf:'',generatedAt:'',busy:false,refreshing:false};
@@ -39,6 +39,15 @@ function render(){
  document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tab===state.tab)));
  document.querySelectorAll('[data-sport]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.sport===state.sport)));
  const list=about?[]:selectRaces(state.events,{query:season?'':state.query,sport:season?'':state.sport,savedOnly:season,saved:state.saved});
+ const next=season?raceCountdown(state.events,state.saved):null;
+ $('seasonOverview').hidden=!season||!list.length;
+ $('nextRace').hidden=!next;
+ if(next){
+  $('nextRaceName').textContent=next.race.name;
+  $('countdown').textContent=next.days===0?'Vandaag':next.days===1?'Nog 1 dag':'Nog '+next.days+' dagen';
+ }
+ $('seasonCount').textContent=list.length===1?'1 bewaarde wedstrijd':list.length+' bewaarde wedstrijden';
+ $('shareSeason').hidden=!list.length;
  $('races').replaceChildren(...list.slice(0,state.limit).map(card));
  if(!about&&!list.length)$('races').append(node('p',season?'Je hebt nog geen wedstrijden bewaard.':'Geen wedstrijden gevonden.','caption'));
  const missing=season?state.saved.filter(id=>!state.events.some(e=>e.id===id)).length:0;
@@ -78,6 +87,7 @@ async function init(){
   $('more').onclick=()=>{state.limit+=24;render()};
   $('openSite').onclick=()=>open('https://trizentro.com/events/');
   $('refresh').onclick=refreshCatalogue;
+  $('shareSeason').onclick=async()=>{const text=seasonShareText(state.events,state.saved);if(!text)return;try{await Share.share({title:'Mijn wedstrijdseizoen',text})}catch{msg('Delen niet voltooid.')}};
   render();
  }catch{msg('De app kon niet worden geladen. Start TriZentro opnieuw.')}
 }
