@@ -204,3 +204,14 @@ body{background:var(--tz-polish-bg)!important}
  #savedPage #raShareSeason{grid-column:1/-1}
  #savedPage :is(.raSeasonGoals,.raMonthPlanner,.raRegistrationWatch,.raSeasonHealth,.raRecommendations){padding:16px;border-radius:15px}
 }
+
+/* Curated routes give the catalogue a useful editorial discovery layer. */
+#explore .tzDiscoveryLinks{margin:35px 0 0}
+#explore .tzDiscoveryLinks h2{font-size:25px;letter-spacing:-.04em;color:#102b32;margin:0 0 14px}
+#explore .tzDiscoveryGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#explore .tzDiscoveryGrid a{display:flex;flex-direction:column;gap:8px;min-height:130px;padding:17px 19px;background:#fff;border:1px solid #dce6e5;border-radius:15px;text-decoration:none;color:#102b32}
+#explore .tzDiscoveryGrid a:hover,#explore .tzDiscoveryGrid a:focus-visible{border-color:#88b54f;box-shadow:0 5px 18px #0d2d3210}
+#explore .tzDiscoveryGrid a span{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#56736b;font-weight:800}
+#explore .tzDiscoveryGrid a strong{font-size:18px;line-height:1.25;letter-spacing:-.025em}
+#explore .tzDiscoveryGrid a small{font-size:12px;color:#315d4d;margin-top:auto;font-weight:750}
+@media(max-width:600px){#explore .tzDiscoveryGrid{grid-template-columns:1fr;gap:8px}#explore .tzDiscoveryGrid a{min-height:104px;padding:15px}}
