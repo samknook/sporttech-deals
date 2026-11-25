@@ -15,6 +15,7 @@ on:
       - 'tests/test-trizentro-organizer-summary.cjs'
       - 'tests/test-trizentro-event-save.cjs'
       - 'tests/test-trizentro-season-sharing.cjs'
+      - 'tests/test-trizentro-filter-usability.cjs'
       - 'tests/test-trizentro-registration-radar.cjs'
       - 'tests/test-trizentro-referrer-attribution.cjs'
       - 'tests/test-trizentro-legacy-canonical.cjs'
@@ -75,6 +76,7 @@ jobs:
             tests/test-trizentro-organizer-summary.cjs \
             tests/test-trizentro-event-save.cjs \
             tests/test-trizentro-season-sharing.cjs \
+            tests/test-trizentro-filter-usability.cjs \
             tests/test-trizentro-registration-radar.cjs \
             tests/test-trizentro-referrer-attribution.cjs \
             tests/test-trizentro-legacy-canonical.cjs \
@@ -180,6 +182,8 @@ jobs:
             if curl -fsSL --max-time 25 "https://trizentro.com/events/?release=${{ github.sha }}" -o /tmp/tri-calendar &&
                grep -Fq 'data-quick="registration"' /tmp/tri-calendar &&
                grep -Fq 'id="raShareSeason"' /tmp/tri-calendar &&
+               grep -Fq 'id="raAdvancedCount"' /tmp/tri-calendar &&
+               grep -Fq 'function updateFilterOverview()' /tmp/tri-calendar &&
                grep -Fq 'ra-direct-registration' /tmp/tri-calendar &&
                grep -Fq 'function registrationCardStatus(e)' /tmp/tri-calendar &&
                grep -Fq 'Inschrijving gesloten volgens bron' /tmp/tri-calendar &&
