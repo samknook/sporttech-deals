@@ -175,10 +175,10 @@ function render(data){
  if(!Array.isArray(data.events)||!data.events.length){
   const p=document.createElement('p');
   p.textContent='Er zijn nog geen geverifieerde evenementen gekoppeld. Claim je evenement via de organisatorenpagina; TriZentro controleert je aanvraag.';
-  races.append(p);$('export').disabled=true;$('exportDaily').disabled=true;$('copySummary').disabled=true;return;
+  races.append(p);$('export').disabled=true;$('exportDaily').disabled=true;$('copySummary').disabled=true;$('downloadSummary').disabled=true;return;
  }
  $('export').disabled=false;
- $('copySummary').disabled=false;
+ $('copySummary').disabled=false;$('downloadSummary').disabled=false;
  $('exportDaily').disabled=!Array.isArray(data.trend)||!data.trend.length;
  for(const e of data.events){
   const section=document.createElement('section');section.className='race';
@@ -201,7 +201,7 @@ function render(data){
 }
 async function load(){
  if(!client||!activeUser)return;
- $('refresh').disabled=true;$('export').disabled=true;$('exportDaily').disabled=true;$('copySummary').disabled=true;$('copySummaryStatus').textContent='';setMessage('Rapportages ophalen…');
+ $('refresh').disabled=true;$('export').disabled=true;$('exportDaily').disabled=true;$('copySummary').disabled=true;$('downloadSummary').disabled=true;$('copySummaryStatus').textContent='';setMessage('Rapportages ophalen…');
  try{
   const {data:session,error:sErr}=await client.auth.getSession();
   if(sErr||!session.session||session.session.user.id!==activeUser)throw Error('session');
@@ -211,7 +211,7 @@ async function load(){
   const data=await response.json();
   if(data?.error)throw Error(data.error);
   render(data);setMessage('Rapportages bijgewerkt. Alleen jouw geverifieerde evenementen zijn zichtbaar.');
- }catch(err){report=null;races.replaceChildren();$('export').disabled=true;$('exportDaily').disabled=true;$('copySummary').disabled=true;setMessage('Rapportages konden niet veilig worden opgehaald. Meld je opnieuw aan of probeer later opnieuw.');}
+ }catch(err){report=null;races.replaceChildren();$('export').disabled=true;$('exportDaily').disabled=true;$('copySummary').disabled=true;$('downloadSummary').disabled=true;setMessage('Rapportages konden niet veilig worden opgehaald. Meld je opnieuw aan of probeer later opnieuw.');}
  finally{$('refresh').disabled=false}
 }
 async function init(){
@@ -254,8 +254,20 @@ $('copySummary').addEventListener('click',async()=>{
   await navigator.clipboard.writeText(summary);
   status.textContent='Rapportsamenvatting gekopieerd. Deel deze alleen met de bedoelde ontvangers.';
  }catch{
-  status.textContent='Automatisch kopiëren is niet beschikbaar. Download het CSV-rapport of probeer een beveiligde browser.';
+  status.textContent='Automatisch kopiëren is niet beschikbaar. Gebruik Download samenvatting om het rapport als tekstbestand te bewaren.';
  }
+});
+$('downloadSummary').addEventListener('click',()=>{
+ if(!report?.events?.length)return;
+ const events=selectedEvents();
+ if(!events.length)return;
+ const file=new Blob([organizerSummaryText(report,events)+'\n'],{type:'text/plain;charset=utf-8'});
+ const url=URL.createObjectURL(file),link=document.createElement('a');
+ const scope=events.length===1&&/^ra-\d{1,8}$/.test(events[0].event_id)?events[0].event_id:'evenementen';
+ link.href=url;
+ link.download='trizentro-samenvatting-'+scope+'-'+$('period').value+'-dagen.txt';
+ link.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
 });
 $('exportDaily').addEventListener('click',()=>{
  if(!report?.events?.length||!Array.isArray(report.trend)||!report.trend.length)return;
