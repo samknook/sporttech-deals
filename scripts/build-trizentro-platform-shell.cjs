@@ -69,6 +69,8 @@ for(const route of routes){
  // Give Google an explicit, accurate organization/website identity. These are
  // descriptive facts, not fabricated reviews, ratings or search actions.
  if(route.canonical==='events/'){
+  // The legacy source may already have been marked noindex by a previous build.
+  html=html.replace(/<meta name="robots" content="noindex,follow">/gi,'');
   const identity={
    '@context':'https://schema.org',
    '@graph':[
