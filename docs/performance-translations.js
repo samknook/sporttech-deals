@@ -29,6 +29,11 @@ TriZentroAddTranslations('performance.html','nl',[
  ['Bereken je eindtijd →','Calculate finish time →'],['Race Fuel Planner','Race Fuel Planner'],
  ['Stel een praktisch voedingsplan samen voor het fiets- en looponderdeel.','Build a practical nutrition plan for cycling and running.'],
  ['Plan je voeding →','Plan nutrition →'],
+ ['04 / VOORBEREIDING','04 / PREPARATION'],['70.3 voorbereidingscheck','70.3 preparation check'],
+ ['Loop je praktische voorbereidingen na en ontdek welke acties nog openstaan.','Review your practical preparations and identify outstanding tasks.'],
+ ['Controleer je voorbereiding →','Check your preparation →'],['05 / WEDSTRIJDWEEK','05 / RACE WEEK'],
+ ['Wedstrijdweek-checklist','Race-week checklist'],['Bereid materiaal, voeding, logistiek en je wedstrijdweek stap voor stap voor.','Prepare equipment, nutrition, logistics and your race week step by step.'],
+ ['Bekijk de checklist →','View the checklist →'],
  ['Alle calculators zijn gratis, zonder account. De uitkomsten zijn rekenvoorbeelden en geen garanties voor een wedstrijduitslag.','All calculators are free, with no account required. Estimates are examples, not race-result guarantees.']
 ]);
 TriZentroAddTranslations('pace-calculator.html','nl',[

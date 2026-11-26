@@ -9,9 +9,10 @@ const path=require('node:path');
 const http=require('node:http');
 const {chromium}=require('playwright');
 const ROOT=path.resolve(__dirname,'../docs');
-const mime={'.html':'text/html; charset=utf-8','.js':'application/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.json':'application/json'};
+const mime={'.html':'text/html; charset=utf-8','.js':'application/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.json':'application/json','.webmanifest':'application/manifest+json'};
 const server=http.createServer((request,response)=>{
  let pathname;
+ if(request.url.includes('offline-check=1')){request.socket.destroy();return}
  try{pathname=decodeURIComponent(new URL(request.url,'http://localhost').pathname)}catch{response.writeHead(400);response.end();return}
  const filename=path.resolve(ROOT,'.'+(pathname==='/'?'/index.html':pathname));
  if(!filename.startsWith(ROOT+path.sep)){response.writeHead(403);response.end();return}
@@ -98,7 +99,24 @@ async function test(){
   assert.equal(await page.locator('.race-secondary [data-ra-outbound="organizer"]').isVisible(),true);
   assert.equal(await page.locator('#shareRaceStatus').getAttribute('role'),'status');
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+2),'Detail page should not overflow horizontally');
-  console.log('PASS: mobile discovery, filters, save, season and focused race-detail actions');
+  // App metadata and service worker operate on the real built site.
+  await page.goto(base+'/events/',{waitUntil:'domcontentloaded'});
+  assert.equal(await page.locator('link[rel="manifest"]').getAttribute('href'),'/manifest.webmanifest');
+  const manifestResponse=await context.request.get(base+'/manifest.webmanifest');
+  assert.equal(manifestResponse.status(),200);
+  assert.equal((await manifestResponse.json()).display,'standalone');
+  await page.waitForFunction(()=>!!navigator.serviceWorker.controller,{},{timeout:15000});
+  const cached=await page.evaluate(async()=>{const name=(await caches.keys()).find(k=>k.startsWith('trizentro-offline-'));if(!name)throw Error('Offline cache missing');const c=await caches.open(name);return (await c.keys()).map(r=>new URL(r.url).pathname).sort()});
+  assert.deepEqual(cached,['/app-icons/icon-192.png','/app-offline.html']);
+  // A real server-side connection failure reaches the worker's fetch, unlike
+  // Chromium's page-only offline emulation which may not affect a worker.
+  await page.evaluate(()=>localStorage.setItem('raceatlas-saved-v2',JSON.stringify(['ra-219'])));
+  await page.goto(base+'/events/?offline-check=1',{waitUntil:'domcontentloaded'});
+  assert.match(await page.locator('h1').innerText(),/Even geen verbinding/);
+  assert.match(await page.locator('#offline-saved').innerText(),/RBR Almere 2027/);
+  await page.goto(base+'/events/',{waitUntil:'domcontentloaded'});
+  await page.locator('#cards .card').first().waitFor({state:'visible'});
+  console.log('PASS: mobile discovery, race detail, season and installable app offline fallback');
  }catch(err){
   try{await page.screenshot({path:'mobile-smoke-failure.png',fullPage:true})}catch{}
   throw err;

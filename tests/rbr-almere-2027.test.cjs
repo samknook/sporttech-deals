@@ -17,7 +17,10 @@ test('RBR Almere 2027 is verified, unique and searchable as duatlon',()=>{
  assert.equal(e.region,'Flevoland');
  assert.match(e.officialEventUrl,/^https:\/\/rbr-almere\.nl\/wedstrijdinformatie\/$/);
  assert.match(e.routeUrl,/rbr-almere\.nl\/wedstrijdinformatie\/parcours\/$/);
- assert.ok(!e.registrationUrl,'Do not invent direct registration availability');
+ assert.equal(e.registrationUrl,'https://in.njuko.com/rbr--tt-almere-20271786603370440');
+ assert.equal(e.registrationInfoUrl,'https://live.challenge-family.com/php/trihard.html');
+ assert.equal(e.registrationStatus,'link_available');
+ assert.match(e.registrationStatusNote,/Controleer de actuele beschikbaarheid/);
 });
 test('generated individual race page can be saved and links to organiser',()=>{
  cp.execFileSync(process.execPath,[path.join(root,'scripts/build-trizentro-event-pages.cjs')],{cwd:root,encoding:'utf8',env:{...process.env,TRIZENTRO_DOMAIN_CONFIRMED:'true'}});

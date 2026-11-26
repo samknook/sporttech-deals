@@ -4,6 +4,8 @@ const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
+const os=require('node:os');
+const cp=require('node:child_process');
 const core=require('../docs/race-planner-core.js');
 const docs=path.join(__dirname,'..','docs');
 function race(distance='half',overrides={}){
@@ -52,38 +54,53 @@ test('unrealistic and malformed inputs fail validation',()=>{
  assert.throws(()=>race('half',{runPace:'0:20'}));
  assert.throws(()=>race('half',{t1Minutes:-2}));
 });
-test('dashboard and sitemap contain consistent references',()=>{
+test('dashboard and Performance contain consistent references',()=>{
  const dashboard=fs.readFileSync(path.join(docs,'race-dashboard.html'),'utf8');
- const homepage=fs.readFileSync(path.join(docs,'index.html'),'utf8');
- const sitemap=fs.readFileSync(path.join(docs,'sitemap.xml'),'utf8');
+ const performance=fs.readFileSync(path.join(docs,'performance.html'),'utf8');
  assert.match(dashboard,/<script src="race-planner-core.js"><\/script>/);
  assert.match(dashboard,/localStorage\.setItem/);
  assert.match(dashboard,/localStorage\.removeItem/);
  assert.match(dashboard,/id="download"/);
  assert.match(dashboard,/id="scenarios"/);
  assert.match(dashboard,/core\.compareScenarios\(v\.input\)/);
- assert.match(homepage,/href="race-dashboard.html"/);
- assert.match(sitemap,/https:\/\/samknook\.github\.io\/sporttech-deals\/race-dashboard\.html/);
+ assert.match(performance,/href="race-dashboard.html"/);
 });
 test('every sitemap URL has a matching docs file',()=>{
- const sitemap=fs.readFileSync(path.join(docs,'sitemap.xml'),'utf8');
- const urls=[...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m=>m[1]);
+ // Build an isolated copy: generated routes are not committed and other tests use source HTML.
+ const stage=fs.mkdtempSync(path.join(os.tmpdir(),'trizentro-sitemap-'));
+ try{
+  const root=path.join(__dirname,'..');
+  for(const dir of ['docs','scripts','config'])fs.cpSync(path.join(root,dir),path.join(stage,dir),{recursive:true});
+  fs.mkdirSync(path.join(stage,'.github'));
+  fs.copyFileSync(path.join(root,'.github/trizentro-domain.json'),path.join(stage,'.github/trizentro-domain.json'));
+  for(const script of ['build-trizentro-event-pages.cjs','build-trizentro-seo-hubs.cjs','build-trizentro-platform-shell.cjs']){
+   cp.execFileSync(process.execPath,[path.join(stage,'scripts',script)],{cwd:stage,env:{...process.env,TRIZENTRO_DOMAIN_CONFIRMED:'true'},encoding:'utf8'});
+  }
+  const published=path.join(stage,'docs');
+  const sitemap=fs.readFileSync(path.join(published,'sitemap.xml'),'utf8');
+  assert.match(sitemap,/<loc>https:\/\/trizentro\.com\/race-dashboard\.html<\/loc>/);
+  const urls=[...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m=>m[1]);
  assert.ok(urls.length>=8);
  for(const url of urls){
   const u=new URL(url);
-  assert.equal(u.hostname,'samknook.github.io');
-  assert.ok(u.pathname.startsWith('/sporttech-deals/'));
-  const rel=u.pathname.slice('/sporttech-deals/'.length);
-  assert.ok(fs.existsSync(path.join(docs,rel||'index.html')),'Missing file for '+url);
+  assert.equal(u.origin,'https://trizentro.com');
+  assert.ok(!u.pathname.startsWith('/raceatlas/'),'Legacy URL must not be indexed: '+url);
+  const rel=decodeURIComponent(u.pathname).replace(/^\/+/, '');
+  const target=path.resolve(published,rel.endsWith('/')||!rel?path.join(rel,'index.html'):rel);
+  assert.ok(target.startsWith(published+path.sep),'Sitemap URL escapes docs: '+url);
+  assert.ok(fs.existsSync(target)&&fs.statSync(target).isFile(),'Missing file for '+url);
  }
  assert.equal(new Set(urls).size,urls.length,'duplicate sitemap URLs');
+ const dashboard=fs.readFileSync(path.join(published,'race-dashboard.html'),'utf8');
+ assert.match(dashboard,/<link rel="canonical" href="https:\/\/trizentro\.com\/race-dashboard\.html">/);
+ }finally{fs.rmSync(stage,{recursive:true,force:true});}
 });
 
 test('commercial previews exist, reference calculation engine and have no checkout',()=>{
  const products=fs.readFileSync(path.join(docs,'products.html'),'utf8');
  const pack=fs.readFileSync(path.join(docs,'race-pack-preview.html'),'utf8');
  const blueprint=fs.readFileSync(path.join(docs,'blueprint-preview.html'),'utf8');
- const index=fs.readFileSync(path.join(docs,'index.html'),'utf8');
+ const index=fs.readFileSync(path.join(docs,'tools-archief.html'),'utf8');
  assert.match(products,/Your First 70\.3 Race Pack/);
  assert.match(products,/The Complete Triathlon Blueprint/);
  assert.match(pack,/race-planner-core\.js/);

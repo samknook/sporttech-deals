@@ -3,11 +3,15 @@ on:
   push:
     paths:
       - 'docs/**'
+      - 'scripts/**'
+      - 'config/**'
       - 'tests/*.test.cjs'
       - '.github/workflows/race-tools-check.yml'
   pull_request:
     paths:
       - 'docs/**'
+      - 'scripts/**'
+      - 'config/**'
       - 'tests/*.test.cjs'
       - '.github/workflows/race-tools-check.yml'
   workflow_dispatch:
@@ -22,4 +26,5 @@ jobs:
         with:
           node-version: '22'
       - name: Verify race calculations, sitemap and dashboard integration
-        run: node --test tests/*.test.cjs
+        # Generator tests rewrite shared docs directories; parallel file workers race.
+        run: node --test --test-concurrency=1 tests/*.test.cjs

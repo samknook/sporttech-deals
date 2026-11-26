@@ -1,0 +1,135 @@
+name: TriZentro native app prototype
+on:
+  pull_request:
+    paths:
+      - 'mobile/**'
+      - 'docs/raceatlas/index.html'
+      - 'docs/trizentro-app-mark.svg'
+      - 'scripts/build-trizentro-app-icons.cjs'
+      - 'scripts/build-trizentro-event-pages.cjs'
+      - 'scripts/trizentro-mobile-catalogue.cjs'
+      - '.github/workflows/trizentro-native-app.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: trizentro-native-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  web-build:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: npm test
+      - run: npm run build
+      - name: Install pinned browser test runner
+        run: npm install --no-save --no-audit --no-fund playwright@1.56.1
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Verify native app interface in mobile browser
+        run: node test-ui.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trizentro-native-preview
+          path: mobile/trizentro-native-preview.png
+      - name: Generate Android project
+        run: npx cap add android
+      - name: Validate packaged web bundle
+        run: |
+          test -f www/main.js
+          test -f android/app/src/main/assets/public/catalogue.json
+          test -f android/app/src/main/assets/public/logo.svg
+          test -f android/app/src/main/AndroidManifest.xml
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trizentro-mobile-web-preview
+          path: mobile/www
+  android-debug:
+    needs: web-build
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: npm install --no-audit --no-fund
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4.0.3
+        with:
+          packages: 'platform-tools platforms;android-36 build-tools;36.0.0'
+      - run: npm run android:init
+      - name: Apply TriZentro launcher icons
+        run: node brand-android.mjs
+      - name: Build Android debug APK
+        working-directory: mobile/android
+        shell: bash
+        run: |
+          set -o pipefail
+          for attempt in 1 2 3; do
+            if ./gradlew assembleDebug --no-daemon --stacktrace 2>&1 | tee "$RUNNER_TEMP/trizentro-gradle.log"; then
+              exit 0
+            fi
+            if [[ "$attempt" -eq 3 ]] || ! grep -Fq 'Received status code 429' "$RUNNER_TEMP/trizentro-gradle.log"; then
+              exit 1
+            fi
+            sleep "$((30 * attempt))"
+          done
+      - name: Verify APK identity and signature
+        run: |
+          apk=android/app/build/outputs/apk/debug/app-debug.apk
+          test -s "$apk"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$apk" | tee /tmp/trizentro-apk-info.txt
+          grep -Fq "package: name='com.trizentro.app'" /tmp/trizentro-apk-info.txt
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose "$apk"
+          sha256sum "$apk"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trizentro-android-debug
+          if-no-files-found: error
+          path: mobile/android/app/build/outputs/apk/debug/*.apk
+
+  ios-simulator:
+    needs: web-build
+    runs-on: macos-26
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: xcodebuild -version
+      - run: npm install --no-audit --no-fund
+      - run: npm run ios:init
+      - name: Apply TriZentro iOS icon and privacy manifest
+        run: node brand-ios.mjs
+      - name: Build unsigned iOS simulator app
+        run: |
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath ios-build CODE_SIGNING_ALLOWED=NO build
+      - name: Verify app bundle
+        run: |
+          app=ios-build/Build/Products/Debug-iphonesimulator/App.app
+          test -d "$app"
+          test -f "$app/PrivacyInfo.xcprivacy"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Info.plist" | grep -Fx com.trizentro.app
+          ditto -c -k --keepParent "$app" TriZentro-iOS-simulator.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trizentro-ios-simulator
+          path: mobile/TriZentro-iOS-simulator.zip
+          if-no-files-found: error

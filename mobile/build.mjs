@@ -1,0 +1,15 @@
+import {readFile,mkdir,writeFile,copyFile} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+import {build} from 'esbuild';
+import {validateCatalogue} from './model.mjs';
+execFileSync(process.execPath,[fileURLToPath(new URL('../scripts/build-trizentro-event-pages.cjs',import.meta.url))],{stdio:'inherit',env:{...process.env,TRIZENTRO_DOMAIN_CONFIRMED:'true'}});
+const catalogue=validateCatalogue(JSON.parse(await readFile(new URL('../docs/app-catalogue.json',import.meta.url),'utf8')));
+if(!catalogue)throw Error('Invalid public race bundle');
+await mkdir('www',{recursive:true});
+await writeFile('www/catalogue.json',JSON.stringify(catalogue));
+await copyFile('index.html','www/index.html');
+await copyFile('style.css','www/style.css');
+await copyFile('../docs/trizentro-app-mark.svg','www/logo.svg');
+await build({entryPoints:['main.mjs'],bundle:true,format:'esm',platform:'browser',target:['es2022'],outfile:'www/main.js'});
+console.log('Built mobile app with '+catalogue.events.length+' public races');

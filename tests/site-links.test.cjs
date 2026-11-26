@@ -11,16 +11,17 @@ test('local HTML links resolve to existing docs files',()=>{
   for(const match of html.matchAll(/\bhref\s*=\s*["']([^"']+)["']/g)){
    const href=match[1].trim();
    if(!href||href.startsWith('#')||/^(https?:|mailto:|tel:|javascript:|data:)/i.test(href))continue;
-   const plain=href.split(/[?#]/)[0];
+   const plain=href.split(/[?#]/)[0].replace(/^\/+/, '');
    const dest=plain===''?'index.html':plain.endsWith('/')?path.join(plain,'index.html'):plain;
-   if(!fs.existsSync(path.resolve(docs,dest)))missing.push(name+': '+href);
+   const target=path.resolve(docs,dest);
+   if(!target.startsWith(docs+path.sep)||!fs.existsSync(target)||!fs.statSync(target).isFile())missing.push(name+': '+href);
   }
  }
  assert.deepEqual(missing,[],'broken local page links');
 });
-test('race week guide is linked to homepage, Readiness Check and sitemap',()=>{
+test('race week guide is linked to Performance, Readiness Check and sitemap',()=>{
  const guide=fs.readFileSync(path.join(docs,'first-70-3-race-week-checklist.html'),'utf8');
- const home=fs.readFileSync(path.join(docs,'index.html'),'utf8');
+ const home=fs.readFileSync(path.join(docs,'performance.html'),'utf8');
  const readiness=fs.readFileSync(path.join(docs,'70-3-readiness-check.html'),'utf8');
  const sitemap=fs.readFileSync(path.join(docs,'sitemap.xml'),'utf8');
  assert.match(guide,/<title>First 70\.3 Race Week Checklist/);

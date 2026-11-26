@@ -1,0 +1,20 @@
+/* Build a small public, read-only season snapshot for the offline app. */
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const root=path.resolve(__dirname,'../docs'),source=fs.readFileSync(path.join(root,'raceatlas/index.html'),'utf8');
+const start=source.indexOf('const EVENTS=')+'const EVENTS='.length,end=source.indexOf(';\n',start);
+if(start<'const EVENTS='.length||end<=start)throw Error('Event catalogue missing');
+const events=JSON.parse(source.slice(start,end)).filter(e=>/^ra-\d{1,8}$/.test(e.id)&&e.name&&/^https:\/\//i.test(e.officialEventUrl||'')).map(e=>({id:e.id,name:e.name,place:e.place||'',sport:e.sport||'',date:e.dateEvidence==='official'&&/^\d{4}-\d{2}-\d{2}$/.test(e.date||'')?e.date:null}));
+const file=path.join(root,'app-offline.html');
+let html=fs.readFileSync(file,'utf8');
+const snapshot=JSON.stringify({asOf:new Date().toISOString().slice(0,10),events}).replace(/</g,'\\u003c');
+const pattern=/(<script type="application\/json" id="offline-catalogue">)[\s\S]*?(<\/script>)/;
+if(!pattern.test(html))throw Error('Offline catalogue marker missing');
+html=html.replace(pattern,(_,a,b)=>a+snapshot+b);
+fs.writeFileSync(file,html);
+const sw=path.join(root,'trizentro-sw.js');
+let worker=fs.readFileSync(sw,'utf8');
+const hash=crypto.createHash('sha256').update(html).update(fs.readFileSync(path.join(root,'app-icons/icon-192.png'))).digest('hex').slice(0,12);
+worker=worker.replace(/const CACHE='trizentro-offline-[a-z0-9-]+';/,"const CACHE='trizentro-offline-"+hash+"';");
+fs.writeFileSync(sw,worker);
+console.log('Built offline season snapshot with '+events.length+' public races');
