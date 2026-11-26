@@ -84,6 +84,10 @@ try{
  await page.reload();await page.locator('article').first().waitFor();
  await page.locator('[data-tab="season"]').click();
  assert.match(await page.locator('#races').innerText(),/RBR Almere 2027 \(test\)/);
+ response={...feed,events:feed.events.map(e=>e.id==='ra-219'?{...e,name:e.name+' (weer online)'}:e)};
+ await context.setOffline(false);
+ await page.locator('#races').getByText('RBR Almere 2027 (weer online)',{exact:true}).waitFor();
+ assert.equal(await page.locator('#status').innerText(),'');
  console.log('PASS: native web bundle, search, persistent local season, automatic and manual refresh, offline cache, mobile layout');
  await page.screenshot({path:'trizentro-native-preview.png',fullPage:true});
 }finally{await browser.close();await new Promise(resolve=>server.close(resolve))}

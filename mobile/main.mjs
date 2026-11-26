@@ -150,7 +150,9 @@ async function init(){
 
   $('shareSeason').onclick=async()=>{const text=seasonShareText(state.events,state.saved);if(!text)return;try{await Share.share({title:'Mijn wedstrijdseizoen',text})}catch{msg('Delen niet voltooid.')}};
   render();
-  if(navigator.onLine)void refreshCatalogue({announce:false});
+  const refreshSilently=()=>void refreshCatalogue({announce:false});
+  window.addEventListener('online',refreshSilently);
+  if(navigator.onLine)refreshSilently();
  }catch{msg('De app kon niet worden geladen. Start TriZentro opnieuw.')}
 }
 init();
