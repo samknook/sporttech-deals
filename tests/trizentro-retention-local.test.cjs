@@ -5,18 +5,18 @@ const html=read('docs/raceatlas/index.html');
 const a=html.indexOf('const EVENTS=')+'const EVENTS='.length,b=html.indexOf('];',a)+1;
 const races=JSON.parse(html.slice(a,b));
 test('four verified 2027 run-bike-run races are uniquely available',()=>{
- for(const [id,date,host] of [
+ for(const [id,date,host,registrationUrl] of [
   ['ra-206','2027-02-06','www.veluwserunbikerun.nl'],
   ['ra-210','2027-03-06','www.veluwserunbikerun.nl'],
-  ['ra-214','2027-04-03','rbr-rotterdam.nl'],
+  ['ra-214','2027-04-03','rbr-rotterdam.nl','https://in.njuko.com/rbr-rotterdam-20271786625155223'],
   ['ra-459','2027-04-17','www.veluwserunbikerun.nl']]){
    const matches=races.filter(e=>e.id===id);
    assert.equal(matches.length,1,'unique '+id);
    const e=matches[0];assert.equal(e.date,date);
    assert.equal(e.sport,'Triatlon');assert.equal(e.dateEvidence,'official');
    assert.equal(new URL(e.officialEventUrl).hostname,host);
-   assert.equal(e.registrationStatus,'check');
-   assert.ok(!e.registrationUrl,'unverified registration availability is not invented');
+   assert.equal(e.registrationStatus,registrationUrl?'link_available':'check');
+   assert.equal(e.registrationUrl||undefined,registrationUrl);
  }
 });
 test('a real save is recorded only after storage success, with a link to My Season',()=>{
