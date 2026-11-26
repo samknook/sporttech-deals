@@ -47,3 +47,12 @@ test('organizer summary only copies on user click and handles clipboard absence'
  assert.ok(js.includes("navigator.clipboard.writeText(summary)"));
  assert.ok(js.includes("Automatisch kopiëren is niet beschikbaar."));
 });
+
+test('organizer can download the scoped text summary without clipboard permission',()=>{
+ assert.ok(html.includes('id="downloadSummary" type="button" disabled'));
+ const download=js.slice(js.indexOf("$('downloadSummary').addEventListener"),js.indexOf("$('exportDaily').addEventListener"));
+ assert.match(download,/const events=selectedEvents\(\)/);
+ assert.match(download,/organizerSummaryText\(report,events\)/);
+ assert.match(download,/text\/plain;charset=utf-8/);
+ assert.doesNotMatch(download,/clipboard/);
+});
