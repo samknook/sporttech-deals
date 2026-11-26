@@ -21,14 +21,16 @@ try{
  const base='http://127.0.0.1:'+server.address().port;
  const feed=JSON.parse(await readFile('www/catalogue.json','utf8'));
  assert.ok(feed.events.find(e=>e.id==='ra-219'),'RBR Almere must be in bundle');
- let response={...feed,schemaVersion:999};
+ let response={...feed,events:feed.events.map(e=>e.id==='ra-219'?{...e,place:'Almere (automatisch bijgewerkt)'}:e)};
  await page.route('https://trizentro.com/app-catalogue.json',route=>route.fulfill({status:200,headers:{'Access-Control-Allow-Origin':'*','Content-Type':'application/json'},body:JSON.stringify(response)}));
  await page.goto(base);
  await page.locator('article').first().waitFor();
  await page.locator('[data-sport="Triatlon"]').click();
  await page.locator('#search').fill('RBR Almere');
  const card=page.locator('article').filter({hasText:'RBR Almere 2027'});
- await card.waitFor();
+ await card.getByText(/Almere \(automatisch bijgewerkt\)/).waitFor();
+ assert.equal(await page.locator('#status').innerText(),'');
+ response={...feed,schemaVersion:999};
  await card.getByRole('button',{name:'Bekijk wedstrijd'}).click();
  await page.locator('#raceDetail[open]').waitFor();
  assert.match(await page.locator('#detailName').innerText(),/RBR Almere 2027/);
@@ -65,9 +67,16 @@ try{
  await page.waitForFunction(()=>document.getElementById('status').textContent.includes('bijgewerkt.'));
  assert.match(await page.locator('#races').innerText(),/RBR Almere 2027 \(test\)/);
  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+2));
+ await context.setOffline(true);
+ // The native bundle remains readable without a connection.
+ await page.route(base+'/**',route=>{
+  const pathname=new URL(route.request().url()).pathname;
+  const file=pathname==='/'?'/index.html':pathname;
+  return route.fulfill({path:root+file,contentType:mime[path.extname(file)]});
+ });
  await page.reload();await page.locator('article').first().waitFor();
  await page.locator('[data-tab="season"]').click();
  assert.match(await page.locator('#races').innerText(),/RBR Almere 2027 \(test\)/);
- console.log('PASS: native web bundle, search, persistent local season, validated refresh, cached update, mobile layout');
+ console.log('PASS: native web bundle, search, persistent local season, automatic and manual refresh, offline cache, mobile layout');
  await page.screenshot({path:'trizentro-native-preview.png',fullPage:true});
 }finally{await browser.close();await new Promise(resolve=>server.close(resolve))}
