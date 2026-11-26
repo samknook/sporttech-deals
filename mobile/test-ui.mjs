@@ -25,8 +25,15 @@ try{
  await page.route('https://trizentro.com/app-catalogue.json',route=>route.fulfill({status:200,headers:{'Access-Control-Allow-Origin':'*','Content-Type':'application/json'},body:JSON.stringify(response)}));
  await page.goto(base);
  await page.locator('article').first().waitFor();
+ await page.locator('#search').fill('zz-onbekende-wedstrijd');
+ await page.getByText('Geen wedstrijden gevonden.').waitFor();
+ await page.locator('#confirmedOnly').check();
+ await page.locator('#resetFilters').click();
+ assert.equal(await page.locator('#search').inputValue(),'');
+ assert.equal(await page.locator('#confirmedOnly').isChecked(),false);
+ await page.locator('article').first().waitFor();
  await page.locator('[data-sport="Triatlon"]').click();
- await page.locator('#search').fill('RBR Almere');
+ await page.locator('#search').fill('Almére RBR');
  const card=page.locator('article').filter({hasText:'RBR Almere 2027'});
  await card.getByText(/Almere \(automatisch bijgewerkt\)/).waitFor();
  assert.equal(await page.locator('#status').innerText(),'');

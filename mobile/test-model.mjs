@@ -31,3 +31,12 @@ test('shared race and season links identify the campaign without altering the de
  assert.deepEqual(seasonLinks.map(url => url.pathname), [singleLink.pathname, '/events/']);
  assert.ok(seasonLinks.every(url => url.searchParams.get('utm_campaign') === 'app_season_share'));
 });
+
+test('search combines fields without requiring accents or word order and can require confirmed dates',()=>{
+ const confirmed=publicRace({...raw,name:'Gravél-tocht',place:'Almere',distance:'70 km'});
+ const expected=publicRace({...raw,id:'ra-7',name:'Graveltocht',dateEvidence:'unknown'});
+ const events=[confirmed,expected];
+ assert.deepEqual(selectRaces(events,{query:'Almere gravel tocht 70 km',today:'2026-11-26'}),[confirmed]);
+ assert.equal(selectRaces(events,{query:'gravel',today:'2026-11-26'}).length,2);
+ assert.deepEqual(selectRaces(events,{query:'gravel',confirmedOnly:true,today:'2026-11-26'}),[confirmed]);
+});

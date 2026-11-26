@@ -6,7 +6,7 @@ import {selectRaces,toggleRace,validateCatalogue,raceCountdown,seasonShareText,s
 const $=id=>document.getElementById(id),key='trizentro.native.saved.v1';
 const radarKey='trizentro.native.radar.v1';
 const catalogueKey='trizentro.native.catalogue.v1',feed='https://trizentro.com/app-catalogue.json';
-const state={events:[],saved:[],watched:[],query:'',sport:'',tab:'discover',limit:24,asOf:'',generatedAt:'',busy:false,refreshing:false};
+const state={events:[],saved:[],watched:[],query:'',sport:'',confirmedOnly:false,tab:'discover',limit:24,asOf:'',generatedAt:'',busy:false,refreshing:false};
 const msg=s=>{$('status').textContent=s;if($('raceDetail').open)$('detailStatus').textContent=s};
 function button(label,fn,className=''){const b=document.createElement('button');b.type='button';b.textContent=label;b.className=className;b.addEventListener('click',fn);return b}
 function node(tag,content,cls=''){const el=document.createElement(tag);el.textContent=content;if(cls)el.className=cls;return el}
@@ -81,7 +81,8 @@ function render(){
  $('snapshot').textContent=about?'':'Kalenderexport van '+state.asOf+' · actuele informatie via de wedstrijddetails.';
  document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tab===state.tab)));
  document.querySelectorAll('[data-sport]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.sport===state.sport)));
- const list=about?[]:radar?radarRaces(state.events,state.watched):selectRaces(state.events,{query:season?'':state.query,sport:season?'':state.sport,savedOnly:season,saved:state.saved});
+ $('resetFilters').hidden=!state.query&&!state.sport&&!state.confirmedOnly;
+ const list=about?[]:radar?radarRaces(state.events,state.watched):selectRaces(state.events,{query:season?'':state.query,sport:season?'':state.sport,confirmedOnly:!season&&state.confirmedOnly,savedOnly:season,saved:state.saved});
  const next=season?raceCountdown(state.events,state.saved):null;
  $('seasonOverview').hidden=!season||!list.length;
  $('nextRace').hidden=!next;
@@ -130,6 +131,12 @@ async function init(){
   $('search').addEventListener('input',e=>{state.query=e.target.value;state.limit=24;render()});
   document.querySelectorAll('[data-sport]').forEach(b=>b.onclick=()=>{state.sport=b.dataset.sport;state.limit=24;render()});
   document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{state.tab=b.dataset.tab;state.limit=24;msg('');render();window.scrollTo(0,0)});
+  $('confirmedOnly').onchange=event=>{state.confirmedOnly=event.target.checked;state.limit=24;render()};
+  $('resetFilters').onclick=()=>{
+   state.query='';state.sport='';state.confirmedOnly=false;state.limit=24;
+   $('search').value='';$('confirmedOnly').checked=false;
+   render();$('search').focus();
+  };
   $('more').onclick=()=>{state.limit+=24;render()};
   $('openSite').onclick=()=>open('https://trizentro.com/events/');
   $('refresh').onclick=()=>refreshCatalogue();
